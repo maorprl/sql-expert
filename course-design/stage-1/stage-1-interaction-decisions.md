@@ -18,6 +18,8 @@ The learner should be required to perform the reasoning, while the interface mak
 
 The system must not reveal future steps merely because the learner makes an error in the current step.
 
+Stage 1 uses closed or constrained choices for reasoning checks with a well-defined answer. It does not use open-text answers for connecting columns, information source, relationship reasoning, prediction, or operation selection.
+
 ---
 
 ## 2. Hints
@@ -54,21 +56,11 @@ Hint 2:
 
 ---
 
-### Step 3 — information-location hints
+### Step 3 — tuple-following hints
 
 Prompt:
 
-> Which relation contains the company status we need to add?
-
-Hint 1:
-
-> Inspect the columns of the two relations.
-
-Hint 2:
-
-> `funding_round` contains information about the round. Look at `company` for an attribute describing the company's current state.
-
-For the connecting column:
+> Which column in `funding_round` identifies the related company?
 
 Hint 1:
 
@@ -78,13 +70,25 @@ Hint 2:
 
 > Compare `funding_round.company_id` with `company.company_id`.
 
+For:
+
+> Which relation stores the current status of that company?
+
+Hint 1:
+
+> Inspect the columns of the related `company` row.
+
+Hint 2:
+
+> `company.status` stores the company's current state.
+
 ---
 
 ### Step 4 — relationship hints
 
 For:
 
-> For one row in `funding_round`, how many rows in `company` should its `company_id` match?
+> Each funding round belongs to how many companies?
 
 Hint 1:
 
@@ -148,7 +152,7 @@ Hint 2:
 
 For:
 
-> Which relational operation do we need in order to combine each `funding_round` row with its related `company` row?
+> Which relational operation should we use to combine related rows from `funding_round` and `company`?
 
 Hint 1:
 
@@ -171,6 +175,10 @@ Hint 2:
 > Use the `JOIN` operation you just selected to combine `funding_round` with `company` through `company_id`.
 
 The hint must not provide the full query text.
+
+### Output requirements
+
+At Step 8, the required output fields are hidden behind a **Show output requirements** control. This control is collapsed by default, may be opened and closed at any time, and is not a hint: opening it does not affect hint availability or usage. The SQL checker enforces the fields regardless of whether the control was opened.
 
 ---
 
@@ -298,9 +306,13 @@ Future steps are not shown in advance.
 
 Completed steps may remain accessible for review, but reopening them must not erase later work or change completion state.
 
+Completed steps use a compact card that shows the original question, selected answer, and a completion indicator. Expanding the card reveals all choices, the selected choice, feedback, and any hints the learner opened. A correct answer cannot be changed merely by reopening the card.
+
 Hints open **inline beneath the current prompt**. They should not appear in a separate side panel or popover that disconnects them from the reasoning step they support.
 
 The neutral SQL editor and result table are used directly when the learner reaches the SQL portion, following the reveal and persistence behavior specified in `stage-1-learner-route.md`.
+
+At the baseline, the editor is compact and the existing visible **Run Query** button remains available. At Step 8, the same editor expands to a normal working size.
 
 The learner's editor contents must not be reset by:
 

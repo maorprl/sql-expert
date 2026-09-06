@@ -125,32 +125,40 @@ The word `grain` is therefore introduced only after the learner has first reason
 
 ---
 
-### Step 3 — Identify where the requested information lives
+### Step 3 — Follow the funding-round tuple
 
 Prompt:
 
-> **Which relation contains the company status we need to add to each funding round?**
+> **Which column in `funding_round` identifies the related company?**
 
 Answer options:
 
-- `funding_round`
-- `company`
-
-Correct answer:
-
-> `company`
-
-Follow-up prompt:
-
-> **Which column connects a funding round to its company?**
+- `funding_round_id`
+- `company_id`
+- `round_type`
+- `announced_date`
 
 Correct answer:
 
 > `company_id`
 
+Follow-up prompt:
+
+> **Which relation stores the current status of that company?**
+
+Correct answer:
+
+> `company`
+
 Feedback:
 
-> `funding_round.company_id` identifies the company associated with each funding round.
+> `funding_round.company_id` leads to the related `company` row, where `status` is stored.
+
+Reasoning path:
+
+```text
+funding_round row → company_id → related company row → company.status
+```
 
 ---
 
@@ -158,13 +166,13 @@ Feedback:
 
 Prompt 1:
 
-> **For one row in `funding_round`, how many rows in `company` should its `company_id` match?**
+> **Each funding round belongs to how many companies?**
 
 Answer options:
 
-- zero
-- one
-- many
+- None
+- One
+- Many
 
 Correct answer:
 
@@ -204,6 +212,14 @@ SELECT COUNT(*)
 FROM funding_round;
 ```
 
+Before the editor appears, the transition is:
+
+> **Let’s establish a baseline.**
+> Before combining the two relations, first measure how many rows are currently in `funding_round`.
+> The query below is already prepared for you. Run it and inspect the result.
+
+The existing Lab editor is shown in a compact baseline mode with a visible **Run Query** button.
+
 Expected result:
 
 ```text
@@ -237,26 +253,18 @@ Feedback:
 
 Prompt:
 
-> **If we add `company.status` to every funding round, what should happen to the number of rows?**
+> **What do you expect to happen when we add `company.status` to every funding round?**
 
 Answer options:
 
-- fewer than 26
-- exactly 26
-- more than 26
-- cannot be predicted from the relationship
+- The result should have 26 rows, because each funding round matches one company.
+- The result should have more than 26 rows, because each company may have many funding rounds.
+- The result should have fewer than 26 rows, because several funding rounds may belong to the same company.
+- We cannot predict the row count from the relationship.
 
 Correct answer:
 
-> **exactly 26**
-
-Follow-up prompt:
-
-> **Why?**
-
-Accepted reasoning:
-
-> Each funding round matches one company, so adding the company's status should add information to the existing funding-round row rather than create additional funding-round rows.
+> **The result should have 26 rows, because each funding round matches one company.**
 
 Feedback:
 
@@ -275,7 +283,14 @@ The learner has already established that:
 
 Prompt:
 
-> **Which relational operation do we need in order to combine each `funding_round` row with its related `company` row?**
+> **Which relational operation should we use to combine related rows from `funding_round` and `company`?**
+
+Answer options:
+
+- `SELECT`
+- `JOIN`
+- `GROUP BY`
+- `UNION`
 
 Correct answer:
 
@@ -283,7 +298,7 @@ Correct answer:
 
 Feedback:
 
-> `JOIN` combines related rows from different relations. Here, it lets us add the related company's `status` to each funding-round row.
+> `JOIN` combines related rows from different relations. The SQL task implements this operation with an `INNER JOIN`.
 
 At this point, `JOIN` is selected as the relational operation before its SQL syntax is implemented.
 
@@ -295,7 +310,7 @@ Task wording:
 
 > **Write a query that returns every funding round together with the current `status` of the company that raised it.**
 
-Minimum required output columns:
+The output requirements are collapsed by default behind **Show output requirements**. Opening this control is not a hint. When opened, it shows the minimum required output columns:
 
 ```text
 funding_round_id
@@ -471,6 +486,14 @@ FROM funding_round;
 
 The learner runs this query; they are not required to construct the `COUNT(*)` syntax from memory.
 
+Before the editor is shown, the learner sees:
+
+> **Let’s establish a baseline.**
+> Before combining the two relations, first measure how many rows are currently in `funding_round`.
+> The query below is already prepared for you. Run it and inspect the result.
+
+The editor is compact at this point and retains the visible Lab **Run Query** button. It expands to its normal working size only when the learner reaches the Step 8 JOIN task.
+
 ### One persistent editor
 
 Stage 1 uses the existing Lab SQL editor as a single persistent workspace.
@@ -486,6 +509,10 @@ The baseline query remains in the editor after Step 5.
 When the learner reaches the JOIN implementation, they continue working in the same editor and may write the new statement beneath the existing baseline query.
 
 Moving between Stage 1 steps, opening hints, or checking reasoning answers must not erase or replace the SQL already in the editor.
+
+### Completed reasoning review
+
+Completed steps remain as compact cards. Their collapsed state shows the original question, selected answer, and a completion indicator. The learner can expand a card to review all choices, their selected choice, feedback, and any hints they opened. Reopening a completed card does not change its answer or completion state.
 
 ### Transition from reasoning to SQL
 
