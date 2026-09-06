@@ -2,6 +2,15 @@
 
 A browser-only SQLite workspace for the startup ecosystem dataset.
 
+The application currently includes Stage 1. Its learner sequence and
+interaction behavior are implemented from:
+
+- `course-design/stage-1/stage-1-learner-route.md`
+- `course-design/stage-1/stage-1-interaction-decisions.md`
+
+Stage 1 uses the same editor, SQLite runtime, schema viewer, autocomplete,
+results table, and reset behavior as the underlying SQL Lab.
+
 ## Run
 
 ```sh

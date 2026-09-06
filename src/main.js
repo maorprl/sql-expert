@@ -5,6 +5,7 @@ import 'ace-builds/src-noconflict/ext-language_tools';
 import initSqlJs from 'sql.js';
 import wasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
 import './styles.css';
+import { createStage1 } from './stage1.js';
 
 const SOURCE_FILES = [
   '/startup-ecosystem/startup-ecosystem-schema.sql',
@@ -17,6 +18,7 @@ let SQL;
 let db;
 let schema = [];
 let editor;
+let stage1;
 const el = (id) => document.getElementById(id);
 const status = el('db-status');
 const errorPanel = el('error-panel');
@@ -174,7 +176,11 @@ function runCurrentQuery() {
   clearError(); if (!db) return;
   const statement = selectedOrCurrent();
   if (!statement.trim()) { showError('No SQL to run', 'Select SQL or place the cursor within a statement.'); return; }
-  try { resultTable(db.exec(statement)); } catch (error) { showError('SQL error', error, statement); }
+  try {
+    const resultSets = db.exec(statement);
+    resultTable(resultSets);
+    stage1?.handleSqlSuccess(statement, resultSets);
+  } catch (error) { showError('SQL error', error, statement); }
 }
 
 el('run-query').addEventListener('click', runCurrentQuery);
@@ -182,6 +188,7 @@ el('clear-results').addEventListener('click', () => { el('result-content').inner
 el('reset-db').addEventListener('click', loadDatabase);
 el('schema-search').addEventListener('input', renderSchema);
 configureEditor();
+stage1 = createStage1({ editor, getDatabase: () => db });
 SQL = await initSqlJs({ locateFile: () => wasmUrl });
 db = new SQL.Database();
 await loadDatabase();
