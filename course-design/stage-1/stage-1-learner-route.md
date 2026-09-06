@@ -32,6 +32,7 @@ By the end of the stage, the learner should be able to explain:
 - where the requested `status` comes from;
 - how the two relations are related;
 - what the relationship implies for the output row count;
+- which relational operation fits the problem before translating that choice into SQL;
 - why the SQL join is an implementation of that reasoning rather than the reasoning itself.
 
 ---
@@ -263,7 +264,32 @@ Feedback:
 
 ---
 
-### Step 7 — SQL implementation
+### Step 7 — Choose the relational operation
+
+The learner has already established that:
+
+- the required information is split across `funding_round` and `company`;
+- the two relations are connected through `company_id`;
+- each funding round should match one company;
+- the expected output remains at funding-round grain.
+
+Prompt:
+
+> **Which relational operation do we need in order to combine each `funding_round` row with its related `company` row?**
+
+Correct answer:
+
+> **JOIN**
+
+Feedback:
+
+> `JOIN` combines related rows from different relations. Here, it lets us add the related company's `status` to each funding-round row.
+
+At this point, `JOIN` is selected as the relational operation before its SQL syntax is implemented.
+
+---
+
+### Step 8 — SQL implementation
 
 Task wording:
 
@@ -288,7 +314,7 @@ A valid solution must correctly combine `funding_round` and `company` through `c
 
 ---
 
-### Step 8 — Verify the result
+### Step 9 — Verify the result
 
 After a valid result is produced, the learner sees:
 
@@ -338,7 +364,8 @@ understand row meaning
 → understand the relationship
 → measure rows
 → predict join effect
-→ implement the join
+→ choose JOIN as the relational operation
+→ implement the join in SQL
 → verify the prediction
 ```
 
@@ -400,6 +427,7 @@ The learner has completed the Stage 1 route when they have demonstrated all of t
 - reasoned correctly about the one-to-many relationship;
 - established and interpreted the `COUNT(*)` baseline;
 - predicted that the row count should remain 26;
+- selected `JOIN` as the relational operation that fits the problem;
 - produced a SQL result that correctly adds `status`;
 - verified that the result still has 26 rows;
 - correctly identified the final result grain as one funding round per row.
@@ -408,13 +436,80 @@ Interaction rules for hints, wrong answers, automatic checking, and completion b
 
 ---
 
-## 9. Remaining OPEN items
+## 9. Presentation decisions for the learner route
 
-Only implementation-facing presentation details remain open here:
+The following presentation behavior is part of the Stage 1 learner route and should not be left to implementation interpretation.
 
-- exact visual arrangement of the two relations;
-- whether example rows appear inline or in an expandable data preview;
-- exact typography and visual treatment of the introduced terms `grain` and `cardinality`;
-- exact visual transition between reasoning steps and the SQL editor.
+### Relation visibility
 
-The learner-route content itself is specified above.
+During the early reasoning steps, `funding_round` and `company` must both be directly visible to the learner.
+
+The implementation may place them side by side on wide screens or stack them responsively on narrow screens, but they should not be hidden behind separate tabs or require the learner to remember one relation while inspecting the other.
+
+### Example rows
+
+The Stage 1 example rows defined in Section 3 should be visible inline during the relevant reasoning steps.
+
+They should not be hidden behind an expandable preview by default.
+
+This is important because the learner is expected to inspect the actual rows when reasoning about row meaning and the relationship between the two relations.
+
+The full relation data remains available through the neutral Lab if the learner chooses to inspect it.
+
+### SQL editor reveal
+
+The SQL editor should not be the primary workspace during Steps 1–4.
+
+It is introduced into the learner route at Step 5, when `COUNT(*)` is used as a row-count baseline.
+
+At that point, the existing Lab editor is shown with the baseline query already present:
+
+```sql
+SELECT COUNT(*)
+FROM funding_round;
+```
+
+The learner runs this query; they are not required to construct the `COUNT(*)` syntax from memory.
+
+### One persistent editor
+
+Stage 1 uses the existing Lab SQL editor as a single persistent workspace.
+
+Do not create separate editors for:
+
+- the `COUNT(*)` baseline;
+- the JOIN implementation;
+- verification.
+
+The baseline query remains in the editor after Step 5.
+
+When the learner reaches the JOIN implementation, they continue working in the same editor and may write the new statement beneath the existing baseline query.
+
+Moving between Stage 1 steps, opening hints, or checking reasoning answers must not erase or replace the SQL already in the editor.
+
+### Transition from reasoning to SQL
+
+The learner route should therefore feel like:
+
+```text
+reason about the data
+→ use SQL as a measurement tool
+→ make a prediction
+→ choose the relational operation
+→ use the same SQL workspace to implement it
+→ verify the result
+```
+
+The SQL editor is introduced as a tool inside the reasoning process rather than as the starting point of the stage.
+
+### Still implementation-facing
+
+Only cosmetic presentation details remain open, including:
+
+- typography;
+- spacing;
+- colors;
+- exact component styling;
+- animation or transition effects.
+
+These implementation choices must not change the visibility, sequencing, or persistence behavior specified above.

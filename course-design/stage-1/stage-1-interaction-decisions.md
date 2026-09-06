@@ -144,7 +144,23 @@ Hint 2:
 
 ---
 
-### Step 7 — SQL hints
+### Step 7 — relational-operation hints
+
+For:
+
+> Which relational operation do we need in order to combine each `funding_round` row with its related `company` row?
+
+Hint 1:
+
+> We need an operation that combines related rows from two different relations.
+
+Hint 2:
+
+> The two relations are connected through `company_id`. Which relational operation combines matching rows across relations?
+
+---
+
+### Step 8 — SQL hints
 
 Hint 1:
 
@@ -152,7 +168,7 @@ Hint 1:
 
 Hint 2:
 
-> Join `funding_round` to `company` using their `company_id` columns.
+> Use the `JOIN` operation you just selected to combine `funding_round` with `company` through `company_id`.
 
 The hint must not provide the full query text.
 
@@ -226,6 +242,7 @@ The following are checked directly:
 - one company → potentially many funding rounds;
 - baseline meaning = 26 funding rounds;
 - predicted row count after combination = 26;
+- relational operation selected = `JOIN`;
 - final grain = funding round.
 
 ### SQL result check
@@ -256,7 +273,8 @@ The learner should not receive the SQL task before completing the reasoning step
 - source of the missing information;
 - relationship;
 - baseline;
-- prediction.
+- prediction;
+- selection of `JOIN` as the relational operation.
 
 This sequencing is a Stage 1 decision.
 
@@ -274,7 +292,15 @@ The business request remains visible or immediately accessible throughout the st
 
 The learner can inspect the relevant schema.
 
-The neutral SQL editor and result table are used directly when the learner reaches the SQL portion.
+The interface foregrounds **one current reasoning step at a time**.
+
+Future steps are not shown in advance.
+
+Completed steps may remain accessible for review, but reopening them must not erase later work or change completion state.
+
+Hints open **inline beneath the current prompt**. They should not appear in a separate side panel or popover that disconnects them from the reasoning step they support.
+
+The neutral SQL editor and result table are used directly when the learner reaches the SQL portion, following the reveal and persistence behavior specified in `stage-1-learner-route.md`.
 
 The learner's editor contents must not be reset by:
 
@@ -283,20 +309,20 @@ The learner's editor contents must not be reset by:
 - moving between Stage 1 steps;
 - receiving SQL feedback.
 
+When Stage 1 is complete, the interface must show a clear completion state. The exact visual styling of that state is implementation-facing.
+
 ### Still implementation-dependent
 
-The exact visual layout is not prescribed here.
+Only presentation details that do not alter the learner route remain implementation-dependent:
 
-Codex may choose an appropriate implementation for:
-
-- panel placement;
-- accordion versus step cards;
+- responsive placement on different screen sizes;
 - spacing;
-- responsive behavior;
-- visual emphasis;
-- transitions.
+- typography;
+- colors;
+- exact component styling;
+- animation or transition effects.
 
-These choices must not alter the learner route or reveal future answers.
+These choices must not alter sequencing, visibility, hint behavior, persistence, or completion behavior.
 
 ---
 
@@ -311,6 +337,7 @@ Required evidence:
 - correct relationship reasoning;
 - correct baseline interpretation;
 - correct prediction;
+- correct selection of `JOIN` as the relational operation;
 - correct SQL result;
 - correct final-grain verification.
 
@@ -334,14 +361,17 @@ The system should prefer local corrective feedback and optional hints over force
 
 ---
 
-## 10. Remaining OPEN items
+## 10. Remaining implementation-facing details
 
-The following remain implementation-facing rather than pedagogical:
+No pedagogical or interaction behavior remains OPEN in this document.
 
-- exact visual layout;
+The remaining implementation freedom is limited to cosmetic and responsive presentation details:
+
+- spacing;
+- typography;
+- colors;
 - exact component styling;
-- whether hints open inline, in a popover, or in a side panel;
-- visual completion indicator;
-- animation or transition behavior.
+- responsive placement that preserves the required visibility and sequencing;
+- animation or transition effects.
 
-The Stage 1 interaction behavior itself is specified above.
+These choices must not change the learner route, hint behavior, checking behavior, editor persistence, or completion requirements.
