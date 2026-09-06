@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SQL Lab</title>
+  </head>
+  <body>
+    <main id="app">
+      <header class="topbar">
+        <div><h1>SQL Lab</h1><span id="db-status" class="status">Loading database…</span></div>
+        <div class="actions"><button id="run-query" class="primary" disabled>Run query <kbd>Ctrl / ⌘ + Enter</kbd></button><button id="clear-results" disabled>Clear results</button><button id="reset-db" disabled>Reset database</button></div>
+      </header>
+      <section id="error-panel" class="message error" hidden></section>
+      <section class="workspace">
+        <aside class="schema-panel">
+          <div class="panel-header"><h2>Schema</h2><input id="schema-search" type="search" placeholder="Find relations or columns" aria-label="Search schema" /></div>
+          <div id="schema-viewer" class="schema-viewer" aria-live="polite"></div>
+        </aside>
+        <section class="query-panel">
+          <div class="editor-header"><h2>Query</h2><span id="editor-note">Write SQL to begin.</span></div>
+          <div id="editor" aria-label="SQL editor"></div>
+          <section class="results-panel">
+            <div class="results-header"><h2>Results</h2><span id="result-meta">No query run</span></div>
+            <div id="result-content" class="result-content"><p class="empty">Results will appear here.</p></div>
+          </section>
+        </section>
+      </section>
+    </main>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
