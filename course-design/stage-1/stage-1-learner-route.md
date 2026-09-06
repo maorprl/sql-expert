@@ -96,7 +96,7 @@ No SQL task is given yet.
 
 ---
 
-### Step 2 — Identify what one output row should represent
+### Step 3 — Identify what one output row should represent
 
 Prompt:
 
@@ -125,7 +125,15 @@ The word `grain` is therefore introduced only after the learner has first reason
 
 ---
 
-### Step 3 — Follow the funding-round tuple
+### Step 2 — Choose relevant relations
+
+The focused working schema starts empty. The learner uses the live schema viewer to add relations with its `+` action; the viewer and working area both derive from loaded SQLite metadata.
+
+The working area holds up to four relations, preserves insertion order, prevents duplicates, and allows removal without resetting SQL or progress. It shows schema metadata only: columns, PKs, and FK targets—never seed rows.
+
+The learner must select the relations needed by the request before continuing. The route does not foreground their names in advance.
+
+### Step 4 — Follow the funding-round tuple
 
 Prompt:
 
@@ -162,7 +170,7 @@ funding_round row → company_id → related company row → company.status
 
 ---
 
-### Step 4 — Reason about the relationship in both directions
+### Step 5 — Reason about the relationship in both directions
 
 Prompt 1:
 
@@ -203,7 +211,7 @@ This is the first point at which the word `cardinality` appears.
 
 ---
 
-### Step 5 — Establish the baseline row count
+### Step 6 — Establish the baseline row count
 
 The learner is asked to run:
 
@@ -249,7 +257,7 @@ Feedback:
 
 ---
 
-### Step 6 — Predict the effect of combining the relations
+### Step 7 — Predict the effect of combining the relations
 
 Prompt:
 
@@ -272,7 +280,7 @@ Feedback:
 
 ---
 
-### Step 7 — Choose the relational operation
+### Step 8 — Choose the relational operation
 
 The learner has already established that:
 
@@ -304,7 +312,7 @@ At this point, `JOIN` is selected as the relational operation before its SQL syn
 
 ---
 
-### Step 8 — SQL implementation
+### Step 9 — SQL implementation
 
 Task wording:
 
@@ -329,7 +337,7 @@ A valid solution must correctly combine `funding_round` and `company` through `c
 
 ---
 
-### Step 9 — Verify the result
+### Step 10 — Verify the result
 
 After a valid result is produced, the learner sees:
 

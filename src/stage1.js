@@ -1,43 +1,13 @@
 const BASELINE_SQL = `SELECT COUNT(*)
 FROM funding_round;`;
 
-const RELATIONS = [
-  {
-    name: 'funding_round',
-    columns: ['funding_round_id', 'company_id', 'round_type', 'announced_date', 'reported_total_amount', 'currency_code'],
-    rows: [
-      [1001, 1, 'seed', '2019-06-10', 4000000, 'USD'],
-      [1002, 1, 'series a', '2021-05-18', 12000000, 'USD'],
-      [1003, 1, 'series b', '2023-09-04', 30000000, 'USD'],
-      [1101, 2, 'seed', '2020-02-14', 5000000, 'USD'],
-    ],
-  },
-  {
-    name: 'company',
-    columns: ['company_id', 'status', 'description'],
-    rows: [
-      [1, 'active', 'Cloud security platform for enterprise workloads.'],
-      [2, 'active', 'Digital health monitoring and clinical workflow software.'],
-      [3, 'active', 'AI routing and optimization for commercial fleets.'],
-      [4, 'acquired', 'Payments infrastructure and fraud analytics.'],
-    ],
-  },
-];
-
 const STEP_META = {
   intro: [1, 'Read the business request'],
-  output: [2, 'Output meaning'],
-  connection: [3, 'Follow the funding-round tuple'],
-  source: [3, 'Information source'],
-  roundCompany: [4, 'Relationship: round to company'],
-  companyRounds: [4, 'Relationship: company to rounds'],
-  baselineRun: [5, 'Baseline row count'],
-  baselineMeaning: [5, 'Interpret the baseline'],
-  prediction: [6, 'Predict the joined result'],
-  operation: [7, 'Choose the operation'],
-  sql: [8, 'Implement in SQL'],
-  finalGrain: [9, 'Verify the result'],
-  complete: [9, 'Stage complete'],
+  relations: [2, 'Choose relevant relations'],
+  output: [3, 'Output meaning'], connection: [4, 'Follow the funding-round tuple'], source: [4, 'Information source'],
+  roundCompany: [5, 'Relationship: round to company'], companyRounds: [5, 'Relationship: company to rounds'],
+  baselineRun: [6, 'Baseline row count'], baselineMeaning: [6, 'Interpret the baseline'], prediction: [7, 'Predict the joined result'],
+  operation: [8, 'Choose the operation'], sql: [9, 'Implement in SQL'], finalGrain: [10, 'Verify the result'], complete: [10, 'Stage complete'],
 };
 
 const REQUIRED_RESULT_COLUMNS = [
@@ -49,7 +19,7 @@ const REQUIRED_RESULT_COLUMNS = [
   'status',
 ];
 
-export function createStage1({ editor, getDatabase }) {
+export function createStage1({ editor, getDatabase, getSchema, onSelectionChange }) {
   const state = {
     current: 'intro',
     completed: [],
@@ -60,6 +30,7 @@ export function createStage1({ editor, getDatabase }) {
     localFeedback: '',
     editorRevealed: false,
     outputRequirementsOpen: false,
+    selectedRelations: [],
   };
 
   const currentEl = document.getElementById('current-step');
@@ -72,17 +43,24 @@ export function createStage1({ editor, getDatabase }) {
   }
 
   function renderRelations() {
-    relationEl.innerHTML = RELATIONS.map((relation) => `
+    const selected = state.selectedRelations.map((name) => getSchema().find((relation) => relation.name === name)).filter(Boolean);
+    relationEl.innerHTML = selected.length ? selected.map((relation) => `
       <article class="data-card">
-        <div class="data-card-title"><span>Relation</span><code>${relation.name}</code></div>
-        <div class="preview-table-wrap">
-          <table class="preview-table">
-            <thead><tr>${relation.columns.map((column) => `<th>${column}</th>`).join('')}</tr></thead>
-            <tbody>${relation.rows.map((row) => `<tr>${row.map((value) => `<td>${value}</td>`).join('')}</tr>`).join('')}</tbody>
-          </table>
-        </div>
+        <div class="data-card-title"><span>Working relation</span><code>${relation.name}</code><button type="button" class="remove-relation" data-remove-relation="${relation.name}">Remove</button></div>
+        <ul class="working-columns">${relation.columns.map((column) => `<li><code>${column.column}</code>${column.pk ? ' <span class="badge">PK</span>' : ''}${relation.foreignKeys.filter((fk) => fk.from === column.column).map((fk) => ` <span class="fk-inline">FK → ${fk.refTable}.${fk.to}</span>`).join('')}</li>`).join('')}</ul>
       </article>
-    `).join('');
+    `).join('') : '<div class="working-empty">Add relevant relations from the schema.</div>';
+    relationEl.querySelectorAll('[data-remove-relation]').forEach((button) => button.addEventListener('click', () => removeRelation(button.dataset.removeRelation)));
+  }
+
+  function addRelation(name) {
+    if (state.selectedRelations.includes(name)) return;
+    if (state.selectedRelations.length >= 4) { state.localFeedback = 'The working schema can contain up to four relations. Remove one to add another.'; render(); return; }
+    state.selectedRelations.push(name); state.localFeedback = ''; render(); onSelectionChange();
+  }
+
+  function removeRelation(name) {
+    state.selectedRelations = state.selectedRelations.filter((item) => item !== name); state.localFeedback = ''; render(); onSelectionChange();
   }
 
   function renderCompleted() {
@@ -180,7 +158,7 @@ export function createStage1({ editor, getDatabase }) {
 
   function stepShell(prompt, body, intro = '') {
     const [step, label] = STEP_META[state.current];
-    return `<div class="step-kicker">Step ${step} of 9 · ${label}</div>${intro}<h2 class="prompt">${prompt}</h2>${body}`;
+    return `<div class="step-kicker">Step ${step} of 10 · ${label}</div>${intro}<h2 class="prompt">${prompt}</h2>${body}`;
   }
 
   function bindHints() {
@@ -193,15 +171,20 @@ export function createStage1({ editor, getDatabase }) {
   }
 
   function render() {
+    renderRelations();
     renderCompleted();
-    const early = ['intro', 'output', 'source', 'connection', 'roundCompany', 'companyRounds'].includes(state.current);
-    relationEl.hidden = !early;
+    relationEl.hidden = false;
     if (['baselineRun', 'baselineMeaning', 'prediction', 'operation', 'sql', 'finalGrain', 'complete'].includes(state.current)) revealEditorWithBaseline();
     labEl.classList.toggle('baseline-mode', ['baselineRun', 'baselineMeaning', 'prediction', 'operation'].includes(state.current));
 
     if (state.current === 'intro') {
       currentEl.innerHTML = stepShell('Inspect the business request and the two relevant relations.', '<button id="continue-stage" class="primary">Continue</button>', '<p class="step-copy">No SQL task yet. First, compare what the rows in each relation represent.</p>');
-      document.getElementById('continue-stage').addEventListener('click', () => record({ prompt: 'Read the business request and inspect the relations.', answer: 'Reviewed', next: 'output' }));
+      document.getElementById('continue-stage').addEventListener('click', () => record({ prompt: 'Read the business request.', answer: 'Reviewed', next: 'relations' }));
+    } else if (state.current === 'relations') {
+      const ready = state.selectedRelations.includes('funding_round') && state.selectedRelations.includes('company');
+      currentEl.innerHTML = stepShell('Choose the relations relevant to the business request.', `<p class="step-copy">Use the <strong>+</strong> actions in the live schema viewer to build your focused working schema.</p><button id="continue-relations" class="primary" ${ready ? '' : 'disabled'}>Continue</button>${feedbackMarkup()}${hintMarkup(['Read the nouns in the request and look for relations that represent them.', 'The request needs information about funding rounds and the companies that raised them.'])}`);
+      bindHints();
+      document.getElementById('continue-relations').addEventListener('click', () => record({ evidence: 'relations', prompt: 'Choose the relations relevant to the business request.', answer: state.selectedRelations.join(', '), feedback: 'The working schema now contains the relations needed for this task.', next: 'output' }));
     } else if (state.current === 'output') {
       choiceQuestion({
         prompt: 'What should one row in the requested result represent?',
@@ -225,7 +208,7 @@ export function createStage1({ editor, getDatabase }) {
     } else if (state.current === 'roundCompany') {
       choiceQuestion({ prompt: 'Each funding round belongs to how many companies?', options: [['zero', 'None'], ['one', 'One'], ['many', 'Many']], correct: 'one', evidence: 'roundCompany', next: 'companyRounds', feedback: 'Correct. Each funding round belongs to one company.', wrongFeedback: 'Follow one funding round through its <code>company_id</code>.', hints: ['Ask what <code>company_id</code> identifies in the <code>company</code> relation.', 'A funding round belongs to a specific company.'] });
     } else if (state.current === 'companyRounds') {
-      choiceQuestion({ prompt: 'Can one company be related to more than one funding round?', options: [['yes', 'yes'], ['no', 'no']], correct: 'yes', evidence: 'companyRounds', next: 'baselineRun', feedback: 'Correct. One company can be associated with multiple funding rounds.', after: '<div class="concept-callout"><strong>This is a one-to-many relationship: one company can have many funding rounds, while each funding round belongs to one company.</strong><span>Cardinality: company 1 → M funding_round</span><span>Cardinality describes how many rows on one side of a relationship can be associated with rows on the other side.</span></div>', wrongFeedback: 'Look again at the example rows. The same company can appear in more than one funding round.', hints: ['Look at the example rows in <code>funding_round</code>. Does the same <code>company_id</code> appear more than once?', 'Company <code>1</code> appears in several funding-round rows.'] });
+      choiceQuestion({ prompt: 'Can one company be related to more than one funding round?', options: [['yes', 'yes'], ['no', 'no']], correct: 'yes', evidence: 'companyRounds', next: 'baselineRun', feedback: 'Correct. One company can be associated with multiple funding rounds.', after: '<div class="concept-callout"><strong>This is a one-to-many relationship: one company can have many funding rounds, while each funding round belongs to one company.</strong><span>Cardinality: company 1 → M funding_round</span><span>Cardinality describes how many rows on one side of a relationship can be associated with rows on the other side.</span></div>', wrongFeedback: 'Use the schema relationship: <code>funding_round.company_id</code> is an FK and it is not unique, so multiple funding-round rows may reference one company.', hints: ['Inspect the PK on <code>company.company_id</code> and the FK from <code>funding_round.company_id</code>.', '<code>funding_round.company_id</code> is not unique, so multiple funding-round rows can reference the same company.'] });
     } else if (state.current === 'baselineRun') {
       currentEl.innerHTML = stepShell('Let’s establish a baseline.', `<p class="step-copy">Before combining the two relations, first measure how many rows are currently in <code>funding_round</code>.</p><p class="step-copy">The query below is already prepared for you. Run it and inspect the result.</p>${feedbackMarkup()}${hintMarkup(['We need a baseline for the number of rows in <code>funding_round</code>.', 'Use <code>COUNT(*)</code> on <code>funding_round</code>.'])}`);
       bindHints();
@@ -242,7 +225,7 @@ export function createStage1({ editor, getDatabase }) {
     } else if (state.current === 'finalGrain') {
       choiceQuestion({ prompt: 'What is the grain of the result?', intro: '<div class="verification-callout"><strong>You predicted 26 rows before writing the join. Did the result match your prediction?</strong><span>Yes. The result contains 26 rows.</span></div>', options: [['company', 'one company per row'], ['funding_round', 'one funding round per row'], ['investor', 'one investor per row'], ['pair', 'one company-funding-round pair per row']], correct: 'funding_round', evidence: 'finalGrain', next: 'complete', feedback: 'The join added company information without changing what one row represents. The result is still at funding-round grain.', wrongFeedback: 'Reconsider what each result row represents.' });
     } else if (state.current === 'complete') {
-      const required = ['output', 'source', 'connection', 'roundCompany', 'companyRounds', 'baselineRun', 'baselineMeaning', 'prediction', 'operation', 'sql', 'finalGrain'];
+      const required = ['relations', 'output', 'source', 'connection', 'roundCompany', 'companyRounds', 'baselineRun', 'baselineMeaning', 'prediction', 'operation', 'sql', 'finalGrain'];
       const complete = required.every((item) => state.evidence.has(item));
       currentEl.innerHTML = stepShell('Stage 1 complete', `<div class="completion-state"><div class="completion-icon">✓</div><p>${complete ? 'You reasoned from row meaning and relationships, selected JOIN, implemented it in SQL, and verified that the result remained at funding-round grain.' : 'Required evidence is incomplete.'}</p></div>`);
     }
@@ -282,8 +265,7 @@ export function createStage1({ editor, getDatabase }) {
     }
   }
 
-  renderRelations();
   render();
 
-  return { handleSqlSuccess, current: () => state.current };
+  return { handleSqlSuccess, current: () => state.current, addRelation, isRelationSelected: (name) => state.selectedRelations.includes(name) };
 }

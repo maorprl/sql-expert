@@ -79,8 +79,10 @@ function renderSchema() {
     if (!matches) continue;
     const details = document.createElement('details'); details.className = 'relation'; details.open = Boolean(filter);
     const summary = document.createElement('summary'); summary.title = 'Double-click to insert relation name';
-    summary.innerHTML = `<span class="relation-name">${escapeHtml(table.name)}</span><span class="count">${table.columns.length} columns</span>`;
+    const selected = stage1?.isRelationSelected(table.name);
+    summary.innerHTML = `<span class="relation-name">${escapeHtml(table.name)}</span><span class="count">${table.columns.length} columns</span><button type="button" class="add-relation" ${selected ? 'disabled' : ''} aria-label="Add ${escapeHtml(table.name)} to working schema">${selected ? 'Added' : '+'}</button>`;
     summary.addEventListener('dblclick', (event) => { event.preventDefault(); insertAtCursor(table.name); });
+    summary.querySelector('.add-relation').addEventListener('click', (event) => { event.preventDefault(); event.stopPropagation(); stage1?.addRelation(table.name); });
     details.append(summary);
     const body = document.createElement('div'); body.className = 'relation-body';
     for (const column of table.columns) {
@@ -188,7 +190,7 @@ el('clear-results').addEventListener('click', () => { el('result-content').inner
 el('reset-db').addEventListener('click', loadDatabase);
 el('schema-search').addEventListener('input', renderSchema);
 configureEditor();
-stage1 = createStage1({ editor, getDatabase: () => db });
+stage1 = createStage1({ editor, getDatabase: () => db, getSchema: () => schema, onSelectionChange: renderSchema });
 SQL = await initSqlJs({ locateFile: () => wasmUrl });
 db = new SQL.Database();
 await loadDatabase();

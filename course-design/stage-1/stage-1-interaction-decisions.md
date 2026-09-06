@@ -24,6 +24,12 @@ Stage 1 uses closed or constrained choices for reasoning checks with a well-defi
 
 ## 2. Hints
 
+### Relation selection
+
+The working schema begins empty. Each live-schema relation has a `+` action; selected relations show an added state and can be removed from the working area. Selection is limited to four relations, with a neutral limit message. Removing a relation never resets answers, hints, progress, or SQL.
+
+The working cards show only live schema metadata (columns, PKs, and FKs), not instance rows. Relation-selection hints may point the learner back to the business request and schema, without preselecting relations.
+
 ### Hint model
 
 Each reasoning step has up to **two hint levels**.
@@ -40,7 +46,7 @@ There is no automatic solution reveal.
 
 ---
 
-### Step 2 — output grain hints
+### Step 3 — output grain hints
 
 Prompt:
 
@@ -56,7 +62,7 @@ Hint 2:
 
 ---
 
-### Step 3 — tuple-following hints
+### Step 4 — tuple-following hints
 
 Prompt:
 
@@ -84,7 +90,7 @@ Hint 2:
 
 ---
 
-### Step 4 — relationship hints
+### Step 5 — relationship hints
 
 For:
 
@@ -104,15 +110,15 @@ For:
 
 Hint 1:
 
-> Look at the example rows in `funding_round`. Does the same `company_id` appear more than once?
+> Inspect the PK on `company.company_id` and the FK from `funding_round.company_id`.
 
 Hint 2:
 
-> Company `1` appears in several funding-round rows.
+> `funding_round.company_id` is not unique, so multiple funding-round rows can reference the same company.
 
 ---
 
-### Step 5 — `COUNT(*)` hints
+### Step 6 — `COUNT(*)` hints
 
 If the learner does not know what to run:
 
@@ -136,7 +142,7 @@ Hint 2:
 
 ---
 
-### Step 6 — prediction hints
+### Step 7 — prediction hints
 
 Hint 1:
 
@@ -148,7 +154,7 @@ Hint 2:
 
 ---
 
-### Step 7 — relational-operation hints
+### Step 8 — relational-operation hints
 
 For:
 
@@ -164,7 +170,7 @@ Hint 2:
 
 ---
 
-### Step 8 — SQL hints
+### Step 9 — SQL hints
 
 Hint 1:
 
