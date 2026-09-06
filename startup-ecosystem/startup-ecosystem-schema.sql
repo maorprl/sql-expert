@@ -3,6 +3,7 @@ PRAGMA foreign_keys = ON;
 -- ============================================================
 -- Startup Ecosystem SQL Lab
 -- Normalized relational schema for SQLite
+-- 24 relations
 -- ============================================================
 
 CREATE TABLE party (
@@ -25,17 +26,11 @@ CREATE TABLE person (
     FOREIGN KEY (person_id) REFERENCES party(party_id)
 );
 
-CREATE TABLE company_status (
-    company_status_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE
-);
-
 CREATE TABLE company (
     company_id INTEGER PRIMARY KEY,
-    company_status_id INTEGER,
+    status TEXT,
     description TEXT,
-    FOREIGN KEY (company_id) REFERENCES organization(organization_id),
-    FOREIGN KEY (company_status_id) REFERENCES company_status(company_status_id)
+    FOREIGN KEY (company_id) REFERENCES organization(organization_id)
 );
 
 CREATE TABLE company_founder (
@@ -108,20 +103,10 @@ CREATE TABLE investor_sector_focus (
 -- Funding
 -- ============================================================
 
-CREATE TABLE currency (
-    currency_code TEXT PRIMARY KEY,
-    currency_name TEXT NOT NULL
-);
-
-CREATE TABLE funding_round_type (
-    funding_round_type_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE
-);
-
 CREATE TABLE funding_round (
     funding_round_id INTEGER PRIMARY KEY,
     company_id INTEGER NOT NULL,
-    funding_round_type_id INTEGER,
+    round_type TEXT,
     announced_date TEXT,
     reported_total_amount NUMERIC
         CHECK (reported_total_amount IS NULL OR reported_total_amount >= 0),
@@ -130,10 +115,7 @@ CREATE TABLE funding_round (
         CHECK (pre_money_valuation IS NULL OR pre_money_valuation >= 0),
     post_money_valuation NUMERIC
         CHECK (post_money_valuation IS NULL OR post_money_valuation >= 0),
-    FOREIGN KEY (company_id) REFERENCES company(company_id),
-    FOREIGN KEY (funding_round_type_id)
-        REFERENCES funding_round_type(funding_round_type_id),
-    FOREIGN KEY (currency_code) REFERENCES currency(currency_code)
+    FOREIGN KEY (company_id) REFERENCES company(company_id)
 );
 
 CREATE TABLE round_investment (
@@ -148,8 +130,6 @@ CREATE TABLE round_investment (
         REFERENCES funding_round(funding_round_id),
     FOREIGN KEY (investor_id)
         REFERENCES investor(investor_id),
-    FOREIGN KEY (currency_code)
-        REFERENCES currency(currency_code),
     UNIQUE (funding_round_id, investor_id)
 );
 
@@ -170,32 +150,16 @@ CREATE TABLE party_tag (
     FOREIGN KEY (tag_id) REFERENCES tag(tag_id)
 );
 
-CREATE TABLE funding_round_tag (
-    funding_round_id INTEGER NOT NULL,
-    tag_id INTEGER NOT NULL,
-    PRIMARY KEY (funding_round_id, tag_id),
-    FOREIGN KEY (funding_round_id)
-        REFERENCES funding_round(funding_round_id),
-    FOREIGN KEY (tag_id) REFERENCES tag(tag_id)
-);
-
 -- ============================================================
 -- Geography / addresses
 -- ============================================================
 
-CREATE TABLE geo_unit_type (
-    geo_unit_type_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE
-);
-
 CREATE TABLE geo_unit (
     geo_unit_id INTEGER PRIMARY KEY,
-    geo_unit_type_id INTEGER NOT NULL,
+    unit_type TEXT NOT NULL,
     name TEXT NOT NULL,
     parent_geo_unit_id INTEGER,
     code TEXT,
-    FOREIGN KEY (geo_unit_type_id)
-        REFERENCES geo_unit_type(geo_unit_type_id),
     FOREIGN KEY (parent_geo_unit_id)
         REFERENCES geo_unit(geo_unit_id),
     UNIQUE (parent_geo_unit_id, name),
@@ -217,24 +181,17 @@ CREATE TABLE address (
     FOREIGN KEY (geo_unit_id) REFERENCES geo_unit(geo_unit_id)
 );
 
-CREATE TABLE address_role (
-    address_role_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE
-);
-
 CREATE TABLE party_address (
     party_address_id INTEGER PRIMARY KEY,
     party_id INTEGER NOT NULL,
     address_id INTEGER NOT NULL,
-    address_role_id INTEGER NOT NULL,
+    address_role TEXT NOT NULL,
     valid_from TEXT,
     valid_to TEXT,
     is_primary INTEGER NOT NULL DEFAULT 0
         CHECK (is_primary IN (0, 1)),
     FOREIGN KEY (party_id) REFERENCES party(party_id),
     FOREIGN KEY (address_id) REFERENCES address(address_id),
-    FOREIGN KEY (address_role_id)
-        REFERENCES address_role(address_role_id),
     CHECK (valid_to IS NULL OR valid_from IS NULL OR valid_to >= valid_from)
 );
 
@@ -255,25 +212,20 @@ CREATE TABLE news_article (
     title TEXT NOT NULL,
     published_at TEXT,
     language_code TEXT,
+    byline TEXT,
     summary TEXT,
     FOREIGN KEY (news_source_id)
         REFERENCES news_source(news_source_id)
 );
 
-CREATE TABLE news_author (
-    news_author_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL
-);
 
-CREATE TABLE news_article_author (
+CREATE TABLE article_tag (
     news_article_id INTEGER NOT NULL,
-    news_author_id INTEGER NOT NULL,
-    author_order INTEGER,
-    PRIMARY KEY (news_article_id, news_author_id),
+    tag_id INTEGER NOT NULL,
+    PRIMARY KEY (news_article_id, tag_id),
     FOREIGN KEY (news_article_id)
         REFERENCES news_article(news_article_id),
-    FOREIGN KEY (news_author_id)
-        REFERENCES news_author(news_author_id)
+    FOREIGN KEY (tag_id) REFERENCES tag(tag_id)
 );
 
 CREATE TABLE article_party (
@@ -304,16 +256,6 @@ CREATE TABLE article_sector (
         REFERENCES news_article(news_article_id),
     FOREIGN KEY (sector_id)
         REFERENCES sector(sector_id)
-);
-
-CREATE TABLE article_tag (
-    news_article_id INTEGER NOT NULL,
-    tag_id INTEGER NOT NULL,
-    PRIMARY KEY (news_article_id, tag_id),
-    FOREIGN KEY (news_article_id)
-        REFERENCES news_article(news_article_id),
-    FOREIGN KEY (tag_id)
-        REFERENCES tag(tag_id)
 );
 
 -- ============================================================
@@ -372,5 +314,5 @@ CREATE UNIQUE INDEX uq_geo_unit_root_name
     WHERE parent_geo_unit_id IS NULL;
 
 CREATE UNIQUE INDEX uq_party_primary_current_address
-    ON party_address(party_id, address_role_id)
+    ON party_address(party_id, address_role)
     WHERE is_primary = 1 AND valid_to IS NULL;

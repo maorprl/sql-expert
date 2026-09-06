@@ -6,12 +6,6 @@ BEGIN TRANSACTION;
 -- LOOKUPS
 -- ============================================================
 
-INSERT INTO company_status (company_status_id, name) VALUES
-(1, 'active'),
-(2, 'acquired'),
-(3, 'closed'),
-(4, 'stealth');
-
 INSERT INTO investor_category (investor_category_id, name) VALUES
 (1, 'angel'),
 (2, 'venture capital'),
@@ -21,35 +15,6 @@ INSERT INTO investor_category (investor_category_id, name) VALUES
 (6, 'family office'),
 (7, 'government'),
 (8, 'institutional');
-
-INSERT INTO currency (currency_code, currency_name) VALUES
-('USD', 'US Dollar'),
-('EUR', 'Euro'),
-('ILS', 'Israeli New Shekel');
-
-INSERT INTO funding_round_type (funding_round_type_id, name) VALUES
-(1, 'pre-seed'),
-(2, 'seed'),
-(3, 'series a'),
-(4, 'series b'),
-(5, 'series c'),
-(6, 'growth'),
-(7, 'debt'),
-(8, 'grant'),
-(9, 'convertible note');
-
-INSERT INTO geo_unit_type (geo_unit_type_id, name) VALUES
-(1, 'country'),
-(2, 'state'),
-(3, 'district'),
-(4, 'county'),
-(5, 'city');
-
-INSERT INTO address_role (address_role_id, name) VALUES
-(1, 'headquarters'),
-(2, 'office'),
-(3, 'registered'),
-(4, 'mailing');
 
 -- ============================================================
 -- PARTIES
@@ -114,19 +79,19 @@ INSERT INTO person (person_id, first_name, last_name, linkedin_url) VALUES
 -- COMPANIES
 -- ============================================================
 
-INSERT INTO company (company_id, company_status_id, description) VALUES
-(1, 1, 'Cloud security platform for enterprise workloads.'),
-(2, 1, 'Digital health monitoring and clinical workflow software.'),
-(3, 1, 'AI routing and optimization for commercial fleets.'),
-(4, 2, 'Payments infrastructure and fraud analytics.'),
-(5, 4, 'Quantum-inspired inventory optimization.'),
-(6, 1, 'AI infrastructure for real-time signal analysis.'),
-(7, 1, 'Robotics for precision agriculture and field inspection.'),
-(8, 1, 'Retail analytics and demand intelligence.'),
-(9, 1, 'Municipal infrastructure and public-service software.'),
-(10,1, 'Advanced materials for energy storage applications.'),
-(19,1, 'Industrial software and embedded systems.'),
-(20,1, 'Early-stage biotech diagnostics company.');
+INSERT INTO company (company_id, status, description) VALUES
+(1, 'active', 'Cloud security platform for enterprise workloads.'),
+(2, 'active', 'Digital health monitoring and clinical workflow software.'),
+(3, 'active', 'AI routing and optimization for commercial fleets.'),
+(4, 'acquired', 'Payments infrastructure and fraud analytics.'),
+(5, 'stealth', 'Quantum-inspired inventory optimization.'),
+(6, 'active', 'AI infrastructure for real-time signal analysis.'),
+(7, 'active', 'Robotics for precision agriculture and field inspection.'),
+(8, 'active', 'Retail analytics and demand intelligence.'),
+(9, 'active', 'Municipal infrastructure and public-service software.'),
+(10,'active', 'Advanced materials for energy storage applications.'),
+(19,'active', 'Industrial software and embedded systems.'),
+(20,'active', 'Early-stage biotech diagnostics company.');
 
 INSERT INTO company_founder
 (company_id, person_id, founder_title, start_date, end_date) VALUES
@@ -235,46 +200,45 @@ INSERT INTO investor_sector_focus (investor_id, sector_id) VALUES
 -- ============================================================
 
 INSERT INTO funding_round
-(funding_round_id, company_id, funding_round_type_id, announced_date,
+(funding_round_id, company_id, round_type, announced_date,
  reported_total_amount, currency_code, pre_money_valuation, post_money_valuation)
 VALUES
-(1001,1,2,'2019-06-10',  4000000,'USD', 12000000,16000000),
-(1002,1,3,'2021-05-18', 12000000,'USD', 36000000,48000000),
-(1003,1,4,'2023-09-04', 30000000,'USD', 90000000,120000000),
-(1004,1,5,'2025-11-12', 60000000,'USD', 240000000,300000000),
+(1001,1,'seed','2019-06-10',  4000000,'USD', 12000000,16000000),
+(1002,1,'series a','2021-05-18', 12000000,'USD', 36000000,48000000),
+(1003,1,'series b','2023-09-04', 30000000,'USD', 90000000,120000000),
+(1004,1,'series c','2025-11-12', 60000000,'USD', 240000000,300000000),
 
-(1101,2,2,'2020-02-14',  5000000,'USD', 15000000,20000000),
-(1102,2,3,'2022-07-20', 15000000,'USD', 45000000,60000000),
-(1103,2,4,'2025-03-03', 30000000,'USD', NULL,130000000),
+(1101,2,'seed','2020-02-14',  5000000,'USD', 15000000,20000000),
+(1102,2,'series a','2022-07-20', 15000000,'USD', 45000000,60000000),
+(1103,2,'series b','2025-03-03', 30000000,'USD', NULL,130000000),
 
-(1201,3,2,'2023-01-17',  3000000,'USD', 9000000,12000000),
-(1202,3,3,'2025-08-25', 12000000,'USD', 38000000,50000000),
+(1201,3,'seed','2023-01-17',  3000000,'USD', 9000000,12000000),
+(1202,3,'series a','2025-08-25', 12000000,'USD', 38000000,50000000),
 
-(1301,4,2,'2018-04-09',  4000000,'USD', 10000000,14000000),
-(1302,4,3,'2020-09-15', 12000000,'USD', 33000000,45000000),
-(1303,4,4,'2023-12-11', 30000000,'USD', 95000000,125000000),
+(1301,4,'seed','2018-04-09',  4000000,'USD', 10000000,14000000),
+(1302,4,'series a','2020-09-15', 12000000,'USD', 33000000,45000000),
+(1303,4,'series b','2023-12-11', 30000000,'USD', 95000000,125000000),
 
-(1401,5,2,'2025-06-05',  8000000,'USD', 22000000,30000000),
+(1401,5,'seed','2025-06-05',  8000000,'USD', 22000000,30000000),
 
-(1501,6,1,'2022-01-12',  1500000,'USD', NULL,NULL),
-(1502,6,2,'2023-04-27',  4000000,'USD', 11000000,15000000),
-(1503,6,3,'2026-02-19', 15000000,'USD', 50000000,65000000),
+(1501,6,'pre-seed','2022-01-12',  1500000,'USD', NULL,NULL),
+(1502,6,'seed','2023-04-27',  4000000,'USD', 11000000,15000000),
+(1503,6,'series a','2026-02-19', 15000000,'USD', 50000000,65000000),
 
-(1601,7,2,'2021-03-30',  5000000,'USD', 15000000,20000000),
-(1602,7,3,'2024-04-08', 15000000,'USD', 45000000,60000000),
+(1601,7,'seed','2021-03-30',  5000000,'USD', 15000000,20000000),
+(1602,7,'series a','2024-04-08', 15000000,'USD', 45000000,60000000),
 
-(1701,8,2,'2022-10-13',  4000000,'USD', 12000000,16000000),
+(1701,8,'seed','2022-10-13',  4000000,'USD', 12000000,16000000),
 
-(1801,9,8,'2022-11-07',   750000,'USD', NULL,NULL),
-(1802,9,2,'2024-06-24',  5000000,'USD', 18000000,23000000),
+(1801,9,'grant','2022-11-07',   750000,'USD', NULL,NULL),
+(1802,9,'seed','2024-06-24',  5000000,'USD', 18000000,23000000),
 
-(1901,10,1,'2020-03-02', 2000000,'USD', NULL,NULL),
-(1902,10,2,'2021-12-06', 8000000,'USD', 22000000,30000000),
-(1903,10,3,'2024-10-21',25000000,'USD', 75000000,100000000),
+(1901,10,'pre-seed','2020-03-02', 2000000,'USD', NULL,NULL),
+(1902,10,'seed','2021-12-06', 8000000,'USD', 22000000,30000000),
+(1903,10,'series a','2024-10-21',25000000,'USD', 75000000,100000000),
 
-(2001,19,7,'2019-08-01',10000000,'USD', NULL,NULL),
-(2002,19,6,'2022-05-16',30000000,'USD', NULL,NULL);
-
+(2001,19,'debt','2019-08-01',10000000,'USD', NULL,NULL),
+(2002,19,'growth','2022-05-16',30000000,'USD', NULL,NULL);
 -- ============================================================
 -- ROUND INVESTMENTS
 -- Amount may be NULL even when round total is known.
@@ -419,39 +383,29 @@ INSERT INTO party_tag (party_id, tag_id) VALUES
 (121,4);
 -- Company 20 intentionally has no tags.
 
-INSERT INTO funding_round_tag (funding_round_id, tag_id) VALUES
-(1003,14),(1004,14),(1004,12),
-(1103,14),(1103,12),
-(1202,14),
-(1303,14),(1303,11),
-(1503,14),(1503,13),
-(1602,14),
-(1903,14),(1903,9);
-
 -- ============================================================
 -- GEOGRAPHY
 -- ============================================================
 
-INSERT INTO geo_unit (geo_unit_id, geo_unit_type_id, name, parent_geo_unit_id, code) VALUES
-(1, 1, 'Israel',                 NULL, 'IL'),
-(2, 3, 'Tel Aviv District',      1,    NULL),
-(3, 5, 'Tel Aviv-Yafo',          2,    NULL),
-(4, 5, 'Herzliya',               2,    NULL),
-(5, 3, 'Central District',       1,    NULL),
-(6, 5, 'Petah Tikva',            5,    NULL),
-(7, 5, 'Rehovot',                5,    NULL),
-(8, 3, 'Haifa District',         1,    NULL),
-(9, 5, 'Haifa',                  8,    NULL),
-(10,3, 'Jerusalem District',     1,    NULL),
-(11,5, 'Jerusalem',              10,   NULL),
-(20,1, 'United States',          NULL, 'US'),
-(21,2, 'California',             20,   'CA'),
-(22,4, 'San Mateo County',       21,   NULL),
-(23,5, 'Redwood City',           22,   NULL),
-(24,5, 'San Francisco',          21,   NULL),
-(25,2, 'New York',               20,   'NY'),
-(26,5, 'New York City',          25,   NULL);
-
+INSERT INTO geo_unit (geo_unit_id, unit_type, name, parent_geo_unit_id, code) VALUES
+(1, 'country', 'Israel',                 NULL, 'IL'),
+(2, 'district', 'Tel Aviv District',      1,    NULL),
+(3, 'city', 'Tel Aviv-Yafo',          2,    NULL),
+(4, 'city', 'Herzliya',               2,    NULL),
+(5, 'district', 'Central District',       1,    NULL),
+(6, 'city', 'Petah Tikva',            5,    NULL),
+(7, 'city', 'Rehovot',                5,    NULL),
+(8, 'district', 'Haifa District',         1,    NULL),
+(9, 'city', 'Haifa',                  8,    NULL),
+(10,'district', 'Jerusalem District',     1,    NULL),
+(11,'city', 'Jerusalem',              10,   NULL),
+(20,'country', 'United States',          NULL, 'US'),
+(21,'state', 'California',             20,   'CA'),
+(22,'county', 'San Mateo County',       21,   NULL),
+(23,'city', 'Redwood City',           22,   NULL),
+(24,'city', 'San Francisco',          21,   NULL),
+(25,'state', 'New York',               20,   'NY'),
+(26,'city', 'New York City',          25,   NULL);
 INSERT INTO address
 (address_id, geo_unit_id, street_line_1, street_line_2, postal_code, latitude, longitude)
 VALUES
@@ -472,36 +426,35 @@ VALUES
 (15,3,'99 Yigal Alon St',NULL,NULL,32.0700,34.7940);
 
 INSERT INTO party_address
-(party_address_id, party_id, address_id, address_role_id, valid_from, valid_to, is_primary)
+(party_address_id, party_id, address_id, address_role, valid_from, valid_to, is_primary)
 VALUES
-(1,1,1,1,'2018-03-15','2022-06-30',0),
-(2,1,2,1,'2022-07-01',NULL,1),
-(3,1,8,2,'2024-01-01',NULL,0),
+(1,1,1,'headquarters','2018-03-15','2022-06-30',0),
+(2,1,2,'headquarters','2022-07-01',NULL,1),
+(3,1,8,'office','2024-01-01',NULL,0),
 
-(4,2,3,1,'2019-07-01',NULL,1),
-(5,2,9,2,'2025-01-01',NULL,0),
+(4,2,3,'headquarters','2019-07-01',NULL,1),
+(5,2,9,'office','2025-01-01',NULL,0),
 
-(6,3,6,1,'2021-02-10',NULL,1),
-(7,4,7,1,'2017-11-20','2024-02-01',0),
-(8,5,11,1,'2023-05-03',NULL,1),
-(9,6,12,1,'2021-09-12',NULL,1),
-(10,7,14,1,'2020-01-28',NULL,1),
-(11,8,15,1,'2020-08-14',NULL,1),
-(12,9,5,1,'2022-04-22',NULL,1),
-(13,10,4,1,'2019-10-06',NULL,1),
-(14,19,13,1,'2012-06-18',NULL,1),
+(6,3,6,'headquarters','2021-02-10',NULL,1),
+(7,4,7,'headquarters','2017-11-20','2024-02-01',0),
+(8,5,11,'headquarters','2023-05-03',NULL,1),
+(9,6,12,'headquarters','2021-09-12',NULL,1),
+(10,7,14,'headquarters','2020-01-28',NULL,1),
+(11,8,15,'headquarters','2020-08-14',NULL,1),
+(12,9,5,'headquarters','2022-04-22',NULL,1),
+(13,10,4,'headquarters','2019-10-06',NULL,1),
+(14,19,13,'headquarters','2012-06-18',NULL,1),
 
-(15,11,7,1,'2011-01-01',NULL,1),
-(16,11,9,2,'2018-01-01',NULL,0),
-(17,12,3,1,'2014-01-01',NULL,1),
-(18,13,10,1,'2009-01-01',NULL,1),
-(19,14,2,1,'2016-01-01',NULL,1),
-(20,15,1,1,'2013-01-01',NULL,1),
-(21,16,10,1,'2005-01-01',NULL,1),
-(22,17,11,1,'2010-01-01',NULL,1),
-(23,18,8,1,'2001-01-01',NULL,1),
-(24,121,3,3,'2020-01-01',NULL,1);
--- Company 20 intentionally has no address.
+(15,11,7,'headquarters','2011-01-01',NULL,1),
+(16,11,9,'office','2018-01-01',NULL,0),
+(17,12,3,'headquarters','2014-01-01',NULL,1),
+(18,13,10,'headquarters','2009-01-01',NULL,1),
+(19,14,2,'headquarters','2016-01-01',NULL,1),
+(20,15,1,'headquarters','2013-01-01',NULL,1),
+(21,16,10,'headquarters','2005-01-01',NULL,1),
+(22,17,11,'headquarters','2010-01-01',NULL,1),
+(23,18,8,'headquarters','2001-01-01',NULL,1),
+(24,121,3,'registered','2020-01-01',NULL,1);-- Company 20 intentionally has no address.
 
 -- ============================================================
 -- NEWS
@@ -513,56 +466,27 @@ INSERT INTO news_source (news_source_id, name, website_url) VALUES
 (3,'MarketWire','https://marketwire.example'),
 (4,'HealthTech Review','https://healthtechreview.example');
 
-INSERT INTO news_author (news_author_id, name) VALUES
-(1,'Maya Stern'),
-(2,'Ben Adler'),
-(3,'Ruth Klein'),
-(4,'Daniel Moss'),
-(5,'Leah Grant'),
-(6,'Noam Green');
-
 INSERT INTO news_article
-(news_article_id, news_source_id, url, title, published_at, language_code, summary)
+(news_article_id, news_source_id, url, title, published_at, language_code, byline, summary)
 VALUES
-(1,1,'https://techledger.example/a1','CloudFence raises Series B for cloud security expansion','2023-09-04 09:00:00','en','CloudFence announced a new Series B round.'),
-(2,2,'https://venturedaily.example/a2','CloudFence opens US office','2024-02-10 12:00:00','en','The company expanded its US presence.'),
-(3,3,'https://marketwire.example/a3','CloudFence closes $60M Series C','2025-11-12 08:30:00','en','The company reported a $60M Series C.'),
-(4,4,'https://healthtechreview.example/a4','MedOrbit expands remote monitoring platform','2023-03-11 10:00:00','en','MedOrbit released new clinical monitoring features.'),
-(5,2,'https://venturedaily.example/a5','MedOrbit raises Series B','2025-03-03 09:15:00','en','MedOrbit announced a Series B round.'),
-(6,1,'https://techledger.example/a6','GreenRoute applies AI to fleet emissions','2024-01-18 14:00:00','en','GreenRoute discussed fleet optimization and emissions.'),
-(7,2,'https://venturedaily.example/a7','GreenRoute raises Series A','2025-08-25 08:00:00','en','GreenRoute announced its Series A.'),
-(8,3,'https://marketwire.example/a8','FinEdge acquired after years of payments growth','2024-02-01 07:30:00','en','FinEdge was acquired.'),
-(9,1,'https://techledger.example/a9','DeepSignal launches real-time AI platform','2024-07-14 11:00:00','en','DeepSignal launched a new product.'),
-(10,2,'https://venturedaily.example/a10','DeepSignal raises Series A','2026-02-19 09:00:00','en','DeepSignal announced a Series A.'),
-(11,3,'https://marketwire.example/a11','TerraVision deploys agriculture robots','2024-05-02 13:00:00','en','TerraVision expanded commercial deployments.'),
-(12,2,'https://venturedaily.example/a12','CivicGrid wins municipal infrastructure contract','2025-01-16 10:30:00','en','CivicGrid signed a public-sector contract.'),
-(13,3,'https://marketwire.example/a13','NovaMaterials raises $25M Series A','2024-10-21 08:15:00','en','NovaMaterials raised a Series A.'),
-(14,1,'https://techledger.example/a14','QuantumShelf emerges from stealth','2025-06-05 07:45:00','en','QuantumShelf announced its seed round and product vision.'),
-(15,2,'https://venturedaily.example/a15','Orbian expands embedded AI portfolio','2023-02-08 09:20:00','en','Orbian expanded its industrial AI offering.'),
-(16,1,'https://techledger.example/a16','Cybersecurity funding remains resilient','2025-12-01 06:30:00','en','Sector overview of cybersecurity funding.'),
-(17,4,'https://healthtechreview.example/a17','Digital health investment rebounds','2025-04-12 08:40:00','en','Sector overview of digital-health investment.'),
-(18,3,'https://marketwire.example/a18','Climate technology rounds grow larger','2025-09-30 12:10:00','en','Climate-tech funding analysis.');
-
-INSERT INTO news_article_author (news_article_id, news_author_id, author_order) VALUES
-(1,1,1),(1,2,2),
-(2,2,1),
-(3,3,1),
-(4,4,1),
-(5,4,1),(5,5,2),
-(6,1,1),
-(7,2,1),
-(8,3,1),
-(9,6,1),
-(10,6,1),(10,2,2),
-(11,5,1),
-(12,3,1),
-(13,1,1),
-(14,2,1),
-(15,5,1),
-(16,1,1),(16,3,2),
-(17,4,1),
-(18,5,1);
-
+(1,1,'https://techledger.example/a1','CloudFence raises Series B for cloud security expansion','2023-09-04 09:00:00','en','Maya Stern, Ben Adler','CloudFence announced a new Series B round.'),
+(2,2,'https://venturedaily.example/a2','CloudFence opens US office','2024-02-10 12:00:00','en','Ben Adler','The company expanded its US presence.'),
+(3,3,'https://marketwire.example/a3','CloudFence closes $60M Series C','2025-11-12 08:30:00','en','Ruth Klein','The company reported a $60M Series C.'),
+(4,4,'https://healthtechreview.example/a4','MedOrbit expands remote monitoring platform','2023-03-11 10:00:00','en','Daniel Moss','MedOrbit released new clinical monitoring features.'),
+(5,2,'https://venturedaily.example/a5','MedOrbit raises Series B','2025-03-03 09:15:00','en','Daniel Moss, Leah Grant','MedOrbit announced a Series B round.'),
+(6,1,'https://techledger.example/a6','GreenRoute applies AI to fleet emissions','2024-01-18 14:00:00','en','Maya Stern','GreenRoute discussed fleet optimization and emissions.'),
+(7,2,'https://venturedaily.example/a7','GreenRoute raises Series A','2025-08-25 08:00:00','en','Ben Adler','GreenRoute announced its Series A.'),
+(8,3,'https://marketwire.example/a8','FinEdge acquired after years of payments growth','2024-02-01 07:30:00','en','Ruth Klein','FinEdge was acquired.'),
+(9,1,'https://techledger.example/a9','DeepSignal launches real-time AI platform','2024-07-14 11:00:00','en','Noam Green','DeepSignal launched a new product.'),
+(10,2,'https://venturedaily.example/a10','DeepSignal raises Series A','2026-02-19 09:00:00','en','Noam Green, Ben Adler','DeepSignal announced a Series A.'),
+(11,3,'https://marketwire.example/a11','TerraVision deploys agriculture robots','2024-05-02 13:00:00','en','Leah Grant','TerraVision expanded commercial deployments.'),
+(12,2,'https://venturedaily.example/a12','CivicGrid wins municipal infrastructure contract','2025-01-16 10:30:00','en','Ruth Klein','CivicGrid signed a public-sector contract.'),
+(13,3,'https://marketwire.example/a13','NovaMaterials raises $25M Series A','2024-10-21 08:15:00','en','Maya Stern','NovaMaterials raised a Series A.'),
+(14,1,'https://techledger.example/a14','QuantumShelf emerges from stealth','2025-06-05 07:45:00','en','Ben Adler','QuantumShelf announced its seed round and product vision.'),
+(15,2,'https://venturedaily.example/a15','Orbian expands embedded AI portfolio','2023-02-08 09:20:00','en','Leah Grant','Orbian expanded its industrial AI offering.'),
+(16,1,'https://techledger.example/a16','Cybersecurity funding remains resilient','2025-12-01 06:30:00','en','Maya Stern, Ruth Klein','Sector overview of cybersecurity funding.'),
+(17,4,'https://healthtechreview.example/a17','Digital health investment rebounds','2025-04-12 08:40:00','en','Daniel Moss','Sector overview of digital-health investment.'),
+(18,3,'https://marketwire.example/a18','Climate technology rounds grow larger','2025-09-30 12:10:00','en','Leah Grant','Climate-tech funding analysis.');
 INSERT INTO article_party (news_article_id, party_id) VALUES
 (1,1),(1,14),(1,11),
 (2,1),

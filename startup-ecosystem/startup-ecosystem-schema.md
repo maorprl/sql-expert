@@ -1,31 +1,30 @@
 # Startup Ecosystem — Normalized Relational Schema
 
-**Status:** Initial data-model candidate  
+**Status:** Simplified normalized model
 **Target database:** SQLite  
 **Domain:** startups, funding rounds, investors, sectors, tags, news, and addresses  
-**Design goal:** Keep the model as normalized and relationally explicit as practical while remaining usable for analytical SQL learning.
+**Design goal:** Keep the model relationally explicit and normalized where the relationships matter, while avoiding lookup-table over-normalization that adds cognitive noise without adding analytical value.
 
 ---
 
 ## 1. Design principles
 
-This schema intentionally favors:
+This schema favors:
 
 - explicit relations over JSON arrays;
 - explicit bridge tables for many-to-many relationships;
-- lookup tables for reusable controlled vocabularies;
-- normalized geographic entities;
 - subtype modeling where the domain genuinely has a shared supertype;
-- separate relationships when their business meaning differs;
-- preserving business meaning even when some values are unknown.
+- recursive relations for real hierarchies;
+- separate relations when their business meaning differs;
+- preserving business meaning even when values are unknown.
 
 It intentionally avoids:
 
 - generic `entity_type + entity_id` polymorphic foreign keys;
 - comma-separated tags, sectors, or investors;
-- storing a company with repeated investor/sector/address columns;
-- collapsing organizations and people into one wide table full of nullable columns;
-- treating the reported total of a funding round as necessarily equal to the sum of disclosed investor checks.
+- wide denormalized company records;
+- lookup tables for simple stable textual attributes such as company status, round type, currency code, geographic unit type, and address role;
+- treating reported funding-round totals as necessarily equal to the sum of disclosed investor checks.
 
 ---
 
@@ -46,13 +45,6 @@ Any party may additionally have the role:
 
 - `investor`
 
-This allows:
-
-- a VC fund manager or investment firm to be an organization + investor;
-- an angel to be a person + investor;
-- a startup to be an organization + company;
-- a corporate investor to be both company + investor if needed.
-
 ```text
 party
 ├── organization
@@ -63,7 +55,7 @@ party
 └── investor
 ```
 
-`investor` is therefore a **role subtype**, not a mutually exclusive entity kind.
+This supports organizational investors, angel investors, startup companies, and companies that also invest.
 
 ---
 
@@ -106,86 +98,48 @@ news_article >──< sector
 news_article >──< tag
    via article_tag
 
-funding_round >──< tag
-   via funding_round_tag
-
 geo_unit ──< geo_unit
-   recursive geographic hierarchy
-
 sector ──< sector
-   recursive sector taxonomy
 ```
 
 ---
 
-## 4. Identity and organization tables
+## 4. Relations and grains
 
 ### `party`
 
-Pure relational supertype used as the shared key for organizations, people, and investor roles.
-
-| Column | Meaning |
-|---|---|
-| `party_id` | Stable identifier |
+One row per ecosystem party identity.
 
 ### `organization`
 
-| Column | Meaning |
-|---|---|
-| `organization_id` | PK and FK to `party` |
-| `name` | Organization name |
-| `website_url` | Main website |
-| `founded_date` | Founding date when known |
+One row per organization.
+
+Columns include:
+
+- `organization_id`
+- `name`
+- `website_url`
+- `founded_date`
 
 ### `person`
 
-| Column | Meaning |
-|---|---|
-| `person_id` | PK and FK to `party` |
-| `first_name` | Given name |
-| `last_name` | Family name |
-| `linkedin_url` | Optional professional profile |
-
----
-
-## 5. Companies / startups
-
-### `company_status`
-
-Controlled vocabulary such as:
-
-- active
-- acquired
-- closed
-- stealth
+One row per person.
 
 ### `company`
 
-`company` is a subtype of `organization`.
+One row per company.
 
-| Column | Meaning |
-|---|---|
-| `company_id` | PK and FK to `organization` |
-| `company_status_id` | Current company status |
-| `description` | Short company description |
+Important columns:
 
-The company name, website, and founding date remain in `organization` rather than being repeated here.
+- `company_id`
+- `status`
+- `description`
 
----
-
-## 6. Founders
+`status` is stored directly as text rather than through a separate two-column lookup table.
 
 ### `company_founder`
 
-Many-to-many relationship between companies and people.
-
-| Column | Meaning |
-|---|---|
-| `company_id` | Company |
-| `person_id` | Founder |
-| `founder_title` | Optional title, e.g. CEO / CTO |
-| `start_date` | Optional start date |
-| `end_date` | Optional end date |
+One row per company-founder relationship.
 
 Primary key:
 
@@ -193,21 +147,13 @@ Primary key:
 (company_id, person_id)
 ```
 
-This avoids repeated `founder_1`, `founder_2`, etc. columns.
-
----
-
-## 7. Investors
-
 ### `investor`
 
-An investor is a role that can be attached to either a person or an organization through the shared `party_id`.
-
-| Column | Meaning |
-|---|---|
-| `investor_id` | PK and FK to `party` |
+One row per party that has the investor role.
 
 ### `investor_category`
+
+One row per meaningful investor category.
 
 Examples:
 
@@ -216,455 +162,231 @@ Examples:
 - corporate venture capital
 - private equity
 - accelerator
-- family office
-- government
-- institutional
 
 ### `investor_category_membership`
 
-Many-to-many relation because one investor can legitimately belong to more than one category.
+One row per investor-category relationship.
 
-| Column | Meaning |
-|---|---|
-| `investor_id` | Investor |
-| `investor_category_id` | Category |
-
----
-
-## 8. Sectors
+This remains a bridge because one investor can belong to multiple categories.
 
 ### `sector`
 
-Hierarchical taxonomy.
-
-| Column | Meaning |
-|---|---|
-| `sector_id` | Sector |
-| `name` | Sector name |
-| `parent_sector_id` | Optional parent sector |
-
-Example:
+One row per sector in a recursive hierarchy.
 
 ```text
-Enterprise Software
-└── Cybersecurity
-    ├── Cloud Security
-    └── Identity Security
+Technology
+└── Enterprise Software
+    └── Cybersecurity
+        └── Cloud Security
 ```
-
-The self-reference supports hierarchical sector analysis without repeating parent names.
 
 ### `company_sector`
 
-Many-to-many relationship between companies and sectors.
+One row per company-sector assignment.
 
-| Column | Meaning |
-|---|---|
-| `company_id` | Company |
-| `sector_id` | Sector |
-| `is_primary` | Whether this is marked as a primary sector |
-
-At most one sector may be marked as the current primary sector for a company.
+`is_primary` marks at most one primary sector per company.
 
 ### `investor_sector_focus`
 
-Investor investment-thesis relationship.
+One row per investor-sector focus relationship.
 
-| Column | Meaning |
-|---|---|
-| `investor_id` | Investor |
-| `sector_id` | Sector |
-
-This is kept separate from `company_sector` because:
-
-- a company **operates in** a sector;
-- an investor **focuses on investing in** a sector.
-
-Those are different business relationships.
-
----
-
-## 9. Funding rounds and investments
-
-### `currency`
-
-| Column | Meaning |
-|---|---|
-| `currency_code` | ISO-like code such as USD, EUR, ILS |
-| `currency_name` | Currency name |
-
-### `funding_round_type`
-
-Examples:
-
-- pre-seed
-- seed
-- series a
-- series b
-- series c
-- growth
-- debt
-- grant
-- convertible note
+This remains distinct from `company_sector` because “operates in” and “invests in” are different business relationships.
 
 ### `funding_round`
 
-One company can have many funding rounds.
+One row per funding round.
 
-| Column | Meaning |
-|---|---|
-| `funding_round_id` | Round |
-| `company_id` | Funded company |
-| `funding_round_type_id` | Round type |
-| `announced_date` | Public announcement date |
-| `reported_total_amount` | Reported round total, if known |
-| `currency_code` | Currency of reported total |
-| `pre_money_valuation` | Optional reported value |
-| `post_money_valuation` | Optional reported value |
+Important columns include:
 
-Important modeling rule:
+- `company_id`
+- `round_type`
+- `announced_date`
+- `reported_total_amount`
+- `currency_code`
+- valuations
 
-> `reported_total_amount` is not assumed to equal the sum of disclosed `round_investment.amount` values.
-
-Individual investor checks are often undisclosed even when a total round size is reported.
+`round_type` and `currency_code` are stored directly rather than through separate lookup tables.
 
 ### `round_investment`
 
-Bridge / fact relation connecting investors to funding rounds.
+One row per investor participation in a funding round.
 
-| Column | Meaning |
-|---|---|
-| `round_investment_id` | Investment participation |
-| `funding_round_id` | Round |
-| `investor_id` | Investor |
-| `amount` | Investor-specific disclosed amount, if known |
-| `currency_code` | Currency of the disclosed check |
-| `is_lead` | Lead-investor flag |
-
-The intended grain is **one row per investor per funding round**, enforced by a unique constraint on:
+The intended grain is:
 
 ```text
-(funding_round_id, investor_id)
+one investor × one funding round
 ```
 
-This relation creates the natural many-to-many structure:
-
-```text
-funding_round >──< investor
-```
-
----
-
-## 10. Tags
+A disclosed investor check may be `NULL` even when the round total is known.
 
 ### `tag`
 
-A reusable free-form or curated classification.
-
-| Column | Meaning |
-|---|---|
-| `tag_id` | Tag |
-| `name` | Unique tag label |
+One row per reusable tag.
 
 ### `party_tag`
 
-Tags attached to a real ecosystem party:
-
-- startup/company
-- investor organization
-- angel
-- other person/organization represented by `party`
+One row per party-tag relationship.
 
 ### `article_tag`
 
-Tags attached to news articles.
-
-### `funding_round_tag`
-
-Tags attached specifically to funding rounds.
-
-Separate bridges are used instead of a polymorphic:
-
-```text
-tag_assignment(entity_type, entity_id, tag_id)
-```
-
-because real foreign keys and relationship meaning are preferable.
-
----
-
-## 11. Geography and addresses
-
-### `geo_unit_type`
-
-Examples:
-
-- country
-- state
-- province
-- district
-- city
+One row per article-tag relationship.
 
 ### `geo_unit`
 
-Recursive geographic hierarchy.
+One row per geographic unit in a recursive hierarchy.
 
-| Column | Meaning |
-|---|---|
-| `geo_unit_id` | Geographic unit |
-| `geo_unit_type_id` | Type |
-| `name` | Place name |
-| `parent_geo_unit_id` | Parent geography |
-| `code` | Optional official code |
+Important columns:
 
-Example:
+- `unit_type`
+- `name`
+- `parent_geo_unit_id`
+- `code`
 
-```text
-Israel
-└── Tel Aviv District
-    └── Tel Aviv-Yafo
-```
-
-The recursive hierarchy avoids repeating country and region names in every address.
+`unit_type` is stored directly as text.
 
 ### `address`
 
-| Column | Meaning |
-|---|---|
-| `address_id` | Address |
-| `geo_unit_id` | Most specific known geographic unit |
-| `street_line_1` | Street and number |
-| `street_line_2` | Optional additional line |
-| `postal_code` | Postal code |
-| `latitude` | Optional latitude |
-| `longitude` | Optional longitude |
-
-An address can be partial: a record may contain a city-level `geo_unit_id` even if no street is known.
-
-### `address_role`
-
-Examples:
-
-- headquarters
-- office
-- registered
-- mailing
+One row per address.
 
 ### `party_address`
 
-Many-to-many temporal relationship between parties and addresses.
+One row per party-address relationship over time.
 
-| Column | Meaning |
-|---|---|
-| `party_address_id` | Relationship row |
-| `party_id` | Company / investor / person / organization |
-| `address_id` | Address |
-| `address_role_id` | Address role |
-| `valid_from` | Optional start date |
-| `valid_to` | Optional end date |
-| `is_primary` | Current primary flag |
+Important columns:
 
-This supports:
+- `party_id`
+- `address_id`
+- `address_role`
+- `valid_from`
+- `valid_to`
+- `is_primary`
 
-- companies with multiple offices;
-- investors with multiple offices;
-- historical headquarters;
-- an address shared by multiple related entities.
-
----
-
-## 12. News
+`address_role` is stored directly as text.
 
 ### `news_source`
 
-| Column | Meaning |
-|---|---|
-| `news_source_id` | Publisher |
-| `name` | Publisher name |
-| `website_url` | Publisher website |
+One row per news publisher.
 
 ### `news_article`
 
-| Column | Meaning |
-|---|---|
-| `news_article_id` | Article |
-| `news_source_id` | Publisher |
-| `url` | Unique article URL |
-| `title` | Headline |
-| `published_at` | Publication timestamp |
-| `language_code` | Optional language code |
-| `summary` | Optional internal summary |
+One row per article.
 
-### `news_author`
-
-| Column | Meaning |
-|---|---|
-| `news_author_id` | Author |
-| `name` | Author name |
-
-### `news_article_author`
-
-Many-to-many relation because:
-
-- an article may have multiple authors;
-- an author may write many articles.
+Includes a simple `byline` text field instead of separate author relations because article-author modeling is not needed for the current course capabilities.
 
 ### `article_party`
 
-Links news to companies, investors, people, or organizations through `party`.
+One row per article-party relationship.
 
 ### `article_funding_round`
 
-Links an article directly to a funding round.
+One row per article-funding-round relationship.
 
 ### `article_sector`
 
-Links an article to sectors.
-
-These are distinct from one another because “this article mentions company X” is not the same assertion as “this article is about funding round Y”.
+One row per article-sector relationship.
 
 ---
 
-## 13. Why this schema is useful for analytical SQL
+## 5. Why the two-column bridges remain
 
-The model naturally supports the relational problems the course needs.
-
-### Grain
-
-Examples of distinct grains:
-
-- `company`: one row per company
-- `funding_round`: one row per round
-- `round_investment`: one row per investor participation in a round
-- `company_sector`: one row per company-sector assignment
-- `article_party`: one row per article-party link
-
-### One-to-many
-
-Examples:
+Relations such as:
 
 ```text
-company 1 ── M funding_round
-news_source 1 ── M news_article
-geo_unit 1 ── M child geo_unit
+company_sector
+investor_sector_focus
+party_tag
+article_tag
+article_party
+article_funding_round
+article_sector
+investor_category_membership
 ```
 
-### Many-to-many
+are intentionally retained.
 
-Examples:
+They are not lookup-table overhead.
+
+Each row represents a real business relationship between two entities, and these relations provide natural material for:
+
+- many-to-many cardinality;
+- bridge-table grain;
+- join multiplicity;
+- fanout;
+- `EXISTS` / `NOT EXISTS`;
+- aggregation across relationships.
+
+---
+
+## 6. Advanced SQL readiness
+
+No special tables are required for advanced SQL.
+
+### CTEs
+
+Natural intermediate grains include:
 
 ```text
-company M ── N sector
-funding_round M ── N investor
-company M ── N person (founders)
-news_article M ── N party
-party M ── N tag
+round investments
+→ one row per funding round
+→ one row per company
+→ company-sector analytical result
 ```
 
-### Fanout opportunities
+### Recursive CTEs
+
+Two genuine recursive structures exist:
+
+```text
+sector.parent_sector_id
+geo_unit.parent_geo_unit_id
+```
+
+### Window functions
+
+Funding rounds provide natural ordered partitions for:
+
+- `ROW_NUMBER`
+- `RANK`
+- `LAG`
+- `LEAD`
+- running totals
+- partition-level averages
+
+The schema therefore supports advanced SQL without artificial exercise tables.
+
+---
+
+## 7. Fanout opportunities
 
 A company can simultaneously have:
 
-- multiple funding rounds;
-- multiple sectors;
-- multiple founders;
-- multiple addresses;
-- multiple news articles.
-
-Joining several branches without controlling grain creates realistic fanout.
+- several funding rounds;
+- several sectors;
+- several founders;
+- several addresses;
+- several news articles.
 
 For example:
 
 ```text
 company
-  ├── funding_round
-  └── company_sector
+├── funding_round
+├── company_sector
+├── company_founder
+└── article_party
 ```
 
-A company with 4 rounds and 3 sectors can produce 12 rows when both branches are joined.
-
-### Pre-aggregation
-
-The schema supports cases such as:
-
-1. aggregate investments to one row per funding round;
-2. aggregate rounds to one row per company;
-3. only then join to company-level attributes.
-
-### LEFT JOIN / missing relationships
-
-Natural missing relationships exist:
-
-- company with no funding round;
-- investor with no disclosed check amount;
-- company with no known street address;
-- article with no funding-round link;
-- sector without a parent sector.
-
-### EXISTS / NOT EXISTS
-
-Natural questions include:
-
-- companies that have at least one funding round;
-- investors that have invested in cybersecurity;
-- companies with no news coverage;
-- investors that have never led a round.
-
-### Self joins / hierarchy
-
-Natural recursive or self-referential structures:
-
-- `sector.parent_sector_id`
-- `geo_unit.parent_geo_unit_id`
-
-### Window functions
-
-Natural analytical tasks include:
-
-- rank funding rounds within each company;
-- cumulative funding by company over time;
-- rank investors by number of investments within sector;
-- compare each round with the previous round for the same company.
+Joining several independent branches can multiply rows while remaining syntactically valid.
 
 ---
 
-## 14. Main integrity rules
-
-The database should enforce where practical:
-
-- organization IDs must exist in `party`;
-- person IDs must exist in `party`;
-- company IDs must exist in `organization`;
-- investor IDs must exist in `party`;
-- all bridge endpoints must exist;
-- tag names are unique;
-- sector names are unique within the same parent;
-- article URLs are unique;
-- currency amounts cannot be negative;
-- latitude must be between -90 and 90;
-- longitude must be between -180 and 180;
-- `valid_to` cannot precede `valid_from`;
-- a sector cannot be its own direct parent;
-- a geographic unit cannot be its own direct parent.
-
-Some subtype rules require application logic or triggers, for example:
-
-> every `investor` should correspond to either a `person` or an `organization`.
-
-That requirement cannot be expressed with an ordinary SQLite foreign key alone.
-
----
-
-## 15. Tables
-
-Core tables:
+## 8. Relations
 
 ```text
 party
 organization
 person
 company
-company_status
 company_founder
 
 investor
@@ -675,51 +397,62 @@ sector
 company_sector
 investor_sector_focus
 
-currency
-funding_round_type
 funding_round
 round_investment
 
 tag
 party_tag
 article_tag
-funding_round_tag
 
-geo_unit_type
 geo_unit
 address
-address_role
 party_address
 
 news_source
 news_article
-news_author
-news_article_author
 article_party
 article_funding_round
 article_sector
 ```
 
-Total: **32 relations**
+Total: **24 relations**
 
 ---
 
-## 16. Deliberate omissions from v1
+## 9. Removed during simplification
 
-Not included yet:
+The following relations were intentionally removed:
 
-- acquisitions / exits;
-- employee-count history;
-- valuation history outside funding rounds;
-- funds managed by investment firms;
-- LP / GP structures;
-- patents;
-- products;
-- technology taxonomy separate from sectors;
-- data provenance / source evidence for every fact;
-- confidence scoring;
-- duplicate-resolution / entity-resolution tables.
+```text
+company_status
+currency
+funding_round_type
+geo_unit_type
+address_role
+funding_round_tag
+news_author
+news_article_author
+```
 
-These can be added later if the course or analytical requirements require them.
+Reasons:
 
-They should not be added merely to make the schema larger.
+- the first five were lookup-table over-normalization for simple stable text values;
+- `funding_round_tag` added little analytical capability beyond the other tag bridges;
+- separate article-author modeling added schema noise without serving the current knowledge map.
+
+Their removal reduces cognitive load without removing any required relational-algebra or advanced-SQL capability.
+
+---
+
+## 10. Boundary
+
+This schema does not define:
+
+- stages;
+- lesson order;
+- pedagogical scaffolding;
+- hints;
+- expected answers;
+- learner progress.
+
+It is neutral infrastructure for future course design.
