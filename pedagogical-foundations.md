@@ -114,3 +114,11 @@ The next pedagogical work should evaluate concrete candidate learner experiences
 - the current knowledge map;
 - the explicitly established foundations above.
 New pedagogical rules should be added only when they are actually established in the current reconstruction.
+
+## WORKING — First JOIN Teaching Encounter: Reusable Architecture
+
+The first JOIN teaching encounter is a calibrated sequence validated through the current Stage 1 business case, not a universal template for later stages. Its validated progression is: concrete business problem → output-row meaning → Grain → relational key connection → PK/FK → Cardinality → baseline when needed to reason about row-count preservation → prediction before execution → semantic relational action → JOIN terminology → INNER JOIN / ON syntax before independent SQL implementation → SQL implementation → verification against expected grain and relational behavior.
+
+A replacement business case for this encounter should retain the same relational shape: a base relation supplies the target output grain; each base row matches one referenced row through FK → PK; attributes are added from that referenced relation; and the JOIN preserves the base-row grain and row count. Grain, PK/FK, Cardinality, and JOIN remain first-exposure concepts here, so this scaffolding remains appropriate.
+
+Baseline measurement and prediction belong here only when they support reasoning about grain or row-count preservation; `COUNT(*)` is not required in every stage. The exact number of learner steps, exactly four Working Schema relations, answer choices, baseline value, and relation names are not pedagogical invariants. Later stages must not automatically repeat this full scaffolding: it should decrease or change as concepts are reinforced or transferred. The current Stage 1 business case is evidence of this teaching architecture, not reusable content itself.
