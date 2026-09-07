@@ -16,4 +16,4 @@ This first JOIN encounter develops the ability to preserve one article per outpu
 8. First learn the `INNER JOIN ... ON ...` pattern, its matching-row meaning, and the task-specific connection; only then write a result-checked query that returns each article's `title` with its publishing source's `name`.
 9. Verify that the final grain is one news article per row and that the result preserves the 18-row article baseline.
 
-Stage completion is a state, not a numbered step. Completed cards retain the question, answer, feedback, and any opened hints.
+Stage completion is a state, not a numbered step. Completed cards retain the original question, learner answer, feedback, completion state, and any opened hints for review.

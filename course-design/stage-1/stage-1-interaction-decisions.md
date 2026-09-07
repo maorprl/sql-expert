@@ -20,6 +20,12 @@ The PK/FK explanation states that `news_article.news_source_id` identifies the `
 
 After correct cardinality reasoning, show a local explanatory diagram of `news_source.news_source_id` (PK), `news_article.news_source_id` (FK), and the one-source-to-many-articles relationship. It reinforces the learner's answer without appearing beforehand. Concept moments use the learning accent and remain visually distinct from correctness feedback.
 
+## Learner-experience visual application
+
+Completed Stage 1 interactions retain the original question, learner answer, and completion state for review.
+
+Grain, PK/FK, Cardinality, and JOIN are the Concept Moments in this Stage. The local cardinality visual uses the course learning accent.
+
 ## Baseline, prediction, and semantic action
 
 The baseline is included because it supports reasoning about row-count and grain preservation in this encounter. It measures `news_article` and reports 18 rows. The learner interprets this as 18 news articles before predicting the JOIN result. The prepared measurement is not SQL syntax instruction and does not require the learner to write `COUNT(*)`.
@@ -30,7 +36,9 @@ The learner then chooses the semantic action of combining each article with its 
 
 ## SQL instruction, implementation, and verification
 
-SQL instruction is visually distinct from the workspace. It teaches `INNER JOIN ... ON`, matching-row meaning, and `news_article.news_source_id = news_source.news_source_id` before independent SQL implementation. There is no separate assessment of the `ON` condition; its understanding is evidenced by the learner's query result.
+Before learner-authored SQL, the `INNER JOIN ... ON` pattern, matching-row meaning, and `news_article.news_source_id = news_source.news_source_id` are instructional content. There is no separate assessment of the `ON` condition; its understanding is evidenced by the learner's query result.
+
+For this Stage, the editor, execution controls, and result grid are the SQL workspace used for the learner's implementation and verification.
 
 The implementation task requires a result containing each article's `title` and its publishing source's `name`. Completion evaluation must establish that the result has 18 rows, preserves one news article per row, and associates each article with its referenced source. The final learner interaction asks the learner to verify the result against the expected grain and baseline.
 
