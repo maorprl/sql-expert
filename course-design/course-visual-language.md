@@ -50,16 +50,6 @@ Avoid making every block look equally important.
 
 Visual aids are explanatory rather than decorative. They appear only when they clarify a relational idea, are local to the concept they support, reinforce reasoning after learner engagement, and do not give away answers prematurely.
 
-### Locked Stage 1 Requirement
-
-After the learner correctly reasons about cardinality in Step 4, Stage 1 must include a small visual aid that reinforces:
-
-- `company.company_id` as the primary key
-- `funding_round.company_id` as the foreign key
-- `company 1 → M funding_round`
-
-This visual aid is a pedagogical requirement. Its treatment follows this visual language. Do not use a Venn diagram.
-
 ## 8. Stage 1 as Calibration Specimen
 
 Stage 1 tests and refines this visual language. The language should be reusable, but is not yet a complete system for every future stage. Do not over-generalize from Stage 1 to future concepts that have not yet been designed.
