@@ -4,6 +4,8 @@ The Working Schema begins empty. The live schema viewer supplies all relations t
 
 All reasoning uses closed choices. Concepts appear after the learner's prerequisite answer: Grain, then PK/FK, then Cardinality, then JOIN. Cardinality uses PK/FK and the non-unique foreign key, not seed examples.
 
+The current step has the strongest visual hierarchy; completed steps stay compact and reviewable. Concept moments use a dedicated learning accent rather than the green reserved for correctness and completion. The cardinality concept includes a local relational diagram that emphasizes `funding_round.company_id` → `company.company_id` and `company 1 → M funding_round`; the unrelated `company.company_id` → `organization.organization_id` metadata remains visible but visually secondary in the Working Schema.
+
 Hints are unavailable until an incorrect attempt. SQL hints progress after attempts; a later **Show solution** reveals SQL without overwriting learner code. Viewing it does not prevent completion.
 
 The baseline uses the persistent editor in compact mode and a visible Run Query button. Running and interpreting 26 are internal phases of one Step 5 and produce one completed Step 5 card, with no duplicated step number. The SQL task expands that editor, teaches the INNER JOIN pattern, matching semantics, and `ON` before asking for SQL; it hides fields behind a non-hint control and validates result semantics rather than exact SQL text.
