@@ -28,6 +28,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     editorRevealed: false,
     outputRequirementsOpen: false,
     selectedRelations: [],
+    baselineExecuted: false,
   };
 
   const currentEl = document.getElementById('current-step');
@@ -184,8 +185,8 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
         prompt: 'What should one row in the requested result represent?',
         options: [['company', 'a company'], ['funding_round', 'a funding round'], ['investor', 'an investor'], ['sector', 'a sector']],
         correct: 'funding_round', evidence: 'output', next: 'connection',
-        feedback: 'Correct. The request asks for information about every funding round, so each output row should still represent one funding round.',
-        after: '<div class="concept-callout"><strong>This is the output grain: one funding round per row.</strong><span>Grain = what one row represents.</span></div>',
+        feedback: '<div class="concept-callout"><strong>NEW CONCEPT: GRAIN</strong><span>The output grain is one funding round per row.</span><span>Grain = what one row represents.</span></div>',
+        after: '',
         wrongFeedback: 'The request asks for every funding round, with company status added to it. Reconsider what the main row still represents.',
         hints: ['Look at the wording of the business request: what does it ask us to list all of?', 'The company status is extra information being added. The main thing being listed is still the funding round.'],
       });
@@ -193,17 +194,19 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
       choiceQuestion({
         prompt: 'Which column in <code>funding_round</code> identifies the related company?',
         options: [['funding_round_id', '<code>funding_round_id</code>'], ['company_id', '<code>company_id</code>'], ['round_type', '<code>round_type</code>'], ['announced_date', '<code>announced_date</code>']],
-        correct: 'company_id', evidence: 'connection', next: 'cardinality', feedback: '<div class="concept-callout"><strong>NEW CONCEPT: PRIMARY KEY / FOREIGN KEY</strong><span><code>company.company_id</code> is the primary key: it uniquely identifies a company row.</span><span><code>funding_round.company_id</code> is a foreign key that references it. The related company row contains the <code>status</code> we need.</span></div>',
+        correct: 'company_id', evidence: 'connection', next: 'cardinality', feedback: '<div class="concept-callout"><strong>NEW CONCEPT: PRIMARY KEY / FOREIGN KEY</strong><span><code>company.company_id</code> is the primary key: it uniquely identifies a company row.</span><span><code>funding_round.company_id</code> is a foreign key that references it.</span><span>Its value tells us which company row this funding round belongs to.</span><span>That company row contains the <code>status</code> we need.</span></div>',
         wrongFeedback: 'Look for the column in the funding-round row that identifies a company.',
         hints: ['Look for a column that appears in both relations.', 'Compare <code>funding_round.company_id</code> with <code>company.company_id</code>.'],
       });
     } else if (state.current === 'cardinality') {
       choiceQuestion({ prompt: 'Which statement correctly describes the relationship between <code>company</code> and <code>funding_round</code>?', options: [['correct', 'One company can have many funding rounds, and each funding round belongs to one company.'], ['one', 'One company can have only one funding round.'], ['many', 'One funding round can belong to many companies.'], ['none', 'Companies and funding rounds are unrelated.']], correct: 'correct', evidence: 'cardinality', next: 'baselineRun', feedback: 'Correct.', after: '<div class="concept-callout"><strong>NEW CONCEPT: CARDINALITY</strong><span>One company can have many funding rounds, while each funding round belongs to one company.</span><span><code>company.company_id</code> (PK) ← <code>funding_round.company_id</code> (FK)</span><span><strong>company 1 → M funding_round</strong></span></div>', wrongFeedback: 'Use the PK/FK relationship and the fact that <code>funding_round.company_id</code> is not unique.', hints: ['Inspect the PK on <code>company.company_id</code> and the FK from <code>funding_round.company_id</code>.', '<code>funding_round.company_id</code> is not unique, so multiple funding-round rows can reference one company.'] });
     } else if (state.current === 'baselineRun') {
-      currentEl.innerHTML = stepShell('Let’s establish a baseline.', `<p class="step-copy">Before combining the two relations, first measure how many rows are currently in <code>funding_round</code>.</p><p class="step-copy">The query below is already prepared for you. Run it and inspect the result.</p>${feedbackMarkup()}${hintMarkup(['We need a baseline for the number of rows in <code>funding_round</code>.', 'Use <code>COUNT(*)</code> on <code>funding_round</code>.'])}`);
-      bindHints();
-    } else if (state.current === 'baselineMeaning') {
-      choiceQuestion({ intro: '<div class="verification-callout"><strong>Baseline result: 26 rows</strong></div>', prompt: 'What does the number 26 represent here?', options: [['companies', '26 companies'], ['rounds', '26 funding rounds'], ['investors', '26 investors'], ['sectors', '26 sectors']], correct: 'rounds', evidence: 'baselineMeaning', next: 'prediction', feedback: '<code>COUNT(*)</code> counts rows. Because <code>funding_round</code> has one funding round per row, 26 rows means 26 funding rounds.', wrongFeedback: '<code>COUNT(*)</code> counts rows. What does one row in <code>funding_round</code> represent?', hints: ['<code>COUNT(*)</code> counts rows. What does one row in <code>funding_round</code> represent?', "The relation's grain is one funding round per row."] });
+      if (state.baselineExecuted) {
+        choiceQuestion({ intro: '<div class="verification-callout"><strong>Baseline result: 26 rows</strong></div>', prompt: 'What does the number 26 represent here?', options: [['companies', '26 companies'], ['rounds', '26 funding rounds'], ['investors', '26 investors'], ['sectors', '26 sectors']], correct: 'rounds', evidence: 'baseline', next: 'prediction', feedback: '<code>COUNT(*)</code> counts rows. Because <code>funding_round</code> has one funding round per row, 26 rows means 26 funding rounds.', wrongFeedback: '<code>COUNT(*)</code> counts rows. What does one row in <code>funding_round</code> represent?', hints: ['<code>COUNT(*)</code> counts rows. What does one row in <code>funding_round</code> represent?', "The relation's grain is one funding round per row."] });
+      } else {
+        currentEl.innerHTML = stepShell('Let’s establish a baseline.', `<p class="step-copy">Before combining the two relations, first measure how many rows are currently in <code>funding_round</code>.</p><p class="step-copy">The query below is already prepared for you. Run it and inspect the result.</p>${feedbackMarkup()}${hintMarkup(['We need a baseline for the number of rows in <code>funding_round</code>.', 'Use <code>COUNT(*)</code> on <code>funding_round</code>.'])}`);
+        bindHints();
+      }
     } else if (state.current === 'prediction') {
       choiceQuestion({ prompt: 'What do you expect to happen when we add <code>company.status</code> to every funding round?', options: [['exact', 'The result should have 26 rows, because each funding round matches one company.'], ['more', 'The result should have more than 26 rows, because each company may have many funding rounds.'], ['fewer', 'The result should have fewer than 26 rows, because several funding rounds may belong to the same company.'], ['unknown', 'We cannot predict the row count from the relationship.']], correct: 'exact', evidence: 'prediction', next: 'operation', feedback: 'We start with 26 <code>funding_round</code> rows — one funding round per row. For each round, <code>company_id</code> points to one company row because <code>company.company_id</code> uniquely identifies a company. Adding <code>status</code> adds information to that existing funding-round row without creating a copy: 26 funding rounds × 1 matching company each = 26 result rows. One company may have many funding rounds, but those are already separate rows in the 26-row baseline. The result keeps one funding round per row.', wrongFeedback: 'Start from one funding-round row. How many company rows should it match?', hints: ['Start from one funding-round row. How many company rows should it match?', "If each funding round matches one company, adding one company's <code>status</code> should add a value to the row rather than multiply it."] });
     } else if (state.current === 'operation') {
@@ -220,7 +223,7 @@ FROM relation_a
     } else if (state.current === 'finalGrain') {
       choiceQuestion({ prompt: 'What is the grain of the result?', intro: '<div class="verification-callout"><strong>You predicted 26 rows before writing the join. Did the result match your prediction?</strong><span>Yes. The result contains 26 rows.</span></div>', options: [['company', 'one company per row'], ['funding_round', 'one funding round per row'], ['investor', 'one investor per row'], ['sector', 'one sector per row']], correct: 'funding_round', evidence: 'finalGrain', next: 'complete', feedback: 'The join added company information without changing what one row represents. The result is still at funding-round grain.', wrongFeedback: 'Reconsider what each result row represents.' });
     } else if (state.current === 'complete') {
-      const required = ['relations', 'output', 'connection', 'cardinality', 'baselineRun', 'baselineMeaning', 'prediction', 'operation', 'sql', 'finalGrain'];
+      const required = ['relations', 'output', 'connection', 'cardinality', 'baseline', 'prediction', 'operation', 'sql', 'finalGrain'];
       const complete = required.every((item) => state.evidence.has(item));
       currentEl.innerHTML = stepShell('Stage 1 complete', `<div class="completion-state"><div class="completion-icon">✓</div><p>${complete ? 'You reasoned from row meaning and relationships, selected JOIN, implemented it in SQL, and verified that the result remained at funding-round grain.' : 'Required evidence is incomplete.'}</p></div>`);
     }
@@ -252,7 +255,7 @@ FROM relation_a
     if (state.current === 'baselineRun') {
       const result = resultSets.at(-1);
       const valid = resultSets.length === 1 && result?.values?.length === 1 && result.values[0].length === 1 && result.values[0][0] === 26;
-      if (valid) record({ evidence: 'baselineRun', prompt: 'Run the prepared baseline query.', answer: '26 rows returned', next: 'baselineMeaning' });
+      if (valid) { state.baselineExecuted = true; state.localFeedback = ''; render(); }
       else wrong('The baseline should count the rows in <code>funding_round</code> and return 26. Run the prepared statement with the cursor inside it.');
     } else if (state.current === 'sql') {
       if (validateStageSql(resultSets)) record({ evidence: 'sql', prompt: 'Return every funding round with its company status.', answer: 'Valid 26-row result', next: 'finalGrain', feedback: 'Your result matches the prediction: 26 rows, one for every funding round, with the related company status.' });
