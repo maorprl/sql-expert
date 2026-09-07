@@ -22,12 +22,7 @@ A WORKING decision may still be revised or rejected.
 A question that has not yet been resolved.
 An OPEN question must not be silently resolved inside implementation work or treated as if a decision already exists.
 The learner should understand what the data represents before SQL syntax is allowed to substitute for that understanding.
-This does not determine:
-- the first stage;
-- the first exercise;
-- the first named concept;
-- the exact order of grain, keys, cardinality, joins, or aggregation;
-- when SQL first appears.
+This does not determine a universal sequence beyond the locally established current Stage 1, including the exact order of grain, keys, cardinality, joins, or aggregation in later encounters, or the timing of SQL outside the currently designed encounter.
 This is currently a working pedagogical direction, not a locked course sequence.
 course-knowledge-map.md defines the knowledge and capability space of the course.
 It does not automatically define teaching order.
@@ -92,18 +87,13 @@ A safer current working method is:
 5. refine or reject it;
 6. only then consider the next move.
 A local sequence should not be treated as globally fixed merely because it was designed first.
-The following have not yet been decided:
-- the exact first learner encounter;
-- whether the course begins with a business problem, direct inspection of relations, or another concrete situation;
-- when the term grain is introduced;
-- when keys are introduced;
-- when cardinality is introduced;
-- when JOIN is introduced;
-- when SQL first appears;
+For the current course design, Stage 1 is the first learner encounter, using the `news_article → news_source` business case. Its learner-route and interaction-decisions documents establish the first introduction of Grain, Primary Key / Foreign Key, Cardinality, and JOIN, including their exact Stage 1 timing.
+Those documents also establish locally distinct placements for prepared SQL used as a measurement tool, explicit SQL syntax instruction, and independent learner-authored SQL. They do not define a broader course-level rule for the timing of SQL or new SQL constructs outside the currently designed encounter.
+The following remain OPEN at broader course scope:
 - how much of the schema is exposed initially;
-- the stage structure;
+- the broader course stage structure beyond the concrete current Stage 1;
 - the overall progression.
-These questions must remain open until they are explicitly resolved.
+These broader questions must remain open until they are explicitly resolved.
 Before treating a pedagogical claim as part of the current course design, verify that it was established in the current reconstruction.
 If it comes only from an older course version, older chat, older checkpoint, previous pedagogy file, or remembered decision, it is not current source of truth.
 When uncertain, keep the issue OPEN rather than importing an old answer.
@@ -125,6 +115,6 @@ This principle is not JOIN-specific. The business question and the relational re
 
 The first JOIN teaching encounter is a calibrated sequence validated through the current Stage 1 business case, not a universal template for later stages. Its validated progression is: concrete business problem → output-row meaning → Grain → relational key connection → PK/FK → Cardinality → baseline when needed to reason about row-count preservation → prediction before execution → semantic relational action → JOIN terminology → INNER JOIN / ON syntax before independent SQL implementation → SQL implementation → verification against expected grain and relational behavior.
 
-A replacement business case for this encounter should retain the same relational shape: a base relation supplies the target output grain; each base row matches one referenced row through FK → PK; attributes are added from that referenced relation; and the JOIN preserves the base-row grain and row count. Grain, PK/FK, Cardinality, and JOIN remain first-exposure concepts here, so this scaffolding remains appropriate.
+The business case for this first JOIN teaching encounter should retain the same relational shape: a base relation supplies the target output grain; each base row matches one referenced row through FK → PK; attributes are added from that referenced relation; and the JOIN preserves the base-row grain and row count. Grain, PK/FK, Cardinality, and JOIN remain first-exposure concepts here, so this scaffolding remains appropriate.
 
 Baseline measurement and prediction belong here only when they support reasoning about grain or row-count preservation; `COUNT(*)` is not required in every stage. The exact number of learner steps, exactly four Working Schema relations, answer choices, baseline value, and relation names are not pedagogical invariants. Later stages must not automatically repeat this full scaffolding: it should decrease or change as concepts are reinforced or transferred. The current Stage 1 business case is evidence of this teaching architecture, not reusable content itself.
