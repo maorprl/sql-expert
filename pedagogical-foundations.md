@@ -115,6 +115,12 @@ The next pedagogical work should evaluate concrete candidate learner experiences
 - the explicitly established foundations above.
 New pedagogical rules should be added only when they are actually established in the current reconstruction.
 
+## WORKING — Relation Identification from the Business Question
+
+The learner must be able to connect the business question, the information required to answer it, and the relations that provide that information. When identifying relevant relations is part of the intended relational reasoning, the learner should determine them from the available schema rather than receive the required relation set pre-resolved.
+
+This principle is not JOIN-specific. The business question and the relational reasoning needed to answer it determine how many relations are relevant. Relation identification may be its own learner interaction or be embedded in another interaction, depending on the reasoning capability and evidence required by the stage. The requirement is to preserve relational interpretation when that interpretation is itself part of the intended learner capability; this principle does not prescribe a UI mechanism.
+
 ## WORKING — First JOIN Teaching Encounter: Reusable Architecture
 
 The first JOIN teaching encounter is a calibrated sequence validated through the current Stage 1 business case, not a universal template for later stages. Its validated progression is: concrete business problem → output-row meaning → Grain → relational key connection → PK/FK → Cardinality → baseline when needed to reason about row-count preservation → prediction before execution → semantic relational action → JOIN terminology → INNER JOIN / ON syntax before independent SQL implementation → SQL implementation → verification against expected grain and relational behavior.

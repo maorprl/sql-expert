@@ -59,3 +59,7 @@ Stage 1 tests and refines this visual language. The language should be reusable,
 Visual changes must not alter learner flow, question wording, answer options, concept wording, SQL reasoning, hint logic, solution logic, or stage completion logic.
 
 Visual design supports the pedagogy. It does not redefine it.
+
+## 10. Working Schema Capacity
+
+The Working Schema must allow the learner to keep up to four selected relations available concurrently for inspection and reasoning. Four is a workspace capacity ceiling, not a pedagogical target or expected task size. The number of relations required by a task is determined by that task; Working Schema capacity is independent of that number and of the relational operation being learned or used.
