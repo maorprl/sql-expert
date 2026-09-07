@@ -8,7 +8,7 @@ This document defines the initial visual language for the course, using Stage 1 
 
 It is not a full design system.
 
-The goal is to make the course feel like a learning environment rather than an internal tool or admin interface, while preserving the existing pedagogy and learner flow.
+The goal is to make the course feel inviting, focused, and like a guided learning environment rather than an internal tool, admin interface, or developer console, while preserving the existing pedagogy and learner flow.
 
 ---
 
@@ -32,9 +32,13 @@ New concepts such as Grain, Primary Key / Foreign Key, Cardinality, and JOIN sho
 
 Green primarily represents correct answers, successful completion, and positive validation. A separate accent color represents new concepts, instructional emphasis, learning transitions, and visual explanations. Concepts should not rely on green as their main identity.
 
+The overall palette should contribute to an inviting learning experience, not merely encode states. It should feel calm and approachable while maintaining readable contrast and clear semantic color roles.
+
 ## 5. SQL Teaching vs SQL Workspace
 
 SQL teaching—syntax patterns, short explanations, and worked structural examples—should feel like instructional content. The SQL workspace—editor, execution controls, and results—should feel like tools used by the learner. The workspace supports the lesson rather than dominating it.
+
+Interaction structure and visual tone are separate concerns: changing how the experience feels must not silently change its learning sequence or behavior.
 
 ## 6. Typography, Spacing, and Surfaces
 
