@@ -2,12 +2,9 @@ const BASELINE_SQL = `SELECT COUNT(*)
 FROM funding_round;`;
 
 const STEP_META = {
-  intro: [1, 'Read the business request'],
-  relations: [2, 'Choose relevant relations'],
-  output: [3, 'Output meaning'], connection: [4, 'Follow the funding-round tuple'], source: [4, 'Information source'],
-  roundCompany: [5, 'Relationship: round to company'], companyRounds: [5, 'Relationship: company to rounds'],
-  baselineRun: [6, 'Baseline row count'], baselineMeaning: [6, 'Interpret the baseline'], prediction: [7, 'Predict the joined result'],
-  operation: [8, 'Choose the operation'], sql: [9, 'Implement in SQL'], finalGrain: [10, 'Verify the result'], complete: [10, 'Stage complete'],
+  relations: [1, 'Choose relevant relations'], output: [2, 'Output meaning'], connection: [3, 'Connecting key'],
+  cardinality: [4, 'Cardinality'], baselineRun: [5, 'Baseline row count'], baselineMeaning: [5, 'Interpret the baseline'],
+  prediction: [6, 'Predict the result'], operation: [7, 'Choose the relational action'], sql: [8, 'INNER JOIN and SQL'], finalGrain: [9, 'Verify the result'], complete: [null, 'Stage complete'],
 };
 
 const REQUIRED_RESULT_COLUMNS = [
@@ -21,7 +18,7 @@ const REQUIRED_RESULT_COLUMNS = [
 
 export function createStage1({ editor, getDatabase, getSchema, onSelectionChange }) {
   const state = {
-    current: 'intro',
+    current: 'relations',
     completed: [],
     evidence: new Set(),
     attempts: {},
@@ -66,7 +63,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   function renderCompleted() {
     completedEl.innerHTML = state.completed.map((item, index) => `
       <details class="completed-step">
-        <summary><span class="complete-mark">✓</span> Step ${item.step}: ${escapeHtml(item.label)} <span class="completed-answer">${escapeHtml(item.answer)}</span></summary>
+        <summary><span class="complete-mark">✓</span> Step ${item.step}: ${escapeHtml(item.label)}</summary>
         <div class="completed-body"><p><strong>${escapeHtml(item.prompt.replace(/<[^>]+>/g, ''))}</strong></p><p><strong>Your answer:</strong> ${escapeHtml(item.answer)}</p>${item.options ? `<fieldset class="choices review-choices" disabled>${item.options.map(([value, label]) => `<label class="${value === item.value ? 'selected-choice' : ''}"><input type="radio" ${value === item.value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>` : ''}${item.feedback ? `<div class="review-feedback">${item.feedback}</div>` : ''}${item.hints?.map((hint, hintIndex) => `<div class="hint-text ${hintIndex ? 'stronger' : ''}"><strong>Hint ${hintIndex + 1}</strong><p>${hint}</p></div>`).join('') || ''}</div>
       </details>
     `).join('');
@@ -119,8 +116,8 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     return `
       <div class="hints">
         <div class="hint-actions">
-          <button type="button" data-hint="1" class="hint-button ${attempts >= 1 && opened < 1 ? 'prominent' : ''}">${opened >= 1 ? 'Hint 1 shown' : 'Hint 1'}</button>
-          ${secondAvailable ? `<button type="button" data-hint="2" class="hint-button ${attempts >= 2 && opened < 2 ? 'prominent' : ''}">${opened >= 2 ? 'Hint 2 shown' : 'Hint 2'}</button>` : ''}
+          ${attempts >= 1 ? `<button type="button" data-hint="1" class="hint-button ${opened < 1 ? 'prominent' : ''}">Hint 1</button>` : ''}
+          ${secondAvailable ? `<button type="button" data-hint="2" class="hint-button ${opened < 2 ? 'prominent' : ''}">Hint 2</button>` : ''}
         </div>
         ${opened >= 1 ? `<div class="hint-text"><strong>Hint 1</strong><p>${hints[0]}</p></div>` : ''}
         ${opened >= 2 ? `<div class="hint-text stronger"><strong>Hint 2</strong><p>${hints[1]}</p></div>` : ''}
@@ -158,7 +155,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
 
   function stepShell(prompt, body, intro = '') {
     const [step, label] = STEP_META[state.current];
-    return `<div class="step-kicker">Step ${step} of 10 · ${label}</div>${intro}<h2 class="prompt">${prompt}</h2>${body}`;
+    return step ? `<div class="step-kicker">Step ${step} of 9 · ${label}</div>${intro}<h2 class="prompt">${prompt}</h2>${body}` : `<h2 class="prompt">${prompt}</h2>${body}`;
   }
 
   function bindHints() {
@@ -177,12 +174,9 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     if (['baselineRun', 'baselineMeaning', 'prediction', 'operation', 'sql', 'finalGrain', 'complete'].includes(state.current)) revealEditorWithBaseline();
     labEl.classList.toggle('baseline-mode', ['baselineRun', 'baselineMeaning', 'prediction', 'operation'].includes(state.current));
 
-    if (state.current === 'intro') {
-      currentEl.innerHTML = stepShell('Inspect the business request and the two relevant relations.', '<button id="continue-stage" class="primary">Continue</button>', '<p class="step-copy">No SQL task yet. First, compare what the rows in each relation represent.</p>');
-      document.getElementById('continue-stage').addEventListener('click', () => record({ prompt: 'Read the business request.', answer: 'Reviewed', next: 'relations' }));
-    } else if (state.current === 'relations') {
+    if (state.current === 'relations') {
       const ready = state.selectedRelations.includes('funding_round') && state.selectedRelations.includes('company');
-      currentEl.innerHTML = stepShell('Choose the relations relevant to the business request.', `<p class="step-copy">Use the <strong>+</strong> actions in the live schema viewer to build your focused working schema.</p><button id="continue-relations" class="primary" ${ready ? '' : 'disabled'}>Continue</button>${feedbackMarkup()}${hintMarkup(['Read the nouns in the request and look for relations that represent them.', 'The request needs information about funding rounds and the companies that raised them.'])}`);
+      currentEl.innerHTML = stepShell('Choose the relations relevant to the business request.', `<p class="step-copy">Use the <strong>+</strong> actions in the live schema viewer to build your focused working schema.</p><button id="continue-relations" class="primary" ${ready ? '' : 'disabled'}>Check selection</button>${feedbackMarkup()}${hintMarkup(['Read the nouns in the request and look for relations that represent them.', 'The request needs information about funding rounds and the companies that raised them.'])}`);
       bindHints();
       document.getElementById('continue-relations').addEventListener('click', () => record({ evidence: 'relations', prompt: 'Choose the relations relevant to the business request.', answer: state.selectedRelations.join(', '), feedback: 'The working schema now contains the relations needed for this task.', next: 'output' }));
     } else if (state.current === 'output') {
@@ -199,16 +193,12 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
       choiceQuestion({
         prompt: 'Which column in <code>funding_round</code> identifies the related company?',
         options: [['funding_round_id', '<code>funding_round_id</code>'], ['company_id', '<code>company_id</code>'], ['round_type', '<code>round_type</code>'], ['announced_date', '<code>announced_date</code>']],
-        correct: 'company_id', evidence: 'connection', next: 'source', feedback: '<code>funding_round.company_id</code> identifies the related company row.',
+        correct: 'company_id', evidence: 'connection', next: 'cardinality', feedback: '<div class="concept-callout"><strong>NEW CONCEPT: PRIMARY KEY / FOREIGN KEY</strong><span><code>company.company_id</code> is the primary key: it uniquely identifies a company row.</span><span><code>funding_round.company_id</code> is a foreign key that references it. The related company row contains the <code>status</code> we need.</span></div>',
         wrongFeedback: 'Look for the column in the funding-round row that identifies a company.',
         hints: ['Look for a column that appears in both relations.', 'Compare <code>funding_round.company_id</code> with <code>company.company_id</code>.'],
       });
-    } else if (state.current === 'source') {
-      choiceQuestion({ prompt: 'Which relation stores the current status of that company?', options: [['funding_round', '<code>funding_round</code>'], ['company', '<code>company</code>']], correct: 'company', evidence: 'source', next: 'roundCompany', feedback: 'Correct. Follow the tuple: <code>funding_round.company_id</code> leads to the related <code>company</code> row, where <code>status</code> is stored.', wrongFeedback: 'Follow <code>company_id</code> to the related company row and inspect its columns.', hints: ['Inspect the columns of the related <code>company</code> row.', '<code>company.status</code> stores the company\'s current state.'] });
-    } else if (state.current === 'roundCompany') {
-      choiceQuestion({ prompt: 'Each funding round belongs to how many companies?', options: [['zero', 'None'], ['one', 'One'], ['many', 'Many']], correct: 'one', evidence: 'roundCompany', next: 'companyRounds', feedback: 'Correct. Each funding round belongs to one company.', wrongFeedback: 'Follow one funding round through its <code>company_id</code>.', hints: ['Ask what <code>company_id</code> identifies in the <code>company</code> relation.', 'A funding round belongs to a specific company.'] });
-    } else if (state.current === 'companyRounds') {
-      choiceQuestion({ prompt: 'Can one company be related to more than one funding round?', options: [['yes', 'yes'], ['no', 'no']], correct: 'yes', evidence: 'companyRounds', next: 'baselineRun', feedback: 'Correct. One company can be associated with multiple funding rounds.', after: '<div class="concept-callout"><strong>This is a one-to-many relationship: one company can have many funding rounds, while each funding round belongs to one company.</strong><span>Cardinality: company 1 → M funding_round</span><span>Cardinality describes how many rows on one side of a relationship can be associated with rows on the other side.</span></div>', wrongFeedback: 'Use the schema relationship: <code>funding_round.company_id</code> is an FK and it is not unique, so multiple funding-round rows may reference one company.', hints: ['Inspect the PK on <code>company.company_id</code> and the FK from <code>funding_round.company_id</code>.', '<code>funding_round.company_id</code> is not unique, so multiple funding-round rows can reference the same company.'] });
+    } else if (state.current === 'cardinality') {
+      choiceQuestion({ prompt: 'Which statement correctly describes the relationship between <code>company</code> and <code>funding_round</code>?', options: [['correct', 'One company can have many funding rounds, and each funding round belongs to one company.'], ['one', 'One company can have only one funding round.'], ['many', 'One funding round can belong to many companies.'], ['none', 'Companies and funding rounds are unrelated.']], correct: 'correct', evidence: 'cardinality', next: 'baselineRun', feedback: 'Correct.', after: '<div class="concept-callout"><strong>NEW CONCEPT: CARDINALITY</strong><span>One company can have many funding rounds, while each funding round belongs to one company.</span><span><code>company.company_id</code> (PK) ← <code>funding_round.company_id</code> (FK)</span><span><strong>company 1 → M funding_round</strong></span></div>', wrongFeedback: 'Use the PK/FK relationship and the fact that <code>funding_round.company_id</code> is not unique.', hints: ['Inspect the PK on <code>company.company_id</code> and the FK from <code>funding_round.company_id</code>.', '<code>funding_round.company_id</code> is not unique, so multiple funding-round rows can reference one company.'] });
     } else if (state.current === 'baselineRun') {
       currentEl.innerHTML = stepShell('Let’s establish a baseline.', `<p class="step-copy">Before combining the two relations, first measure how many rows are currently in <code>funding_round</code>.</p><p class="step-copy">The query below is already prepared for you. Run it and inspect the result.</p>${feedbackMarkup()}${hintMarkup(['We need a baseline for the number of rows in <code>funding_round</code>.', 'Use <code>COUNT(*)</code> on <code>funding_round</code>.'])}`);
       bindHints();
@@ -217,15 +207,20 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     } else if (state.current === 'prediction') {
       choiceQuestion({ prompt: 'What do you expect to happen when we add <code>company.status</code> to every funding round?', options: [['exact', 'The result should have 26 rows, because each funding round matches one company.'], ['more', 'The result should have more than 26 rows, because each company may have many funding rounds.'], ['fewer', 'The result should have fewer than 26 rows, because several funding rounds may belong to the same company.'], ['unknown', 'We cannot predict the row count from the relationship.']], correct: 'exact', evidence: 'prediction', next: 'operation', feedback: 'Correct. Each funding round matches one company, so adding status adds information to the existing funding-round row and preserves the 26-row result.', wrongFeedback: 'Start from one funding-round row. How many company rows should it match?', hints: ['Start from one funding-round row. How many company rows should it match?', "If each funding round matches one company, adding one company's <code>status</code> should add a value to the row rather than multiply it."] });
     } else if (state.current === 'operation') {
-      choiceQuestion({ prompt: 'Which relational operation should we use to combine related rows from <code>funding_round</code> and <code>company</code>?', options: [['select', '<code>SELECT</code>'], ['join', '<code>JOIN</code>'], ['group', '<code>GROUP BY</code>'], ['union', '<code>UNION</code>']], correct: 'join', evidence: 'operation', next: 'sql', feedback: '<code>JOIN</code> is the relational operation that combines related rows. In the SQL task, you will implement it with an <code>INNER JOIN</code>.', wrongFeedback: 'We need an operation that combines related rows from two different relations.', hints: ['We need an operation that combines related rows from two different relations.', 'The two relations are connected through <code>company_id</code>. Which relational operation combines matching rows across relations?'] });
+      choiceQuestion({ prompt: 'What do we need to do next to answer the business request?', options: [['combine', 'Combine each funding round with its related company.'], ['filter', 'Filter out some funding rounds.'], ['group', 'Summarize funding rounds into groups.'], ['append', 'Append rows from another result.']], correct: 'combine', evidence: 'operation', next: 'sql', feedback: '<div class="concept-callout"><strong>NEW CONCEPT: JOIN</strong><span>A JOIN combines related rows from different relations.</span><span>Here, we want to combine each <code>funding_round</code> row with its related <code>company</code> row.</span></div>', wrongFeedback: 'The request needs company information added to every funding-round row.', hints: ['The missing information lives on a related company row.', 'We need to combine related rows, not remove, summarize, or append rows.'] });
     } else if (state.current === 'sql') {
-      currentEl.innerHTML = stepShell('Write a query that returns every funding round together with the current <code>status</code> of the company that raised it.', `<button id="output-requirements" type="button" class="requirements-toggle">${state.outputRequirementsOpen ? 'Hide output requirements' : 'Show output requirements'}</button>${state.outputRequirementsOpen ? `<p class="step-copy output-requirements">Required output fields: <code>${REQUIRED_RESULT_COLUMNS.join('</code>, <code>')}</code>.</p>` : ''}<p class="step-copy">Continue in the same editor below. Keep the baseline query and write the new statement beneath it.</p>${feedbackMarkup()}${hintMarkup(['The requested columns come from two relations connected by <code>company_id</code>.', 'Use the <code>JOIN</code> operation you just selected to combine <code>funding_round</code> with <code>company</code> through <code>company_id</code.'])}`);
+      const attempts = state.attempts.sql || 0;
+      currentEl.innerHTML = stepShell('Write a query that returns every funding round together with the current <code>status</code> of the company that raised it.', `<div class="sql-pattern"><strong>SQL PATTERN: INNER JOIN</strong><pre>SELECT ...
+FROM relation_a
+INNER JOIN relation_b
+    ON relation_a.key = relation_b.key;</pre><p><code>INNER JOIN</code> combines matching rows. <code>ON</code> defines which rows match.</p></div><button id="output-requirements" type="button" class="requirements-toggle">${state.outputRequirementsOpen ? 'Hide output requirements' : 'Show output requirements'}</button>${state.outputRequirementsOpen ? `<p class="step-copy output-requirements">Required output fields: <code>${REQUIRED_RESULT_COLUMNS.join('</code>, <code>')}</code>.</p>` : ''}<p class="step-copy">Continue in the same editor below. Keep the baseline query and write the new statement beneath it.</p>${feedbackMarkup()}${hintMarkup(['The requested columns come from two relations connected by <code>company_id</code>.', 'Use <code>INNER JOIN</code> with <code>ON fr.company_id = c.company_id</code>.'])}${attempts >= 2 ? '<button id="show-solution" type="button">Show solution</button><pre id="solution" hidden>SELECT\n    fr.funding_round_id,\n    fr.company_id,\n    fr.round_type,\n    fr.announced_date,\n    fr.reported_total_amount,\n    c.status\nFROM funding_round AS fr\nINNER JOIN company AS c\n    ON fr.company_id = c.company_id;</pre>' : ''}`);
       bindHints();
       document.getElementById('output-requirements').addEventListener('click', () => { state.outputRequirementsOpen = !state.outputRequirementsOpen; render(); });
+      document.getElementById('show-solution')?.addEventListener('click', () => { document.getElementById('solution').hidden = false; });
     } else if (state.current === 'finalGrain') {
-      choiceQuestion({ prompt: 'What is the grain of the result?', intro: '<div class="verification-callout"><strong>You predicted 26 rows before writing the join. Did the result match your prediction?</strong><span>Yes. The result contains 26 rows.</span></div>', options: [['company', 'one company per row'], ['funding_round', 'one funding round per row'], ['investor', 'one investor per row'], ['pair', 'one company-funding-round pair per row']], correct: 'funding_round', evidence: 'finalGrain', next: 'complete', feedback: 'The join added company information without changing what one row represents. The result is still at funding-round grain.', wrongFeedback: 'Reconsider what each result row represents.' });
+      choiceQuestion({ prompt: 'What is the grain of the result?', intro: '<div class="verification-callout"><strong>You predicted 26 rows before writing the join. Did the result match your prediction?</strong><span>Yes. The result contains 26 rows.</span></div>', options: [['company', 'one company per row'], ['funding_round', 'one funding round per row'], ['investor', 'one investor per row'], ['sector', 'one sector per row']], correct: 'funding_round', evidence: 'finalGrain', next: 'complete', feedback: 'The join added company information without changing what one row represents. The result is still at funding-round grain.', wrongFeedback: 'Reconsider what each result row represents.' });
     } else if (state.current === 'complete') {
-      const required = ['relations', 'output', 'source', 'connection', 'roundCompany', 'companyRounds', 'baselineRun', 'baselineMeaning', 'prediction', 'operation', 'sql', 'finalGrain'];
+      const required = ['relations', 'output', 'connection', 'cardinality', 'baselineRun', 'baselineMeaning', 'prediction', 'operation', 'sql', 'finalGrain'];
       const complete = required.every((item) => state.evidence.has(item));
       currentEl.innerHTML = stepShell('Stage 1 complete', `<div class="completion-state"><div class="completion-icon">✓</div><p>${complete ? 'You reasoned from row meaning and relationships, selected JOIN, implemented it in SQL, and verified that the result remained at funding-round grain.' : 'Required evidence is incomplete.'}</p></div>`);
     }
