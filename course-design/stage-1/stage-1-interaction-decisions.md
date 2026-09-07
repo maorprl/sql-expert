@@ -1,13 +1,41 @@
 # Stage 1 interaction decisions
 
-The Working Schema begins empty. The live schema viewer supplies all relations through `+` actions; no hardcoded second schema exists. It prevents duplicates, preserves insertion order, limits selection to four, and removal never clears SQL, progress, or hints. Working cards show metadata, not instances.
+## Business case and schema basis
 
-All reasoning questions use closed choices. Concepts appear only after the learner's prerequisite answer: Grain after output-row reasoning, PK/FK after identifying `funding_round.company_id`, Cardinality after one closed relationship question, and JOIN after choosing the semantic action. There is no separate information-source step. The PK/FK explanation includes the operational meaning: **Its value tells us which company row this funding round belongs to.** Cardinality uses PK/FK and the non-unique foreign key, not seed examples.
+The learner works from this business need: every news article should include the source that published it. The required relations are `news_article` and `news_source`.
 
-The current step has the strongest visual hierarchy; completed steps stay compact and reviewable without accumulating excessive visual weight. The most recently completed step remains expanded so its answer, feedback, concept moment, and any opened hints are immediately reviewable; earlier steps remain available through their summaries. Concept moments use a dedicated learning accent rather than the green reserved for correctness and completion. Redundant isolated **Correct.** feedback is avoided when correctness is already visually clear. The cardinality concept includes a local relational diagram that emphasizes `company 1 → M funding_round`; the FK relationship below it is written separately as `funding_round.company_id` (FK) **references** `company.company_id` (PK), without a second directional arrow. The unrelated `company.company_id` → `organization.organization_id` metadata remains truthful and visible but visually secondary in the Working Schema. The diagram is a locked pedagogical requirement and must not be a Venn diagram.
+`news_article` has `news_article_id` as its primary key and `news_source_id INTEGER NOT NULL` as a foreign key referencing `news_source.news_source_id`. `news_source.news_source_id` is its primary key, and `news_source.name` is the publishing-source attribute needed in the result. The seed contains 18 `news_article` rows and four `news_source` rows. This is a one-source-to-many-articles relationship; every article has one referenced source.
 
-Hints are unavailable until an incorrect attempt. SQL hints progress after attempts; a later **Show solution** reveals SQL without overwriting learner code. Viewing it does not prevent completion.
+## Relation identification and Working Schema
 
-The baseline uses the persistent editor and results in compact mode with a visible Run Query button. Running and interpreting 26 are internal phases of one Step 5 and produce one completed Step 5 card, with no duplicated step number. Step 6 presents the prediction before JOIN vocabulary and visually chunks the explanation around **26 funding rounds × 1 matching company each = 26 result rows** and the preserved funding-round grain; it does not introduce `fan-out`. Step 7 asks for the semantic action before naming JOIN. The SQL task expands the same editor, visually separates SQL instruction from the workspace, teaches the INNER JOIN pattern, matching semantics, and `ON` before asking for SQL, and keeps output requirements hidden by default behind a non-hint control. SQL help escalates after attempts, the solution never overwrites learner code, and validation checks result semantics rather than exact SQL text.
+The Working Schema begins empty. From the live schema, the learner must identify and select `news_article` and `news_source` as the relations needed to connect the requested article information with the requested publishing-source information. This is assessed relational reasoning, not a pre-resolved setup step.
 
-Completion requires the selected relations, grain, connecting key, cardinality, baseline interpretation, prediction, semantic action, correct query result, and final grain. It is not a numbered learner step.
+The task requires two selected relations. The Working Schema can retain up to four selected relations concurrently for inspection and reasoning; that capacity does not imply that four relations are required. Selected cards must expose the columns, PKs, and FKs needed for the route.
+
+## Reasoning, concepts, and visual aid
+
+All reasoning questions use closed choices. Concepts appear only after the learner's prerequisite reasoning: Grain after identifying the output-row meaning; PK/FK after identifying `news_article.news_source_id`; Cardinality after a closed relationship question; and JOIN after choosing the semantic action.
+
+The PK/FK explanation states that `news_article.news_source_id` identifies the `news_source` row that published the article, and that `news_source.name` is the attribute to add. Cardinality is reasoned from the PK/FK structure, not from observed seed examples.
+
+After correct cardinality reasoning, show a local explanatory diagram of `news_source.news_source_id` (PK), `news_article.news_source_id` (FK), and the one-source-to-many-articles relationship. It reinforces the learner's answer without appearing beforehand. Concept moments use the learning accent and remain visually distinct from correctness feedback.
+
+## Baseline, prediction, and semantic action
+
+The baseline is included because it supports reasoning about row-count and grain preservation in this encounter. It measures `news_article` and reports 18 rows. The learner interprets this as 18 news articles before predicting the JOIN result. The prepared measurement is not SQL syntax instruction and does not require the learner to write `COUNT(*)`.
+
+Before JOIN terminology appears, the learner predicts that adding one publishing-source name per article preserves the 18 article rows and the one-article-per-row grain. The feedback makes the PK/FK and cardinality basis explicit: each article matches one source row. The prediction uses a closed response; no open rationale is required.
+
+The learner then chooses the semantic action of combining each article with its related source. Only after that choice is **JOIN** introduced.
+
+## SQL instruction, implementation, and verification
+
+SQL instruction is visually distinct from the workspace. It teaches `INNER JOIN ... ON`, matching-row meaning, and `news_article.news_source_id = news_source.news_source_id` before independent SQL implementation. There is no separate assessment of the `ON` condition; its understanding is evidenced by the learner's query result.
+
+The implementation task requires a result containing each article's `title` and its publishing source's `name`. Completion evaluation must establish that the result has 18 rows, preserves one news article per row, and associates each article with its referenced source. The final learner interaction asks the learner to verify the result against the expected grain and baseline.
+
+## OPEN implementation decisions
+
+- The exact UI mechanism for selecting relations, including card controls and removal behavior, is not determined by the current course-level documentation.
+- The exact presentation of the prepared baseline measurement is not determined, provided it does not become premature SQL syntax instruction.
+- Hint escalation, solution-reveal behavior, and the technical mechanism for semantic result checking are not determined by the current course-level documentation.

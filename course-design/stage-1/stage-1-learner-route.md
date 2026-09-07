@@ -1,15 +1,19 @@
 # Stage 1 learner route
 
-The business request remains visible as context; it is not a learner step. The route contains nine learner steps, followed by a completion state.
+The business request remains visible as context; it is not a learner step:
 
-1. Select relevant relations from the live schema into an empty Working Schema. Cards derive from SQLite metadata and show columns, PKs, and FKs only. Selection is ordered, unique, removable, and limited to four relations.
-2. Identify output meaning, then introduce **NEW CONCEPT: GRAIN**: the output grain is one funding round per row; Grain = what one row represents.
-3. Identify `funding_round.company_id`, then explicitly introduce Primary Key / Foreign Key. The explanation includes the operational meaning: **Its value tells us which company row this funding round belongs to.** That company row contains `status`. There is no separate information-source step.
-4. Answer one closed question about the one-to-many relationship, then explicitly introduce Cardinality. After the correct answer, show a local visual aid reinforcing `company.company_id` as PK, `funding_round.company_id` as FK, and `company 1 → M funding_round`. This visual aid is a locked pedagogical requirement and must not be a Venn diagram.
-5. Run and interpret the compact persistent `COUNT(*)` baseline in two internal phases of the same learner step. It reports **Baseline result: 26 rows**, then asks what 26 represents: 26 funding rounds.
-6. Predict that adding status preserves 26 rows before JOIN vocabulary is introduced. The explanation connects the baseline, funding-round grain, and the one-company PK/FK match; it makes **26 funding rounds × 1 matching company each = 26 result rows** the key reasoning takeaway and confirms that the grain stays one funding round per row. Do not introduce the term `fan-out` here.
-7. Choose to combine each funding round with its related company, then introduce **JOIN**.
-8. First learn the `INNER JOIN ... ON ...` pattern, its matching-row meaning, and the task-specific connection; only then write the result-checked query in the same expanded editor. Output requirements are hidden by default in a non-hint disclosure. SQL help escalates after attempts and can show a non-overwriting solution. Query checking is result-based.
-9. Verify that the final grain is one funding round per row.
+> The research team is reviewing media coverage and wants every article to include the source that published it.
 
-Stage completion is a state, not a numbered step. Completed cards retain the question, answer, choices, feedback, and opened hints.
+This first JOIN encounter develops the ability to preserve one article per output row while adding its publishing source. The route contains nine learner steps, followed by a completion state.
+
+1. Identify the required relations from the live schema and add them to the Working Schema: `news_article`, which contains the articles, and `news_source`, which contains publishing-source information. The task requires two relations; the Working Schema capacity of four is not a task target.
+2. Identify output meaning, then introduce **NEW CONCEPT: GRAIN**: the output grain is one news article per row; Grain = what one row represents.
+3. Identify `news_article.news_source_id`, then explicitly introduce Primary Key / Foreign Key. Its value tells us which `news_source` row published that article. That source row contains `name`.
+4. Answer one closed question about the one-to-many relationship, then explicitly introduce Cardinality. After the correct answer, show a local visual aid reinforcing `news_source.news_source_id` as PK, `news_article.news_source_id` as FK, and one news source to many news articles.
+5. Run and interpret a prepared baseline measurement of `news_article`. It reports **Baseline result: 18 rows**, then asks what 18 represents: 18 news articles.
+6. Predict that adding the publishing-source name preserves 18 rows before JOIN vocabulary is introduced. The explanation connects the baseline, article grain, and the one-source PK/FK match: **18 news articles × 1 matching source each = 18 result rows**. The grain remains one news article per row.
+7. Choose to combine each news article with its related news source, then introduce **JOIN**.
+8. First learn the `INNER JOIN ... ON ...` pattern, its matching-row meaning, and the task-specific connection; only then write a result-checked query that returns each article's `title` with its publishing source's `name`.
+9. Verify that the final grain is one news article per row and that the result preserves the 18-row article baseline.
+
+Stage completion is a state, not a numbered step. Completed cards retain the question, answer, feedback, and any opened hints.
