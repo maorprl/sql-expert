@@ -1,0 +1,19 @@
+# Preserved Calibrated Source — Future Stage 3 Interaction Decisions
+
+## Preservation Status
+
+This document preserves the calibrated `funding_round → company` encounter because this business case is intended to become Stage 3. It is not yet final Stage 3 interaction design. Its current scaffolding reflects a first-exposure JOIN encounter and must not be assumed appropriate for Stage 3; later Stage 3 design must reconsider scaffolding based on the learner state at that point. Preservation does not reinterpret or improve any current Stage 1 decision.
+
+## Preserved Current Stage 1 Content
+
+The Working Schema begins empty. The live schema viewer supplies all relations through `+` actions; no hardcoded second schema exists. It prevents duplicates, preserves insertion order, limits selection to four, and removal never clears SQL, progress, or hints. Working cards show metadata, not instances.
+
+All reasoning questions use closed choices. Concepts appear only after the learner's prerequisite answer: Grain after output-row reasoning, PK/FK after identifying `funding_round.company_id`, Cardinality after one closed relationship question, and JOIN after choosing the semantic action. There is no separate information-source step. The PK/FK explanation includes the operational meaning: **Its value tells us which company row this funding round belongs to.** Cardinality uses PK/FK and the non-unique foreign key, not seed examples.
+
+The current step has the strongest visual hierarchy; completed steps stay compact and reviewable without accumulating excessive visual weight. The most recently completed step remains expanded so its answer, feedback, concept moment, and any opened hints are immediately reviewable; earlier steps remain available through their summaries. Concept moments use a dedicated learning accent rather than the green reserved for correctness and completion. Redundant isolated **Correct.** feedback is avoided when correctness is already visually clear. The cardinality concept includes a local relational diagram that emphasizes `company 1 → M funding_round`; the FK relationship below it is written separately as `funding_round.company_id` (FK) **references** `company.company_id` (PK), without a second directional arrow. The unrelated `company.company_id` → `organization.organization_id` metadata remains truthful and visible but visually secondary in the Working Schema. The diagram is a locked pedagogical requirement and must not be a Venn diagram.
+
+Hints are unavailable until an incorrect attempt. SQL hints progress after attempts; a later **Show solution** reveals SQL without overwriting learner code. Viewing it does not prevent completion.
+
+The baseline uses the persistent editor and results in compact mode with a visible Run Query button. Running and interpreting 26 are internal phases of one Step 5 and produce one completed Step 5 card, with no duplicated step number. Step 6 presents the prediction before JOIN vocabulary and visually chunks the explanation around **26 funding rounds × 1 matching company each = 26 result rows** and the preserved funding-round grain; it does not introduce `fan-out`. Step 7 asks for the semantic action before naming JOIN. The SQL task expands the same editor, visually separates SQL instruction from the workspace, teaches the INNER JOIN pattern, matching semantics, and `ON` before asking for SQL, and keeps output requirements hidden by default behind a non-hint control. SQL help escalates after attempts, the solution never overwrites learner code, and validation checks result semantics rather than exact SQL text.
+
+Completion requires the selected relations, grain, connecting key, cardinality, baseline interpretation, prediction, semantic action, correct query result, and final grain. It is not a numbered learner step.
