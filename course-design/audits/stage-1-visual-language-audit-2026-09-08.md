@@ -304,3 +304,7 @@ Full Stage 1 validation has not yet been completed.
 #### Rejected implementation attempt
 
 A Step-8-only continuous-scroll implementation was tested. It improved continuity between the actionable instruction and the SQL workspace, but it was rejected because changing scroll ownership on the Step 7 → Step 8 transition reset the learner's visible position. This regression is not present in the committed implementation because the experiment was reverted.
+
+#### Broadened later evidence
+
+The committed workspace-sizing change remains a real partial improvement. Later manual review broadened the remaining issue beyond Step 8 instructional separation: the SQL workspace presentation does not yet adapt sufficiently to its pedagogical role. In Step 5, the prepared measurement query is compact but the editor/workspace remains visually large; in Step 8, the learner-authored workspace remains visually dominant and the actionable instruction can still be cut off at the workspace boundary. The current status remains `PARTIALLY IMPROVED — NON-BLOCKING UX BACKLOG`.

@@ -314,14 +314,14 @@ These should be resolved when they become necessary to current work.
 
 They should not all be forced into the Active Plan merely because they remain OPEN.
 
-### 7.5 Stage 1 SQL workspace usability
+### 7.5 SQL workspace role adaptation / instructional continuity
 
 **Workstream:** UX / Shared Infrastructure
 **Classification:** UX / shared-infrastructure work
 **Status:** PARTIALLY IMPROVED — NON-BLOCKING UX BACKLOG
 **Source:** Stage 1 test-drive evidence
 
-The committed workspace-height reduction remains and improved the SQL workspace balance. The remaining instructional/workspace separation is not considered blocking and can be revisited when related SQL workspace or layout work makes a cleaner solution practical.
+The committed workspace-height reduction remains in place and improved the SQL workspace balance. Later evidence shows that Step 5's prepared baseline presentation is still too visually dominant for a compact measurement task, while Step 8 still has some instructional/workspace separation. The workspace does not yet adapt sufficiently between these two pedagogical roles. This remains non-blocking, does not block Stage 1 completion or the current project flow, and should be revisited during future SQL workspace / UX work. No specific future solution is selected.
 
 A Step-8-only continuous-scroll implementation was tested and reverted because changing scroll ownership reset the learner's visible position during the Step 7 → Step 8 transition. That rejected experiment is not part of the current implementation, and its regression is not a current Bug Backlog item.
 
