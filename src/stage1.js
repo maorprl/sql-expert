@@ -1,28 +1,26 @@
 const BASELINE_SQL = `SELECT COUNT(*)
-FROM funding_round;`;
+FROM news_article;`;
 
 const STEP_META = {
-  relations: [1, 'Choose relevant relations'], output: [2, 'Output meaning'], connection: [3, 'Connecting key'],
-  cardinality: [4, 'Cardinality'], baselineRun: [5, 'Baseline row count'], baselineMeaning: [5, 'Interpret the baseline'],
-  prediction: [6, 'Predict the result'], operation: [7, 'Choose the relational action'], sql: [8, 'INNER JOIN and SQL'], finalGrain: [9, 'Verify the result'], complete: [null, 'Stage complete'],
+  relations: [1, 'Choose relevant relations'],
+  output: [2, 'Output meaning'],
+  connection: [3, 'Connecting key'],
+  cardinality: [4, 'Cardinality'],
+  baselineRun: [5, 'Baseline row count'],
+  prediction: [6, 'Predict the result'],
+  operation: [7, 'Choose the relational action'],
+  sql: [8, 'INNER JOIN and SQL'],
+  finalGrain: [9, 'Verify the result'],
+  complete: [null, 'Stage complete'],
 };
 
-const REQUIRED_RESULT_COLUMNS = [
-  'funding_round_id',
-  'company_id',
-  'round_type',
-  'announced_date',
-  'reported_total_amount',
-  'status',
-];
+const REQUIRED_RELATIONS = ['news_article', 'news_source'];
 
 export function createStage1({ editor, getDatabase, getSchema, onSelectionChange }) {
   const state = {
     current: 'relations',
     completed: [],
     evidence: new Set(),
-    attempts: {},
-    openHints: {},
     drafts: {},
     localFeedback: '',
     editorRevealed: false,
@@ -40,32 +38,60 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     return String(value).replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
   }
 
+  function stripMarkup(value) {
+    return String(value).replace(/<[^>]+>/g, '');
+  }
+
   function renderRelations() {
-    const selected = state.selectedRelations.map((name) => getSchema().find((relation) => relation.name === name)).filter(Boolean);
+    const selected = state.selectedRelations
+      .map((name) => getSchema().find((relation) => relation.name === name))
+      .filter(Boolean);
+
     relationEl.innerHTML = selected.length ? selected.map((relation) => `
       <article class="data-card">
-        <div class="data-card-title"><div class="relation-heading"><span>Working relation</span><code>${relation.name}</code></div><button type="button" class="remove-relation" data-remove-relation="${relation.name}">Remove</button></div>
-        <ul class="working-columns">${relation.columns.map((column) => `<li class="${relation.name === 'funding_round' && column.column === 'company_id' ? 'relationship-relevant' : ''}"><code>${column.column}</code>${column.pk ? ' <span class="badge">PK</span>' : ''}${relation.foreignKeys.filter((fk) => fk.from === column.column).map((fk) => ` <span class="fk-inline ${relation.name === 'company' && fk.refTable === 'organization' ? 'context-secondary' : ''} ${relation.name === 'funding_round' && fk.refTable === 'company' ? 'context-relevant' : ''}">FK → ${fk.refTable}.${fk.to}</span>`).join('')}</li>`).join('')}</ul>
+        <div class="data-card-title">
+          <div class="relation-heading"><span>Working relation</span><code>${escapeHtml(relation.name)}</code></div>
+          <button type="button" class="remove-relation" data-remove-relation="${escapeHtml(relation.name)}">Remove</button>
+        </div>
+        <ul class="working-columns">${relation.columns.map((column) => `<li><code>${escapeHtml(column.column)}</code>${column.pk ? ' <span class="badge">PK</span>' : ''}${relation.foreignKeys.filter((foreignKey) => foreignKey.from === column.column).map((foreignKey) => ` <span class="fk-inline">FK → ${escapeHtml(foreignKey.refTable)}.${escapeHtml(foreignKey.to)}</span>`).join('')}</li>`).join('')}</ul>
       </article>
     `).join('') : '<div class="working-empty">Add relevant relations from the schema.</div>';
-    relationEl.querySelectorAll('[data-remove-relation]').forEach((button) => button.addEventListener('click', () => removeRelation(button.dataset.removeRelation)));
+
+    relationEl.querySelectorAll('[data-remove-relation]').forEach((button) => {
+      button.addEventListener('click', () => removeRelation(button.dataset.removeRelation));
+    });
   }
 
   function addRelation(name) {
     if (state.selectedRelations.includes(name)) return;
-    if (state.selectedRelations.length >= 4) { state.localFeedback = 'The working schema can contain up to four relations. Remove one to add another.'; render(); return; }
-    state.selectedRelations.push(name); state.localFeedback = ''; render(); onSelectionChange();
+    if (state.selectedRelations.length >= 4) {
+      state.localFeedback = 'The working schema can contain up to four relations. Remove one to add another.';
+      render();
+      return;
+    }
+    state.selectedRelations.push(name);
+    state.localFeedback = '';
+    render();
+    onSelectionChange();
   }
 
   function removeRelation(name) {
-    state.selectedRelations = state.selectedRelations.filter((item) => item !== name); state.localFeedback = ''; render(); onSelectionChange();
+    state.selectedRelations = state.selectedRelations.filter((item) => item !== name);
+    state.localFeedback = '';
+    render();
+    onSelectionChange();
   }
 
   function renderCompleted() {
     completedEl.innerHTML = state.completed.map((item, index) => `
       <details class="completed-step" ${index === state.completed.length - 1 ? 'open' : ''}>
         <summary><span class="complete-mark">✓</span> Step ${item.step}: ${escapeHtml(item.label)}</summary>
-        <div class="completed-body"><p><strong>${escapeHtml(item.prompt.replace(/<[^>]+>/g, ''))}</strong></p><p><strong>Your answer:</strong> ${escapeHtml(item.answer)}</p>${item.options ? `<fieldset class="choices review-choices" disabled>${item.options.map(([value, label]) => `<label class="${value === item.value ? 'selected-choice' : ''}"><input type="radio" ${value === item.value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>` : ''}${item.feedback ? `<div class="review-feedback">${item.feedback}</div>` : ''}${item.hints?.map((hint, hintIndex) => `<div class="hint-text ${hintIndex ? 'stronger' : ''}"><strong>Hint ${hintIndex + 1}</strong><p>${hint}</p></div>`).join('') || ''}</div>
+        <div class="completed-body">
+          <p><strong>${escapeHtml(stripMarkup(item.prompt))}</strong></p>
+          <p><strong>Your answer:</strong> ${escapeHtml(item.answer)}</p>
+          ${item.options ? `<fieldset class="choices review-choices" disabled>${item.options.map(([value, label]) => `<label class="${value === item.value ? 'selected-choice' : ''}"><input type="radio" ${value === item.value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>` : ''}
+          ${item.feedback ? `<div class="review-feedback">${item.feedback}</div>` : ''}
+        </div>
       </details>
     `).join('');
   }
@@ -85,7 +111,6 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function wrong(feedback) {
-    state.attempts[state.current] = (state.attempts[state.current] || 0) + 1;
     state.localFeedback = feedback;
     render();
   }
@@ -94,38 +119,36 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     labEl.hidden = false;
     document.querySelectorAll('.lab-action').forEach((element) => { element.hidden = false; });
     if (state.editorRevealed) return;
+
     const normalized = editor.getValue().replace(/\s+/g, ' ').toLowerCase();
-    if (!normalized.includes('select count(*) from funding_round')) {
+    if (!normalized.includes('select count(*) from news_article')) {
       const separator = editor.getValue().trim() ? '\n\n' : '';
       editor.setValue(`${editor.getValue()}${separator}${BASELINE_SQL}`, 1);
-    } else {
-      const baselineStart = editor.getValue().lastIndexOf(BASELINE_SQL);
-      if (baselineStart >= 0) {
-        const position = editor.session.doc.indexToPosition(baselineStart + BASELINE_SQL.length - 1);
-        editor.clearSelection();
-        editor.moveCursorToPosition(position);
-      }
+    }
+
+    const baselineStart = editor.getValue().lastIndexOf(BASELINE_SQL);
+    if (baselineStart >= 0) {
+      const position = editor.session.doc.indexToPosition(baselineStart + BASELINE_SQL.length - 1);
+      editor.clearSelection();
+      editor.moveCursorToPosition(position);
     }
     state.editorRevealed = true;
   }
 
-  function hintMarkup(hints) {
-    if (!hints?.length) return '';
-    const attempts = state.attempts[state.current] || 0;
-    const opened = state.openHints[state.current] || 0;
-    const secondAvailable = attempts >= 2;
-    return `
-      <div class="hints">
-        <div class="hint-actions">
-          ${attempts >= 1 ? `<button type="button" data-hint="1" class="hint-button ${opened < 1 ? 'prominent' : ''}">Hint 1</button>` : ''}
-          ${secondAvailable ? `<button type="button" data-hint="2" class="hint-button ${opened < 2 ? 'prominent' : ''}">Hint 2</button>` : ''}
-        </div>
-        ${opened >= 1 ? `<div class="hint-text"><strong>Hint 1</strong><p>${hints[0]}</p></div>` : ''}
-        ${opened >= 2 ? `<div class="hint-text stronger"><strong>Hint 2</strong><p>${hints[1]}</p></div>` : ''}
-      </div>`;
+  function feedbackMarkup() {
+    return state.localFeedback
+      ? `<div class="local-feedback incorrect"><strong>Not quite.</strong> ${state.localFeedback.replace(/^Not quite\.\s*/i, '')}</div>`
+      : '';
   }
 
-  function choiceQuestion({ prompt, options, correct, feedback, wrongFeedback, next, evidence, hints, after = '', intro = '' }) {
+  function stepShell(prompt, body, intro = '') {
+    const [step, label] = STEP_META[state.current];
+    return step
+      ? `<div class="step-kicker">Step ${step} of 9 · ${label}</div>${intro}<h2 class="prompt">${prompt}</h2>${body}`
+      : `<h2 class="prompt">${prompt}</h2>${body}`;
+  }
+
+  function choiceQuestion({ prompt, options, correct, feedback, wrongFeedback, next, evidence, after = '', intro = '' }) {
     const draft = state.drafts[state.current] || '';
     currentEl.innerHTML = stepShell(prompt, `
       <form id="answer-form" class="answer-form">
@@ -133,137 +156,251 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
         <button class="primary" type="submit">Check answer</button>
       </form>
       ${feedbackMarkup()}
-      ${hintMarkup(hints)}
     `, intro);
-    bindHints();
+
     document.getElementById('answer-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const answer = new FormData(event.currentTarget).get('answer');
       state.drafts[state.current] = answer || '';
-      if (answer === correct) {
-        const [step, defaultLabel] = STEP_META[state.current];
-        if (evidence) state.evidence.add(evidence);
-        state.completed.push({ step, label: defaultLabel, prompt, answer: options.find(([value]) => value === answer)[1].replaceAll('<code>', '').replaceAll('</code>', ''), value: answer, options, feedback: `${feedback}${after}`, hints: hints?.slice(0, state.openHints[state.current] || 0) });
-        setCurrent(next);
+      if (answer !== correct) {
+        wrong(wrongFeedback);
+        return;
       }
-      else wrong(wrongFeedback);
+
+      const [step, label] = STEP_META[state.current];
+      if (evidence) state.evidence.add(evidence);
+      state.completed.push({
+        step,
+        label,
+        prompt,
+        answer: stripMarkup(options.find(([value]) => value === answer)[1]),
+        value: answer,
+        options,
+        feedback: `${feedback}${after}`,
+      });
+      setCurrent(next);
     });
   }
 
-  function feedbackMarkup() {
-    return state.localFeedback ? `<div class="local-feedback incorrect"><strong>Not quite.</strong> ${state.localFeedback.replace(/^Not quite\.\s*/i, '')}</div>` : '';
-  }
-
-  function stepShell(prompt, body, intro = '') {
-    const [step, label] = STEP_META[state.current];
-    return step ? `<div class="step-kicker">Step ${step} of 9 · ${label}</div>${intro}<h2 class="prompt">${prompt}</h2>${body}` : `<h2 class="prompt">${prompt}</h2>${body}`;
-  }
-
-  function bindHints() {
-    currentEl.querySelectorAll('[data-hint]').forEach((button) => button.addEventListener('click', () => {
-      const form = currentEl.querySelector('#answer-form');
-      if (form) state.drafts[state.current] = String(new FormData(form).get('answer') || '');
-      state.openHints[state.current] = Math.max(state.openHints[state.current] || 0, Number(button.dataset.hint));
-      render();
-    }));
+  function hasExactRequiredRelations() {
+    return state.selectedRelations.length === REQUIRED_RELATIONS.length
+      && REQUIRED_RELATIONS.every((relation) => state.selectedRelations.includes(relation));
   }
 
   function render() {
     renderRelations();
     renderCompleted();
     relationEl.hidden = false;
-    if (['baselineRun', 'baselineMeaning', 'prediction', 'operation', 'sql', 'finalGrain', 'complete'].includes(state.current)) revealEditorWithBaseline();
-    labEl.classList.toggle('baseline-mode', ['baselineRun', 'baselineMeaning', 'prediction', 'operation'].includes(state.current));
+
+    if (['baselineRun', 'prediction', 'operation', 'sql', 'finalGrain', 'complete'].includes(state.current)) {
+      revealEditorWithBaseline();
+    }
+    labEl.classList.toggle('baseline-mode', ['baselineRun', 'prediction', 'operation'].includes(state.current));
 
     if (state.current === 'relations') {
-      const ready = state.selectedRelations.includes('funding_round') && state.selectedRelations.includes('company');
-      currentEl.innerHTML = stepShell('Choose the relations relevant to the business request.', `<p class="step-copy">Use the <strong>+</strong> actions in the live schema viewer to build your focused working schema.</p><button id="continue-relations" class="primary" ${ready ? '' : 'disabled'}>Check selection</button>${feedbackMarkup()}${hintMarkup(['Read the nouns in the request and look for relations that represent them.', 'The request needs information about funding rounds and the companies that raised them.'])}`);
-      bindHints();
-      document.getElementById('continue-relations').addEventListener('click', () => record({ evidence: 'relations', prompt: 'Choose the relations relevant to the business request.', answer: state.selectedRelations.join(', '), feedback: 'The working schema now contains the relations needed for this task.', next: 'output' }));
+      const canCheck = state.selectedRelations.length > 0;
+      currentEl.innerHTML = stepShell(
+        'Choose the relations relevant to the business request.',
+        `<p class="step-copy">Use the <strong>+</strong> actions in the full live schema viewer to build your focused working schema.</p><button id="continue-relations" class="primary" ${canCheck ? '' : 'disabled'}>Check selection</button>${feedbackMarkup()}`,
+      );
+      document.getElementById('continue-relations').addEventListener('click', () => {
+        if (!hasExactRequiredRelations()) {
+          wrong('The selected relations do not yet provide exactly the article information and publishing-source information requested. Reinspect the schema and revise the Working Schema.');
+          return;
+        }
+        record({
+          evidence: 'relations',
+          prompt: 'Choose the relations relevant to the business request.',
+          answer: state.selectedRelations.join(', '),
+          feedback: 'The working schema now contains the two relations needed for this task.',
+          next: 'output',
+        });
+      });
     } else if (state.current === 'output') {
       choiceQuestion({
         prompt: 'What should one row in the requested result represent?',
-        options: [['company', 'a company'], ['funding_round', 'a funding round'], ['investor', 'an investor'], ['sector', 'a sector']],
-        correct: 'funding_round', evidence: 'output', next: 'connection',
-        feedback: '<div class="concept-callout"><strong>NEW CONCEPT: GRAIN</strong><span>The output grain is one funding round per row.</span><span>Grain = what one row represents.</span></div>',
-        after: '',
-        wrongFeedback: 'The request asks for every funding round, with company status added to it. Reconsider what the main row still represents.',
-        hints: ['Look at the wording of the business request: what does it ask us to list all of?', 'The company status is extra information being added. The main thing being listed is still the funding round.'],
+        options: [['source', 'a news source'], ['article', 'a news article'], ['company', 'a company'], ['publication_date', 'a publication date']],
+        correct: 'article',
+        evidence: 'output',
+        next: 'connection',
+        feedback: '<div class="concept-callout"><strong>NEW CONCEPT: GRAIN</strong><span>The output grain is one news article per row.</span><span>Grain = what one row represents.</span></div>',
+        wrongFeedback: 'The request asks for every article, with its publishing source added. Reconsider what the main row still represents.',
       });
     } else if (state.current === 'connection') {
       choiceQuestion({
-        prompt: 'Which column in <code>funding_round</code> identifies the related company?',
-        options: [['funding_round_id', '<code>funding_round_id</code>'], ['company_id', '<code>company_id</code>'], ['round_type', '<code>round_type</code>'], ['announced_date', '<code>announced_date</code>']],
-        correct: 'company_id', evidence: 'connection', next: 'cardinality', feedback: '<div class="concept-callout"><strong>NEW CONCEPT: PRIMARY KEY / FOREIGN KEY</strong><span><code>company.company_id</code> is the primary key: it uniquely identifies a company row.</span><span><code>funding_round.company_id</code> is a foreign key that references it.</span><span>Its value tells us which company row this funding round belongs to.</span><span>That company row contains the <code>status</code> we need.</span></div>',
-        wrongFeedback: 'Look for the column in the funding-round row that identifies a company.',
-        hints: ['Look for a column that appears in both relations.', 'Compare <code>funding_round.company_id</code> with <code>company.company_id</code>.'],
+        prompt: 'Which column in <code>news_article</code> identifies the related publishing source?',
+        options: [['news_article_id', '<code>news_article_id</code>'], ['news_source_id', '<code>news_source_id</code>'], ['url', '<code>url</code>'], ['title', '<code>title</code>']],
+        correct: 'news_source_id',
+        evidence: 'connection',
+        next: 'cardinality',
+        feedback: '<div class="concept-callout"><strong>NEW CONCEPT: PRIMARY KEY / FOREIGN KEY</strong><span><code>news_source.news_source_id</code> is the primary key: it uniquely identifies a news-source row.</span><span><code>news_article.news_source_id</code> is a foreign key that references it.</span><span>Its value tells us which source row published the article.</span><span>That source row contains the <code>name</code> we need.</span></div>',
+        wrongFeedback: 'Look for the column in the article row whose value identifies a news source.',
       });
     } else if (state.current === 'cardinality') {
-      choiceQuestion({ prompt: 'Which statement correctly describes the relationship between <code>company</code> and <code>funding_round</code>?', options: [['correct', 'One company can have many funding rounds, and each funding round belongs to one company.'], ['one', 'One company can have only one funding round.'], ['many', 'One funding round can belong to many companies.'], ['none', 'Companies and funding rounds are unrelated.']], correct: 'correct', evidence: 'cardinality', next: 'baselineRun', feedback: '', after: '<div class="concept-callout"><strong>NEW CONCEPT: CARDINALITY</strong><span>One company can have many funding rounds, while each funding round belongs to one company.</span><div class="relationship-diagram"><div class="relationship-node"><strong>company</strong><code>company_id</code><span>PK</span></div><div class="relationship-link"><span>1 → M</span><i></i></div><div class="relationship-node"><strong>funding_round</strong><code>company_id</code><span>FK</span></div></div><span><code>funding_round.company_id</code> (FK) <strong>references</strong> <code>company.company_id</code> (PK)</span></div>', wrongFeedback: 'Use the PK/FK relationship and the fact that <code>funding_round.company_id</code> is not unique.', hints: ['Inspect the PK on <code>company.company_id</code> and the FK from <code>funding_round.company_id</code>.', '<code>funding_round.company_id</code> is not unique, so multiple funding-round rows can reference one company.'] });
+      choiceQuestion({
+        prompt: 'Which statement correctly describes the relationship between <code>news_source</code> and <code>news_article</code>?',
+        options: [
+          ['correct', 'One news source can publish many news articles, and each news article references one news source.'],
+          ['one', 'One news source can publish only one news article.'],
+          ['many', 'One news article can reference many news sources.'],
+          ['none', 'News sources and news articles are unrelated.'],
+        ],
+        correct: 'correct',
+        evidence: 'cardinality',
+        next: 'baselineRun',
+        feedback: '',
+        after: '<div class="concept-callout"><strong>NEW CONCEPT: CARDINALITY</strong><span>One news source can publish many news articles, while each news article references one news source.</span><div class="relationship-diagram"><div class="relationship-node"><strong>news_source</strong><code>news_source_id</code><span>PK</span></div><div class="relationship-link"><span>1 → M</span><i></i></div><div class="relationship-node"><strong>news_article</strong><code>news_source_id</code><span>FK</span></div></div><span><code>news_article.news_source_id</code> (FK) <strong>references</strong> <code>news_source.news_source_id</code> (PK)</span></div>',
+        wrongFeedback: 'Use the PK/FK relationship: each article stores one source ID, while the same source ID may appear in multiple article rows.',
+      });
     } else if (state.current === 'baselineRun') {
       if (state.baselineExecuted) {
-        choiceQuestion({ intro: '<div class="verification-callout"><strong>Baseline result: 26 rows</strong></div>', prompt: 'What does the number 26 represent here?', options: [['companies', '26 companies'], ['rounds', '26 funding rounds'], ['investors', '26 investors'], ['sectors', '26 sectors']], correct: 'rounds', evidence: 'baseline', next: 'prediction', feedback: '<code>COUNT(*)</code> counts rows. Because <code>funding_round</code> has one funding round per row, 26 rows means 26 funding rounds.', wrongFeedback: '<code>COUNT(*)</code> counts rows. What does one row in <code>funding_round</code> represent?', hints: ['<code>COUNT(*)</code> counts rows. What does one row in <code>funding_round</code> represent?', "The relation's grain is one funding round per row."] });
+        choiceQuestion({
+          intro: '<div class="verification-callout"><strong>Baseline result: 18 rows</strong></div>',
+          prompt: 'What does the number 18 represent here?',
+          options: [['sources', '18 news sources'], ['articles', '18 news articles'], ['companies', '18 companies'], ['dates', '18 publication dates']],
+          correct: 'articles',
+          evidence: 'baseline',
+          next: 'prediction',
+          feedback: '<code>COUNT(*)</code> counts rows. Because <code>news_article</code> has one article per row, 18 rows means 18 news articles.',
+          wrongFeedback: '<code>COUNT(*)</code> counts rows. What does one row in <code>news_article</code> represent?',
+        });
       } else {
-        currentEl.innerHTML = stepShell('Let’s establish a baseline.', `<p class="step-copy">Before combining the two relations, first measure how many rows are currently in <code>funding_round</code>.</p><p class="step-copy">The query below is already prepared for you. Run it and inspect the result.</p>${feedbackMarkup()}${hintMarkup(['We need a baseline for the number of rows in <code>funding_round</code>.', 'Use <code>COUNT(*)</code> on <code>funding_round</code>.'])}`);
-        bindHints();
+        currentEl.innerHTML = stepShell(
+          'Let’s establish a baseline.',
+          `<p class="step-copy">Before combining the two relations, first measure how many rows are currently in <code>news_article</code>.</p><p class="step-copy">The query below is already prepared for you. Run it and inspect the result.</p>${feedbackMarkup()}`,
+        );
       }
     } else if (state.current === 'prediction') {
-      choiceQuestion({ prompt: 'What do you expect to happen when we add <code>company.status</code> to every funding round?', options: [['exact', 'The result should have 26 rows, because each funding round matches one company.'], ['more', 'The result should have more than 26 rows, because each company may have many funding rounds.'], ['fewer', 'The result should have fewer than 26 rows, because several funding rounds may belong to the same company.'], ['unknown', 'We cannot predict the row count from the relationship.']], correct: 'exact', evidence: 'prediction', next: 'operation', feedback: '<div class="prediction-explanation"><p>We start with 26 <code>funding_round</code> rows — one funding round per row.</p><p>For each round, <code>company_id</code> points to one company row because <code>company.company_id</code> uniquely identifies a company.</p><p>Adding <code>status</code> adds information to that existing funding-round row without creating a copy:</p><p class="prediction-equation">26 funding rounds × 1 matching company each = 26 result rows.</p><p>One company may have many funding rounds, but those are already separate rows in the 26-row baseline.</p><p class="grain-takeaway">The result keeps one funding round per row.</p></div>', wrongFeedback: 'Start from one funding-round row. How many company rows should it match?', hints: ['Start from one funding-round row. How many company rows should it match?', "If each funding round matches one company, adding one company's <code>status</code> should add a value to the row rather than multiply it."] });
+      choiceQuestion({
+        prompt: 'What do you expect to happen when we add the publishing source’s <code>name</code> to every news article?',
+        options: [
+          ['exact', 'The result should have 18 rows, because each article matches one news source.'],
+          ['more', 'The result should have more than 18 rows, because one source may publish many articles.'],
+          ['fewer', 'The result should have fewer than 18 rows, because several articles may share one source.'],
+          ['unknown', 'We cannot predict the row count from the relationship.'],
+        ],
+        correct: 'exact',
+        evidence: 'prediction',
+        next: 'operation',
+        feedback: '<div class="prediction-explanation"><p>We start with 18 <code>news_article</code> rows — one article per row.</p><p>For each article, <code>news_source_id</code> points to one source row because <code>news_source.news_source_id</code> uniquely identifies a source.</p><p>Adding <code>name</code> adds information to that existing article row without creating a copy:</p><p class="prediction-equation">18 news articles × 1 matching source each = 18 result rows.</p><p>One source may publish many articles, but those articles are already separate rows in the baseline.</p><p class="grain-takeaway">The result keeps one news article per row.</p></div>',
+        wrongFeedback: 'Start from one article row. How many source rows does its foreign key reference?',
+      });
     } else if (state.current === 'operation') {
-      choiceQuestion({ prompt: 'What do we need to do next to answer the business request?', options: [['combine', 'Combine each funding round with its related company.'], ['filter', 'Filter out some funding rounds.'], ['group', 'Summarize funding rounds into groups.'], ['append', 'Append rows from another result.']], correct: 'combine', evidence: 'operation', next: 'sql', feedback: '<div class="concept-callout"><strong>NEW CONCEPT: JOIN</strong><span>A JOIN combines related rows from different relations.</span><span>Here, we want to combine each <code>funding_round</code> row with its related <code>company</code> row.</span></div>', wrongFeedback: 'The request needs company information added to every funding-round row.', hints: ['The missing information lives on a related company row.', 'We need to combine related rows, not remove, summarize, or append rows.'] });
+      choiceQuestion({
+        prompt: 'What do we need to do next to answer the business request?',
+        options: [
+          ['combine', 'Combine each news article with its related news source.'],
+          ['filter', 'Filter out some news articles.'],
+          ['group', 'Summarize news articles into groups.'],
+          ['append', 'Append rows from another result.'],
+        ],
+        correct: 'combine',
+        evidence: 'operation',
+        next: 'sql',
+        feedback: '<div class="concept-callout"><strong>NEW CONCEPT: JOIN</strong><span>A JOIN combines related rows from different relations.</span><span>Here, we want to combine each <code>news_article</code> row with its related <code>news_source</code> row.</span></div>',
+        wrongFeedback: 'The request needs publishing-source information added to every article row.',
+      });
     } else if (state.current === 'sql') {
-      const attempts = state.attempts.sql || 0;
-      currentEl.innerHTML = stepShell('Implement the JOIN in SQL', `<div class="sql-pattern"><strong>SQL PATTERN: INNER JOIN</strong><pre>SELECT ...
+      currentEl.innerHTML = stepShell('Implement the JOIN in SQL', `
+        <div class="sql-pattern">
+          <strong>SQL PATTERN: INNER JOIN</strong>
+          <pre>SELECT ...
 FROM relation_a
- INNER JOIN relation_b
-    ON relation_a.key = relation_b.key;</pre><p><code>INNER JOIN</code> keeps rows with a matching row in the other relation. <code>ON</code> tells SQL how to find matches.</p><p class="step-copy">In this case, every funding round has one related company, so the INNER JOIN adds the company’s <code>status</code> while keeping one row per funding round.</p></div><h3>Now write a query that returns every funding round together with the current status of the company that raised it.</h3><button id="output-requirements" type="button" class="requirements-toggle">${state.outputRequirementsOpen ? 'Hide output requirements' : 'Show output requirements'}</button>${state.outputRequirementsOpen ? `<p class="step-copy output-requirements">Required output fields: <code>${REQUIRED_RESULT_COLUMNS.join('</code>, <code>')}</code>.</p>` : ''}<p class="step-copy">Keep the baseline query and write the new statement beneath it.</p>${feedbackMarkup()}${hintMarkup(['The requested columns come from two relations connected by <code>company_id</code>.', 'Use <code>INNER JOIN</code> with <code>ON fr.company_id = c.company_id</code>.'])}${attempts >= 2 ? '<button id="show-solution" type="button">Show solution</button><pre id="solution" hidden>SELECT\n    fr.funding_round_id,\n    fr.company_id,\n    fr.round_type,\n    fr.announced_date,\n    fr.reported_total_amount,\n    c.status\nFROM funding_round AS fr\nINNER JOIN company AS c\n    ON fr.company_id = c.company_id;</pre>' : ''}`);
-      bindHints();
-      document.getElementById('output-requirements').addEventListener('click', () => { state.outputRequirementsOpen = !state.outputRequirementsOpen; render(); });
-      document.getElementById('show-solution')?.addEventListener('click', () => { document.getElementById('solution').hidden = false; });
+INNER JOIN relation_b
+  ON relation_a.key = relation_b.key;</pre>
+          <p><code>INNER JOIN</code> keeps rows with a matching row in the other relation. <code>ON</code> tells SQL how to find matches.</p>
+          <p class="step-copy">In this case, every news article references one news source, so the INNER JOIN adds the source’s <code>name</code> while keeping one row per article.</p>
+        </div>
+        <h3>Now write a query that returns every article’s <code>title</code> together with the <code>name</code> of the source that published it.</h3>
+        <button id="output-requirements" type="button" class="requirements-toggle">${state.outputRequirementsOpen ? 'Hide output requirements' : 'Show output requirements'}</button>
+        ${state.outputRequirementsOpen ? '<p class="step-copy output-requirements">Required output fields: <code>news_article.title</code> and <code>news_source.name</code>.</p>' : ''}
+        <p class="step-copy">Keep the baseline query and write the new statement beneath it.</p>
+        ${feedbackMarkup()}
+      `);
+      document.getElementById('output-requirements').addEventListener('click', () => {
+        state.outputRequirementsOpen = !state.outputRequirementsOpen;
+        render();
+      });
     } else if (state.current === 'finalGrain') {
-      choiceQuestion({ prompt: 'What is the grain of the result?', intro: '<div class="verification-callout"><strong>You predicted 26 rows before writing the join. Did the result match your prediction?</strong><span>Yes. The result contains 26 rows.</span></div>', options: [['company', 'one company per row'], ['funding_round', 'one funding round per row'], ['investor', 'one investor per row'], ['sector', 'one sector per row']], correct: 'funding_round', evidence: 'finalGrain', next: 'complete', feedback: 'The join added company information without changing what one row represents. The result is still at funding-round grain.', wrongFeedback: 'Reconsider what each result row represents.' });
+      choiceQuestion({
+        prompt: 'What is the grain of the result?',
+        intro: '<div class="verification-callout"><strong>You predicted 18 rows before writing SQL.</strong><span>The result contains 18 rows, matching the prediction.</span></div>',
+        options: [['source', 'one news source per row'], ['article', 'one news article per row'], ['company', 'one company per row'], ['date', 'one publication date per row']],
+        correct: 'article',
+        evidence: 'finalGrain',
+        next: 'complete',
+        feedback: 'The JOIN added the source name without changing what one row represents. The result keeps one news article per row and preserves the 18-row baseline.',
+        wrongFeedback: 'Reconsider what each row still represents after the source name is added.',
+      });
     } else if (state.current === 'complete') {
-      const required = ['relations', 'output', 'connection', 'cardinality', 'baseline', 'prediction', 'operation', 'sql', 'finalGrain'];
-      const complete = required.every((item) => state.evidence.has(item));
-      currentEl.innerHTML = stepShell('Stage 1 complete', `<div class="completion-state"><div class="completion-icon">✓</div><p>${complete ? 'You reasoned from row meaning and relationships, selected JOIN, implemented it in SQL, and verified that the result remained at funding-round grain.' : 'Required evidence is incomplete.'}</p></div>`);
+      const requiredEvidence = ['relations', 'output', 'connection', 'cardinality', 'baseline', 'prediction', 'operation', 'sql', 'finalGrain'];
+      const complete = requiredEvidence.every((item) => state.evidence.has(item));
+      currentEl.innerHTML = stepShell('Stage complete', `
+        <div class="completion-state"><div class="completion-icon">✓</div><p>${complete ? 'You identified the relevant relations, reasoned about the article grain and relationship, predicted the JOIN behavior, implemented it in SQL, and verified the result.' : 'The required learning evidence is incomplete.'}</p></div>
+      `);
     }
   }
 
-  function validateStageSql(resultSets) {
+  function normalizedRows(values) {
+    return values.map((row) => JSON.stringify(row)).sort();
+  }
+
+  function validateArticleSourceResult(statement, resultSets) {
     if (!resultSets.length) return false;
+    if (!/\b(?:inner\s+)?join\b/i.test(statement) || !/\bon\b/i.test(statement)) return false;
     const result = resultSets.at(-1);
-    if (!REQUIRED_RESULT_COLUMNS.every((column) => result.columns.includes(column))) return false;
-    if (result.values.length !== 26) return false;
-    const indices = Object.fromEntries(REQUIRED_RESULT_COLUMNS.map((column) => [column, result.columns.indexOf(column)]));
-    const actualIds = result.values.map((row) => row[indices.funding_round_id]);
-    if (new Set(actualIds).size !== 26) return false;
-    const expectedResult = getDatabase().exec(`
-      SELECT fr.funding_round_id, fr.company_id, fr.round_type, fr.announced_date,
-             fr.reported_total_amount, c.status
-      FROM funding_round AS fr
-      JOIN company AS c ON c.company_id = fr.company_id;
-    `)[0];
-    const expected = new Map(expectedResult.values.map((row) => [String(row[0]), row]));
-    if (expected.size !== 26 || actualIds.some((id) => !expected.has(String(id)))) return false;
-    return result.values.every((row) => {
-      const expectedRow = expected.get(String(row[indices.funding_round_id]));
-      return REQUIRED_RESULT_COLUMNS.every((column, expectedIndex) => Object.is(row[indices[column]], expectedRow[expectedIndex]));
-    });
+    if (result.columns.length !== 2 || result.values.length !== 18) return false;
+
+    const expected = getDatabase().exec(`
+      SELECT news_article.title, news_source.name
+      FROM news_article
+      INNER JOIN news_source
+        ON news_article.news_source_id = news_source.news_source_id;
+    `)[0]?.values ?? [];
+
+    const resultRows = normalizedRows(result.values);
+    const expectedRows = normalizedRows(expected);
+    const reversedExpectedRows = normalizedRows(expected.map(([title, name]) => [name, title]));
+    return resultRows.every((row, index) => row === expectedRows[index])
+      || resultRows.every((row, index) => row === reversedExpectedRows[index]);
   }
 
   function handleSqlSuccess(statement, resultSets) {
     if (state.current === 'baselineRun') {
       const result = resultSets.at(-1);
-      const valid = resultSets.length === 1 && result?.values?.length === 1 && result.values[0].length === 1 && result.values[0][0] === 26;
-      if (valid) { state.baselineExecuted = true; state.localFeedback = ''; render(); }
-      else wrong('The baseline should count the rows in <code>funding_round</code> and return 26. Run the prepared statement with the cursor inside it.');
+      const isBaseline = resultSets.length === 1
+        && result?.values?.length === 1
+        && result.values[0]?.length === 1
+        && result.values[0][0] === 18;
+
+      if (isBaseline) {
+        state.baselineExecuted = true;
+        state.localFeedback = '';
+        render();
+      } else {
+        wrong('The prepared measurement should return the 18 rows in <code>news_article</code>. Run that statement and inspect its result.');
+      }
     } else if (state.current === 'sql') {
-      if (validateStageSql(resultSets)) record({ evidence: 'sql', prompt: 'Return every funding round with its company status.', answer: 'Valid 26-row result', next: 'finalGrain', feedback: 'Your result matches the prediction: 26 rows, one for every funding round, with the related company status.' });
-      else wrong('Your query ran, but the result does not match the Stage 1 prediction. You expected one row per funding round and 26 rows total. Inspect how the relations were combined.');
+      if (validateArticleSourceResult(statement, resultSets)) {
+        record({
+          evidence: 'sql',
+          prompt: 'Return every article title with the name of its publishing source.',
+          answer: 'A semantically correct 18-row article-and-source result',
+          feedback: 'The query produced one row for every article, with the name of its related publishing source.',
+          next: 'finalGrain',
+        });
+      } else {
+        wrong('The SQL ran, but the result does not yet contain exactly the 18 article titles paired with their publishing-source names. Inspect the selected fields and the relationship used in <code>ON</code>, then retry.');
+      }
     }
   }
 
   render();
 
-  return { handleSqlSuccess, current: () => state.current, addRelation, isRelationSelected: (name) => state.selectedRelations.includes(name) };
+  return {
+    handleSqlSuccess,
+    current: () => state.current,
+    addRelation,
+    isRelationSelected: (name) => state.selectedRelations.includes(name),
+  };
 }
