@@ -6,6 +6,7 @@ import initSqlJs from 'sql.js';
 import wasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
 import './styles.css';
 import { createStage1 } from './stage1.js';
+import { createInteractionLifecycle } from './interaction-lifecycle.js';
 
 const SOURCE_FILES = [
   '/startup-ecosystem/startup-ecosystem-schema.sql',
@@ -190,7 +191,8 @@ el('clear-results').addEventListener('click', () => { el('result-content').inner
 el('reset-db').addEventListener('click', loadDatabase);
 el('schema-search').addEventListener('input', renderSchema);
 configureEditor();
-stage1 = createStage1({ editor, getDatabase: () => db, getSchema: () => schema, onSelectionChange: renderSchema });
+const interactionLifecycle = createInteractionLifecycle({ currentElement: el('current-step'), completedElement: el('completed-steps') });
+stage1 = createStage1({ editor, getDatabase: () => db, getSchema: () => schema, onSelectionChange: renderSchema, interactionLifecycle });
 SQL = await initSqlJs({ locateFile: () => wasmUrl });
 db = new SQL.Database();
 await loadDatabase();

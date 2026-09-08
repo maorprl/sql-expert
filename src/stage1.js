@@ -16,7 +16,7 @@ const STEP_META = {
 
 const REQUIRED_RELATIONS = ['news_article', 'news_source'];
 
-export function createStage1({ editor, getDatabase, getSchema, onSelectionChange }) {
+export function createStage1({ editor, getDatabase, getSchema, onSelectionChange, interactionLifecycle }) {
   const state = {
     current: 'relations',
     completed: [],
@@ -29,8 +29,6 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     baselineExecuted: false,
   };
 
-  const currentEl = document.getElementById('current-step');
-  const completedEl = document.getElementById('completed-steps');
   const relationEl = document.getElementById('relation-preview');
   const labEl = document.getElementById('lab-workspace');
 
@@ -83,17 +81,16 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function renderCompleted() {
-    completedEl.innerHTML = state.completed.map((item, index) => `
-      <details class="completed-step" ${index === state.completed.length - 1 ? 'open' : ''}>
-        <summary><span class="complete-mark">✓</span> Step ${item.step}: ${escapeHtml(item.label)}</summary>
-        <div class="completed-body">
+    interactionLifecycle.renderCompleted(state.completed.map((item) => ({
+      id: item.id,
+      summaryHtml: `<span class="complete-mark">✓</span> Step ${item.step}: ${escapeHtml(item.label)}`,
+      reviewHtml: `
           <p><strong>${escapeHtml(stripMarkup(item.prompt))}</strong></p>
           <p><strong>Your answer:</strong> ${escapeHtml(item.answer)}</p>
           ${item.options ? `<fieldset class="choices review-choices" disabled>${item.options.map(([value, label]) => `<label class="${value === item.value ? 'selected-choice' : ''}"><input type="radio" ${value === item.value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>` : ''}
           ${item.feedback ? `<div class="review-feedback">${item.feedback}</div>` : ''}
-        </div>
-      </details>
-    `).join('');
+      `,
+    })));
   }
 
   function setCurrent(next) {
@@ -106,7 +103,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   function record({ evidence, prompt, answer, feedback = '', next, label }) {
     if (evidence) state.evidence.add(evidence);
     const [step, defaultLabel] = STEP_META[state.current];
-    state.completed.push({ step, label: label || defaultLabel, prompt, answer, feedback });
+    state.completed.push({ id: state.current, step, label: label || defaultLabel, prompt, answer, feedback });
     setCurrent(next);
   }
 
@@ -150,13 +147,13 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
 
   function choiceQuestion({ prompt, options, correct, feedback, wrongFeedback, next, evidence, after = '', intro = '' }) {
     const draft = state.drafts[state.current] || '';
-    currentEl.innerHTML = stepShell(prompt, `
+    interactionLifecycle.renderCurrent(stepShell(prompt, `
       <form id="answer-form" class="answer-form">
         <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${escapeHtml(value)}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>
         <button class="primary" type="submit">Check answer</button>
       </form>
       ${feedbackMarkup()}
-    `, intro);
+    `, intro));
 
     document.getElementById('answer-form').addEventListener('submit', (event) => {
       event.preventDefault();
@@ -170,6 +167,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
       const [step, label] = STEP_META[state.current];
       if (evidence) state.evidence.add(evidence);
       state.completed.push({
+        id: state.current,
         step,
         label,
         prompt,
@@ -199,10 +197,10 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
 
     if (state.current === 'relations') {
       const canCheck = state.selectedRelations.length > 0;
-      currentEl.innerHTML = stepShell(
+      interactionLifecycle.renderCurrent(stepShell(
         'Choose the relations relevant to the business request.',
         `<p class="step-copy">Use the <strong>+</strong> actions in the full live schema viewer to build your focused working schema.</p><button id="continue-relations" class="primary" ${canCheck ? '' : 'disabled'}>Check selection</button>${feedbackMarkup()}`,
-      );
+      ));
       document.getElementById('continue-relations').addEventListener('click', () => {
         if (!hasExactRequiredRelations()) {
           wrong('The selected relations do not yet provide exactly the article information and publishing-source information requested. Reinspect the schema and revise the Working Schema.');
@@ -265,10 +263,10 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
           wrongFeedback: '<code>COUNT(*)</code> counts rows. What does one row in <code>news_article</code> represent?',
         });
       } else {
-        currentEl.innerHTML = stepShell(
+        interactionLifecycle.renderCurrent(stepShell(
           'Let’s establish a baseline.',
           `<p class="step-copy">Before combining the two relations, first measure how many rows are currently in <code>news_article</code>.</p><p class="step-copy">The query below is already prepared for you. Run it and inspect the result.</p>${feedbackMarkup()}`,
-        );
+        ));
       }
     } else if (state.current === 'prediction') {
       choiceQuestion({
@@ -301,7 +299,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
         wrongFeedback: 'The request needs publishing-source information added to every article row.',
       });
     } else if (state.current === 'sql') {
-      currentEl.innerHTML = stepShell('Implement the JOIN in SQL', `
+      interactionLifecycle.renderCurrent(stepShell('Implement the JOIN in SQL', `
         <div class="sql-pattern">
           <strong>SQL PATTERN: INNER JOIN</strong>
           <pre>SELECT ...
@@ -316,7 +314,7 @@ INNER JOIN relation_b
         ${state.outputRequirementsOpen ? '<p class="step-copy output-requirements">Required output fields: <code>news_article.title</code> and <code>news_source.name</code>.</p>' : ''}
         <p class="step-copy">Keep the baseline query and write the new statement beneath it.</p>
         ${feedbackMarkup()}
-      `);
+      `));
       document.getElementById('output-requirements').addEventListener('click', () => {
         state.outputRequirementsOpen = !state.outputRequirementsOpen;
         render();
@@ -335,9 +333,9 @@ INNER JOIN relation_b
     } else if (state.current === 'complete') {
       const requiredEvidence = ['relations', 'output', 'connection', 'cardinality', 'baseline', 'prediction', 'operation', 'sql', 'finalGrain'];
       const complete = requiredEvidence.every((item) => state.evidence.has(item));
-      currentEl.innerHTML = stepShell('Stage complete', `
+      interactionLifecycle.renderCurrent(stepShell('Stage complete', `
         <div class="completion-state"><div class="completion-icon">✓</div><p>${complete ? 'You identified the relevant relations, reasoned about the article grain and relationship, predicted the JOIN behavior, implemented it in SQL, and verified the result.' : 'The required learning evidence is incomplete.'}</p></div>
-      `);
+      `));
     }
   }
 
