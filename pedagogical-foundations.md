@@ -105,6 +105,14 @@ The next pedagogical work should evaluate concrete candidate learner experiences
 - the explicitly established foundations above.
 New pedagogical rules should be added only when they are actually established in the current reconstruction.
 
+## WORKING — Guided reasoning progression
+
+When the course guides a learner through a multi-step reasoning process, the learner should remain oriented within that process: what problem is being worked on, what has already been established, and why the next reasoning move is relevant.
+
+Guidance should preserve this continuity without performing the reasoning for the learner.
+
+This does not prescribe a fixed interaction pattern, require an explanation between every step, or determine a universal amount of scaffolding.
+
 ## WORKING — Relation Identification from the Business Question
 
 The learner must be able to connect the business question, the information required to answer it, and the relations that provide that information. When identifying relevant relations is part of the intended relational reasoning, the learner should determine them from the available schema rather than receive the required relation set pre-resolved.
