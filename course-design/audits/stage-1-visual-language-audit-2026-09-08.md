@@ -286,3 +286,17 @@ Verification results:
 Build, syntax, and `git diff --check` passed. No markup, JavaScript, pedagogy, SQL behavior, Stage flow, editor behavior, or result-rendering behavior changed.
 
 The focused verification closes this implementation gap to the current scope. This does not constitute full Stage 1 validation.
+
+#### Subsequent manual visual-review evidence
+
+A later manual review of Step 8 showed that:
+
+- the active instruction is cut off at the boundary where the SQL workspace begins;
+- the “Now write a query…” instruction is not fully visible;
+- the editor still occupies a large portion of the viewport;
+- results are not visible in the same viewport;
+- instruction and implementation still read as physically separated regions.
+
+This evidence preserves the previous implementation and focused-verification record: the sizing change improved the problem, but it did not close it. The current implementation status for Gap #2 is `PARTIALLY IMPROVED — OPEN`.
+
+Full Stage 1 validation has not yet been completed.
