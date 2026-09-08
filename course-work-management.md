@@ -143,13 +143,18 @@ Their existence does not establish:
 
 Before extending the course, close the currently established implementation / UX gaps in the existing Stage 1 experience.
 
+The Stage 1 visual-language implementation audit is complete. It confirmed two implementation gaps:
+
+- overall surface hierarchy / atmosphere;
+- SQL workspace dominance / instructional separation.
+
 ### 5.1 Visual implementation gap
 
 **Workstream:** Visual Implementation  
 **Classification:** Implementation gap  
 **Source:** Stage 1 test-drive evidence + `course-design/course-visual-language.md`
 
-Bring the current Stage 1 implementation into better alignment with the established course visual language.
+Implement the confirmed surface hierarchy / atmosphere gap using the established course visual language.
 
 Current observed scope:
 
@@ -417,6 +422,14 @@ The record remains:
 
 REFERENCE ONLY / NON-AUTHORITATIVE
 
+### Stage 1 visual-language implementation audit
+
+Completed. The audit is recorded in:
+
+`course-design/audits/stage-1-visual-language-audit-2026-09-08.md`
+
+It confirmed the overall surface hierarchy / atmosphere gap and the SQL workspace dominance / instructional separation gap.
+
 ### Guided reasoning progression
 
 `08ddd13`
@@ -471,11 +484,10 @@ PASS
 
 ### Current execution sequence
 
-1. Identify the concrete Stage 1 implementation deviations from `course-design/course-visual-language.md`.
-2. Close the confirmed visual implementation gaps without redefining the visual language.
-3. Investigate and address SQL workspace usability without assuming a specific solution in advance.
-4. Run Stage 1 regression and learner-flow validation.
-5. Record the validation evidence and classify remaining findings appropriately.
-6. If no blocking Stage 1 stabilization issue remains, run the next-capability planning gate.
+1. **Implement the confirmed surface hierarchy / atmosphere gap.**
+2. Address the confirmed SQL workspace dominance / instructional separation gap.
+3. Run Stage 1 regression and learner-flow validation.
+4. Record the validation evidence and classify remaining findings appropriately.
+5. If no blocking Stage 1 stabilization issue remains, run the next-capability planning gate.
 
 The next course unit is selected because it develops the next required learner capability — not because a Stage number is available.
