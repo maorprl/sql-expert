@@ -258,3 +258,31 @@ No new readability, contrast, density, or hierarchy problem was observed.
 The surface hierarchy / atmosphere gap is `RESOLVED TO CURRENT SCOPE`.
 
 Full Stage 1 validation has not yet been completed. SQL workspace dominance / instructional separation remains `OPEN` and was not evaluated as resolved by this review.
+
+### Gap #2 — SQL workspace dominance / instructional separation
+
+- Original classification: `CONFIRMED IMPLEMENTATION GAP`
+- Implementation status: `RESOLVED TO CURRENT SCOPE`
+- Implementation file: `src/styles.css`
+
+Implementation summary:
+
+- full SQL workspace allocation reduced and rebalanced;
+- editor/results minimum heights reduced proportionally;
+- baseline mode preserved;
+- existing scrolling model preserved;
+- no new resize control or interaction behavior introduced.
+
+Verification results:
+
+- Step 8 — 1280×720: `PASS`
+- Step 8 — 1280×600: `PASS`
+- Step 8 — 390×844: `PASS`
+- Editor usability: `PASS`
+- Result visibility and scrolling: `PASS`
+- Instruction + workspace co-visibility: `PASS`
+- Baseline mode unchanged: `PASS`
+
+Build, syntax, and `git diff --check` passed. No markup, JavaScript, pedagogy, SQL behavior, Stage flow, editor behavior, or result-rendering behavior changed.
+
+The focused verification closes this implementation gap to the current scope. This does not constitute full Stage 1 validation.
