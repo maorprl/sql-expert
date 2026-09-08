@@ -300,3 +300,7 @@ A later manual review of Step 8 showed that:
 This evidence preserves the previous implementation and focused-verification record: the sizing change improved the problem, but it did not close it. The current implementation status for Gap #2 is `PARTIALLY IMPROVED — OPEN`.
 
 Full Stage 1 validation has not yet been completed.
+
+#### Rejected implementation attempt
+
+A Step-8-only continuous-scroll implementation was tested. It improved continuity between the actionable instruction and the SQL workspace, but it was rejected because changing scroll ownership on the Step 7 → Step 8 transition reset the learner's visible position. This regression is not present in the committed implementation because the experiment was reverted.

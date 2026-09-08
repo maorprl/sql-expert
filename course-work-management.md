@@ -141,14 +141,14 @@ Their existence does not establish:
 
 ### Current Focus — Stabilize Stage 1
 
-Before extending the course, close the currently established implementation / UX gaps in the existing Stage 1 experience.
+Before extending the course, complete full regression and learner-flow validation of the existing Stage 1 experience.
 
 The Stage 1 visual-language implementation audit is complete. It confirmed two implementation gaps:
 
 - overall surface hierarchy / atmosphere;
 - SQL workspace dominance / instructional separation.
 
-The surface hierarchy / atmosphere gap is resolved to the current scope. The SQL workspace dominance / instructional separation gap was improved but has been reopened by subsequent manual visual evidence.
+The surface hierarchy / atmosphere gap is resolved to the current scope. The remaining SQL workspace dominance / instructional separation issue is non-blocking and has moved to the UX backlog.
 
 ### 5.1 Visual implementation gap
 
@@ -184,36 +184,10 @@ This focused review does not constitute completion of full Stage 1 validation.
 - no new visual-language principle has been introduced implicitly through implementation;
 - the affected learner flow, Working Schema, Concept Moments, and SQL workspace have been checked after the changes.
 
-### 5.2 SQL workspace usability
-
-**Workstream:** UX / Shared Infrastructure  
-**Classification:** UX / shared-infrastructure work  
-**Status:** PARTIALLY IMPROVED — OPEN — CURRENT ACTIVE ITEM
-**Source:** Stage 1 test-drive evidence
-
-The focused post-implementation verification confirmed that:
-
-- the full SQL workspace allocation is reduced and rebalanced;
-- the editor and results remain usable and visible;
-- instruction and workspace are co-visible more often;
-- baseline mode and the existing scrolling model are preserved.
-
-Subsequent manual visual evidence at Step 8 showed that the active instruction can still be cut off at the SQL workspace boundary, the editor can still occupy a large portion of the viewport, results may not be visible in the same viewport, and instruction and implementation can still read as physically separated regions. The previous sizing change improved the problem but did not close it.
-
-This gap remains open. Full Stage 1 validation has not yet been completed.
-
-#### Complete when
-
-- the issue has been examined in a representative learner flow;
-- the learner can move practically between instruction, query editing, execution, and results;
-- the SQL workspace does not dominate the task in a way that materially interferes with that flow;
-- the solution does not depend on a predetermined layout mechanism;
-- shared SQL / interaction behavior remains intact.
-
-### 5.3 Stage 1 validation
+### 5.2 Stage 1 validation
 
 **Workstream:** Validation / Testing
-**Status:** PENDING
+**Status:** ACTIVE — CURRENT NEXT ACTION
 
 After the affected Stage 1 changes:
 
@@ -340,7 +314,18 @@ These should be resolved when they become necessary to current work.
 
 They should not all be forced into the Active Plan merely because they remain OPEN.
 
-### 7.5 Conditional management split
+### 7.5 Stage 1 SQL workspace usability
+
+**Workstream:** UX / Shared Infrastructure
+**Classification:** UX / shared-infrastructure work
+**Status:** PARTIALLY IMPROVED — NON-BLOCKING UX BACKLOG
+**Source:** Stage 1 test-drive evidence
+
+The committed workspace-height reduction remains and improved the SQL workspace balance. The remaining instructional/workspace separation is not considered blocking and can be revisited when related SQL workspace or layout work makes a cleaner solution practical.
+
+A Step-8-only continuous-scroll implementation was tested and reverted because changing scroll ownership reset the learner's visible position during the Step 7 → Step 8 transition. That rejected experiment is not part of the current implementation, and its regression is not a current Bug Backlog item.
+
+### 7.6 Conditional management split
 
 If the capability-coverage view becomes too large or difficult to maintain inside this document:
 
@@ -500,9 +485,8 @@ PASS
 
 ### Current execution sequence
 
-1. **Resolve the remaining SQL workspace dominance / instructional separation gap.**
-2. Run full Stage 1 regression and learner-flow validation.
-3. Record the validation evidence and classify remaining findings appropriately.
-4. If no blocking Stage 1 stabilization issue remains, run the next-capability planning gate.
+1. **Run full Stage 1 regression and learner-flow validation.**
+2. Record the validation evidence and classify remaining findings appropriately.
+3. If no blocking Stage 1 stabilization issue remains, run the next-capability planning gate.
 
 The next course unit is selected because it develops the next required learner capability — not because a Stage number is available.
