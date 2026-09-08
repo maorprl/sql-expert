@@ -150,6 +150,8 @@ The Stage 1 visual-language implementation audit is complete. It confirmed two i
 
 The surface hierarchy / atmosphere gap is resolved to the current scope. The remaining SQL workspace dominance / instructional separation issue is non-blocking and has moved to the UX backlog.
 
+The Stage 1 instructional-experience audit is complete. It confirmed recurring guided-reasoning continuity gaps in the current learner flow.
+
 ### 5.1 Visual implementation gap
 
 **Workstream:** Visual Implementation  
@@ -184,10 +186,17 @@ This focused review does not constitute completion of full Stage 1 validation.
 - no new visual-language principle has been introduced implicitly through implementation;
 - the affected learner flow, Working Schema, Concept Moments, and SQL workspace have been checked after the changes.
 
-### 5.2 Stage 1 validation
+### 5.2 Guided-reasoning continuity capability
+
+**Workstream:** Pedagogy / Shared Interaction
+**Status:** ACTIVE — CURRENT NEXT ACTION
+
+Determine the shared interaction/lifecycle capability needed to support guided-reasoning continuity without Stage-1-specific hard-coding. This is a capability-definition step only; no implementation has started.
+
+### 5.3 Stage 1 validation
 
 **Workstream:** Validation / Testing
-**Status:** ACTIVE — CURRENT NEXT ACTION
+**Status:** PENDING
 
 After the affected Stage 1 changes:
 
@@ -475,6 +484,9 @@ PASS
 - `course-design/test-drives/stage-1-test-drive-2026-09-08.md`
   - REFERENCE ONLY
   - NON-AUTHORITATIVE
+- `course-design/audits/stage-1-instructional-experience-audit-2026-09-08.md`
+  - REFERENCE / IMPLEMENTATION-EXPERIENCE AUDIT
+  - NOT A DESIGN AUTHORITY
 
 ### Data
 
@@ -485,8 +497,9 @@ PASS
 
 ### Current execution sequence
 
-1. **Run full Stage 1 regression and learner-flow validation.**
-2. Record the validation evidence and classify remaining findings appropriately.
-3. If no blocking Stage 1 stabilization issue remains, run the next-capability planning gate.
+1. **Determine the shared interaction/lifecycle capability needed to support guided-reasoning continuity without Stage-1-specific hard-coding.**
+2. Run full Stage 1 regression and learner-flow validation.
+3. Record the validation evidence and classify remaining findings appropriately.
+4. If no blocking Stage 1 stabilization issue remains, run the next-capability planning gate.
 
 The next course unit is selected because it develops the next required learner capability — not because a Stage number is available.
