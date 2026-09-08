@@ -152,9 +152,10 @@ The Stage 1 visual-language implementation audit is complete. It confirmed two i
 
 **Workstream:** Visual Implementation  
 **Classification:** Implementation gap  
+**Status:** COMPLETED
 **Source:** Stage 1 test-drive evidence + `course-design/course-visual-language.md`
 
-Implement the confirmed surface hierarchy / atmosphere gap using the established course visual language.
+The confirmed surface hierarchy / atmosphere gap was implemented using the established course visual language.
 
 Current observed scope:
 
@@ -164,6 +165,16 @@ Current observed scope:
 - SQL implementation.
 
 This work should implement the existing visual direction, not redefine it.
+
+The focused visual review passed these representative states:
+
+- initial business request;
+- populated Working Schema;
+- CURRENT / COMPLETED hierarchy;
+- Concept Moment;
+- SQL instruction + workspace visual-role separation.
+
+This focused review does not constitute completion of full Stage 1 validation.
 
 #### Complete when
 
@@ -175,6 +186,7 @@ This work should implement the existing visual direction, not redefine it.
 
 **Workstream:** UX / Shared Infrastructure  
 **Classification:** UX / shared-infrastructure work  
+**Status:** ACTIVE — CURRENT NEXT ACTION
 **Source:** Stage 1 test-drive evidence
 
 Current evidence indicates that:
@@ -484,10 +496,9 @@ PASS
 
 ### Current execution sequence
 
-1. **Implement the confirmed surface hierarchy / atmosphere gap.**
-2. Address the confirmed SQL workspace dominance / instructional separation gap.
-3. Run Stage 1 regression and learner-flow validation.
-4. Record the validation evidence and classify remaining findings appropriately.
-5. If no blocking Stage 1 stabilization issue remains, run the next-capability planning gate.
+1. **Address the confirmed SQL workspace dominance / instructional separation gap.**
+2. Run Stage 1 regression and learner-flow validation.
+3. Record the validation evidence and classify remaining findings appropriately.
+4. If no blocking Stage 1 stabilization issue remains, run the next-capability planning gate.
 
 The next course unit is selected because it develops the next required learner capability — not because a Stage number is available.
