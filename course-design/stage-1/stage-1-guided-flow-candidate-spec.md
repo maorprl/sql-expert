@@ -803,7 +803,7 @@ The course should continue to feel like a guided learning environment rather tha
 
 Changing top-level packaging does not reduce required learner evidence.
 
-The implementation must still record evidence for:
+The implementation must still preserve evidence for:
 
 - relevant relation identification;
 - output grain;
@@ -815,9 +815,11 @@ The implementation must still record evidence for:
 - valid JOIN SQL result;
 - final grain verification.
 
-If one top-level episode contains multiple reasoning moves, each required evidence item must remain independently testable in state and review.
+**NEW CANDIDATE DECISION**
 
-A merged UI episode must not collapse multiple pedagogical checks into one uninspectable success flag.
+When one top-level episode contains multiple reasoning moves, the distinct required evidence should remain inspectable rather than being collapsed into one opaque episode-success flag.
+
+This candidate does **not** prescribe a specific internal state model, independent-testability mechanism, or technical representation for that evidence.
 
 ---
 
@@ -909,7 +911,7 @@ The following are out of scope for this redesign:
 - adding free-form learner explanations where they are not already required;
 - building a generic lesson engine before Stage 1 behavior proves a reusable need;
 - creating a persistent generic evidence panel / dashboard;
-- reintroducing the failed bridge-text-only prototype as the architecture;
+- **NEW CANDIDATE NON-GOAL:** reintroducing the failed bridge-text-only prototype as the architecture;
 - redesigning the entire SQL Lab;
 - treating external research labels such as teacher presence or coaching as independent course requirements;
 - changing hint escalation or solution-reveal rules without a separate accepted decision.
@@ -930,6 +932,8 @@ The following remain OPEN:
 8. Exact placement of business-request context during later episodes.
 9. Exact completed-review grouping when a top-level episode contains multiple reasoning moves.
 10. Hint escalation, solution reveal, and unresolved SQL-workspace backlog items not explicitly decided here.
+11. Exact Working Schema relation-removal behavior.
+12. Technical mechanism used for semantic result checking; the semantic correctness requirement itself remains preserved.
 
 If implementation requires one of these to be resolved, it must be surfaced as a design decision rather than inferred silently.
 
@@ -939,7 +943,7 @@ If implementation requires one of these to be resolved, it must be surfaced as a
 
 The implementation is not accepted merely because it renders, executes SQL, or passes technical checks.
 
-It must pass manual learner-experience validation against this checklist.
+It must be evaluated against this checklist.
 
 ### Source protection
 
@@ -1009,8 +1013,9 @@ It must pass manual learner-experience validation against this checklist.
 
 ### Evidence preservation
 
-- [ ] All nine current evidence targets remain available in state / review even though top-level packaging changes.
-- [ ] Merged episodes do not hide or collapse distinct reasoning evidence.
+- [ ] All required reasoning evidence remains available for review even though top-level packaging changes.
+- [ ] Merged episodes do not hide or collapse distinct reasoning evidence into one opaque success state.
+- [ ] Exact internal state representation remains an implementation choice unless separately decided.
 - [ ] Stage completion remains a state after all required evidence is present.
 
 ---
@@ -1043,7 +1048,7 @@ Implementation exposed an unresolved design choice that should not be guessed.
 
 Technical tests are necessary but not sufficient.
 
-Manual learner test-drive evidence controls acceptance for experiential claims such as continuity, visual hierarchy, perceived guidance, or whether a visual reveals an answer prematurely.
+**NEW CANDIDATE PROCESS RULE:** for experiential claims such as continuity, visual hierarchy, perceived guidance, or whether a visual reveals an answer prematurely, manual learner test-drive evidence is the proposed acceptance method for this candidate. This is not asserted as an existing course-level rule.
 
 ---
 
