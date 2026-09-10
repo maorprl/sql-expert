@@ -61,9 +61,9 @@ Visual aids are explanatory rather than decorative, are local to the reasoning t
 
 Result-Grain reasoning, the baseline, and the prediction are one continuous reasoning episode. After the relationship and Cardinality are established, the learner identifies that one requested result row represents one news article. Only then introduce **Grain**: the grain of the requested result is what one requested result row represents. Grain is never a property of `news_article`, and it is never another name for a table.
 
-The baseline is included because it supports reasoning about row-count and result-Grain preservation in this encounter. It measures `news_article` and reports 18 rows. The learner interprets the measurement as 18 starting news-article rows. Because the requested result Grain is one article per row, this provides the baseline against which row and Grain preservation can be predicted. The prepared measurement is not SQL syntax instruction and does not require the learner to write `COUNT(*)`.
+The baseline is included because it supports reasoning about row-count and result-Grain preservation in this encounter. The learner-facing SQL editor is first used here as the persistent Stage 1 SQL workspace, prefilled with `SELECT COUNT(*) FROM news_article`. The learner runs and interprets this prepared query; they do not author it, and its role here is measurement rather than SQL syntax instruction. It reports 18 rows, which the learner interprets as 18 starting news-article rows. Because the requested result Grain is one article per row, this provides the baseline against which row and Grain preservation can be predicted.
 
-Baseline measurement and prediction are presented as one continuous reasoning episode. The baseline presentation should be role-sensitive and compact enough that the implementation workspace does not visually dominate this measurement activity. The exact compact UI remains open.
+Baseline measurement and prediction are presented as one continuous reasoning episode. The same learner-facing SQL editor remains the workspace used later for JOIN implementation; the baseline must not be presented as a separate static code card or followed by a newly introduced replacement editor. The exact visual size and placement of the persistent editor during the baseline remain open, provided it does not visually dominate the reasoning activity.
 
 Before JOIN terminology appears, the learner predicts that adding one publishing-source name per article preserves the 18 result rows with the same result Grain. The feedback makes the PK/FK and Cardinality basis explicit: each article matches one source row. The prediction uses a closed response; no open rationale is required. The continuous chain is: one article per requested result row → 18 starting article rows → one matching source per article → 18 result rows with the same Grain.
 
@@ -73,7 +73,7 @@ The learner then chooses the semantic action of combining each article with its 
 
 Before learner-authored SQL, the `INNER JOIN ... ON ...` pattern, matching-row meaning, and `news_article.news_source_id = news_source.news_source_id` are instructional content. There is no separate assessment of the `ON` condition; its understanding is evidenced by the learner's query result.
 
-For this Stage, SQL instruction and the SQL workspace remain visually distinct. The editor, execution controls, and result grid are learner tools that support the lesson rather than dominate it.
+For this Stage, SQL instruction and the SQL workspace remain visually distinct. The SQL workspace is not newly introduced here: it is the same learner-facing editor first used for the prepared baseline measurement. The editor, execution controls, and result grid are learner tools that support the lesson rather than dominate it.
 
 SQL implementation and verification form one continuous top-level episode while preserving the distinct required evidence.
 
@@ -89,8 +89,8 @@ Stage completion is a state, not a numbered learner episode.
 - The exact visual styling of schema focus / dimming after Grain is not determined.
 - The exact styling of selectable schema columns and the detailed local wrong-answer treatment are not determined beyond the preserved pedagogical behavior above.
 - The exact connector geometry, animation, and annotation treatment are not determined.
-- The exact compact presentation of the prepared baseline measurement is not determined, provided it remains a measurement tool rather than premature SQL syntax instruction.
-- The exact visual transition from the compact baseline measurement into the full SQL implementation workspace is not determined.
+- The exact visual sizing and placement of the persistent SQL editor during the baseline are not determined, provided the prepared `COUNT(*)` query is run in that same learner-facing workspace and the editor does not dominate the reasoning activity.
+- The exact visual expansion or reframing of that persistent editor for later JOIN implementation is not determined, provided it is not presented as a newly introduced or replacement workspace.
 - The exact placement / treatment of persistent business-request context during later episodes is not determined.
 - The exact grouping of completed review when one top-level episode contains multiple reasoning moves is not determined, provided required evidence remains inspectable.
 - Hint escalation and solution-reveal behavior are not determined by this document.
