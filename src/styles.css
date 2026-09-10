@@ -82,9 +82,6 @@ input[type="search"] { width: 100%; padding: 8px 10px; border: 1px solid #cfd9e5
 .relation-preview.relationship-visible { grid-template-columns: minmax(145px, 1fr) 68px minmax(145px, 1fr); gap: 8px; align-items: start; }
 .working-empty { grid-column: 1 / -1; align-self: center; padding: 24px 16px; color: var(--muted); text-align: center; }
 .data-card { position: relative; min-width: 0; overflow: visible; border: 1px solid #c8d7e6; border-radius: 11px; background: #fff; transition: opacity .2s, box-shadow .2s, border-color .2s; }
-.data-card.grain-focus { border: 2px solid var(--blue); box-shadow: 0 0 0 4px rgba(47,111,237,.08); }
-.data-card.grain-quiet { opacity: .72; }
-.grain-marker { position: absolute; top: -27px; left: 0; width: max-content; max-width: 190px; padding: 5px 8px; border: 1px solid #bad2fb; border-radius: 999px; background: #e9f2ff; color: #225ab9; font-size: 9px; font-weight: 800; }
 .data-card-title { min-height: 39px; display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 9px 10px; border-bottom: 1px solid #c8d7e6; border-radius: 10px 10px 0 0; background: #eef4fb; }
 .data-card-title > code { overflow: hidden; color: #223c61; font-size: 12px; font-weight: 850; text-overflow: ellipsis; }
 .remove-relation { padding: 3px 6px; border-radius: 5px; font-size: 9px; }
@@ -154,6 +151,8 @@ button.working-column:hover { border-color: var(--blue); background: #f0f5ff; }
 .lab-workspace[hidden] { display: none; }
 .editor-header, .results-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 13px; border-bottom: 1px solid #cbd3dd; background: #f7f9fb; }
 .editor-header h2, .results-header h2 { margin: 0; font-size: 13px; }
+.editor-actions { display: flex; align-items: center; gap: 10px; }
+.editor-actions #run-query { padding: 6px 9px; font-size: 11px; }
 #editor-note, #result-meta { color: var(--muted); font-size: 10px; }
 #editor { width: 100%; height: 100%; }
 .results-panel { min-height: 0; display: flex; flex-direction: column; overflow: hidden; border-top: 1px solid #cbd3dd; }

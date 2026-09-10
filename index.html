@@ -9,7 +9,7 @@
     <main id="app">
       <header class="topbar">
         <div><h1>SQL Lab <span class="stage-label">Stage 1</span></h1><span id="db-status" class="status">Loading database…</span></div>
-        <div class="actions"><button id="run-query" class="primary lab-action" hidden disabled>Run query <kbd>Ctrl / ⌘ + Enter</kbd></button><button id="clear-results" class="lab-action" hidden disabled>Clear results</button><button id="reset-db" disabled>Reset database</button></div>
+        <div class="actions"><button id="clear-results" class="lab-action" hidden disabled>Clear results</button><button id="reset-db" disabled>Reset database</button></div>
       </header>
       <section id="error-panel" class="message error" hidden></section>
       <section class="workspace">
@@ -34,7 +34,7 @@
                   <div id="relation-preview" class="relation-preview" aria-label="Working schema"></div>
                 </section>
                 <section id="lab-workspace" class="lab-workspace" hidden>
-                  <div class="editor-header"><h2>SQL Workspace</h2><span id="editor-note">SQLite</span></div>
+                  <div class="editor-header"><h2>SQL Workspace</h2><div class="editor-actions"><span id="editor-note">SQLite</span><button id="run-query" class="primary lab-action" hidden disabled>Run query <kbd>Ctrl / ⌘ + Enter</kbd></button></div></div>
                   <div id="editor" aria-label="SQL editor"></div>
                   <section class="results-panel">
                     <div class="results-header"><h2>Results</h2><span id="result-meta">No query run</span></div>
