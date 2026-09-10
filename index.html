@@ -14,22 +14,28 @@
       <section id="error-panel" class="message error" hidden></section>
       <section class="workspace">
         <aside class="schema-panel">
-          <div class="panel-header"><h2>Schema</h2><input id="schema-search" type="search" placeholder="Find relations or columns" aria-label="Search schema" /></div>
+          <div class="panel-header"><div><span class="eyebrow">Explore</span><h2>Live Schema</h2></div><input id="schema-search" type="search" placeholder="Find relations or columns" aria-label="Search schema" /></div>
           <div id="schema-viewer" class="schema-viewer" aria-live="polite"></div>
         </aside>
         <section class="learning-panel">
           <div id="stage-scroll" class="stage-scroll">
             <section class="business-request" aria-labelledby="business-request-title">
-              <span class="eyebrow">Research request</span>
+              <span class="eyebrow">Business request</span>
               <h2 id="business-request-title">The research team is reviewing media coverage and wants every article to include the source that published it.</h2>
             </section>
-            <section class="working-schema-header"><span class="eyebrow">Working schema</span><span>Selected relations</span></section>
-            <section id="relation-preview" class="relation-preview" aria-label="Working schema"></section>
-            <section id="completed-steps" class="completed-steps" aria-label="Completed reasoning"></section>
-            <section id="current-step" class="current-step" aria-live="polite"></section>
+            <div class="lesson-surface">
+              <div class="reasoning-column">
+                <section id="completed-steps" class="completed-steps" aria-label="Completed reasoning"></section>
+                <section id="current-step" class="current-step" aria-live="polite"></section>
+              </div>
+              <section class="working-schema-panel" aria-labelledby="working-schema-title">
+                <div class="working-schema-header"><div><span class="eyebrow">Reasoning surface</span><h2 id="working-schema-title">Working Schema</h2></div><span id="working-schema-status">Selected relations persist as you reason</span></div>
+                <div id="relation-preview" class="relation-preview" aria-label="Working schema"></div>
+              </section>
+            </div>
           </div>
           <section id="lab-workspace" class="lab-workspace" hidden>
-            <div class="editor-header"><h2>Query</h2></div>
+            <div class="editor-header"><h2>SQL Workspace</h2><span id="editor-note">SQLite</span></div>
             <div id="editor" aria-label="SQL editor"></div>
             <section class="results-panel">
               <div class="results-header"><h2>Results</h2><span id="result-meta">No query run</span></div>

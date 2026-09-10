@@ -75,13 +75,15 @@ function readSchema(database) {
 function renderSchema() {
   const filter = el('schema-search').value.trim().toLowerCase();
   const viewer = el('schema-viewer'); viewer.textContent = '';
+  const relationshipLevel = stage1?.relationshipLevel() ?? 0;
+  const canAddRelations = stage1?.canAddRelations() ?? true;
   for (const table of schema) {
     const matches = !filter || table.name.toLowerCase().includes(filter) || table.columns.some(c => c.column.toLowerCase().includes(filter));
     if (!matches) continue;
     const details = document.createElement('details'); details.className = 'relation'; details.open = Boolean(filter);
     const summary = document.createElement('summary'); summary.title = 'Double-click to insert relation name';
     const selected = stage1?.isRelationSelected(table.name);
-    summary.innerHTML = `<span class="relation-name">${escapeHtml(table.name)}</span><span class="count">${table.columns.length} columns</span><button type="button" class="add-relation" ${selected ? 'disabled' : ''} aria-label="Add ${escapeHtml(table.name)} to working schema">${selected ? 'Added' : '+'}</button>`;
+    summary.innerHTML = `<span class="relation-name">${escapeHtml(table.name)}</span><span class="count">${table.columns.length} columns</span><button type="button" class="add-relation" ${selected || !canAddRelations ? 'disabled' : ''} ${canAddRelations ? '' : 'hidden'} aria-label="Add ${escapeHtml(table.name)} to working schema">${selected ? 'Added' : '+'}</button>`;
     summary.addEventListener('dblclick', (event) => { event.preventDefault(); insertAtCursor(table.name); });
     summary.querySelector('.add-relation').addEventListener('click', (event) => { event.preventDefault(); event.stopPropagation(); stage1?.addRelation(table.name); });
     details.append(summary);
@@ -89,10 +91,10 @@ function renderSchema() {
     for (const column of table.columns) {
       if (filter && !table.name.toLowerCase().includes(filter) && !column.column.toLowerCase().includes(filter)) continue;
       const item = document.createElement('div'); item.className = 'schema-item'; item.title = 'Double-click to insert column name';
-      item.innerHTML = `<span>${escapeHtml(column.column)}</span> <span class="type">${escapeHtml(column.type)}</span>${column.pk ? '<span class="badge">PK</span>' : ''}`;
+      item.innerHTML = `<span>${escapeHtml(column.column)}</span> <span class="type">${escapeHtml(column.type)}</span>${relationshipLevel > 0 && column.pk ? '<span class="badge">PK</span>' : ''}`;
       item.addEventListener('dblclick', () => insertAtCursor(column.column)); body.append(item);
     }
-    for (const foreignKey of table.foreignKeys) {
+    if (relationshipLevel > 0) for (const foreignKey of table.foreignKeys) {
       const line = document.createElement('span'); line.className = 'fk'; line.textContent = `FK ${foreignKey.from} → ${foreignKey.refTable}.${foreignKey.to}`; body.append(line);
     }
     details.append(body); viewer.append(details);
