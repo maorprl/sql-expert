@@ -2,9 +2,9 @@ const BASELINE_SQL = 'SELECT COUNT(*) FROM news_article;';
 
 const INTERACTION_LABELS = {
   relations: 'Identify relevant relations',
-  output: 'Determine output grain',
+  output: 'Determine row meaning',
   connection: 'Understand the relationship · Connecting key',
-  cardinality: 'Understand the relationship · Cardinality',
+  cardinality: 'Understand the relationship',
   baselineRun: 'Establish the baseline',
   prediction: 'Predict behavior',
   operation: 'Choose the relational action',
@@ -99,7 +99,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     `);
 
     if (showRelationship && cards.length >= 2) {
-      cards.splice(1, 0, `<div class="schema-connector" aria-label="news_article.news_source_id references news_source.news_source_id"><span class="connector-cardinality">${relationshipLevel() > 1 ? 'M ← 1' : ''}</span><span class="connector-line"></span><span class="connector-labels"><b>FK</b><b>PK</b></span></div>`);
+      cards.splice(1, 0, `<div class="schema-connector" aria-label="One news source can publish many news articles"><span class="connector-cardinality">${relationshipLevel() > 1 ? '1 → M' : ''}</span><span class="connector-line"></span></div>`);
     }
     relationEl.innerHTML = cards.join('');
 
@@ -136,7 +136,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     interactionLifecycle.renderCompleted(state.completed.filter((item) => item.id !== state.pendingAdvance?.item.id).map((item) => ({
       id: item.id,
       summaryHtml: `<span class="complete-mark">✓</span><span>${escapeHtml(item.label)}</span><span class="completed-answer">${escapeHtml(item.answer)}</span>`,
-      reviewHtml: `<p class="review-question"><strong>${escapeHtml(stripMarkup(item.prompt))}</strong></p><p><strong>Your answer:</strong> ${escapeHtml(item.answer)}</p>${item.options ? `<fieldset class="choices review-choices" disabled>${item.options.map(([value, label]) => `<label class="${value === item.value ? 'selected-choice' : ''}"><input type="radio" ${value === item.value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>` : ''}${item.feedback ? `<div class="review-feedback">${item.feedback}</div>` : ''}`,
+      reviewHtml: `<p class="review-question"><strong>${escapeHtml(stripMarkup(item.prompt))}</strong></p><p><strong>${escapeHtml(item.answerLabel)}:</strong> ${escapeHtml(item.answer)}</p>${item.options ? `<fieldset class="choices review-choices" disabled>${item.options.map(([value, label]) => `<label class="${value === item.value ? 'selected-choice' : ''}"><input type="radio" ${value === item.value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>` : ''}${item.feedback ? `<div class="review-feedback">${item.feedback}</div>` : ''}`,
     })));
   }
 
@@ -147,9 +147,9 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     onSelectionChange();
   }
 
-  function record({ evidence, prompt, answer, feedback = '', next, label, value, options }) {
+  function record({ evidence, prompt, answer, answerLabel = 'Your answer', feedback = '', next, label, value, options }) {
     if (evidence) state.evidence.add(evidence);
-    const item = { id: state.current, label: label || INTERACTION_LABELS[state.current], prompt, answer, feedback, value, options };
+    const item = { id: state.current, label: label || INTERACTION_LABELS[state.current], prompt, answer, answerLabel, feedback, value, options };
     state.completed.push(item);
     state.pendingAdvance = { next, item };
     state.localFeedback = '';
@@ -172,7 +172,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     const { next, item } = state.pendingAdvance;
     const continueLabel = next === 'complete' ? 'Complete stage' : next === 'finalGrain' ? 'Continue to verification' : 'Continue';
     interactionLifecycle.renderCurrent(stepShell(item.prompt, `
-      <p class="confirmed-answer"><strong>Your answer:</strong> ${escapeHtml(item.answer)}</p>
+      <p class="confirmed-answer"><strong>${escapeHtml(item.answerLabel)}:</strong> ${escapeHtml(item.answer)}</p>
       ${item.feedback}
       <button id="continue-after-feedback" class="primary continue-after-feedback">${continueLabel}</button>
     `));
@@ -276,7 +276,7 @@ INNER JOIN news_source
   function handleSqlSuccess(statement, resultSets) {
     if (state.current !== 'sql') return;
     if (!validateArticleSourceResult(statement, resultSets)) return wrong('The SQL ran, but the result does not yet contain exactly the 18 article titles paired with their publishing-source names. Inspect the selected fields and the relationship in <code>ON</code>, then retry.');
-    record({ evidence: 'sql', prompt: 'Return every article title with the name of its publishing source.', answer: 'Semantically correct 18-row article-and-source result', feedback: '<div class="success-feedback">The query produced one row for every article, with the name of its related publishing source.</div>', next: 'finalGrain' });
+    record({ evidence: 'sql', prompt: 'Return every article title with the name of its publishing source.', answer: '18 rows with article titles and source names', answerLabel: 'Result', feedback: '<div class="success-feedback">The query produced one row for every article, with the name of its related publishing source.</div>', next: 'finalGrain' });
   }
 
   render();
