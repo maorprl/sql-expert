@@ -99,7 +99,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     `);
 
     if (showRelationship && cards.length >= 2) {
-      cards.splice(1, 0, `<div class="schema-connector" aria-label="One news source can publish many news articles"><span class="connector-cardinality">${relationshipLevel() > 1 ? '1 → M' : ''}</span><span class="connector-line"></span></div>`);
+      cards.splice(1, 0, `<div class="schema-connector" aria-label="One news source can publish many news articles"><span class="connector-cardinality">${relationshipLevel() > 1 ? '1 news_source → M news_article rows' : ''}</span><span class="connector-line"></span></div>`);
     }
     relationEl.innerHTML = cards.join('');
 
