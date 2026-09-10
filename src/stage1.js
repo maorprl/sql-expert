@@ -1,16 +1,16 @@
 const BASELINE_SQL = 'SELECT COUNT(*) FROM news_article;';
 
-const EPISODES = {
-  relations: [1, 'Identify relevant relations'],
-  output: [2, 'Determine output grain'],
-  connection: [3, 'Understand the relationship · Connecting key'],
-  cardinality: [3, 'Understand the relationship · Cardinality'],
-  baselineRun: [4, 'Establish the baseline'],
-  prediction: [4, 'Predict behavior'],
-  operation: [5, 'Choose the relational action'],
-  sql: [6, 'Learn and implement JOIN'],
-  finalGrain: [6, 'Verify the result'],
-  complete: [null, 'Stage complete'],
+const INTERACTION_LABELS = {
+  relations: 'Identify relevant relations',
+  output: 'Determine output grain',
+  connection: 'Understand the relationship · Connecting key',
+  cardinality: 'Understand the relationship · Cardinality',
+  baselineRun: 'Establish the baseline',
+  prediction: 'Predict behavior',
+  operation: 'Choose the relational action',
+  sql: 'Learn and implement JOIN',
+  finalGrain: 'Verify the result',
+  complete: 'Stage complete',
 };
 
 const REQUIRED_RELATIONS = ['news_article', 'news_source'];
@@ -18,7 +18,7 @@ const REQUIRED_RELATIONS = ['news_article', 'news_source'];
 export function createStage1({ editor, getDatabase, getSchema, onSelectionChange, interactionLifecycle }) {
   const state = {
     current: 'relations', completed: [], evidence: new Set(), drafts: {}, localFeedback: '',
-    selectedRelations: [], selectedColumn: '', baselineExecuted: false,
+    selectedRelations: [], selectedColumn: '', baselineExecuted: false, pendingAdvance: null,
   };
 
   const relationEl = document.getElementById('relation-preview');
@@ -133,9 +133,9 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function renderCompleted() {
-    interactionLifecycle.renderCompleted(state.completed.map((item) => ({
+    interactionLifecycle.renderCompleted(state.completed.filter((item) => item.id !== state.pendingAdvance?.item.id).map((item) => ({
       id: item.id,
-      summaryHtml: `<span class="complete-mark">✓</span><span>Episode ${item.episode} · ${escapeHtml(item.label)}</span><span class="completed-answer">${escapeHtml(item.answer)}</span>`,
+      summaryHtml: `<span class="complete-mark">✓</span><span>${escapeHtml(item.label)}</span><span class="completed-answer">${escapeHtml(item.answer)}</span>`,
       reviewHtml: `<p class="review-question"><strong>${escapeHtml(stripMarkup(item.prompt))}</strong></p><p><strong>Your answer:</strong> ${escapeHtml(item.answer)}</p>${item.options ? `<fieldset class="choices review-choices" disabled>${item.options.map(([value, label]) => `<label class="${value === item.value ? 'selected-choice' : ''}"><input type="radio" ${value === item.value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>` : ''}${item.feedback ? `<div class="review-feedback">${item.feedback}</div>` : ''}`,
     })));
   }
@@ -149,9 +149,12 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
 
   function record({ evidence, prompt, answer, feedback = '', next, label, value, options }) {
     if (evidence) state.evidence.add(evidence);
-    const [episode, defaultLabel] = EPISODES[state.current];
-    state.completed.push({ id: state.current, episode, label: label || defaultLabel, prompt, answer, feedback, value, options });
-    setCurrent(next);
+    const item = { id: state.current, label: label || INTERACTION_LABELS[state.current], prompt, answer, feedback, value, options };
+    state.completed.push(item);
+    state.pendingAdvance = { next, item };
+    state.localFeedback = '';
+    render();
+    onSelectionChange();
   }
 
   function wrong(feedback) { state.localFeedback = feedback; render(); }
@@ -161,8 +164,22 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function stepShell(prompt, body, intro = '') {
-    const [episode, label] = EPISODES[state.current];
-    return episode ? `<div class="step-kicker">Episode ${episode} of 6 · ${label}</div>${intro}<h2 class="prompt">${prompt}</h2>${body}` : `<h2 class="prompt">${prompt}</h2>${body}`;
+    const label = INTERACTION_LABELS[state.current];
+    return state.current !== 'complete' ? `<div class="step-kicker">${label}</div>${intro}<h2 class="prompt">${prompt}</h2>${body}` : `<h2 class="prompt">${prompt}</h2>${body}`;
+  }
+
+  function renderAcknowledgement() {
+    const { next, item } = state.pendingAdvance;
+    const continueLabel = next === 'complete' ? 'Complete stage' : next === 'finalGrain' ? 'Continue to verification' : 'Continue';
+    interactionLifecycle.renderCurrent(stepShell(item.prompt, `
+      <p class="confirmed-answer"><strong>Your answer:</strong> ${escapeHtml(item.answer)}</p>
+      ${item.feedback}
+      <button id="continue-after-feedback" class="primary continue-after-feedback">${continueLabel}</button>
+    `));
+    document.getElementById('continue-after-feedback').addEventListener('click', () => {
+      state.pendingAdvance = null;
+      setCurrent(next);
+    });
   }
 
   function choiceQuestion({ prompt, options, correct, feedback, wrongFeedback, next, evidence, intro = '' }) {
@@ -192,6 +209,11 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     renderRelations();
     renderCompleted();
     updateWorkspaceVisibility();
+
+    if (state.pendingAdvance) {
+      renderAcknowledgement();
+      return;
+    }
 
     if (state.current === 'relations') {
       interactionLifecycle.renderCurrent(stepShell('Which relations contain the information we need?', `<p class="step-copy">Add the relevant relations from the Live Schema to the Working Schema.</p><button id="continue-relations" class="primary" ${state.selectedRelations.length ? '' : 'disabled'}>Check selection</button>${feedbackMarkup()}`));

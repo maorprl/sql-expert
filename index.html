@@ -28,20 +28,22 @@
                 <section id="completed-steps" class="completed-steps" aria-label="Completed reasoning"></section>
                 <section id="current-step" class="current-step" aria-live="polite"></section>
               </div>
-              <section class="working-schema-panel" aria-labelledby="working-schema-title">
-                <div class="working-schema-header"><div><span class="eyebrow">Reasoning surface</span><h2 id="working-schema-title">Working Schema</h2></div><span id="working-schema-status">Selected relations persist as you reason</span></div>
-                <div id="relation-preview" class="relation-preview" aria-label="Working schema"></div>
-              </section>
+              <div class="implementation-column">
+                <section class="working-schema-panel" aria-labelledby="working-schema-title">
+                  <div class="working-schema-header"><div><span class="eyebrow">Reasoning surface</span><h2 id="working-schema-title">Working Schema</h2></div><span id="working-schema-status">Selected relations persist as you reason</span></div>
+                  <div id="relation-preview" class="relation-preview" aria-label="Working schema"></div>
+                </section>
+                <section id="lab-workspace" class="lab-workspace" hidden>
+                  <div class="editor-header"><h2>SQL Workspace</h2><span id="editor-note">SQLite</span></div>
+                  <div id="editor" aria-label="SQL editor"></div>
+                  <section class="results-panel">
+                    <div class="results-header"><h2>Results</h2><span id="result-meta">No query run</span></div>
+                    <div id="result-content" class="result-content"><p class="empty">Results will appear here.</p></div>
+                  </section>
+                </section>
+              </div>
             </div>
           </div>
-          <section id="lab-workspace" class="lab-workspace" hidden>
-            <div class="editor-header"><h2>SQL Workspace</h2><span id="editor-note">SQLite</span></div>
-            <div id="editor" aria-label="SQL editor"></div>
-            <section class="results-panel">
-              <div class="results-header"><h2>Results</h2><span id="result-meta">No query run</span></div>
-              <div id="result-content" class="result-content"><p class="empty">Results will appear here.</p></div>
-            </section>
-          </section>
         </section>
       </section>
     </main>
