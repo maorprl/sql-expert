@@ -61,7 +61,7 @@ Visual aids are explanatory rather than decorative, are local to the reasoning t
 
 Result-Grain reasoning, the baseline, and the prediction are one continuous reasoning episode. After the relationship and Cardinality are established, the learner identifies that one requested result row represents one news article. Only then introduce **Grain**: the grain of the requested result is what one requested result row represents. Grain is never a property of `news_article`, and it is never another name for a table.
 
-The baseline is included because it supports reasoning about row-count and result-Grain preservation in this encounter. It measures `news_article` and reports 18 rows. Because one requested result row represents one article, the learner interprets this as 18 starting news-article rows before predicting the JOIN result. The prepared measurement is not SQL syntax instruction and does not require the learner to write `COUNT(*)`.
+The baseline is included because it supports reasoning about row-count and result-Grain preservation in this encounter. It measures `news_article` and reports 18 rows. The learner interprets the measurement as 18 starting news-article rows. Because the requested result Grain is one article per row, this provides the baseline against which row and Grain preservation can be predicted. The prepared measurement is not SQL syntax instruction and does not require the learner to write `COUNT(*)`.
 
 Baseline measurement and prediction are presented as one continuous reasoning episode. The baseline presentation should be role-sensitive and compact enough that the implementation workspace does not visually dominate this measurement activity. The exact compact UI remains open.
 
