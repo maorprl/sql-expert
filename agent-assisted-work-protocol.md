@@ -135,22 +135,51 @@ Status reporting must distinguish explicitly between:
 
 Do not use the unqualified word “synced” unless both states have actually been established.
 
-## 6. Multi-agent / scale rule
+## 6. Branch ownership and active-work lock
 
-As the workflow scales, avoid multiple active writers on the same branch whenever practical.
+When an implementation agent begins work from an agreed starting HEAD, the branch relationship for that task must be treated as an active ownership boundary until the implementation is either abandoned or reviewed.
+
+Default rule:
+
+- create or use a dedicated task / review branch for implementation work;
+- one implementation writer owns that task branch while the handoff is active;
+- do not make unrelated direct writes to the branch the implementation agent is expected to rejoin while it is working locally;
+- if documentation or authority maintenance must happen concurrently, use a separate branch or wait until the active implementation handoff reaches a synchronization point;
+- do not silently move the expected base underneath an active local implementation commit.
+
+The preferred scalable flow is:
+
+`canonical working branch → task branch → implementation → validation/report → review of actual commit/diff → promotion to canonical working branch`
+
+Promotion means advancing the canonical working branch only after the implementation has been reviewed and accepted.
+
+The canonical working branch should therefore be treated as **write-frozen for the affected workstream during an active implementation handoff**, unless the handoff is explicitly paused and the implementation agent is instructed to resynchronize before continuing.
+
+If an unavoidable concurrent write changes the canonical branch while local implementation is active:
+
+1. do not push the local implementation commit directly onto the moved canonical branch;
+2. publish or preserve the implementation on a separate task/review branch;
+3. rebase or otherwise reconcile only under explicit instruction and with conflict reporting;
+4. review the reconciled commit against the new base;
+5. promote only after review.
+
+This rule exists to prevent coordination work from creating avoidable divergence and to make multi-agent execution scalable.
+
+## 7. Multi-agent / scale rule
+
+As the workflow scales, avoid multiple active writers on the same branch.
 
 Preferred scalable pattern:
 
 - one active writer per task branch;
 - other agents review read-only or work on separate task branches;
 - each handoff names the exact starting commit;
-- accepted work advances the canonical working branch only after review.
+- accepted work advances the canonical working branch only after review;
+- durable repository state, not conversational memory, carries work between agents.
 
-If a shared working branch is used temporarily, every direct remote write creates an explicit synchronization obligation for any local implementation agent before it resumes work.
+Agents should rely on current authority documents, branch / commit identity, and recorded evidence rather than on another agent's conversational memory.
 
-Durable repository state should carry the project between agents. Agents should rely on current authority documents, branch / commit identity, and recorded evidence rather than on another agent's conversational memory.
-
-## 7. Token and coordination efficiency
+## 8. Token and coordination efficiency
 
 Prefer the shortest reliable path from decision to validated change.
 
@@ -165,7 +194,7 @@ In particular:
 
 Efficiency must not remove the authority, implementation, or validation boundaries. The goal is fewer redundant handoffs, not fewer safeguards.
 
-## 8. Current practical allocation
+## 9. Current practical allocation
 
 For the current course workflow, the default allocation is:
 
