@@ -22,12 +22,12 @@ Stage 1 reasoning remains constrained / closed rather than open-text unless a la
 
 Concepts appear only after the learner's prerequisite reasoning:
 
-- Grain after identifying the output-row meaning;
+- Grain after identifying what one requested result row represents, within the result-preservation episode;
 - PK/FK after identifying `news_article.news_source_id`;
 - Cardinality after the closed relationship question;
 - JOIN after choosing the semantic relational action.
 
-After Grain is established, `news_article` may receive local visual emphasis as the relation supplying the target output-row meaning while `news_source` remains available but quieter. This must not imply the general rule `Grain = table`.
+After result Grain is established, `news_article` may receive local visual emphasis as the relation supplying the target output-row meaning while `news_source` remains available but quieter. This must not imply the general rule `Grain = table`.
 
 For the connecting-key reasoning, the learner selects the relevant column directly in the `news_article` Working Schema card. This remains a constrained answer interaction. A wrong selection produces local corrective feedback and must not reveal PK/FK or the relationship. A correct selection confirms `news_article.news_source_id` and only then permits the PK/FK Concept Moment.
 
@@ -45,7 +45,7 @@ The learner should remain oriented to the same business problem, what has alread
 
 This continuity does not require a fixed bridge-text component or an explanation between every move. It may be carried by the evolving Working Schema, concise instructional framing, persistent business context, visual progression, or another implementation that preserves orientation without performing the next reasoning move for the learner.
 
-In particular, the transitions from Relations → Grain, Grain → connecting key, Cardinality → baseline, Baseline → prediction, Prediction → semantic action, and SQL instruction → implementation must not feel like unrelated new tasks.
+In particular, the transitions from Relations → connecting key, Cardinality → result Grain, result Grain → baseline, Baseline → prediction, Prediction → semantic action, and SQL instruction → implementation must not feel like unrelated new tasks. The business request supplies the article-oriented result; Cardinality does not itself determine the result Grain.
 
 ## Learner-experience visual application
 
@@ -57,13 +57,15 @@ Grain, PK/FK, Cardinality, and JOIN are the Concept Moments in this Stage. Conce
 
 Visual aids are explanatory rather than decorative, are local to the reasoning they support, appear only after learner engagement, and do not give away answers prematurely.
 
-## Baseline, prediction, and semantic action
+## Result Grain, baseline, prediction, and semantic action
 
-The baseline is included because it supports reasoning about row-count and grain preservation in this encounter. It measures `news_article` and reports 18 rows. The learner interprets this as 18 news articles before predicting the JOIN result. The prepared measurement is not SQL syntax instruction and does not require the learner to write `COUNT(*)`.
+Result-Grain reasoning, the baseline, and the prediction are one continuous reasoning episode. After the relationship and Cardinality are established, the learner identifies that one requested result row represents one news article. Only then introduce **Grain**: the grain of the requested result is what one requested result row represents. Grain is never a property of `news_article`, and it is never another name for a table.
+
+The baseline is included because it supports reasoning about row-count and result-Grain preservation in this encounter. It measures `news_article` and reports 18 rows. Because one requested result row represents one article, the learner interprets this as 18 starting news-article rows before predicting the JOIN result. The prepared measurement is not SQL syntax instruction and does not require the learner to write `COUNT(*)`.
 
 Baseline measurement and prediction are presented as one continuous reasoning episode. The baseline presentation should be role-sensitive and compact enough that the implementation workspace does not visually dominate this measurement activity. The exact compact UI remains open.
 
-Before JOIN terminology appears, the learner predicts that adding one publishing-source name per article preserves the 18 article rows and the one-article-per-row grain. The feedback makes the PK/FK and cardinality basis explicit: each article matches one source row. The prediction uses a closed response; no open rationale is required.
+Before JOIN terminology appears, the learner predicts that adding one publishing-source name per article preserves the 18 result rows with the same result Grain. The feedback makes the PK/FK and Cardinality basis explicit: each article matches one source row. The prediction uses a closed response; no open rationale is required. The continuous chain is: one article per requested result row → 18 starting article rows → one matching source per article → 18 result rows with the same Grain.
 
 The learner then chooses the semantic action of combining each article with its related source. This learner decision is retained; it is not replaced by an instructional statement. Only after that choice is **JOIN** introduced.
 

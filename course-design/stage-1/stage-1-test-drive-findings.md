@@ -105,3 +105,7 @@ Before implementation:
 3. treat `DRIFT` items as direct conformance fixes once the authority is clear;
 4. preserve the items listed under `WORKS — PRESERVE`;
 5. then implement the resulting accepted changes as one coherent Stage 1 correction pass rather than a series of isolated screenshot fixes.
+
+## Resolution note: Grain sequencing
+
+The original F1 evidence remains historical. The accepted Stage 1 design response removes the standalone pre-relationship Grain episode and relocates result-Grain reasoning into the result-preservation sequence: relationship/cardinality → one article per requested result row → 18 starting article rows → one matching source per article → predict 18 result rows with the same Grain. The learner route and interaction decisions are the authority for this disposition.
