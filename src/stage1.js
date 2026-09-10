@@ -49,7 +49,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
 
   function renderColumn(relation, column) {
     const keyLevel = relationshipLevel();
-    const isConnectingChoice = state.current === 'connection' && relation.name === 'news_article';
+    const isConnectingChoice = state.current === 'connection' && !state.pendingAdvance && relation.name === 'news_article';
     const isSelected = isConnectingChoice && state.selectedColumn === column.column;
     const isArticleForeignKey = keyLevel > 0 && relation.name === 'news_article' && column.column === 'news_source_id';
     const isSourcePrimaryKey = keyLevel > 0 && relation.name === 'news_source' && column.column === 'news_source_id';
@@ -70,9 +70,9 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function workingSchemaStatus() {
-    if (state.current === 'relations') return 'Build it from the live schema';
+    if (state.current === 'relations') return state.pendingAdvance ? 'The selected relations are established' : 'Build it from the live schema';
     if (state.current === 'output') return 'The selected relations stay with the problem';
-    if (state.current === 'connection') return 'Select a column directly in news_article';
+    if (state.current === 'connection') return state.pendingAdvance ? 'The established PK/FK relationship is now visible' : 'Select a column directly in news_article';
     if (state.current === 'cardinality') return 'The established PK/FK relationship is now visible';
     if (relationshipLevel() > 1) return 'One source → many articles';
     return 'Selected relations persist as you reason';
@@ -93,7 +93,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     const cards = selected.map((relation) => `
       <article class="data-card${relationClass(relation.name)}" data-relation="${escapeHtml(relation.name)}">
         ${state.evidence.has('output') && relation.name === 'news_article' ? '<div class="grain-marker">1 result row = 1 news article</div>' : ''}
-        <div class="data-card-title"><code>${escapeHtml(relation.name)}</code>${state.current === 'relations' ? `<button type="button" class="remove-relation" data-remove-relation="${escapeHtml(relation.name)}">Remove</button>` : ''}</div>
+        <div class="data-card-title"><code>${escapeHtml(relation.name)}</code>${state.current === 'relations' && !state.pendingAdvance ? `<button type="button" class="remove-relation" data-remove-relation="${escapeHtml(relation.name)}">Remove</button>` : ''}</div>
         <ul class="working-columns">${relation.columns.map((column) => renderColumn(relation, column)).join('')}</ul>
       </article>
     `);
@@ -112,7 +112,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function addRelation(name) {
-    if (state.current !== 'relations' || state.selectedRelations.includes(name)) return;
+    if (state.current !== 'relations' || state.pendingAdvance || state.selectedRelations.includes(name)) return;
     if (state.selectedRelations.length >= 4) {
       state.localFeedback = 'The Working Schema can contain up to four relations. Remove one to add another.';
       render();
@@ -125,7 +125,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function removeRelation(name) {
-    if (state.current !== 'relations') return;
+    if (state.current !== 'relations' || state.pendingAdvance) return;
     state.selectedRelations = state.selectedRelations.filter((item) => item !== name);
     state.localFeedback = '';
     render();
@@ -280,5 +280,5 @@ INNER JOIN news_source
   }
 
   render();
-  return { handleSqlSuccess, current: () => state.current, addRelation, isRelationSelected: (name) => state.selectedRelations.includes(name), relationshipLevel, canAddRelations: () => state.current === 'relations' };
+  return { handleSqlSuccess, current: () => state.current, addRelation, isRelationSelected: (name) => state.selectedRelations.includes(name), relationshipLevel, canAddRelations: () => state.current === 'relations' && !state.pendingAdvance };
 }
