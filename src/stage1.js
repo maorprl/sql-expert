@@ -18,7 +18,7 @@ const REQUIRED_RELATIONS = ['news_article', 'news_source'];
 export function createStage1({ editor, getDatabase, getSchema, onSelectionChange, interactionLifecycle }) {
   const state = {
     current: 'relations', completed: [], evidence: new Set(), drafts: {}, localFeedback: '',
-    selectedRelations: [], selectedColumn: '', baselineExecuted: false, pendingAdvance: null,
+    selectedRelations: [], selectedColumn: '', baselineExecuted: false, baselinePrepared: false, pendingAdvance: null,
   };
 
   const relationEl = document.getElementById('relation-preview');
@@ -40,11 +40,6 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     if (state.evidence.has('cardinality')) return 2;
     if (state.evidence.has('connection')) return 1;
     return 0;
-  }
-
-  function relationClass(name) {
-    if (!state.evidence.has('output') || relationshipLevel() > 0) return '';
-    return name === 'news_article' ? ' grain-focus' : name === 'news_source' ? ' grain-quiet' : '';
   }
 
   function renderColumn(relation, column) {
@@ -91,8 +86,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     }
 
     const cards = selected.map((relation) => `
-      <article class="data-card${relationClass(relation.name)}" data-relation="${escapeHtml(relation.name)}">
-        ${state.evidence.has('output') && relation.name === 'news_article' ? '<div class="grain-marker">1 result row = 1 news article</div>' : ''}
+      <article class="data-card" data-relation="${escapeHtml(relation.name)}">
         <div class="data-card-title"><code>${escapeHtml(relation.name)}</code>${state.current === 'relations' && !state.pendingAdvance ? `<button type="button" class="remove-relation" data-remove-relation="${escapeHtml(relation.name)}">Remove</button>` : ''}</div>
         <ul class="working-columns">${relation.columns.map((column) => renderColumn(relation, column)).join('')}</ul>
       </article>
@@ -199,9 +193,15 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function updateWorkspaceVisibility() {
-    const visible = ['sql', 'finalGrain', 'complete'].includes(state.current);
+    const baselineWorkspace = ['baselineRun', 'prediction', 'operation'].includes(state.current);
+    const visible = baselineWorkspace || ['sql', 'finalGrain', 'complete'].includes(state.current);
+    if (state.current === 'baselineRun' && !state.baselinePrepared) {
+      editor.setValue(BASELINE_SQL, -1);
+      state.baselinePrepared = true;
+    }
     labEl.hidden = !visible;
     learningEl.classList.toggle('sql-active', visible);
+    learningEl.classList.toggle('baseline-workspace-active', baselineWorkspace);
     document.querySelectorAll('.lab-action').forEach((element) => { element.hidden = !visible; });
   }
 
@@ -219,10 +219,10 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
       interactionLifecycle.renderCurrent(stepShell('Which relations contain the information we need?', `<p class="step-copy">Add the relevant relations from the Live Schema to the Working Schema.</p><button id="continue-relations" class="primary" ${state.selectedRelations.length ? '' : 'disabled'}>Check selection</button>${feedbackMarkup()}`));
       document.getElementById('continue-relations').addEventListener('click', () => {
         if (!hasExactRequiredRelations()) return wrong('The selection does not yet provide exactly the article and publishing-source information requested. Reinspect the Live Schema and revise it.');
-        record({ evidence: 'relations', prompt: 'Which relations contain the information we need?', answer: 'news_article and news_source', feedback: '<div class="success-feedback">Working Schema now contains <code>news_article</code> and <code>news_source</code>.</div>', next: 'output' });
+        record({ evidence: 'relations', prompt: 'Which relations contain the information we need?', answer: 'news_article and news_source', feedback: '<div class="success-feedback">Working Schema now contains <code>news_article</code> and <code>news_source</code>.</div>', next: 'connection' });
       });
     } else if (state.current === 'output') {
-      choiceQuestion({ prompt: 'What should one row in the requested result represent?', options: [['article', 'a news article'], ['source', 'a news source'], ['country', 'a country'], ['pair', 'a combination of article and source']], correct: 'article', evidence: 'output', next: 'connection', feedback: '<div class="success-feedback">Correct. Each result row represents one news article.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>Grain</b><span>Grain = what one row represents.</span></div>', wrongFeedback: 'The request asks for every article, with source information added. Reconsider what the main row still represents.' });
+      choiceQuestion({ prompt: 'What should one row in the requested result represent?', options: [['article', 'a news article'], ['source', 'a news source'], ['country', 'a country'], ['pair', 'a combination of article and source']], correct: 'article', evidence: 'output', next: 'baselineRun', feedback: '<div class="success-feedback">Correct. Each result row represents one news article.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>Grain</b><span>Grain = what one row represents.</span></div>', wrongFeedback: 'The request asks for every article, with source information added. Reconsider what the main row still represents.' });
     } else if (state.current === 'connection') {
       interactionLifecycle.renderCurrent(stepShell('Which column in <code>news_article</code> identifies the related publishing source?', `<p class="step-copy">Select the column directly in the Working Schema.</p><button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`));
       document.getElementById('check-column').addEventListener('click', () => {
@@ -230,15 +230,10 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
         record({ evidence: 'connection', prompt: 'Which column in news_article identifies the related publishing source?', answer: 'news_article.news_source_id', feedback: '<div class="success-feedback">Correct. Its value tells us which <code>news_source</code> row published that article.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>Primary Key / Foreign Key</b><span><code>news_article.news_source_id</code> is the FK referencing <code>news_source.news_source_id</code>, the PK. The referenced source row contains the <code>name</code> needed in the result.</span></div>', next: 'cardinality' });
       });
     } else if (state.current === 'cardinality') {
-      choiceQuestion({ prompt: 'Which statement correctly describes this relationship?', options: [['correct', 'One source can publish many articles; each article references one source.'], ['article-many', 'One article has many sources.'], ['source-one', 'Many sources publish one article.'], ['many', 'Many-to-many.']], correct: 'correct', evidence: 'cardinality', next: 'baselineRun', feedback: '<div class="success-feedback">Correct. Each article has one referenced source; one source may be referenced by many articles.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>Cardinality</b><span>The relationship is one news source → many news articles.</span></div>', wrongFeedback: 'Use the PK/FK structure: each article stores one source ID, while the same source ID can appear in multiple article rows.' });
+      choiceQuestion({ prompt: 'Which statement correctly describes this relationship?', options: [['correct', 'One source can publish many articles; each article references one source.'], ['article-many', 'One article has many sources.'], ['source-one', 'Many sources publish one article.'], ['many', 'Many-to-many.']], correct: 'correct', evidence: 'cardinality', next: 'output', feedback: '<div class="success-feedback">Correct. Each article has one referenced source; one source may be referenced by many articles.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>Cardinality</b><span>The relationship is one news source → many news articles.</span></div>', wrongFeedback: 'Use the PK/FK structure: each article stores one source ID, while the same source ID can appear in multiple article rows.' });
     } else if (state.current === 'baselineRun') {
       if (!state.baselineExecuted) {
-        interactionLifecycle.renderCurrent(stepShell('First measure the article rows.', `<p class="step-copy">Run this prepared measurement and inspect the result. You do not need to write SQL for this measurement.</p><div class="baseline-measure"><code>${BASELINE_SQL}</code><button id="run-baseline" class="primary">Run measurement</button></div>${feedbackMarkup()}`));
-        document.getElementById('run-baseline').addEventListener('click', () => {
-          const result = getDatabase()?.exec(BASELINE_SQL)[0];
-          if (result?.values?.[0]?.[0] !== 18) return wrong('The prepared measurement did not return the expected Stage 1 baseline. Reset the database and try again.');
-          state.baselineExecuted = true; state.localFeedback = ''; render();
-        });
+        interactionLifecycle.renderCurrent(stepShell('First measure the article rows.', `<p class="step-copy">Run the prepared measurement in the SQL Workspace and inspect the result. You do not need to write SQL for this measurement.</p>${feedbackMarkup()}`));
       } else {
         choiceQuestion({ intro: '<div class="baseline-result"><span>Baseline result</span><strong>18</strong><span>rows</span></div>', prompt: 'What does the number 18 represent here?', options: [['articles', '18 news articles'], ['sources', '18 news sources'], ['companies', '18 companies'], ['dates', '18 publication dates']], correct: 'articles', evidence: 'baseline', next: 'prediction', feedback: '<div class="success-feedback"><code>COUNT(*)</code> counted rows. Because <code>news_article</code> has one article per row, 18 rows means 18 news articles.</div>', wrongFeedback: 'The measurement counts rows in news_article. What does one row in that relation represent?' });
       }
@@ -274,6 +269,14 @@ INNER JOIN news_source
   }
 
   function handleSqlSuccess(statement, resultSets) {
+    if (state.current === 'baselineRun' && !state.baselineExecuted) {
+      const result = resultSets.at(-1);
+      if (statement.trim() !== BASELINE_SQL || result?.values?.[0]?.[0] !== 18) return wrong('Run the prepared measurement to establish the expected Stage 1 baseline. Reset the database and try again if it does not return 18.');
+      state.baselineExecuted = true;
+      state.localFeedback = '';
+      render();
+      return;
+    }
     if (state.current !== 'sql') return;
     if (!validateArticleSourceResult(statement, resultSets)) return wrong('The SQL ran, but the result does not yet contain exactly the 18 article titles paired with their publishing-source names. Inspect the selected fields and the relationship in <code>ON</code>, then retry.');
     record({ evidence: 'sql', prompt: 'Return every article title with the name of its publishing source.', answer: '18 rows with article titles and source names', answerLabel: 'Result', feedback: '<div class="success-feedback">The query produced one row for every article, with the name of its related publishing source.</div>', next: 'finalGrain' });
