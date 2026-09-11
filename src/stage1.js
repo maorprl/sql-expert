@@ -31,13 +31,17 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   const learningEl = document.querySelector('.learning-panel');
 
   function escapeHtml(value) {
-    return String(value).replace(/[&<>'\"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '\"': '&quot;' }[character]));
+    return String(value).replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
   }
 
   function stripMarkup(value) {
     const element = document.createElement('div');
     element.innerHTML = value;
     return element.textContent || '';
+  }
+
+  function teacherVoice(content) {
+    return `<aside class="teacher-voice"><span class="teacher-voice-label">Guidance</span><p>${content}</p></aside>`;
   }
 
   function relationshipLevel() {
@@ -69,13 +73,8 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function workingSchemaStatus() {
-    if (state.current === 'relations') return state.pendingAdvance ? 'Articles + source information selected' : 'Build it from the live schema';
-    if (state.current === 'connection') return state.pendingAdvance
-      ? 'news_article.news_source_id → news_source.news_source_id'
-      : 'Which article column tells us the source?';
-    if (state.current === 'cardinality') return 'news_article.news_source_id → news_source.news_source_id';
-    if (relationshipLevel() > 1) return 'One source → many articles';
-    return 'Selected relations persist as you reason';
+    if (state.current === 'relations' && !state.pendingAdvance) return 'Build it from the live schema';
+    return '';
   }
 
   function renderRelations() {
@@ -83,7 +82,9 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     const showRelationship = relationshipLevel() > 0 && REQUIRED_RELATIONS.every((name) => state.selectedRelations.includes(name));
     relationEl.classList.toggle('relationship-visible', showRelationship);
     relationEl.classList.toggle('cardinality-visible', relationshipLevel() > 1);
-    workingStatusEl.textContent = workingSchemaStatus();
+    const status = workingSchemaStatus();
+    workingStatusEl.textContent = status;
+    workingStatusEl.hidden = !status;
 
     if (!selected.length) {
       relationEl.innerHTML = '<div class="working-empty">Choose relevant relations from the live schema.</div>';
@@ -98,7 +99,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     `);
 
     if (showRelationship && cards.length >= 2) {
-      cards.splice(1, 0, `<div class="schema-connector" aria-label="One news source can publish many news articles"><span class="connector-cardinality">${relationshipLevel() > 1 ? '1 news_source → M news_article rows' : ''}</span><span class="connector-line"></span></div>`);
+      cards.splice(1, 0, '<div class="schema-connector" aria-label="news_article.news_source_id matches news_source.news_source_id"><span class="connector-line"></span></div>');
     }
     relationEl.innerHTML = cards.join('');
 
@@ -134,7 +135,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   function renderCompleted() {
     interactionLifecycle.renderCompleted(state.completed.filter((item) => item.id !== state.pendingAdvance?.item.id).map((item) => ({
       id: item.id,
-      summaryHtml: `<span class="complete-mark">✓</span><span>${escapeHtml(item.label)}</span><span class="completed-answer">${escapeHtml(item.answer)}</span>`,
+      summaryHtml: `<span class="complete-mark">✓</span><span>${escapeHtml(item.label)}</span><span class="completed-answer" title="${escapeHtml(item.answer)}">${escapeHtml(item.answer)}</span>`,
       reviewHtml: `<p class="review-question"><strong>${escapeHtml(stripMarkup(item.prompt))}</strong></p><p><strong>${escapeHtml(item.answerLabel)}:</strong> ${escapeHtml(item.answer)}</p>${item.options ? `<fieldset class="choices review-choices" disabled>${item.options.map(([value, label]) => `<label class="${value === item.value ? 'selected-choice' : ''}"><input type="radio" ${value === item.value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>` : ''}${item.feedback ? `<div class="review-feedback">${item.feedback}</div>` : ''}`,
     })));
   }
@@ -193,24 +194,45 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     const { next, item } = state.pendingAdvance;
 
     if (item.id === 'baselineRun' && next === 'prediction') {
-      interactionLifecycle.renderCurrent(stepShell('Baseline established.', '<p class="step-copy">The measurement now gives us a concrete starting point for the next prediction.</p>'));
+      interactionLifecycle.renderCurrent(stepShell('Baseline established.', teacherVoice('The measurement gives us the starting evidence for the next prediction.')));
       renderWorkspaceAction(`
         ${item.feedback}
-        <p class="evidence-bridge">Next, use this baseline together with the one-source-per-article relationship to predict what should happen when source information is added.</p>
+        ${teacherVoice('Use this baseline together with the one-source-per-article relationship to predict what should happen when source information is added.')}
         <button id="continue-after-baseline" class="primary">Continue</button>
       `, 'baseline-followup');
       continueFromPending('continue-after-baseline');
       return;
     }
 
-    if (item.id === 'sql' && next === 'finalGrain') {
-      interactionLifecycle.renderCurrent(stepShell('Inspect the result.', '<p class="step-copy">Your query ran. Use the returned rows and columns as evidence before deciding whether the earlier prediction held.</p>'));
+    if (item.id === 'prediction' && next === 'operation') {
+      interactionLifecycle.renderCurrent(stepShell('Prediction established.', teacherVoice('You now have an expectation for the result. Next, decide what relational action can add the source information while preserving it.')));
       renderWorkspaceAction(`
         ${item.feedback}
-        <p class="evidence-bridge">Compare what you see with the earlier prediction: 18 rows, one article per row.</p>
+        <button id="continue-after-prediction" class="primary">Continue</button>
+      `, 'prediction-followup');
+      continueFromPending('continue-after-prediction');
+      return;
+    }
+
+    if (item.id === 'sql' && next === 'finalGrain') {
+      interactionLifecycle.renderCurrent(stepShell('Inspect the result.', teacherVoice('Use the returned rows and columns as evidence before deciding whether the earlier prediction held.')));
+      renderWorkspaceAction(`
+        ${item.feedback}
+        ${teacherVoice('Compare what you see with the earlier prediction: 18 rows, one article per row.')}
         <button id="continue-to-verification" class="primary">Continue to verification</button>
       `, 'result-followup');
       continueFromPending('continue-to-verification');
+      return;
+    }
+
+    if (item.id === 'finalGrain' && next === 'complete') {
+      interactionLifecycle.renderCurrent(stepShell('Verification complete.', teacherVoice('You used the actual result to close the reasoning loop.')));
+      renderWorkspaceAction(`
+        <p class="confirmed-answer"><strong>${escapeHtml(item.answerLabel)}:</strong> ${escapeHtml(item.answer)}</p>
+        ${item.feedback}
+        <button id="complete-after-verification" class="primary">Complete stage</button>
+      `, 'verification-followup');
+      continueFromPending('complete-after-verification');
       return;
     }
 
@@ -243,7 +265,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
       ['dates', '18 publication dates'],
     ];
     const draft = state.drafts.baselineRun || '';
-    interactionLifecycle.renderCurrent(stepShell('Interpret the measurement.', '<p class="step-copy">The prepared query has run. Keep the result in view and identify what it tells us about our starting point.</p>'));
+    interactionLifecycle.renderCurrent(stepShell('Interpret the measurement.', teacherVoice('Keep the returned count in view and identify what it tells us about our starting point.')));
     const action = renderWorkspaceAction(`
       <div class="evidence-kicker">Interpret the evidence</div>
       <h3>What does the number 18 represent here?</h3>
@@ -270,15 +292,85 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     });
   }
 
+  function renderPrediction() {
+    const options = [
+      ['exact', '18 rows — one result row for each article'],
+      ['sources', '4 rows — one result row for each source'],
+      ['more', 'More than 18 rows — some articles would produce multiple result rows'],
+    ];
+    const draft = state.drafts.prediction || '';
+    interactionLifecycle.renderCurrent(stepShell('Predict from the evidence.', teacherVoice('We start with 18 article rows, and each article matches one source. Use those two established facts before we combine the rows.')));
+    const action = renderWorkspaceAction(`
+      <div class="baseline-result compact"><span>Established baseline</span><strong>18</strong><span>news articles</span></div>
+      <div class="evidence-kicker">Predict behavior</div>
+      <h3>What should happen when we add each article’s source information?</h3>
+      <form id="prediction-answer-form" class="answer-form">
+        <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${value}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>
+        <button class="primary" type="submit">Check answer</button>
+      </form>
+      ${feedbackMarkup()}
+    `, 'prediction-question');
+    action.querySelector('#prediction-answer-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const answer = new FormData(event.currentTarget).get('answer');
+      state.drafts.prediction = answer || '';
+      if (answer !== 'exact') return wrong('Start with the 18 article rows. For each one, how many source rows can its established relationship match?');
+      record({
+        evidence: 'prediction',
+        prompt: 'What should happen when we add each article’s source information?',
+        answer: stripMarkup(options.find(([value]) => value === answer)[1]),
+        value: answer,
+        options,
+        feedback: '<div class="success-feedback">Correct. We start with 18 article rows, and each article matches exactly one source. Adding the source name does not create extra article rows.</div><div class="prediction-equation">18 news articles × 1 matching source each = 18 result rows</div><p class="grain-takeaway">The Grain remains one news article per row.</p>',
+        next: 'operation',
+      });
+    });
+  }
+
+  function renderFinalVerification() {
+    const options = [
+      ['yes', '18 rows, with one article per row and its matching source_name'],
+      ['source-grain', '18 rows, but each row now represents a source rather than an article'],
+      ['multiplied', 'More than 18 rows because some articles were duplicated by the JOIN'],
+    ];
+    const draft = state.drafts.finalGrain || '';
+    interactionLifecycle.renderCurrent(stepShell('Verify the result.', teacherVoice('Keep the actual result in view. Compare its row count and row meaning with the prediction you made before writing SQL.')));
+    const action = renderWorkspaceAction(`
+      <div class="verification-prompt"><strong>Compare the result with your prediction</strong><span>Earlier prediction: 18 rows, one news article per row.</span></div>
+      <h3>What does the result show?</h3>
+      <form id="verification-answer-form" class="answer-form">
+        <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${value}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>
+        <button class="primary" type="submit">Check answer</button>
+      </form>
+      ${feedbackMarkup()}
+    `, 'verification-question');
+    action.querySelector('#verification-answer-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const answer = new FormData(event.currentTarget).get('answer');
+      state.drafts.finalGrain = answer || '';
+      if (answer !== 'yes') return wrong('Use the visible result as evidence: compare its row count with the 18-row prediction, then inspect what each returned row represents.');
+      record({
+        evidence: 'finalGrain',
+        prompt: 'What does the result show?',
+        answer: stripMarkup(options.find(([value]) => value === answer)[1]),
+        value: answer,
+        options,
+        feedback: '<div class="success-feedback">Correct. The result has 18 rows, just as predicted. Each row still represents one article, and the JOIN added the matching source information without changing the Grain.</div>',
+        next: 'complete',
+      });
+    });
+  }
+
   function hasExactRequiredRelations() {
     return state.selectedRelations.length === REQUIRED_RELATIONS.length && REQUIRED_RELATIONS.every((relation) => state.selectedRelations.includes(relation));
   }
 
   function updateWorkspaceVisibility() {
-    const baselineWorkspace = state.current === 'baselineRun';
-    const implementationWorkspace = ['sql', 'finalGrain', 'complete'].includes(state.current);
+    const predictionEvidence = state.current === 'prediction';
+    const baselineWorkspace = state.current === 'baselineRun' || predictionEvidence;
+    const implementationWorkspace = ['sql', 'finalGrain'].includes(state.current);
     const visible = baselineWorkspace || implementationWorkspace;
-    const baselineEvidence = baselineWorkspace && state.baselineExecuted;
+    const baselineEvidence = (state.current === 'baselineRun' && state.baselineExecuted) || predictionEvidence;
     const resultsEvidence = (state.current === 'sql' && state.pendingAdvance?.next === 'finalGrain') || state.current === 'finalGrain';
     const sqlImplementation = state.current === 'sql' && !resultsEvidence;
 
@@ -296,6 +388,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     learningEl.classList.toggle('sql-active', visible);
     learningEl.classList.toggle('baseline-workspace-active', baselineWorkspace);
     learningEl.classList.toggle('baseline-evidence-active', baselineEvidence);
+    learningEl.classList.toggle('prediction-evidence-active', predictionEvidence);
     learningEl.classList.toggle('join-teaching-active', state.current === 'joinTeaching');
     learningEl.classList.toggle('sql-implementation-active', sqlImplementation);
     learningEl.classList.toggle('results-evidence-active', resultsEvidence);
@@ -316,7 +409,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
           <span class="row-operator">+</span>
           <div class="example-row source-row"><strong>matching news_source row</strong><span class="match-value"><code>news_source_id</code><b>1</b></span><span><code>name</code><b>TechLedger</b></span></div>
           <span class="row-operator">→</span>
-          <div class="example-row result-row"><strong>result row</strong><span><code>title</code><b>CloudFence raises Series B</b></span><span><code>name</code><b>TechLedger</b></span></div>
+          <div class="example-row result-row"><strong>result row</strong><span><code>title</code><b>CloudFence raises Series B</b></span><span><code>source_name</code><b>TechLedger</b></span></div>
         </div>
       </section>
     ` : beat === 2 ? `
@@ -328,7 +421,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
       <section class="teaching-beat active-beat">
         <div class="teaching-beat-heading"><span>3</span><div><strong>Now translate what we already know into SQL</strong><p>Each clause carries one part of the business request and the relational reasoning.</p></div></div>
         <dl class="query-map">
-          <div><dt>requested information</dt><dd><code>SELECT news_article.title, news_source.name</code></dd></div>
+          <div><dt>requested information</dt><dd><code>SELECT news_article.title, news_source.name AS source_name</code></dd></div>
           <div><dt>starting article rows</dt><dd><code>FROM news_article</code></dd></div>
           <div><dt>add the matching source</dt><dd><code>JOIN news_source</code></dd></div>
           <div><dt>how the rows match</dt><dd><code>ON news_article.news_source_id = news_source.news_source_id</code></dd></div>
@@ -341,7 +434,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
       <div class="join-progress" aria-label="JOIN explanation progress"><span>Teaching step ${beat} of 3</span><div><i class="${beat >= 1 ? 'done' : ''}"></i><i class="${beat >= 2 ? 'done' : ''}"></i><i class="${beat >= 3 ? 'done' : ''}"></i></div></div>
       <div class="join-teaching">${beatMarkup}</div>
       <div class="teaching-navigation">
-        <button id="join-teaching-next" class="primary">${beat < 3 ? (beat === 1 ? 'Next: express the match in SQL' : 'Next: build the whole query') : 'Continue to SQL implementation'}</button>
+        <button id="join-teaching-next" class="primary">${beat < 3 ? (beat === 1 ? 'Next: express the match in SQL' : 'Next: map the whole query') : 'Continue to SQL implementation'}</button>
       </div>
     `));
 
@@ -394,7 +487,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
       });
     } else if (state.current === 'cardinality') {
       choiceQuestion({
-        intro: '<p class="step-copy">We know how an article points to its source. Now look at that relationship from both directions.</p>',
+        intro: teacherVoice('We know how an article points to its source. Now look at that relationship from both directions.'),
         prompt: 'Which statement best describes what can happen across the two relations?',
         options: [
           ['correct', 'One source can publish many articles; each article has one publishing source.'],
@@ -408,7 +501,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
       });
     } else if (state.current === 'output') {
       choiceQuestion({
-        intro: '<p class="step-copy">We now know how articles and sources are related. Before we combine them, we need to be clear about the result we want.</p>',
+        intro: teacherVoice('We now know how articles and sources are related. Before we combine them, be clear about the result the business request is asking for.'),
         prompt: 'If the result should show every article with its source, what should one result row represent?',
         options: [['article', 'a news article'], ['source', 'a news source'], ['country', 'a country'], ['pair', 'a combination of article and source']],
         correct: 'article', evidence: 'output', next: 'baselineRun',
@@ -417,26 +510,15 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
       });
     } else if (state.current === 'baselineRun') {
       if (!state.baselineExecuted) {
-        interactionLifecycle.renderCurrent(stepShell('How many article rows do we start with?', `<p class="step-copy">We established that one result row should represent one article. Before we add source information, establish the starting point.</p><div class="measurement-note"><code>COUNT(*)</code> counts the rows in <code>news_article</code>. Run the prepared measurement beside this step; you do not need to write SQL yet.</div>${feedbackMarkup()}`));
+        interactionLifecycle.renderCurrent(stepShell('How many article rows do we start with?', `${teacherVoice('We established that one result row should represent one article. Before we add source information, establish the starting point.')}<div class="measurement-note"><code>COUNT(*)</code> counts the rows in <code>news_article</code>. Run the prepared measurement beside this step; you do not need to write SQL yet.</div>${feedbackMarkup()}`));
       } else {
         renderBaselineInterpretation();
       }
     } else if (state.current === 'prediction') {
-      choiceQuestion({
-        intro: '<div class="baseline-result compact"><span>Established baseline</span><strong>18</strong><span>news articles</span></div><p class="step-copy">We know two things already: we start with 18 article rows, and each article matches one source. Before combining them, predict what should happen to the row count.</p>',
-        prompt: 'What should happen when we add each article’s source information?',
-        options: [
-          ['exact', '18 rows — one result row for each article'],
-          ['sources', '4 rows — one result row for each source'],
-          ['more', 'More than 18 rows — some articles would produce multiple result rows'],
-        ],
-        correct: 'exact', evidence: 'prediction', next: 'operation',
-        feedback: '<div class="success-feedback">Correct. We start with 18 article rows, and each article matches exactly one source. Adding the source name does not create extra article rows.</div><div class="prediction-equation">18 news articles × 1 matching source each = 18 result rows</div><p class="grain-takeaway">The Grain remains one news article per row.</p>',
-        wrongFeedback: 'Start with the 18 article rows. For each one, how many source rows can its established relationship match?',
-      });
+      renderPrediction();
     } else if (state.current === 'operation') {
       choiceQuestion({
-        intro: '<p class="step-copy">We now know what the result should preserve: 18 article rows, with source information added to each one.</p>',
+        intro: teacherVoice('We now know what the result should preserve: 18 article rows, with source information added to each one.'),
         prompt: 'What should we do with each article row to add that information?',
         options: [['combine', 'Combine each article with its matching source.'], ['filter', 'Filter articles by source.'], ['aggregate', 'Aggregate all sources into one row.']],
         correct: 'combine', evidence: 'operation', next: 'joinTeaching',
@@ -446,23 +528,15 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     } else if (state.current === 'joinTeaching') {
       renderJoinTeaching();
     } else if (state.current === 'sql') {
-      interactionLifecycle.renderCurrent(stepShell('Now translate the relationship into SQL.', `<p class="step-copy">Write a query that returns each article’s <code>title</code> with its publishing source’s <code>name</code>.</p><div class="sql-pattern compact"><strong>STRUCTURE</strong><pre>SELECT ...
+      interactionLifecycle.renderCurrent(stepShell('Now translate the relationship into SQL.', `<p class="step-copy">Write the query you just mapped from the business request and the established relationship.</p>
+        <details class="optional-scaffold desired-output"><summary>Show desired output</summary><div class="optional-scaffold-body"><div class="desired-output-grid"><code>title</code><code>source_name</code></div><p>Use <code>news_source.name AS source_name</code> for the publishing-source column.</p></div></details>
+        <details class="optional-scaffold sql-structure"><summary>Show SQL structure</summary><div class="optional-scaffold-body"><pre>SELECT ...
 FROM news_article
 JOIN news_source
-  ON ...</pre><p>Use <code>JOIN</code> to add the source relation and <code>ON</code> to express the relationship you already established.</p></div><p class="implementation-check"><strong>Earlier prediction:</strong> 18 rows · one article per row.</p>${feedbackMarkup()}`));
+  ON ...</pre><p>Use <code>JOIN</code> to add the source relation and <code>ON</code> to express the relationship you already established.</p></div></details>
+        <p class="implementation-check"><strong>Earlier prediction:</strong> 18 rows · one article per row.</p>${feedbackMarkup()}`));
     } else if (state.current === 'finalGrain') {
-      choiceQuestion({
-        intro: '<div class="verification-prompt"><strong>Compare the result with your prediction</strong><span>Earlier prediction: 18 rows, one news article per row.</span></div>',
-        prompt: 'What does the result show?',
-        options: [
-          ['yes', '18 rows, with one article per row and its matching source name'],
-          ['source-grain', '18 rows, but each row now represents a source rather than an article'],
-          ['multiplied', 'More than 18 rows because some articles were duplicated by the JOIN'],
-        ],
-        correct: 'yes', evidence: 'finalGrain', next: 'complete',
-        feedback: '<div class="success-feedback">Correct. The result has 18 rows, just as predicted. Each row still represents one article, and the JOIN added the matching source name without changing the Grain.</div>',
-        wrongFeedback: 'Use the result as evidence: compare its row count with the 18-row prediction, then inspect what each returned row represents.',
-      });
+      renderFinalVerification();
     } else if (state.current === 'complete') {
       const requiredEvidence = ['relations', 'connection', 'cardinality', 'output', 'baseline', 'prediction', 'operation', 'sql', 'finalGrain'];
       const complete = requiredEvidence.every((item) => state.evidence.has(item));
@@ -476,11 +550,12 @@ JOIN news_source
     if (!resultSets.length || !/\b(?:inner\s+)?join\b/i.test(statement) || !/\bon\b/i.test(statement)) return false;
     const result = resultSets.at(-1);
     if (result.columns.length !== 2 || result.values.length !== 18) return false;
+    const columns = result.columns.map((column) => column.toLowerCase());
+    if (columns[0] !== 'title' || columns[1] !== 'source_name') return false;
     const expected = getDatabase().exec('SELECT news_article.title, news_source.name FROM news_article INNER JOIN news_source ON news_article.news_source_id = news_source.news_source_id;')[0]?.values ?? [];
     const actualRows = normalizedRows(result.values);
     const expectedRows = normalizedRows(expected);
-    const reversedRows = normalizedRows(expected.map(([title, name]) => [name, title]));
-    return actualRows.every((row, index) => row === expectedRows[index]) || actualRows.every((row, index) => row === reversedRows[index]);
+    return actualRows.every((row, index) => row === expectedRows[index]);
   }
 
   function handleSqlSuccess(statement, resultSets) {
@@ -493,10 +568,10 @@ JOIN news_source
       return;
     }
     if (state.current !== 'sql' || state.pendingAdvance) return;
-    if (!validateArticleSourceResult(statement, resultSets)) return wrong('The SQL ran, but the result does not yet match the requested article/source result. Inspect the selected fields and the relationship in <code>ON</code>, then retry.');
+    if (!validateArticleSourceResult(statement, resultSets)) return wrong('The SQL ran, but the result does not yet match the requested output. Open Desired output if you want the exact column contract, then inspect the selected fields and the relationship in ON.');
     record({
       evidence: 'sql',
-      prompt: 'Return every article title with the name of its publishing source.',
+      prompt: 'Return every article title with its publishing source as source_name.',
       answer: 'Query ran successfully',
       answerLabel: 'Result',
       feedback: '<div class="success-feedback">The query ran successfully. Inspect the result.</div>',
