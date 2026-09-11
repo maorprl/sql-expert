@@ -11,8 +11,19 @@ function escapeAttribute(value) {
 export function createInteractionLifecycle({ currentElement, completedElement }) {
   const openCompletedIds = new Set();
 
-  function renderCurrent(html) {
-    currentElement.innerHTML = html;
+  function renderCurrent(content) {
+    if (typeof content === 'string') {
+      currentElement.innerHTML = content;
+    } else {
+      const { establishedHtml = '', bridgeHtml = '', contentHtml = '' } = content;
+      const guidanceHtml = establishedHtml || bridgeHtml
+        ? `<div class="interaction-guidance">
+            ${establishedHtml ? `<div class="guidance-established">${establishedHtml}</div>` : ''}
+            ${bridgeHtml ? `<div class="guidance-bridge">${bridgeHtml}</div>` : ''}
+          </div>`
+        : '';
+      currentElement.innerHTML = `${guidanceHtml}${contentHtml}`;
+    }
     currentElement.dataset.interactionState = 'current';
     currentElement.setAttribute('aria-current', 'step');
     return currentElement;

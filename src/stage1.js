@@ -145,15 +145,16 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
       : `<h2 class="prompt">${prompt}</h2>${body}`;
   }
 
-  function choiceQuestion({ prompt, options, correct, feedback, wrongFeedback, next, evidence, after = '', intro = '' }) {
+  function choiceQuestion({ prompt, options, correct, feedback, wrongFeedback, next, evidence, after = '', intro = '', guidance = null }) {
     const draft = state.drafts[state.current] || '';
-    interactionLifecycle.renderCurrent(stepShell(prompt, `
+    const contentHtml = stepShell(prompt, `
       <form id="answer-form" class="answer-form">
         <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${escapeHtml(value)}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>
         <button class="primary" type="submit">Check answer</button>
       </form>
       ${feedbackMarkup()}
-    `, intro));
+    `, intro);
+    interactionLifecycle.renderCurrent(guidance ? { ...guidance, contentHtml } : contentHtml);
 
     document.getElementById('answer-form').addEventListener('submit', (event) => {
       event.preventDefault();
@@ -226,6 +227,10 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
       });
     } else if (state.current === 'connection') {
       choiceQuestion({
+        guidance: {
+          establishedHtml: '<span>One row in the requested result represents one news article.</span>',
+          bridgeHtml: '<span>Now we need to find how each article points to the source information the request needs.</span>',
+        },
         prompt: 'Which column in <code>news_article</code> identifies the related publishing source?',
         options: [['news_article_id', '<code>news_article_id</code>'], ['news_source_id', '<code>news_source_id</code>'], ['url', '<code>url</code>'], ['title', '<code>title</code>']],
         correct: 'news_source_id',
