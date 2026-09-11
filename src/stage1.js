@@ -8,6 +8,7 @@ const INTERACTION_LABELS = {
   baselineRun: 'Establish the baseline',
   prediction: 'Predict behavior',
   operation: 'Choose the relational action',
+  joinTeaching: 'Learn how JOIN expresses the relationship',
   sql: 'Learn and implement JOIN',
   finalGrain: 'Verify the result',
   complete: 'Stage complete',
@@ -18,7 +19,7 @@ const REQUIRED_RELATIONS = ['news_article', 'news_source'];
 export function createStage1({ editor, getDatabase, getSchema, onSelectionChange, interactionLifecycle }) {
   const state = {
     current: 'relations', completed: [], evidence: new Set(), drafts: {}, localFeedback: '',
-    selectedRelations: [], selectedColumn: '', baselineExecuted: false, baselinePrepared: false, pendingAdvance: null,
+    selectedRelations: [], selectedColumn: '', baselineExecuted: false, baselinePrepared: false, implementationPrepared: false, pendingAdvance: null,
   };
 
   const relationEl = document.getElementById('relation-preview');
@@ -48,7 +49,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     const isSelected = isConnectingChoice && state.selectedColumn === column.column;
     const isArticleForeignKey = keyLevel > 0 && relation.name === 'news_article' && column.column === 'news_source_id';
     const isSourcePrimaryKey = keyLevel > 0 && relation.name === 'news_source' && column.column === 'news_source_id';
-    const isOutputField = ['sql', 'finalGrain', 'complete'].includes(state.current)
+    const isOutputField = ['joinTeaching', 'sql', 'finalGrain', 'complete'].includes(state.current)
       && ((relation.name === 'news_article' && column.column === 'title') || (relation.name === 'news_source' && column.column === 'name'));
     const classes = [isSelected ? 'selected-column' : '', isArticleForeignKey || isSourcePrimaryKey ? 'relationship-column' : '', isOutputField ? 'output-column' : ''].filter(Boolean).join(' ');
     const badge = isArticleForeignKey ? '<span class="key-badge">FK</span>' : isSourcePrimaryKey ? '<span class="key-badge">PK</span>' : '';
@@ -192,15 +193,23 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function updateWorkspaceVisibility() {
-    const baselineWorkspace = ['baselineRun', 'prediction', 'operation'].includes(state.current);
-    const visible = baselineWorkspace || ['sql', 'finalGrain', 'complete'].includes(state.current);
+    const baselineWorkspace = state.current === 'baselineRun';
+    const implementationWorkspace = ['sql', 'finalGrain', 'complete'].includes(state.current);
+    const visible = baselineWorkspace || implementationWorkspace;
     if (state.current === 'baselineRun' && !state.baselinePrepared) {
       editor.setValue(BASELINE_SQL, -1);
       state.baselinePrepared = true;
     }
+    if (state.current === 'sql' && !state.implementationPrepared) {
+      editor.setValue('', -1);
+      document.getElementById('clear-results').click();
+      state.implementationPrepared = true;
+    }
     labEl.hidden = !visible;
     learningEl.classList.toggle('sql-active', visible);
     learningEl.classList.toggle('baseline-workspace-active', baselineWorkspace);
+    learningEl.classList.toggle('join-teaching-active', state.current === 'joinTeaching');
+    document.querySelector('.editor-header h2').textContent = baselineWorkspace ? 'Baseline measurement' : 'JOIN implementation';
     document.querySelectorAll('.lab-action').forEach((element) => { element.hidden = !visible; });
   }
 
@@ -239,7 +248,38 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
     } else if (state.current === 'prediction') {
       choiceQuestion({ intro: '<div class="baseline-result compact"><span>Established baseline</span><strong>18</strong><span>news articles</span></div>', prompt: 'If we add each article’s publishing-source name, how many result rows should we expect?', options: [['exact', '18 rows'], ['sources', '4 rows'], ['more', 'more than 18 rows']], correct: 'exact', evidence: 'prediction', next: 'operation', feedback: '<div class="success-feedback">Correct. The result preserves the article rows.</div><div class="prediction-equation">18 news articles × 1 matching source each = 18 result rows</div><p class="grain-takeaway">The grain remains one news article per row.</p>', wrongFeedback: 'Start from one article row. How many source rows does its foreign key reference?' });
     } else if (state.current === 'operation') {
-      choiceQuestion({ prompt: 'What should we do to add the related source information to each article?', options: [['combine', 'Combine each article with its related source.'], ['filter', 'Filter articles by source.'], ['aggregate', 'Aggregate all sources into one row.']], correct: 'combine', evidence: 'operation', next: 'sql', feedback: '<div class="success-feedback">Correct. We need to combine each article with its matching source row.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>JOIN</b><span>A JOIN combines related rows from different relations.</span></div>', wrongFeedback: 'The request needs publishing-source information added to every existing article row.' });
+      choiceQuestion({ prompt: 'What should we do to add the related source information to each article?', options: [['combine', 'Combine each article with its related source.'], ['filter', 'Filter articles by source.'], ['aggregate', 'Aggregate all sources into one row.']], correct: 'combine', evidence: 'operation', next: 'joinTeaching', feedback: '<div class="success-feedback">Correct. We need to combine each article with its matching source row.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>JOIN</b><span>A JOIN combines related rows from different relations.</span></div>', wrongFeedback: 'The request needs publishing-source information added to every existing article row.' });
+    } else if (state.current === 'joinTeaching') {
+      interactionLifecycle.renderCurrent(stepShell('See how the relationship becomes a JOIN.', `
+        <div class="join-teaching">
+          <section class="teaching-beat">
+            <div class="teaching-beat-heading"><span>1</span><div><strong>Match related rows</strong><p>JOIN combines the article row with the source row that has the same <code>news_source_id</code>.</p></div></div>
+            <div class="row-match-visual" aria-label="One article row and its matching source row produce one result row">
+              <div class="example-row article-row"><strong>news_article row</strong><span><code>title</code><b>CloudFence raises Series B</b></span><span class="match-value"><code>news_source_id</code><b>1</b></span></div>
+              <span class="row-operator">+</span>
+              <div class="example-row source-row"><strong>matching news_source row</strong><span class="match-value"><code>news_source_id</code><b>1</b></span><span><code>name</code><b>TechLedger</b></span></div>
+              <span class="row-operator">→</span>
+              <div class="example-row result-row"><strong>result row</strong><span><code>title</code><b>CloudFence raises Series B</b></span><span><code>name</code><b>TechLedger</b></span></div>
+            </div>
+          </section>
+          <section class="teaching-beat">
+            <div class="teaching-beat-heading"><span>2</span><div><strong>Express the established relationship with <code>ON</code></strong><p>The match condition is the SQL expression of the relationship already shown in the Working Schema.</p></div></div>
+            <div class="relationship-on-map"><span>Established relationship</span><code>ON news_article.news_source_id = news_source.news_source_id</code></div>
+          </section>
+          <section class="teaching-beat">
+            <div class="teaching-beat-heading"><span>3</span><div><strong>Translate the business request into the whole query</strong><p>Each clause carries one part of the reasoning.</p></div></div>
+            <dl class="query-map">
+              <div><dt>requested attributes</dt><dd><code>SELECT news_article.title, news_source.name</code></dd></div>
+              <div><dt>starting article rows</dt><dd><code>FROM news_article</code></dd></div>
+              <div><dt>add the related source</dt><dd><code>JOIN news_source</code></dd></div>
+              <div><dt>established relationship</dt><dd><code>ON news_article.news_source_id = news_source.news_source_id</code></dd></div>
+            </dl>
+            <div class="output-requirements"><strong>Established expectation</strong><span>One news article per result row · 18 expected result rows</span></div>
+          </section>
+        </div>
+        <button id="begin-join-implementation" class="primary begin-implementation">Continue to SQL implementation</button>
+      `));
+      document.getElementById('begin-join-implementation').addEventListener('click', () => setCurrent('sql'));
     } else if (state.current === 'sql') {
       interactionLifecycle.renderCurrent(stepShell('Implement the relationship with <code>INNER JOIN ... ON ...</code>', `<div class="sql-pattern"><strong>PATTERN</strong><pre>FROM news_article
 INNER JOIN news_source
