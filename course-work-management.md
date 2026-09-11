@@ -551,6 +551,9 @@ PASS
 - `course-design/test-drives/stage-1-test-drive-2026-09-08.md`
   - REFERENCE ONLY
   - NON-AUTHORITATIVE
+- `course-design/test-drives/stage-1-manual-test-drive-findings-2026-09-10.md`
+  - REFERENCE ONLY
+  - NON-AUTHORITATIVE
 - `course-design/test-drives/stage-1-targeted-test-drive-2026-09-10.md`
   - REFERENCE ONLY
   - NON-AUTHORITATIVE
