@@ -1,0 +1,155 @@
+/* Validation-drive correction layer.
+   This file only addresses runtime findings confirmed after the Stage 1 correction pass. */
+
+/* Current work is the first scan path in ordinary reasoning states too. */
+.reasoning-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.reasoning-column > .current-step { order: 1; }
+.reasoning-column > .completed-steps {
+  order: 2;
+  margin: 12px 0 0;
+}
+.completed-steps:empty { display: none; }
+
+/* Avoid large empty matched-height cards when the current reasoning task is short. */
+.learning-panel .lesson-surface { align-items: start; }
+.learning-panel .current-step,
+.learning-panel .working-schema-panel { min-height: 0; }
+.learning-panel .relation-preview { min-height: 245px; }
+
+/* Teacher guidance must register at a glance as guidance, not as neutral status text. */
+.teacher-voice {
+  margin: 10px 0 15px;
+  padding: 13px 15px;
+  border: 1px solid #b7cef0;
+  border-left: 5px solid var(--blue);
+  border-radius: 10px;
+  background: linear-gradient(135deg, #eef5ff 0%, #f7faff 100%);
+  box-shadow: 0 5px 14px rgba(47, 111, 237, .08);
+  color: #294b70;
+}
+
+.teacher-voice-label {
+  display: inline-flex;
+  width: max-content;
+  margin-bottom: 6px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: .085em;
+  text-transform: uppercase;
+}
+
+.teacher-voice p {
+  margin: 0;
+  color: #294b70;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.workspace-evidence-action .teacher-voice { margin: 0; }
+
+/* Align the related fields before drawing the connector, so the relationship reads cleanly. */
+.relation-preview.relationship-visible .data-card[data-relation="news_source"] {
+  transform: translateY(32px);
+}
+
+.schema-connector .connector-line {
+  top: 87px;
+  left: -4px;
+  width: calc(100% + 8px);
+  transform: none;
+}
+
+.relation-preview.cardinality-visible .schema-connector::before,
+.relation-preview.cardinality-visible .schema-connector::after {
+  top: 57px;
+  width: 28px;
+  height: 22px;
+  border: 1px solid #91b5e8;
+  border-radius: 7px;
+  background: #edf4ff;
+  box-shadow: 0 3px 8px rgba(47, 111, 237, .10);
+  color: var(--blue-dark);
+  font-size: 11px;
+  font-weight: 950;
+}
+
+.relation-preview.cardinality-visible .schema-connector::before {
+  content: 'M';
+  left: -10px;
+}
+
+.relation-preview.cardinality-visible .schema-connector::after {
+  content: '1';
+  right: -10px;
+}
+
+/* Keep both premises next to the prediction question so it is deduction, not memory recall. */
+.prediction-premises {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 9px;
+  border: 1px solid #c9d9ec;
+  border-radius: 10px;
+  background: #f7faff;
+}
+
+.prediction-premises > div {
+  display: grid;
+  gap: 3px;
+  padding: 8px 9px;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.prediction-premises span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+.prediction-premises strong {
+  color: #294b70;
+  font-size: 12px;
+}
+
+/* During final verification, remove the inactive editor so actual result evidence and the
+   verification question fit as one local evidence-reading area. */
+.learning-panel.results-evidence-active #editor { display: none; }
+.learning-panel.results-evidence-active .lab-workspace {
+  height: 305px;
+  min-height: 305px;
+  grid-template-rows: 42px minmax(255px, 1fr);
+}
+.learning-panel.results-evidence-active .results-panel { min-height: 0; }
+.learning-panel.results-evidence-active .workspace-evidence-action { margin-top: 0; }
+
+/* Solution is an explicit, learner-requested disclosure and visually distinct from the lighter scaffolds. */
+.solution-reveal {
+  border-color: #cfc4ef;
+  background: #fbfaff;
+}
+
+.solution-reveal summary { color: #55408f; }
+.solution-reveal[open] summary { border-bottom-color: #e4def5; }
+.solution-reveal .optional-scaffold-body { background: #fdfcff; }
+
+@media (max-width: 760px) {
+  .prediction-premises { grid-template-columns: 1fr; }
+
+  .learning-panel.results-evidence-active .lab-workspace {
+    height: 420px;
+    min-height: 420px;
+  }
+}

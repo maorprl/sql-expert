@@ -18,6 +18,8 @@ The current learner activity should be the strongest visual focus on the page. I
 
 The page should make clear what the learner is expected to attend to and act on now. Completed work and supporting references should remain visually quieter than that current activity.
 
+Visual hierarchy is compositional, not only component-level. It is not enough for the current task, teacher guidance, completed history, and supporting references to each have individually distinct styling if the page composition still makes their roles compete or forces the learner to search for the active task. Their placement, scale, and grouping should make the current learner focus legible as the organizing center of the screen.
+
 ## 2. Completed Steps
 
 Completed steps should remain visible and reviewable, but be visually quieter than the current activity. They should be compact, preserve the original question, learner answer, and completion state, and support review without competing with the active step.
@@ -25,6 +27,8 @@ Completed steps should remain visible and reviewable, but be visually quieter th
 Completion should feel like progress, not like another active task.
 
 Reviewability does not require completed work to occupy the primary learner lane. If completed work would displace the current task from the active workspace, separate the task from its tool, or force the learner to scan past history before acting, completed work should move to a secondary placement or treatment while remaining available for review. The exact UI mechanism is not prescribed here.
+
+This applies to ordinary reasoning states as well as tool-led or authoring states. As completed history accumulates, it must not become the dominant first scan path merely because earlier steps are listed before the current one. The current learner task should remain directly reachable without requiring the learner to visually traverse the completed history first.
 
 ## 3. Concept Moments
 
@@ -60,6 +64,8 @@ When an explanation contains multiple conceptual layers, visual treatment should
 
 A relationship visual must spatially represent the relationship it claims to explain. Connector endpoints should correspond to the actual related fields, Cardinality markers or directional annotations must agree with the semantic relationship and the layout being shown, and annotations must not overlap the relation cards in a way that makes the relationship ambiguous.
 
+Cardinality notation should read immediately as part of the relationship representation rather than as arbitrary floating text attached to a line. The `1` and `M` roles, or any equivalent notation, should be visually associated with the relevant relationship endpoints strongly enough that the learner can interpret the one-to-many meaning without first decoding the layout.
+
 ## 8. Attention choreography and evidence locality
 
 Visual hierarchy should change as the learner's task changes. Persistent elements such as the Business Request, Working Schema, editors, and completed work do not have a fixed visual rank throughout a stage.
@@ -80,7 +86,9 @@ Instructional guidance has a visual role distinct from the learner's task prompt
 
 Concise bridges that explain why the next reasoning move matters, and explicit teacher-led explanations such as the JOIN teaching sequence, should be visually recognizable as guidance from the course rather than appearing as undifferentiated body copy.
 
-This does not mean that every explanatory sentence should receive a special treatment. The distinct guidance role is reserved for text that actively orients the learner through the reasoning journey or explains a concept before the learner acts. The exact visual treatment remains an implementation decision.
+The distinction must be perceptible at a glance. Guidance should not look like a subdued neutral note, status message, or incidental annotation that can be visually skipped without noticing that the course is actively orienting the learner. It should have enough salience to register as a teacher intervention while remaining subordinate to the learner's current task or evidence surface when that task is primary.
+
+This does not mean that every explanatory sentence should receive a special treatment. The distinct guidance role is reserved for text that actively orients the learner through the reasoning journey or explains a concept before the learner acts. The exact visual treatment remains an implementation decision, but the role should be applied consistently enough that the learner can recognize it across the stage.
 
 ## 10. Stage 1 as Calibration Specimen
 
