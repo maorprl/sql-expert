@@ -359,14 +359,56 @@ Current OPEN implementation decisions include:
 - exact prepared-baseline sizing/placement;
 - exact persistent-workspace role transition behavior;
 - hint escalation;
-- solution reveal;
 - technical semantic-checking mechanism.
 
 These should be resolved when they become necessary to current work.
 
 They should not all be forced into the Active Plan merely because they remain OPEN.
 
-### 7.8 Implementation cleanup
+### 7.8 Course-level controls — unresolved semantics and shell details
+
+**Workstream:** UX / Shared Course Infrastructure  
+**Status:** BACKLOG — DECISIONS NOT YET MADE
+
+Authority for the established global control roles is in:
+
+`course-design/course-controls.md`
+
+The following remain undecided and should be resolved only when implementation requires them.
+
+**Show solution:**
+
+- the visual surface in which the revealed solution appears;
+- whether the solution remains open while the learner continues working;
+- how solution availability is represented when a task has no meaningful single solution;
+- whether revealing a solution affects later assessment, analytics, or progress metadata.
+
+**Back:**
+
+- whether Back restores the exact previous interaction state;
+- whether completed evidence is preserved or rolled back;
+- whether opened hints or revealed solutions are preserved;
+- whether editor contents or produced results are preserved;
+- whether Back can cross Concept Moments, execution states, episode boundaries, or Stage boundaries.
+
+**Retry / Redo:**
+
+- whether Retry / Redo applies to the current task, a completed task, or both;
+- what happens to prior evidence, selected answers, hints, revealed solutions, SQL text, query results, Concept Moment visibility, and downstream completed work;
+- whether retrying earlier work invalidates later work.
+
+**Global control shell and future course-level behavior:**
+
+- exact placement, responsive treatment, labels, icons, grouping, keyboard shortcuts, and mobile behavior;
+- whether there is a global hint system;
+- whether there is a global forward / Next control;
+- exact undo / branching semantics;
+- how progress is stored across sessions;
+- how global controls behave across future Stage types that have not yet been designed.
+
+These backlog items are management state, not design authority. Implementation must not silently resolve them.
+
+### 7.9 Implementation cleanup
 
 **Classification:** Non-pedagogical hygiene
 
@@ -377,7 +419,7 @@ Known cleanup items include:
 
 These are not current pedagogical blockers and should not determine workstream priority.
 
-### 7.9 Future Course Development
+### 7.10 Future Course Development
 
 After the next capability-planning gate:
 
@@ -390,13 +432,13 @@ After the next capability-planning gate:
 
 The final number of Stages remains OPEN.
 
-### 7.10 Preserved Stage 3 material
+### 7.11 Preserved Stage 3 material
 
 Evaluate the preserved `funding_round → company` material only when it becomes relevant to the capability currently being designed.
 
 Do not adopt it merely because it already exists or because it is stored under `stage-3`.
 
-### 7.11 Conditional management split
+### 7.12 Conditional management split
 
 If the capability-coverage view becomes too large or difficult to maintain inside this document:
 
@@ -537,6 +579,7 @@ PASS
 - `course-knowledge-map.md`
 - `pedagogical-foundations.md`
 - `course-design/course-visual-language.md`
+- `course-design/course-controls.md`
 
 ### Stage 1 authority
 
