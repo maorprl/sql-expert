@@ -61,21 +61,98 @@ Visual aids are explanatory rather than decorative, are local to the reasoning t
 
 Result-Grain reasoning, the baseline, and the prediction are one continuous reasoning episode. After the relationship and Cardinality are established, the learner identifies that one requested result row represents one news article. Only then introduce **Grain**: the grain of the requested result is what one requested result row represents. Grain is never a property of `news_article`, and it is never another name for a table.
 
-The baseline is included because it supports reasoning about row-count and result-Grain preservation in this encounter. The learner-facing SQL editor is first used here as the persistent Stage 1 SQL workspace, prefilled with `SELECT COUNT(*) FROM news_article`. The learner runs and interprets this prepared query; they do not author it, and its role here is measurement rather than SQL syntax instruction. It reports 18 rows, which the learner interprets as 18 starting news-article rows. Because the requested result Grain is one article per row, this provides the baseline against which row and Grain preservation can be predicted.
+The baseline is included because it supports reasoning about row-count and result-Grain preservation in this encounter. A dedicated compact Baseline SQL editor is used here as a measurement tool, prefilled with `SELECT COUNT(*) FROM news_article`. The learner runs and interprets this prepared query; they do not author it, and its role here is measurement rather than SQL syntax instruction. It reports 18 rows, which the learner interprets as 18 starting news-article rows. Because the requested result Grain is one article per row, this provides the baseline against which row and Grain preservation can be predicted.
 
-Baseline measurement and prediction are presented as one continuous reasoning episode. The same learner-facing SQL editor remains the workspace used later for JOIN implementation; the baseline must not be presented as a separate static code card or followed by a newly introduced replacement editor. The exact visual size and placement of the persistent editor during the baseline remain open, provided it does not visually dominate the reasoning activity.
+The Baseline measurement editor is local to this measurement role. It does not persist into JOIN implementation. Once the measurement has been run and interpreted, the 18-row result remains part of the established reasoning evidence rather than remaining as an active SQL task.
 
 Before JOIN terminology appears, the learner predicts that adding one publishing-source name per article preserves the 18 result rows with the same result Grain. The feedback makes the PK/FK and Cardinality basis explicit: each article matches one source row. The prediction uses a closed response; no open rationale is required. The continuous chain is: one article per requested result row → 18 starting article rows → one matching source per article → 18 result rows with the same Grain.
 
 The learner then chooses the semantic action of combining each article with its related source. This learner decision is retained; it is not replaced by an instructional statement. Only after that choice is **JOIN** introduced.
 
-## SQL instruction, implementation, and verification
+## JOIN teaching climax
 
-Before learner-authored SQL, the `INNER JOIN ... ON ...` pattern, matching-row meaning, and `news_article.news_source_id = news_source.news_source_id` are instructional content. There is no separate assessment of the `ON` condition; its understanding is evidenced by the learner's query result.
+The JOIN introduction is the instructional climax of Stage 1.
 
-For this Stage, SQL instruction and the SQL workspace remain visually distinct. The SQL workspace is not newly introduced here: it is the same learner-facing editor first used for the prepared baseline measurement. The editor, execution controls, and result grid are learner tools that support the lesson rather than dominate it.
+Its purpose is not merely to introduce JOIN syntax. It must make explicit that the SQL query is the implementation of the relational reasoning already established from the business request.
 
-SQL implementation and verification form one continuous top-level episode while preserving the distinct required evidence.
+The learner must remain oriented to the reasoning already established:
+
+- the business request asks for every article with its publishing-source information;
+- one requested result row represents one article;
+- `news_article` supplies the article and `news_source` supplies the source information;
+- `news_article.news_source_id` references `news_source.news_source_id`;
+- each article matches one source;
+- the established baseline is 18 articles;
+- adding the related source is predicted to preserve 18 result rows with the same Grain;
+- the learner has already selected the semantic action: combine each article with its related source.
+
+These ideas are not re-taught. They remain visible or otherwise available as established reasoning and are actively used to explain the JOIN.
+
+After the learner selects the semantic relational action and JOIN is introduced, the course provides an explicit teacher-led explanation before learner-authored SQL.
+
+The explanation progresses through this conceptual mapping:
+
+**established relationship → matching rows → relational operation → SQL expression**
+
+A local row-level example shows one article row matching one source row through the already-established `news_source_id` relationship and contributing information from both relations to one result row. The example must make the contribution of `news_article.title` and `news_source.name` visible.
+
+The Working Schema remains the schema-level reasoning anchor. It must not be converted into an instance-data browser. The row-level example is a separate local explanatory visual.
+
+The learner is shown explicitly that:
+
+`news_article.news_source_id = news_source.news_source_id`
+
+is not a new arbitrary SQL rule. It is the SQL expression, inside `ON`, of the relationship the learner already established.
+
+### Business question → SQL
+
+Before learner-authored implementation, the course reconnects the whole SQL query to the business question and the previously established relational reasoning.
+
+The mapping makes clear that:
+
+- requested output attributes become the `SELECT` list;
+- the article relation supplies the starting article rows in `FROM`;
+- the need to add related source information motivates the relational `JOIN`;
+- the established relationship becomes the `ON` condition;
+- the expected result must continue to satisfy the previously established result Grain and 18-row prediction.
+
+The course must not imply that `SELECT` alone determines Grain. Grain describes what one requested result row represents; the query as a whole must produce a result consistent with that Grain.
+
+The completed SQL should therefore be experienced as a translation of the business question and relational reasoning, not as a disconnected syntax exercise.
+
+### Cognitive-load constraint
+
+The teaching moment introduces only one new conceptual layer at a time. Previously established concepts such as Grain, PK/FK, Cardinality, and the 18-row baseline are reused rather than explained again.
+
+The learner should encounter the teaching progression in this order:
+
+1. what JOIN does to related rows;
+2. how the established relationship becomes `ON`;
+3. how the full query expresses the business request.
+
+No new assessment is inserted between these explanatory beats. Only after this mapping is established does learner-authored SQL become the primary activity.
+
+### Observable implementation requirements
+
+The implementation must make the following behavior observable:
+
+- there is an explicit instructional state between the semantic-action success and learner-authored SQL;
+- the established Working Schema remains visible and retains its PK/FK and Cardinality state during that instruction;
+- a separate local row-level visual shows one article row + its matching source row → one result row;
+- the row-level visual uses the same `news_source_id` relationship already established in the Working Schema;
+- `title` and `name` are visibly connected to the resulting row;
+- the relationship-to-`ON` mapping is shown explicitly;
+- the business-question-to-query mapping covers `SELECT`, `FROM`, `JOIN`, and `ON` before learner-authored implementation;
+- the JOIN implementation editor is not the primary visual focus until the explanatory mapping has been established;
+- no additional learner assessment is introduced inside the teaching explanation;
+- no previously established concept is re-taught as if it were new;
+- if implementation would require a material interaction or visual-design decision not established here or in current visual authority, that ambiguity must be surfaced rather than silently resolved.
+
+### SQL implementation workspace
+
+After the JOIN teaching climax, a separate clean SQL implementation editor becomes the learner's primary action surface.
+
+This implementation editor is distinct from the compact Baseline measurement editor. It must not inherit the Baseline `COUNT(*)` query or its result as active editor state.
 
 The implementation task requires a result containing each article's `title` and its publishing source's `name`. Completion evaluation must establish that the result has 18 rows, preserves one news article per row, and associates each article with its referenced source. Semantic correctness is required; the technical mechanism used to perform that semantic result checking remains open.
 
@@ -83,14 +160,25 @@ After semantically correct execution, the learner still explicitly answers the f
 
 Stage completion is a state, not a numbered learner episode.
 
+### Optional enrichment
+
+Relational algebra and Venn-style representations may be offered as optional enrichment after the core JOIN explanation.
+
+Relational algebra may show the JOIN as a formal representation of the same relational operation already understood by the learner. It is not required learner evidence and its notation is not assessed in Stage 1.
+
+Venn-style representations may support enrichment about row participation across JOIN types. They are not the primary explanatory model for how the task-specific JOIN matches rows and they are not required learner evidence in Stage 1.
+
+Neither optional representation may replace the row-matching explanation or become a prerequisite for learner-authored SQL.
+
 ## OPEN implementation decisions
 
 - The exact UI mechanism for selecting relations, including card controls and relation-removal behavior, is not determined.
 - The exact visual styling of schema focus / dimming after Grain is not determined.
 - The exact styling of selectable schema columns and the detailed local wrong-answer treatment are not determined beyond the preserved pedagogical behavior above.
 - The exact connector geometry, animation, and annotation treatment are not determined.
-- The exact visual sizing and placement of the persistent SQL editor during the baseline are not determined, provided the prepared `COUNT(*)` query is run in that same learner-facing workspace and the editor does not dominate the reasoning activity.
-- The exact visual expansion or reframing of that persistent editor for later JOIN implementation is not determined, provided it is not presented as a newly introduced or replacement workspace.
+- The exact visual sizing and placement of the compact Baseline measurement editor are not determined, provided it remains local to the measurement task and does not visually dominate the reasoning activity.
+- The exact visual sizing and placement of the separate JOIN implementation editor are not determined, provided it becomes the primary action surface only after the JOIN teaching climax.
+- The exact visual form and animation of the local row-matching example are not determined beyond the observable requirements above.
 - The exact placement / treatment of persistent business-request context during later episodes is not determined.
 - The exact grouping of completed review when one top-level episode contains multiple reasoning moves is not determined, provided required evidence remains inspectable.
 - Hint escalation and solution-reveal behavior are not determined by this document.
