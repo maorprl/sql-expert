@@ -79,6 +79,7 @@ Current source documents exist for:
 - knowledge and dependency mapping;
 - pedagogical foundations;
 - visual language;
+- global course controls;
 - schema and seed data.
 
 Still OPEN at course level:
@@ -98,28 +99,26 @@ Stage 1 is currently the only Stage with:
 - a current learner route;
 - supporting interaction decisions;
 - a working implementation;
-- validation evidence to its current scope.
+- targeted runtime validation evidence to its current scope.
 
-Recent authority and implementation work changed two parts of the learner flow:
+The current Stage 1 flow now includes:
 
-- requested-result Grain now occurs after relationship/cardinality reasoning and before Baseline/prediction;
-- the learner-facing SQL Workspace first appears at the Baseline and persists into later SQL implementation.
+- meaning-first relation and relationship reasoning;
+- delayed PK/FK and Cardinality reveal;
+- requested-result Grain before Baseline/prediction;
+- a prepared Baseline measurement as a tool rather than a syntax exercise;
+- explicit prediction from the established premises;
+- semantic action before JOIN terminology;
+- progressive JOIN teaching across three beats;
+- a clean learner-authored JOIN workspace;
+- `title | source_name` as the output contract;
+- result inspection followed by evidence-local final verification.
 
-Implementation commit:
+The latest targeted validation found the corrected Stage 1 experience acceptable to the current scope. No known Stage 1 issue is currently classified as blocking continued course planning.
 
-`2a4cada663b783621a5831e6c96255d511fff9fb`
+This does **not** claim a complete cross-browser, accessibility, or full-regression certification. Those remain broader validation concerns rather than an active Stage 1 design blocker.
 
-A targeted browser test drive on 2026-09-10 confirmed the core behavior of both changes and surfaced additional Stage 1 instructional/UX findings.
-
-Test-drive records are:
-
-REFERENCE ONLY / NON-AUTHORITATIVE
-
-Stage 1 should therefore be treated as:
-
-designed and implemented to its current approved scope, with further stabilization work still open
-
-—not as a claim that every Stage 1 instructional or UX decision is resolved.
+Global `Back`, `Retry / Redo`, and `Show solution` are course-level controls. Their established roles are authoritative; unresolved semantics and shell details remain in Backlog and are not current Stage 1 blockers.
 
 ### Stage 2
 
@@ -152,76 +151,65 @@ Their existence does not establish:
 
 ## 5. Active Plan
 
-### Current Focus — Stabilize Stage 1 before extending the course
+### Current Focus — Stage 1 stabilization closed to current scope
 
-The prior execution plan named shared guided-reasoning lifecycle capability definition as the immediate next action. Work subsequently diverged from that sequence because unresolved Stage 1 authority/implementation mismatches in Grain placement and Baseline workspace continuity were identified and resolved first.
+The Stage 1 stabilization workstream is complete to the current approved and validated scope.
 
-That divergence is now reconciled here rather than treating the superseded sequence as still current.
+The latest correction/promotion pass consolidated the validated implementation onto current authority rather than carrying forward temporary correction layers.
 
-The completed targeted implementation and test drive established a stronger baseline for deciding the next Stage 1 stabilization workstream.
+### 5.1 Completed Stage 1 stabilization
 
-### 5.1 Recently completed Stage 1 correction pass
+**Workstream:** Stage 1 authority → implementation → targeted runtime validation  
+**Status:** COMPLETED TO CURRENT SCOPE
 
-**Workstream:** Stage 1 authority → implementation alignment  
-**Status:** COMPLETED TO TARGETED SCOPE
+Completed and validated in the current Stage 1 experience:
 
-Completed:
+- current task remains the first scan path while Completed Steps stay reviewable but secondary;
+- teacher guidance has a recognizable instructional role distinct from system/status text and Concept Moments;
+- the relationship connector represents the actual established FK/PK fields;
+- Cardinality notation is integrated into the relationship representation;
+- Baseline action, evidence, and interpretation remain locally connected;
+- Prediction visibly carries both premises: 18 starting article rows and one matching source per article;
+- semantic action remains before JOIN terminology;
+- JOIN teaching progresses through row matching → `ON` → whole-query mapping;
+- SQL authoring keeps task, editor, and Working Schema in one coherent workspace;
+- Desired Output and SQL Structure remain optional local scaffolds;
+- `source_name` is enforced as the publishing-source output name;
+- successful SQL execution does not pre-announce the final relational conclusion;
+- final verification remains adjacent to actual result evidence;
+- Stage completion follows explicit verification.
 
-- relocated requested-result Grain to the accepted post-cardinality position;
-- removed the relation-card Grain presentation that risked implying `Grain = table`;
-- restored the persistent learner-facing SQL Workspace beginning at Baseline;
-- preserved that same workspace into prediction, semantic action, and JOIN implementation;
-- validated the changed flow in a manual browser test drive.
+The temporary `stage1-corrections` / `stage1-validation-pass` layering was not promoted as separate runtime layers. The validated behavior is consolidated into the current Stage 1 implementation.
 
-Targeted validation passed:
+The Stage-local `Show solution` disclosure was also not promoted because current course authority establishes `Show solution` as a global course control.
 
-- relation selection → connecting key without premature Grain;
-- delayed PK/FK reveal;
-- cardinality before result Grain;
-- result Grain before Baseline;
-- prepared `COUNT(*)` in the real SQL Workspace;
-- Grain → 18 starting articles → one matching source each → 18 result rows reasoning chain;
-- semantic relational action before JOIN vocabulary;
-- persistence of the same SQL workspace into JOIN implementation.
-
-### 5.2 Stage 1 stabilization findings to triage
-
-**Workstream:** Pedagogy / UX / Instructional Experience  
-**Status:** ACTIVE — PRIORITIZATION REQUIRED BEFORE MORE IMPLEMENTATION
-
-The 2026-09-10 targeted test drive surfaced the following confirmed findings:
-
-- Baseline asks the learner to run the prepared query while the `Run query` control may be outside the current viewport;
-- Baseline success copy explains relation-row meaning but does not fully express why the 18-row measurement is the baseline for requested-result Grain preservation;
-- the persistent SQL workspace still contains the Baseline query/result when JOIN implementation begins, so the role transition from measurement to learner-authored implementation is weak;
-- the reasoning/storyboard column is too narrow relative to the SQL workspace, creating a compressed and visually subordinate guided-reasoning experience;
-- the teacher voice remains too formal and abstraction-heavy for the intended supported-learning experience; the issue is not reduced rigor but insufficient conversational guidance, contextual bridging, and cognitive-load reduction;
-- JOIN instructional experience remains a known major design gap from earlier evidence;
-- final Grain verification remains a known unresolved instructional problem from earlier evidence.
-
-Do not treat this list as permission for independent micro-fixes. Select a coherent workstream before implementation.
-
-### 5.3 Stage 1 broader validation
+### 5.2 Validation status
 
 **Workstream:** Validation / Testing  
-**Status:** PENDING AFTER NEXT STABILIZATION PASS
+**Status:** TARGETED MANUAL VALIDATION PASSED FOR CURRENT SCOPE
 
-A targeted test drive is not equivalent to full Stage 1 regression.
+The latest manual test drive covered the states changed by the correction pass and found the remaining Stage 1 experience acceptable to the current scope.
 
-After the next selected stabilization workstream is resolved and implemented:
+This is sufficient to close the present Stage 1 stabilization workstream.
 
-- run full Stage 1 regression and learner-flow validation;
-- verify no regression in Stage progression;
-- verify shared CURRENT / COMPLETED lifecycle behavior;
-- verify Working Schema;
-- verify Concept Moments;
-- verify SQL execution and semantic validation;
-- verify successful completion behavior;
-- record remaining findings as blocking, non-blocking, or Later Review.
+It is not equivalent to a future full regression suite. Broader validation should still occur when the course has a meaningful multi-encounter progression or before release-level completion claims.
+
+### 5.3 Course controls deferred to Backlog
+
+**Workstream:** UX / Shared Course Infrastructure  
+**Status:** ESTABLISHED ROLES; SEMANTICS / SHELL DETAILS BACKLOGGED
+
+Course-level authority now establishes these persistent controls:
+
+- Back;
+- Retry / Redo;
+- Show solution.
+
+Do not implement unresolved semantics as Stage-local guesses. Resolve the relevant Backlog item when actual course-shell implementation requires it.
 
 ## 6. Next Planning Gate
 
-After Stage 1 stabilization, do not automatically build a unit called “Stage 2”.
+Do not automatically build a unit called “Stage 2”.
 
 The next course-planning activity is to determine the next required learner capability.
 
@@ -282,88 +270,65 @@ This work must not:
 - convert interpretation into requirement;
 - establish universal interaction patterns without evidence.
 
-The recently added:
-
-WORKING — Guided reasoning progression
-
-is one example for which operationalization may be useful.
-
 The broader review is intentionally not automatic implementation work.
 
 ### 7.2 Teacher voice / supported reasoning experience
 
-**Workstream:** Pedagogy / Instructional Experience  
-**Status:** CONFIRMED FINDING — CANDIDATE NEXT WORKSTREAM
+**Status:** RESOLVED FOR CURRENT STAGE 1 CALIBRATION
 
-The learner experience is more coherent than earlier versions, but the teacher voice still assumes a relatively high level of abstraction and self-orientation.
+The current Stage 1 treatment is acceptable to the validated scope and is no longer an active workstream.
 
-The target is not to lower rigor or simplify the relational ideas. The unresolved problem is how to provide stronger conversational guidance, contextual bridging, and cognitive-load reduction while preserving learner reasoning.
-
-This should be handled as an instructional-experience problem rather than as a batch of isolated copy edits.
+Future encounters should reuse the established visual role without assuming that Stage 1 wording or exact component styling is automatically universal.
 
 ### 7.3 JOIN instructional experience
 
-**Workstream:** Pedagogy / Instructional Design  
-**Status:** CONFIRMED MAJOR GAP — CANDIDATE NEXT WORKSTREAM
+**Status:** RESOLVED FOR CURRENT FIRST-JOIN ENCOUNTER
 
-Known unresolved areas include:
+The current Stage 1 first-JOIN encounter now contains the accepted progressive teaching sequence:
 
-- making the established Working Schema relationship active in JOIN teaching;
-- showing how the already-understood relationship becomes `INNER JOIN ... ON ...`;
-- providing a concrete row-level combination explanation without turning the result grid into the JOIN visual;
-- using the persistent SQL workspace as implementation of prior reasoning rather than as a separate syntax event.
+1. row matching;
+2. established relationship → `ON`;
+3. business request / reasoning → whole query.
 
-No final design is selected here.
+Future JOIN encounters should not automatically repeat the full first-exposure scaffolding.
 
 ### 7.4 Stage 1 final verification
 
-**Workstream:** Pedagogy / Assessment-transition design  
-**Status:** OPEN / KNOWN PROBLEM
+**Status:** RESOLVED FOR CURRENT STAGE 1
 
-Final Grain verification remains required but the current implementation is leading and weak as an independent verification experience.
+The learner verifies the returned result against the earlier row-count prediction and requested-result Grain while actual result evidence remains available.
 
-Do not redesign it as a side effect of unrelated work.
+No active redesign is currently required.
 
 ### 7.5 SQL workspace role adaptation / instructional continuity
 
-**Workstream:** UX / Shared Infrastructure  
-**Classification:** UX / shared-infrastructure work  
-**Status:** PARTIALLY IMPROVED — CONFIRMED FINDINGS REMAIN
+**Status:** RESOLVED FOR CURRENT STAGE 1 SCOPE
 
-The SQL workspace now correctly begins at the Baseline and persists into later SQL implementation.
+The current implementation separates the compact Baseline measurement role from learner-authored JOIN implementation and clears Baseline editor/result state before independent implementation.
 
-Remaining observed issues:
+Task, editor, relevant Working Schema reference, and result evidence change prominence according to the learner's current action.
 
-- Baseline execution control may not be locally visible in the learner viewport;
-- the workspace can still feel too dominant for the compact measurement task;
-- Baseline query/result state remains visible when JOIN implementation begins;
-- the transition between measurement role and learner-authored implementation role is not yet sufficiently clear.
-
-No specific future solution is selected.
+No current Stage 1 workstream is open here.
 
 ### 7.6 Reasoning/storyboard visual hierarchy
 
-**Workstream:** UX / Visual Experience  
-**Status:** CONFIRMED FINDING
+**Status:** RESOLVED FOR CURRENT STAGE 1 CALIBRATION
 
-The reasoning/storyboard column is too narrow relative to the SQL workspace in the tested JOIN state. This creates excessive text wrapping, tall cards, and the impression that guided reasoning is a subordinate side panel.
+The current task remains the first scan path, Completed Steps move to a secondary review role, and tool/reference surfaces change prominence according to the active learner task.
 
-Treat this as a hierarchy/cognitive-load issue, not merely a heading-wrap bug.
+Future stages may expose new composition problems; this item should be reopened only from new evidence rather than carried forward as an assumed defect.
 
 ### 7.7 Stage 1 unresolved implementation decisions
 
-Current OPEN implementation decisions include:
+Current non-blocking OPEN implementation decisions include:
 
-- exact relation-selection UI;
-- controls and relation-removal behavior;
-- exact prepared-baseline sizing/placement;
-- exact persistent-workspace role transition behavior;
+- exact future refinement of relation-selection UI and relation-removal behavior;
 - hint escalation;
-- technical semantic-checking mechanism.
+- technical semantic-checking mechanism beyond the current Stage 1 implementation.
 
-These should be resolved when they become necessary to current work.
+These should be resolved only when they become necessary to current work.
 
-They should not all be forced into the Active Plan merely because they remain OPEN.
+They should not be forced into the Active Plan merely because they remain OPEN.
 
 ### 7.8 Course-level controls — unresolved semantics and shell details
 
@@ -412,12 +377,9 @@ These backlog items are management state, not design authority. Implementation m
 
 **Classification:** Non-pedagogical hygiene
 
-Known cleanup items include:
+The temporary Stage 1 correction/validation layers have been consolidated into the current implementation.
 
-- unused legacy Grain CSS selectors left after removal of the relation-card Grain marker;
-- stale Working Schema status copy associated with the relocated result-Grain interaction.
-
-These are not current pedagogical blockers and should not determine workstream priority.
+Any future cleanup item should be recorded from concrete evidence rather than retained merely because an older implementation once contained it.
 
 ### 7.10 Future Course Development
 
@@ -462,13 +424,9 @@ Implementation must not silently decide them.
 
 ## 9. Later Review
 
-The following are preserved for later inspection and are not independently prioritized problems:
+A Later Review item should move into actual work only when relevant evidence, required capability coverage, related implementation work, or validation makes its resolution necessary.
 
-- Step 6 success feedback may be over-explained;
-- JOIN output requirements are visible by default;
-- whether `news_article.title` and `news_source.name` make article grain sufficiently inspectable.
-
-A Later Review item moves into actual work only when relevant evidence, required capability coverage, related implementation work, or validation makes its resolution necessary.
+No current Later Review item is treated as a Stage 1 blocker.
 
 ## 10. Course-Level Validation
 
@@ -495,6 +453,7 @@ Current course-level sources established for:
 - knowledge map;
 - pedagogical foundations;
 - visual language;
+- global course controls;
 - executable schema and seed data.
 
 ### Shared interaction lifecycle
@@ -514,8 +473,6 @@ Resolved and verified:
 - completed interactions compact by default;
 - still reviewable;
 - deliberately opened review state preserved.
-
-No regression was observed in the affected Stage 1 flow.
 
 ### Stage 1 test-drive classification
 
@@ -547,17 +504,11 @@ to:
 
 Its broader operationalization remains future work.
 
-### Stage 1 result-Grain + persistent Baseline workspace
+### Stage 1 stabilization and validated promotion
 
-`2a4cada663b783621a5831e6c96255d511fff9fb`
+The Stage 1 learner flow, JOIN teaching climax, authoring workspace, prediction premises, teacher-guidance treatment, relationship/Cardinality visual, and final verification were stabilized through iterative manual test drives.
 
-Implemented the accepted sequencing and persistent SQL workspace behavior.
-
-Targeted manual browser validation recorded in:
-
-`course-design/test-drives/stage-1-targeted-test-drive-2026-09-10.md`
-
-Core scoped behavior passed; additional UX and instructional findings remain open.
+The validated behavior has been consolidated into the current implementation rather than retained as temporary correction layers.
 
 ### Agent-assisted work protocol
 
@@ -614,28 +565,12 @@ PASS
 
 ## 13. Immediate Next Action
 
-### Stage 1 stabilization prioritization gate
+### Next-capability planning gate
 
-Do not begin another implementation pass yet.
+Stage 1 has no known blocking stabilization issue at the current scope.
 
-Choose the next coherent Stage 1 stabilization workstream using current authority and accumulated validation evidence.
+Do not begin another Stage 1 implementation pass by default, and do not automatically build a unit called “Stage 2”.
 
-The two leading candidates are:
+Determine the next required learner capability using the current exit criteria, knowledge map, pedagogical foundations, capability coverage, and capabilities already established by Stage 1.
 
-1. **teacher voice / supported guided-reasoning experience**, including the narrow storyboard / cognitive-load interaction where relevant;
-2. **JOIN instructional experience**, including how established relational reasoning becomes JOIN/ON implementation.
-
-Determine which is the more upstream constraint on the learner experience and whether resolving it first would materially change the other workstream.
-
-Do not reduce this decision to a list of isolated copy or CSS fixes.
-
-Once the next workstream is selected:
-
-1. resolve any necessary design/authority decisions;
-2. record accepted decisions in current authority;
-3. perform one bounded implementation pass;
-4. review the actual diff;
-5. validate the learner experience;
-6. update this management state.
-
-Only after Stage 1 stabilization has no unresolved blocking issue should the project run the next-capability planning gate for course expansion.
+Only after that capability decision should a new learner encounter be designed or preserved material be considered for reuse.
