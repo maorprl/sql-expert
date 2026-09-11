@@ -24,6 +24,8 @@ Completed steps should remain visible and reviewable, but be visually quieter th
 
 Completion should feel like progress, not like another active task.
 
+Reviewability does not require completed work to occupy the primary learner lane. If completed work would displace the current task from the active workspace, separate the task from its tool, or force the learner to scan past history before acting, completed work should move to a secondary placement or treatment while remaining available for review. The exact UI mechanism is not prescribed here.
+
 ## 3. Concept Moments
 
 New concepts such as Grain, Primary Key / Foreign Key, Cardinality, and JOIN should have a distinct visual treatment. They should clearly signal that a new idea has just been named, have stronger hierarchy than normal feedback, use dedicated spacing and surface treatment, and separate learning from success.
@@ -56,6 +58,8 @@ Visual aids are explanatory rather than decorative. They appear only when they c
 
 When an explanation contains multiple conceptual layers, visual treatment should support the intended instructional sequence rather than expose all layers as equal-priority content at first sight.
 
+A relationship visual must spatially represent the relationship it claims to explain. Connector endpoints should correspond to the actual related fields, Cardinality markers or directional annotations must agree with the semantic relationship and the layout being shown, and annotations must not overlap the relation cards in a way that makes the relationship ambiguous.
+
 ## 8. Attention choreography and evidence locality
 
 Visual hierarchy should change as the learner's task changes. Persistent elements such as the Business Request, Working Schema, editors, and completed work do not have a fixed visual rank throughout a stage.
@@ -64,13 +68,25 @@ The active reasoning or action surface should lead; established artifacts should
 
 When a learner action produces evidence that must be interpreted immediately, keep the action, resulting evidence, and immediate interpretation spatially associated enough to read as one continuous reasoning cycle. Avoid unnecessary left-right or top-bottom jumps that make the learner search for the next action after producing evidence.
 
+When the primary learner activity legitimately moves between page regions, the handoff should be visually legible. The learner should not experience the active questionnaire or action surface as simply jumping between columns without a clear change in role or reasoning phase.
+
+During active authoring, the current task, the authoring tool, and references needed to perform that task should read as one coherent working area. A supporting reference may be visually secondary, but it should remain practically available without requiring the learner to leave the authoring context.
+
 A transition control should normally appear near the evidence or action from which the next step directly follows, unless another placement has a stronger pedagogical reason.
 
-## 9. Stage 1 as Calibration Specimen
+## 9. Teacher guidance voice
+
+Instructional guidance has a visual role distinct from the learner's task prompt, system or status text, correctness feedback, and Concept Moments.
+
+Concise bridges that explain why the next reasoning move matters, and explicit teacher-led explanations such as the JOIN teaching sequence, should be visually recognizable as guidance from the course rather than appearing as undifferentiated body copy.
+
+This does not mean that every explanatory sentence should receive a special treatment. The distinct guidance role is reserved for text that actively orients the learner through the reasoning journey or explains a concept before the learner acts. The exact visual treatment remains an implementation decision.
+
+## 10. Stage 1 as Calibration Specimen
 
 Stage 1 tests and refines this visual language. The language should be reusable, but is not yet a complete system for every future stage. Do not over-generalize from Stage 1 to future concepts that have not yet been designed.
 
-## 10. Locked Pedagogy
+## 11. Locked Pedagogy
 
 Visual changes must not silently alter learner flow, question intent, answer logic, concept timing, SQL reasoning, hint logic, solution logic, or stage completion logic.
 
@@ -78,6 +94,6 @@ Where the current pedagogical authority explicitly changes learner-facing wordin
 
 Visual design supports the pedagogy. It does not redefine it.
 
-## 11. Working Schema Capacity
+## 12. Working Schema Capacity
 
 The Working Schema must allow the learner to keep up to four selected relations available concurrently for inspection and reasoning. Four is a workspace capacity ceiling, not a pedagogical target or expected task size. The number of relations required by a task is determined by that task; Working Schema capacity is independent of that number and of the relational operation being learned or used.
