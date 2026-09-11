@@ -35,6 +35,8 @@ For the connecting-key reasoning, the learner selects the relevant column direct
 
 After correct connecting-key reasoning, reveal that `news_article.news_source_id` is the FK referencing `news_source.news_source_id` as PK, and reveal a connector between those columns. The PK/FK explanation first connects this formal terminology to the relationship the learner just found: the article's `news_source_id` identifies the `news_source` row that published it, and that source row contains the `name` needed in the result.
 
+The relationship visual must correspond spatially to that established relationship. The connector should visibly attach to the highlighted FK and PK fields rather than to generic card centers. If Cardinality markers or directional annotations are added, their position and direction must agree with the displayed relation layout and the one-source-to-many-articles meaning; they must not overlap the relation cards in a way that makes the connection ambiguous. Exact connector geometry remains an implementation decision.
+
 At this point, Cardinality is still hidden. The learner then answers the existing closed relationship question. The question should test the directional business meaning of the relationship — one source can publish many articles while each article has one publishing source — rather than require technical Cardinality vocabulary in advance. Cardinality is reasoned from the PK/FK structure, not from observed seed examples.
 
 Only after correct Cardinality reasoning, introduce Cardinality and annotate the already-visible relationship as one news source to many news articles (`1 → M`). The relationship visual therefore grows from learner-established reasoning rather than appearing as a disconnected explanatory diagram.
@@ -57,13 +59,19 @@ The active reasoning task or action remains the strongest visual focus. Complete
 
 Completed Stage 1 work retains the original question or task, learner answer or selection, completion state, relevant feedback or concept consequence, and any opened hints for review. When one top-level episode contains more than one reasoning move, those distinct evidence-bearing moves must remain inspectable rather than collapsing into one opaque success state. The exact internal state representation is not prescribed here.
 
+During active authoring or other tool-led work, completed review must not displace the current task from the working area or separate that task from the tool used to perform it. Completed work may move to a secondary placement or treatment while remaining reviewable.
+
 Grain, PK/FK, Cardinality, and JOIN are the Concept Moments in this Stage. Concept Moments use the learning accent and remain visually distinct from correctness feedback. Green primarily communicates correctness / success rather than concept identity.
+
+Instructional bridges and teacher-led explanation have a distinct visual role from the learner task, system/status text, correctness feedback, and Concept Moments. Guidance that actively orients the learner through the reasoning journey should be visually recognizable as course guidance rather than undifferentiated body copy. This does not require every explanatory sentence to receive special treatment.
 
 Visual aids are explanatory rather than decorative, are local to the reasoning they support, appear only after learner engagement, and do not give away answers prematurely.
 
 Persistent artifacts do not have a fixed visual rank throughout the Stage. Their prominence should follow their current pedagogical role: the Working Schema may be the primary reasoning surface while the learner is establishing the relationship, then become a quieter reference while measurement, teaching, SQL implementation, or result inspection is the active task.
 
 When a learner action produces evidence that must immediately be interpreted, the produced evidence, its relevant control, and the immediate interpretation should remain visually and spatially connected enough to read as one reasoning cycle. Avoid unnecessary attention jumps across unrelated page regions between producing evidence and interpreting it.
+
+When the current learner action legitimately changes page regions, the change of focus should be visually legible. The learner should not experience a reasoning question as simply jumping between columns without a clear handoff.
 
 ## Result Grain, baseline, prediction, and semantic action
 
@@ -158,7 +166,7 @@ The implementation must make the following behavior observable:
 - the established Working Schema remains visible and retains its PK/FK and Cardinality state during that instruction;
 - a separate local row-level visual shows one article row + its matching source row → one result row;
 - the row-level visual uses the same `news_source_id` relationship already established in the Working Schema;
-- `title` and `name` are visibly connected to the resulting row;
+- `title` and the publishing-source name are visibly connected to the resulting row;
 - the relationship-to-`ON` mapping is shown explicitly;
 - the business-question-to-query mapping covers `SELECT`, `FROM`, `JOIN`, and `ON` before learner-authored implementation;
 - the three teaching beats are not introduced simultaneously as equal-priority panels;
@@ -173,9 +181,13 @@ After the JOIN teaching climax, a separate clean SQL implementation editor becom
 
 This implementation editor is distinct from the compact Baseline measurement editor. It must not inherit the Baseline `COUNT(*)` query or its result as active editor state.
 
-The implementation task requires a result containing each article's `title` and its publishing source's `name`. Instructional content at this point should be reduced to the scaffold necessary to perform the task; the implementation state should not behave like a second full teaching explanation. The Working Schema remains available as a reference to output fields and the established relationship but should not compete with the editor as a co-primary action surface.
+The primary task asks for the business result without permanently exposing every output detail. The required result contains each article's `title` and its publishing source under the output name `source_name`. A learner may reveal **Desired Output** on demand as optional scaffolding showing the output contract `title | source_name`; revealing Desired Output is not Hint 1 / Hint 2. The exact control treatment remains open.
 
-Completion evaluation must establish that the result has 18 rows, preserves one news article per row, and associates each article with its referenced source. Semantic correctness is required; the technical mechanism used to perform that semantic result checking remains open.
+Instructional content at this point should be reduced to the scaffold necessary to perform the task; the implementation state should not behave like a second full teaching explanation. Any SQL-structure reminder should remain secondary or on demand rather than compete with the editor.
+
+The current task, JOIN implementation editor, and Working Schema reference should read as one coherent authoring workspace. The Working Schema remains available as a reference to output fields and the established relationship but should not compete with the editor as a co-primary action surface. Completed review remains available but must not push the current task away from the editor or occupy the primary authoring lane.
+
+Completion evaluation must establish that the output contract is `title | source_name`, the result has 18 rows, preserves one news article per row, and associates each article with its referenced source. Semantic correctness is required; the technical mechanism used to perform that semantic result checking remains open.
 
 ### Execution evidence and final verification
 
@@ -185,7 +197,7 @@ The interface may confirm that the query executed, but before the learner's veri
 
 The result evidence includes the returned row count, output columns, and actual article/source rows. The transition from result inspection to verification should remain visibly associated with that evidence rather than requiring an unrelated navigation jump.
 
-The learner then explicitly answers a closed final verification question that requires interpreting the result against the earlier prediction and requested-result Grain. The options should distinguish materially different interpretations, such as 18 rows with one article per row, 18 rows organized around sources, or row multiplication / duplication. This verification must not be answerable merely by repeating a conclusion already displayed by the system.
+The learner then explicitly answers a closed final verification question that requires interpreting the result against the earlier prediction and requested-result Grain. The actual result evidence should remain visible or immediately adjacent while this verification question is answered; the learner should not have to rely on memory of a previous screen. The options should distinguish materially different interpretations, such as 18 rows with one article per row, 18 rows organized around sources, or row multiplication / duplication. This verification must not be answerable merely by repeating a conclusion already displayed by the system.
 
 Only after the learner verifies correctly should the course close the reasoning loop explicitly: the actual result has 18 rows as predicted, each row still represents one article, and the JOIN added the matching source information without changing the requested Grain.
 
@@ -206,14 +218,15 @@ Neither optional representation may replace the row-matching explanation or beco
 - The exact UI mechanism for selecting relations, including card controls and relation-removal behavior, is not determined.
 - The exact visual styling of schema focus / dimming after Grain is not determined.
 - The exact styling of selectable schema columns and the detailed local wrong-answer treatment are not determined beyond the preserved pedagogical behavior above.
-- The exact connector geometry, animation, and annotation treatment are not determined.
+- The exact connector geometry, animation, and detailed annotation treatment are not determined, subject to the requirement that the visual actually connects the FK and PK fields and does not contradict the displayed Cardinality.
 - The exact wording of meaning-first prompts, feedback, transition copy, and closed answer options is not fixed by this document beyond the pedagogical constraints above.
 - The exact visual sizing and placement of the compact Baseline measurement editor are not determined, provided it remains local to the measurement task and the Baseline control, evidence, and immediate interpretation read as one local cycle.
-- The exact visual sizing and placement of the separate JOIN implementation editor are not determined, provided it becomes the primary action surface only after the JOIN teaching climax and the Working Schema functions as a secondary reference during authoring.
+- The exact visual sizing and placement of the separate JOIN implementation editor are not determined, provided it becomes the primary action surface only after the JOIN teaching climax and the task, editor, and Working Schema reference read as a coherent authoring workspace.
 - The exact visual form and animation of the local row-matching example are not determined beyond the observable requirements above.
 - The exact treatment of previously encountered JOIN teaching beats during progressive exposure — hidden, replaced, or retained as compact reminders — is not determined.
-- The exact placement and styling of the result-to-verification control are not determined, provided the progression remains visibly associated with the result evidence rather than requiring an unrelated cross-page attention jump.
+- The exact placement and styling of the Desired Output disclosure are not determined, provided it is optional scaffolding rather than permanently exposed output detail and is distinct from Hint 1 / Hint 2.
+- The exact placement and styling of the result-to-verification control are not determined, provided the progression and verification question remain visibly associated with the actual result evidence rather than requiring an unrelated cross-page attention jump.
 - The exact placement / treatment of persistent business-request context during later episodes is not determined.
-- The exact grouping of completed review when one top-level episode contains multiple reasoning moves is not determined, provided required evidence remains inspectable.
+- The exact grouping and placement of completed review when one top-level episode contains multiple reasoning moves is not determined, provided required evidence remains inspectable and completed work does not displace the active authoring workspace.
 - Hint escalation and solution-reveal behavior are not determined by this document.
 - The technical mechanism for semantic result checking is not determined; semantic correctness itself is required.
