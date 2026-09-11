@@ -12,12 +12,83 @@
   line-height: 1.5;
 }
 
+.teacher-voice {
+  margin: 9px 0 14px;
+  padding: 10px 12px;
+  border-left: 3px solid #91a4ba;
+  border-radius: 8px;
+  background: #f7f9fc;
+  color: #44566c;
+}
+
+.teacher-voice-label {
+  display: block;
+  margin-bottom: 4px;
+  color: #6d7f94;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+
+.teacher-voice p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.workspace-evidence-action .teacher-voice { margin: 0; }
+
 .implementation-check,
 .evidence-bridge {
   margin: 10px 0 0;
   color: #44566c;
   font-size: 12px;
   line-height: 1.5;
+}
+
+.optional-scaffold {
+  margin: 8px 0;
+  border: 1px solid #d5dfeb;
+  border-radius: 10px;
+  background: #fbfcfe;
+}
+
+.optional-scaffold summary {
+  padding: 9px 11px;
+  color: #3f5875;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.optional-scaffold[open] summary { border-bottom: 1px solid #e2e9f1; }
+
+.optional-scaffold-body {
+  display: grid;
+  gap: 8px;
+  padding: 10px 11px 11px;
+  color: #526276;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.optional-scaffold-body p { margin: 0; }
+.optional-scaffold-body pre { margin: 0; padding: 9px 10px; border-radius: 8px; background: #20283a; color: #eef4ff; font-size: 11px; }
+
+.desired-output-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.desired-output-grid code {
+  padding: 8px 9px;
+  border: 1px solid #dce5ef;
+  border-radius: 7px;
+  background: #fff;
+  color: #263f62;
+  font-weight: 750;
 }
 
 .workspace-evidence-action {
@@ -59,6 +130,54 @@
   background: var(--blue-soft);
   color: #344f70;
   font-size: 11px;
+}
+
+/* The connector represents the actual FK row on the article card and PK row on the source card.
+   Their vertical positions differ by one schema row, so the line is intentionally diagonal. */
+.schema-connector {
+  position: relative;
+  min-height: 130px;
+  display: block;
+  margin-top: 0;
+  color: var(--blue);
+}
+
+.schema-connector .connector-line {
+  position: absolute;
+  top: 87px;
+  left: 0;
+  width: calc(100% + 7px);
+  height: 3px;
+  background: var(--blue);
+  transform: rotate(-25deg);
+  transform-origin: left center;
+}
+
+.relation-preview.cardinality-visible .schema-connector::before,
+.relation-preview.cardinality-visible .schema-connector::after {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--blue-dark);
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.relation-preview.cardinality-visible .schema-connector::before {
+  content: 'M';
+  top: 77px;
+  left: -12px;
+}
+
+.relation-preview.cardinality-visible .schema-connector::after {
+  content: '1';
+  top: 45px;
+  right: -12px;
 }
 
 .join-progress {
@@ -114,10 +233,12 @@
 .learning-panel.join-teaching-active .relation-preview { min-height: 245px; }
 
 .learning-panel.baseline-workspace-active .implementation-column,
+.learning-panel.prediction-evidence-active .implementation-column,
 .learning-panel.sql-implementation-active .implementation-column,
 .learning-panel.results-evidence-active .implementation-column { align-content: start; }
 
 .learning-panel.baseline-workspace-active .lab-workspace,
+.learning-panel.prediction-evidence-active .lab-workspace,
 .learning-panel.sql-implementation-active .lab-workspace,
 .learning-panel.results-evidence-active .lab-workspace {
   order: 1;
@@ -126,10 +247,12 @@
 }
 
 .learning-panel.baseline-workspace-active .workspace-evidence-action,
+.learning-panel.prediction-evidence-active .workspace-evidence-action,
 .learning-panel.sql-implementation-active .workspace-evidence-action,
 .learning-panel.results-evidence-active .workspace-evidence-action { order: 2; }
 
 .learning-panel.baseline-workspace-active .working-schema-panel,
+.learning-panel.prediction-evidence-active .working-schema-panel,
 .learning-panel.sql-implementation-active .working-schema-panel,
 .learning-panel.results-evidence-active .working-schema-panel {
   order: 3;
@@ -139,10 +262,12 @@
 }
 
 .learning-panel.baseline-workspace-active .relation-preview,
+.learning-panel.prediction-evidence-active .relation-preview,
 .learning-panel.sql-implementation-active .relation-preview,
 .learning-panel.results-evidence-active .relation-preview { min-height: 205px; }
 
 .learning-panel.baseline-workspace-active .lesson-surface,
+.learning-panel.prediction-evidence-active .lesson-surface,
 .learning-panel.sql-implementation-active .lesson-surface,
 .learning-panel.results-evidence-active .lesson-surface {
   grid-template-columns: minmax(340px, .8fr) minmax(460px, 1.2fr);
@@ -150,14 +275,43 @@
 }
 
 .learning-panel.baseline-workspace-active .current-step,
+.learning-panel.prediction-evidence-active .current-step,
 .learning-panel.sql-implementation-active .current-step,
 .learning-panel.results-evidence-active .current-step { min-height: 0; }
+
+/* In tool-led states, the current task leads the reasoning lane; completed review moves below it. */
+.learning-panel.baseline-workspace-active .reasoning-column,
+.learning-panel.prediction-evidence-active .reasoning-column,
+.learning-panel.results-evidence-active .reasoning-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.learning-panel.baseline-workspace-active .current-step,
+.learning-panel.prediction-evidence-active .current-step,
+.learning-panel.results-evidence-active .current-step { order: 1; }
+
+.learning-panel.baseline-workspace-active .completed-steps,
+.learning-panel.prediction-evidence-active .completed-steps,
+.learning-panel.results-evidence-active .completed-steps {
+  order: 2;
+  margin: 12px 0 0;
+}
 
 .learning-panel.baseline-workspace-active .lab-workspace {
   height: 300px;
   min-height: 300px;
   grid-template-rows: 42px minmax(105px, .9fr) minmax(105px, 1.1fr);
 }
+
+.learning-panel.prediction-evidence-active .lab-workspace {
+  height: 185px;
+  min-height: 185px;
+  grid-template-rows: 42px minmax(120px, 1fr);
+}
+
+.learning-panel.prediction-evidence-active #editor { display: none; }
+.learning-panel.prediction-evidence-active .results-panel { box-shadow: inset 0 3px 0 var(--blue); }
 
 .learning-panel.sql-implementation-active .lab-workspace {
   height: 430px;
@@ -173,18 +327,72 @@
 
 .learning-panel.results-evidence-active .results-panel { box-shadow: inset 0 3px 0 var(--blue); }
 
+/* During authoring, task + editor + Working Schema form one workspace.
+   Completed review no longer sits above the task. */
+@media (min-width: 1101px) {
+  .learning-panel.sql-implementation-active .lesson-surface {
+    grid-template-columns: minmax(390px, .82fr) minmax(500px, 1.18fr);
+    grid-template-areas:
+      "current lab"
+      "schema lab"
+      "completed lab";
+    align-items: start;
+  }
+
+  .learning-panel.sql-implementation-active .reasoning-column,
+  .learning-panel.sql-implementation-active .implementation-column { display: contents; }
+
+  .learning-panel.sql-implementation-active .current-step {
+    grid-area: current;
+    min-height: 0;
+  }
+
+  .learning-panel.sql-implementation-active .lab-workspace {
+    grid-area: lab;
+    order: initial;
+    align-self: start;
+  }
+
+  .learning-panel.sql-implementation-active .working-schema-panel {
+    grid-area: schema;
+    order: initial;
+    margin-top: 0;
+  }
+
+  .learning-panel.sql-implementation-active .completed-steps {
+    grid-area: completed;
+    margin: 0;
+  }
+
+  .learning-panel.sql-implementation-active .relation-preview.relationship-visible {
+    grid-template-columns: minmax(120px, 1fr) 68px minmax(120px, 1fr);
+    gap: 8px;
+    padding: 25px 8px 10px;
+  }
+}
+
 .sql-pattern.compact { margin: 8px 0 10px; padding: 10px 11px; }
 .sql-pattern.compact pre { max-height: 130px; margin: 6px 0; padding: 9px; }
 
 @media (max-width: 1100px) {
   .learning-panel.join-teaching-active .lesson-surface,
   .learning-panel.baseline-workspace-active .lesson-surface,
+  .learning-panel.prediction-evidence-active .lesson-surface,
   .learning-panel.sql-implementation-active .lesson-surface,
   .learning-panel.results-evidence-active .lesson-surface { grid-template-columns: 1fr; }
 
   .learning-panel.baseline-workspace-active .working-schema-panel,
+  .learning-panel.prediction-evidence-active .working-schema-panel,
   .learning-panel.sql-implementation-active .working-schema-panel,
   .learning-panel.results-evidence-active .working-schema-panel { order: 3; }
+
+  .learning-panel.sql-implementation-active .reasoning-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .learning-panel.sql-implementation-active .current-step { order: 1; }
+  .learning-panel.sql-implementation-active .completed-steps { order: 2; margin: 12px 0 0; }
 }
 
 @media (max-width: 760px) {
@@ -195,6 +403,9 @@
   .query-map > div { grid-template-columns: 1fr; }
 
   .learning-panel.baseline-workspace-active .lab-workspace,
+  .learning-panel.prediction-evidence-active .lab-workspace,
   .learning-panel.sql-implementation-active .lab-workspace,
   .learning-panel.results-evidence-active .lab-workspace { height: 540px; }
+
+  .learning-panel.prediction-evidence-active #editor { display: block; }
 }
