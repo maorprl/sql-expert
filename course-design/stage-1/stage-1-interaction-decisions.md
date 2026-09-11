@@ -183,6 +183,8 @@ This implementation editor is distinct from the compact Baseline measurement edi
 
 The primary task asks for the business result without permanently exposing every output detail. The required result contains each article's `title` and its publishing source under the output name `source_name`. A learner may reveal **Desired Output** on demand as optional scaffolding showing the output contract `title | source_name`; revealing Desired Output is not Hint 1 / Hint 2. The exact control treatment remains open.
 
+A learner may also reveal **Solution** on demand. Solution is closed by default and shows one complete valid Stage 1 query that satisfies the required `title | source_name` output. Revealing it is optional scaffolding, is distinct from Desired Output, SQL Structure, and Hint 1 / Hint 2, and must not auto-populate or auto-run the editor. The learner must still execute the query and complete the final verification.
+
 Instructional content at this point should be reduced to the scaffold necessary to perform the task; the implementation state should not behave like a second full teaching explanation. Any SQL-structure reminder should remain secondary or on demand rather than compete with the editor.
 
 The current task, JOIN implementation editor, and Working Schema reference should read as one coherent authoring workspace. The Working Schema remains available as a reference to output fields and the established relationship but should not compete with the editor as a co-primary action surface. Completed review remains available but must not push the current task away from the editor or occupy the primary authoring lane.
@@ -225,8 +227,9 @@ Neither optional representation may replace the row-matching explanation or beco
 - The exact visual form and animation of the local row-matching example are not determined beyond the observable requirements above.
 - The exact treatment of previously encountered JOIN teaching beats during progressive exposure — hidden, replaced, or retained as compact reminders — is not determined.
 - The exact placement and styling of the Desired Output disclosure are not determined, provided it is optional scaffolding rather than permanently exposed output detail and is distinct from Hint 1 / Hint 2.
+- The exact placement and styling of Solution are not determined, provided it is closed by default, revealed only on learner request, shows a complete valid query, and does not auto-populate, auto-run, or bypass execution and final verification.
 - The exact placement and styling of the result-to-verification control are not determined, provided the progression and verification question remain visibly associated with the actual result evidence rather than requiring an unrelated cross-page attention jump.
 - The exact placement / treatment of persistent business-request context during later episodes is not determined.
 - The exact grouping and placement of completed review when one top-level episode contains multiple reasoning moves is not determined, provided required evidence remains inspectable and completed work does not displace the active authoring workspace.
-- Hint escalation and solution-reveal behavior are not determined by this document.
+- Hint escalation remains not determined by this document.
 - The technical mechanism for semantic result checking is not determined; semantic correctness itself is required.
