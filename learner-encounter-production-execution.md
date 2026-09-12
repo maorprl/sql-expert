@@ -31,7 +31,8 @@ Current sequence status:
 3. Encounter Design — completed; verbatim durable handoff verified.
 4. Independent Pedagogy Design Review — completed; verbatim durable handoff verified.
 5. Independent UX Design Review — completed; verbatim durable handoff verified.
-6. Architect Reconciliation — unblocked and next.
+6. Architect Reconciliation — completed to current authority; verbatim durable handoff verified.
+7. Scoped Course Authority Owner decision — required next before Auditor Pre-Build Control.
 
 The remaining canonical process continues from there as defined in `learner-encounter-production-process.md`.
 
@@ -61,8 +62,10 @@ The following completed Cycle 1 outputs are stored as durable process records:
 - `course-design/production/cycle-1/encounter-design-packet.md`
 - `course-design/production/cycle-1/independent-pedagogy-design-review.md`
 - `course-design/production/cycle-1/independent-ux-design-review.md`
+- `course-design/production/cycle-1/architect-reconciliation.md`
+- `course-design/production/cycle-1/reconciled-encounter-design-packet.md`
 
-These records preserve the completed handoffs through both independent pre-implementation design reviews and provide the durable inputs for Architect Reconciliation.
+These records preserve the completed handoffs through Architect Reconciliation.
 
 They are process/evidence records. They do not independently create new course authority.
 
@@ -100,23 +103,23 @@ Until that review occurs, the current separate-chat approach is temporary execut
 
 ## 6. Current next action
 
-Cycle 1 proceeds to **Architect Reconciliation** under the `Encounter Architect` functional role.
+Cycle 1 requires a **scoped Course Authority Owner decision** before Auditor Pre-Build Control.
 
-The Encounter Architect must consume:
+The Encounter Architect completed reconciliation of all independent review findings and narrowed the remaining authority issue to the evidence-sensitive behavior of the global course controls around the protected pre-execution prediction state.
 
-- `course-design/production/cycle-1/encounter-design-packet.md`
-- `course-design/production/cycle-1/independent-pedagogy-design-review.md`
-- `course-design/production/cycle-1/independent-ux-design-review.md`
+The owner decision is limited to:
 
-Each material review finding must receive one of the dispositions defined in `learner-encounter-production-process.md`:
+1. whether a committed prediction can be reopened/edited after SQL/result evidence has been seen, and how a new protected attempt is represented; and
+2. whether Show solution is available during the protected prediction state and, if used, how its evidence status is recorded.
 
-- **ACCEPTED**;
-- **ACCEPTED WITH MODIFICATION**;
-- **REJECTED WITH RATIONALE**;
-- **OWNER DECISION REQUIRED**.
+The durable decision alternatives and consequences are recorded in:
 
-The independent Pedagogy Design Review contains two REVISION REQUIRED findings and no owner decision.
+`course-design/production/cycle-1/architect-reconciliation.md`
 
-The independent UX Design Review contains two REVISION REQUIRED findings and one OWNER DECISION REQUIRED finding concerning the subset of global Back / Retry / Show solution semantics that can affect protected pre-execution prediction evidence.
+and carried into:
 
-No Auditor Pre-Build Control or implementation work is authorized until Architect Reconciliation is complete and all required owner matters affecting implementation have been resolved through the appropriate authority path.
+`course-design/production/cycle-1/reconciled-encounter-design-packet.md`
+
+This is **not** a request to settle the complete future course-wide Back / Retry / Redo / Show solution policy.
+
+No Auditor Pre-Build Control, frozen implementation authority, or implementation work is authorized until the scoped owner decision is resolved and recorded durably.
