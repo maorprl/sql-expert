@@ -234,6 +234,22 @@ These are useful quality judgments but must not be represented as existing cours
 - cognitive-load judgment beyond explicit existing principles;
 - whether repetition is pedagogically worthwhile.
 
+Professional judgment used to select or reject a case must be **consequence-grounded**. A label such as “clean,” “credible,” “artificial,” “familiar,” “high load,” or “good transfer” is not by itself a sufficient rationale. The Architect must identify:
+
+1. the concrete feature of the learner situation or data that supports the judgment;
+2. what that feature causes the learner to reason about, attend to, assume, or do;
+3. how that learner consequence strengthens or weakens the intended capability evidence at the learner's current course position.
+
+Business / analytical credibility must also be tested operationally. Ask:
+
+> Would the task, requested output, and starting Grain still make analytical sense if the course were not trying to teach the target concept?
+
+and:
+
+> Does the relational difficulty arise naturally from that analytical need, or is the need mainly constructed in order to manufacture the target behavior?
+
+A case does not fail merely because the target concept becomes visible in it. The concern is whether the analytical purpose independently justifies the task and output shape.
+
 When more than one materially plausible current case can exercise the same target capability, Case Validation must compare the relevant alternatives rather than validate only the first sufficient case. The comparison should be proportionate, not exhaustive, and should consider where applicable:
 
 - how directly each case exposes the target reasoning and intended evidence;
@@ -242,6 +258,8 @@ When more than one materially plausible current case can exercise the same targe
 - credibility of the business or analytical situation;
 - additional concepts or confounds introduced by the actual data, such as unmatched rows, NULL behavior, or mechanisms outside the target capability;
 - cognitive load and data cleanliness.
+
+When alternatives have different strengths, the selection rationale must make the **trade-off explicit**. It must state which learner consequence matters more for the current encounter and why. No criterion such as local cleanliness, familiarity, authenticity, novelty, or transfer has automatic priority merely by being present.
 
 The Architect must record why the selected case is preferable to the materially plausible alternatives considered. Technical validity or local cleanliness alone is not sufficient justification when another available case may better serve the learner's current progression.
 
@@ -316,6 +334,9 @@ The reviewer checks only:
 - does the Course-Assumed Learner State avoid unsupported assumptions?
 - can the proposed case exercise the intended capability?
 - when multiple materially plausible cases exist, did the Brief compare the relevant alternatives and justify why the selected case is preferable for the learner's current course position rather than merely sufficient?
+- are material professional judgments consequence-grounded rather than asserted only as labels?
+- where alternatives involve real trade-offs, does the rationale explain which learner consequence should dominate now and why?
+- where business / analytical credibility materially affects selection, is it supported by an independently coherent analytical task, requested output, and Grain rather than by concept-driven framing alone?
 - is the proposed learner evidence relevant to that capability?
 - does proceeding require an unresolved authority decision?
 
@@ -386,6 +407,8 @@ Contradicts current authority, invalidates the intended capability/evidence, or 
 ### REVISION REQUIRED
 
 A material professional defect that should be corrected before implementation.
+
+A professional defect is **material** only when the reviewer identifies a concrete consequence for the target capability or evidence, learner reasoning, unsupported learner-state assumptions, or the current-scope learning experience, and explains why that consequence warrants rework before implementation. A concern that cannot establish such a consequence is **ADVISORY**, not REVISION REQUIRED merely because the reviewer prefers another design choice.
 
 ### ADVISORY
 
