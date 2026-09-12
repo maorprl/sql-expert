@@ -387,6 +387,20 @@ Reviewers must clearly distinguish:
 - **SOURCE-DERIVED requirement**;
 - **PROFESSIONAL / PROCESS recommendation**.
 
+### 5.1 Current-Scope Necessity Test
+
+Before an existing **OPEN**, **BACKLOG**, deferred, or otherwise unresolved matter may be classified as **BLOCKER** or **OWNER DECISION REQUIRED**, the reviewer must establish that it is necessary to the **current implementation scope**.
+
+The reviewer must ask:
+
+1. Is this behavior or decision actually required in the current build?
+2. If it remains unresolved, would the Implementer have to choose its semantics in order to implement or validate the accepted current scope?
+3. Can the behavior instead remain explicitly excluded or deferred without undermining the target capability, required learner evidence, or current authority?
+
+If the matter is not required in the current build and can remain explicitly outside the accepted scope, it must not be escalated merely because it could theoretically interact with the encounter. Record it as **OPEN / BACKLOG / OUT OF CURRENT SCOPE** or as an advisory scope note, as appropriate.
+
+A theoretical dependency is not by itself an implementation dependency.
+
 They do not directly rewrite the encounter.
 
 ---
@@ -406,6 +420,8 @@ A reviewer recommendation does not become authority merely because it is accepte
 
 If a recommendation creates a new course-wide rule, it must go through the appropriate authority process.
 
+For any finding classified as BLOCKER or OWNER DECISION REQUIRED because of an unresolved OPEN / BACKLOG matter, the Architect must re-run the **Current-Scope Necessity Test** before carrying the escalation forward. If the matter can remain explicitly outside the current build without weakening capability, evidence, or authority, the reconciliation must return it to nonblocking OPEN / BACKLOG status and record the implementation boundary rather than requesting an unnecessary owner decision.
+
 ---
 
 ## 7. Auditor Pre-Build Control
@@ -424,6 +440,8 @@ It verifies:
 - validation criteria exist;
 - implementation invariants are clear;
 - permitted implementation discretion is clear.
+
+An unresolved matter is **implementation-affecting** only if the accepted current build must implement that behavior, or if the accepted validation scope depends on it. An OPEN / BACKLOG matter that is explicitly excluded from the current build and can remain deferred without weakening the target capability, required evidence, or current authority is nonblocking. The Auditor must verify the exclusion boundary rather than route such a matter to the Course Authority Owner solely because the unresolved matter exists.
 
 ### Outcomes
 
@@ -606,7 +624,7 @@ Returns to:
 
 ### 12.5 OPEN / authority-triggering change
 
-Stops affected work and routes to Course Authority Owner.
+Stops affected work and routes to Course Authority Owner only when the unresolved matter is required inside the affected current scope. If the matter can remain explicitly deferred and outside the accepted scope, preserve it as OPEN / BACKLOG and continue the unaffected work.
 
 ---
 
