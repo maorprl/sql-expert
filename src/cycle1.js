@@ -1,15 +1,16 @@
 import './stage1.css';
 import './cycle1.css';
 
-const REQUIRED_RELATIONS = ['news_source', 'news_article'];
+const REQUIRED_RELATIONS = ['funding_round', 'round_investment'];
 
 const LABELS = {
-  requestedGrain: 'Requested output Grain',
-  structuralPrediction: 'Structural prediction',
-  numericPrediction: 'Current-data prediction',
-  sql: 'SQL verification',
+  grain: 'Requested output Grain',
+  cardinality: 'Relationship Cardinality',
+  prediction: 'Pre-execution prediction',
+  application: 'Concrete application',
+  sql: 'SQL implementation',
   verification: 'Result verification',
-  complete: 'Coverage review complete',
+  complete: 'Participation audit complete',
 };
 
 const ASSISTANCE_STRENGTH = {
@@ -19,125 +20,56 @@ const ASSISTANCE_STRENGTH = {
   'solution-assisted': 3,
 };
 
-const STRUCTURAL_STEPS = [
+const PREDICTION_STEPS = [
   {
-    id: 'multiplicity',
-    prompt: 'Can one news source contribute more than one raw JOIN row?',
+    id: 'result-shape',
+    prompt: 'Using the Grain and relationship you established, what must happen in the result if the same funding round has several recorded participations?',
     options: [
-      ['yes', 'Yes — if the source matches several articles.'],
-      ['no', 'No — a source can appear only once because it is one starting row.'],
+      ['multiple', 'That funding round can occupy several result rows — one for each recorded participation.'],
+      ['single', 'That funding round must still occupy exactly one result row.'],
+      ['collapse', 'The participation records must be merged into one funding-round row.'],
+      ['grain-change', 'The target Grain changes from participation to funding round.'],
     ],
-    correct: 'yes',
-    answer: 'One source can contribute multiple raw JOIN rows.',
-    wrong: 'Use the visible 1 → M relationship. Start from one source and ask how many article rows can match it.',
-  },
-  {
-    id: 'natural-grain',
-    prompt: 'What will one raw JOIN row naturally represent?',
-    options: [
-      ['source', 'One publishing source.'],
-      ['article', 'One news article without regard to its source.'],
-      ['match', 'One source–article match.'],
-    ],
-    correct: 'match',
-    answer: 'One source–article match.',
-    wrong: 'Focus on what creates each raw result row: one matching row pair from the two relations.',
+    correct: 'multiple',
+    answer: 'One funding round can occupy several result rows when several participation records must each remain represented.',
+    wrong: 'Hold the target Grain at one participation per row, then ask whether several participation records for the same round can all fit into one result row.',
   },
   {
     id: 'repetition',
-    prompt: 'What can happen to source-side information in that raw result?',
+    prompt: 'Across those distinct participation rows, what should happen to funding-round context such as round_type and announced_date?',
     options: [
-      ['repeat', 'It can repeat across several matching result rows.'],
-      ['once', 'It must appear only once because news_source has one row per source.'],
-      ['removed', 'It disappears after the JOIN because article rows become primary.'],
+      ['repeat', 'The round-level values can repeat while participation identifiers differ; those rows are not duplicates merely because the round context repeats.'],
+      ['duplicate', 'Repeated round-level values mean the rows are accidental duplicates and should collapse to one.'],
+      ['first-only', 'Round-level values should appear only on the first participation row.'],
+      ['different-rounds', 'If round-level values repeat, the rows must represent different funding rounds.'],
     ],
     correct: 'repeat',
-    answer: 'Source-side information can repeat across several matching rows.',
-    wrong: 'If one source participates in several matching pairs, ask what happens to that source’s fields beside each matching article.',
-  },
-];
-
-const VERIFICATION_STEPS = [
-  {
-    id: 'why-repeat',
-    prompt: 'Why do source names repeat in the returned rows?',
-    options: [
-      ['matches', 'One source has several matching articles, so its values appear in several source–article matches.'],
-      ['duplicates', 'The news_source table must contain duplicate source rows.'],
-      ['engine', 'SQLite copied source names independently of the relationship.'],
-    ],
-    correct: 'matches',
-    answer: 'A source can have several matching articles.',
-    wrong: 'Use the visible returned pairs. Compare repeated source names with the different article titles beside them.',
-  },
-  {
-    id: 'duplicate-diagnosis',
-    prompt: 'What do the repeated source names indicate here?',
-    options: [
-      ['structural', 'Several legitimate source–article matches.'],
-      ['base-duplicates', 'Accidental duplicate news_source base rows.'],
-      ['unknown', 'The result cannot distinguish these possibilities.'],
-    ],
-    correct: 'structural',
-    answer: 'Several legitimate source–article matches, not duplicate source base rows.',
-    wrong: 'Inspect whether the repeated source name is paired with the same article or with distinct article titles.',
-  },
-  {
-    id: 'preserve-grain',
-    prompt: 'Does the raw result preserve the requested one-source-per-row output?',
-    options: [
-      ['no', 'No.'],
-      ['yes', 'Yes.'],
-    ],
-    correct: 'no',
-    answer: 'No — the raw result does not preserve one source per row.',
-    wrong: 'Compare the requested source-level row meaning with the repeated source rows visible in the actual result.',
-  },
-  {
-    id: 'returned-grain',
-    prompt: 'What does one returned row naturally represent?',
-    options: [
-      ['source', 'One publishing source.'],
-      ['article', 'One article with no relational pairing.'],
-      ['match', 'One source–article match.'],
-    ],
-    correct: 'match',
-    answer: 'One source–article match.',
-    wrong: 'Read across one returned row: it combines one source value with one specific article title.',
-  },
-  {
-    id: 'reconcile',
-    prompt: 'Does the actual result agree with the prediction committed before SQL?',
-    options: [
-      ['yes', 'Yes — it shows the predicted source–article matches and repeated source-side values.'],
-      ['no', 'No — the JOIN preserved one source per row.'],
-    ],
-    correct: 'yes',
-    answer: 'Yes — the actual result agrees with the committed prediction.',
-    wrong: 'Compare the visible result with the committed prediction shown beside it.',
+    answer: 'Round-level context can repeat across distinct participation rows without making those rows duplicates.',
+    wrong: 'Keep the row meaning fixed: each row represents a different participation. Ask what happens to shared round context when several such rows belong to the same round.',
   },
 ];
 
 export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange, interactionLifecycle }) {
   const state = {
-    current: 'requestedGrain',
+    current: 'grain',
     completed: [],
     drafts: {},
     localFeedback: '',
-    requestedGrainAssistance: 'unassisted',
-    structuralIndex: 0,
-    structuralRecorded: false,
-    structuralAnswers: [],
-    structuralWrongAttempts: 0,
-    structuralHintsOpened: new Set(),
-    structuralAssistance: 'unassisted',
-    numericAssistance: 'unassisted',
+    grainAssistance: 'unassisted',
+    cardinalityAssistance: 'unassisted',
+    predictionAssistance: 'unassisted',
+    applicationAssistance: 'unassisted',
     sqlAssistance: 'unassisted',
     verificationAssistance: 'unassisted',
-    verificationIndex: 0,
-    verificationAnswers: [],
+    predictionIndex: 0,
+    predictionAnswers: [],
+    predictionRecorded: false,
+    predictionWrongAttempts: 0,
+    predictionHintsOpened: new Set(),
+    cardinalityEstablished: false,
     sqlPrepared: false,
     sqlVerified: false,
+    lastResultSet: null,
   };
 
   const relationEl = document.getElementById('relation-preview');
@@ -179,8 +111,10 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function currentAssistanceKey() {
-    if (state.current === 'structuralPrediction') return 'structuralAssistance';
-    if (state.current === 'numericPrediction') return 'numericAssistance';
+    if (state.current === 'grain') return 'grainAssistance';
+    if (state.current === 'cardinality') return 'cardinalityAssistance';
+    if (state.current === 'prediction') return 'predictionAssistance';
+    if (state.current === 'application') return 'applicationAssistance';
     if (state.current === 'sql') return 'sqlAssistance';
     if (state.current === 'verification') return 'verificationAssistance';
     return null;
@@ -196,7 +130,7 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function relationshipLevel() {
-    return state.current === 'requestedGrain' ? 0 : 2;
+    return 2;
   }
 
   function isRelationSelected(name) {
@@ -212,17 +146,15 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
   function renderSchemaCard(name, role) {
     const relation = relationByName(name);
     if (!relation) return `<article class="data-card"><div class="data-card-title"><code>${escapeHtml(name)}</code></div><div class="working-empty">Schema loading…</div></article>`;
-    const showRelationship = relationshipLevel() > 0;
     return `
       <article class="data-card cycle1-schema-card" data-relation="${escapeHtml(name)}">
         <div class="data-card-title"><code>${escapeHtml(name)}</code><span class="schema-role">${escapeHtml(role)}</span></div>
         <ul class="working-columns">
           ${relation.columns.map((column) => {
-            const isKey = column.column === 'news_source_id';
-            const badge = showRelationship && isKey
-              ? (name === 'news_source' ? '<span class="key-badge">PK</span>' : '<span class="key-badge">FK</span>')
-              : '';
-            const classes = showRelationship && isKey ? 'relationship-column' : '';
+            const isRelationshipKey = column.column === 'funding_round_id';
+            let badge = '';
+            if (isRelationshipKey) badge = name === 'funding_round' ? '<span class="key-badge">PK</span>' : '<span class="key-badge">FK</span>';
+            const classes = isRelationshipKey ? 'relationship-column' : '';
             return `<li><div class="working-column ${classes}"><code>${escapeHtml(column.column)}</code>${badge}</div></li>`;
           }).join('')}
         </ul>
@@ -230,26 +162,24 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function renderRelations() {
-    const showRelationship = relationshipLevel() > 0;
-    relationEl.className = `relation-preview cycle1-relation-preview${showRelationship ? ' relationship-visible cardinality-visible' : ''}`;
-    workingStatusEl.textContent = showRelationship
-      ? 'Known relationship used for this reasoning task'
-      : 'Known relations supplied for the source-level review';
+    const showCardinality = state.cardinalityEstablished || ['prediction', 'application', 'sql', 'verification', 'complete'].includes(state.current);
+    relationEl.className = `relation-preview cycle1-relation-preview relationship-visible${showCardinality ? ' cardinality-visible' : ''}`;
+    workingStatusEl.textContent = showCardinality
+      ? 'Known relationship · one funding round can relate to many participation records'
+      : 'Known FK → PK relationship for the participation audit';
     workingStatusEl.hidden = false;
     relationEl.innerHTML = `
-      ${renderSchemaCard('news_source', 'Starting relation')}
-      ${showRelationship ? `
-        <div class="cycle1-schema-connector" aria-label="news_source.news_source_id one to many news_article.news_source_id">
-          <svg class="cycle1-connector-line" viewBox="0 0 100 120" preserveAspectRatio="none" aria-hidden="true">
-            <line x1="1" y1="55" x2="99" y2="87"></line>
-            <circle cx="1" cy="55" r="4"></circle>
-            <circle cx="99" cy="87" r="4"></circle>
-          </svg>
-          <span class="cycle1-cardinality one">1</span>
-          <span class="cycle1-cardinality many">M</span>
-          <span class="cycle1-connector-caption"><code>news_source_id</code></span>
-        </div>` : ''}
-      ${renderSchemaCard('news_article', 'Many-side detail')}
+      ${renderSchemaCard('funding_round', 'Round context')}
+      <div class="cycle1-schema-connector" aria-label="funding_round.funding_round_id one to many round_investment.funding_round_id">
+        <svg class="cycle1-connector-line" viewBox="0 0 100 120" preserveAspectRatio="none" aria-hidden="true">
+          <line x1="1" y1="55" x2="99" y2="87"></line>
+          <circle cx="1" cy="55" r="4"></circle>
+          <circle cx="99" cy="87" r="4"></circle>
+        </svg>
+        ${showCardinality ? '<span class="cycle1-cardinality one">1</span><span class="cycle1-cardinality many">M</span>' : ''}
+        <span class="cycle1-connector-caption"><code>funding_round_id</code></span>
+      </div>
+      ${renderSchemaCard('round_investment', 'Participation detail')}
     `;
   }
 
@@ -292,146 +222,181 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
     render();
   }
 
-  function renderRequestedGrain() {
+  function renderGrain() {
     const options = [
-      ['source', 'One publishing source.'],
-      ['article', 'One news article.'],
-      ['match', 'One source–article match.'],
+      ['round', 'One funding round.'],
+      ['participation', 'One recorded round-investor participation.'],
+      ['investor', 'One investor across all funding rounds.'],
+      ['company', 'One company.'],
     ];
-    const draft = state.drafts.requestedGrain || '';
+    const draft = state.drafts.grain || '';
     interactionLifecycle.renderCurrent(stepShell(
-      'In the requested coverage review, what should one row represent?',
-      `${choiceForm('requested-grain-form', options, draft)}${feedbackMarkup()}`,
-      teacherVoice('Keep the business artifact in focus first. The report is meant to review publishing sources, with each source appearing once.'),
+      'What should one row of this requested audit represent?',
+      `${choiceForm('grain-form', options, draft)}${feedbackMarkup()}`,
+      teacherVoice('Use the business request to set the result Grain before reasoning about what the relationship can do to the rows.'),
     ));
-    document.getElementById('requested-grain-form').addEventListener('submit', (event) => {
+    document.getElementById('grain-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const answer = new FormData(event.currentTarget).get('answer');
-      state.drafts.requestedGrain = answer || '';
-      if (answer !== 'source') return wrong('The requested artifact is source-level and says each publishing source should appear once.');
+      state.drafts.grain = answer || '';
+      if (answer !== 'participation') return wrong('The request asks for every recorded round-investor participation, with round information carried as context.');
       recordCompleted({
-        id: 'requested-grain',
+        id: 'grain',
         label: 'Requested output Grain',
         prompt: 'What should one requested row represent?',
-        answer: 'One publishing source per row.',
-        assistance: state.requestedGrainAssistance || 'unassisted',
+        answer: 'One recorded round-investor participation per row.',
+        assistance: state.grainAssistance,
       });
-      setCurrent('structuralPrediction');
+      setCurrent('cardinality');
     });
   }
 
-  function predictionSummaryMarkup() {
-    if (!state.structuralAnswers.length) return '';
-    return `<div class="micro-evidence-list" aria-label="Committed structural judgments so far">${state.structuralAnswers.map((item, index) => `<div class="micro-evidence"><span>${index + 1}</span><p>${escapeHtml(item.answer)}</p></div>`).join('')}</div>`;
+  function renderCardinality() {
+    const options = [
+      ['one-many', 'Each participation belongs to one funding round, and one funding round can have multiple participation records.'],
+      ['round-one', 'Each funding round belongs to exactly one participation record.'],
+      ['participation-many', 'A participation can belong to multiple funding rounds.'],
+      ['exact-one', 'Exactly one participation is allowed for every funding round.'],
+    ];
+    const draft = state.drafts.cardinality || '';
+    interactionLifecycle.renderCurrent(stepShell(
+      'Which statement matches the relationship?',
+      `${choiceForm('cardinality-form', options, draft)}${feedbackMarkup()}`,
+      teacherVoice('Read the FK → PK relationship direction. Reuse Cardinality from Stage 1; do not infer it from the current rows.'),
+    ));
+    document.getElementById('cardinality-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const answer = new FormData(event.currentTarget).get('answer');
+      state.drafts.cardinality = answer || '';
+      if (answer !== 'one-many') return wrong('Follow round_investment.funding_round_id to the funding_round primary key, then reason in both directions.');
+      state.cardinalityEstablished = true;
+      recordCompleted({
+        id: 'cardinality',
+        label: 'Relationship Cardinality',
+        prompt: 'Which statement matches the relationship?',
+        answer: 'Each participation belongs to one round; one round can have multiple participations.',
+        assistance: state.cardinalityAssistance,
+      });
+      setCurrent('prediction');
+    });
   }
 
-  function predictionHintsMarkup(step) {
-    if (step.id !== 'multiplicity') return '';
-    const hint1Available = state.structuralWrongAttempts >= 1;
-    const hint2Available = state.structuralWrongAttempts >= 2;
+  function reasoningSummaryMarkup() {
+    return `<div class="micro-evidence-list" aria-label="Established reasoning">
+      <div class="micro-evidence"><span>✓</span><p>Target Grain: one recorded participation per result row.</p></div>
+      <div class="micro-evidence"><span>✓</span><p>Relationship: one funding round can relate to multiple participation records.</p></div>
+    </div>`;
+  }
+
+  function predictionProgressMarkup() {
+    if (!state.predictionAnswers.length) return reasoningSummaryMarkup();
+    return `${reasoningSummaryMarkup()}<div class="micro-evidence-list" aria-label="Prediction judgments">${state.predictionAnswers.map((item) => `<div class="micro-evidence"><span>✓</span><p>${escapeHtml(item.answer)}</p></div>`).join('')}</div>`;
+  }
+
+  function predictionHintsMarkup() {
+    const hint1Available = state.predictionWrongAttempts >= 1;
+    const hint2Available = state.predictionWrongAttempts >= 2;
     return `<div class="local-assistance" aria-label="Prediction assistance">
-      ${hint1Available ? `<button id="hint-1" type="button" class="assistance-button">Hint 1</button>` : ''}
-      ${hint2Available ? `<button id="hint-2" type="button" class="assistance-button">Hint 2</button>` : ''}
-      ${state.structuralHintsOpened.has('hint-1') ? '<div class="hint-text"><strong>Hint 1:</strong> Look at the direction of the relationship. For one <code>news_source</code> row, how many <code>news_article</code> rows can match?</div>' : ''}
-      ${state.structuralHintsOpened.has('hint-2') ? '<div class="hint-text"><strong>Hint 2:</strong> A JOIN produces a result row for each matching pair. Apply that to one source that matches several articles.</div>' : ''}
+      ${hint1Available ? '<button id="hint-1" type="button" class="assistance-button">Hint 1</button>' : ''}
+      ${hint2Available ? '<button id="hint-2" type="button" class="assistance-button">Hint 2</button>' : ''}
+      ${state.predictionHintsOpened.has('hint-1') ? '<div class="hint-text"><strong>Hint 1:</strong> Keep the requested Grain fixed at one participation per row.</div>' : ''}
+      ${state.predictionHintsOpened.has('hint-2') ? '<div class="hint-text"><strong>Hint 2:</strong> If several participation records belong to the same funding round, each of those records still has to remain represented at the requested Grain.</div>' : ''}
     </div>`;
   }
 
   function wirePredictionHints() {
     document.getElementById('hint-1')?.addEventListener('click', () => {
-      state.structuralHintsOpened.add('hint-1');
-      raiseAssistance('structuralAssistance', 'hint-1');
+      state.predictionHintsOpened.add('hint-1');
+      raiseAssistance('predictionAssistance', 'hint-1');
       render();
     });
     document.getElementById('hint-2')?.addEventListener('click', () => {
-      state.structuralHintsOpened.add('hint-2');
-      raiseAssistance('structuralAssistance', 'hint-2');
+      state.predictionHintsOpened.add('hint-2');
+      raiseAssistance('predictionAssistance', 'hint-2');
       render();
     });
   }
 
-  function renderStructuralPrediction() {
-    if (state.structuralIndex >= STRUCTURAL_STEPS.length) {
-      const assistance = state.structuralAssistance;
-      if (!state.structuralRecorded) {
-        const reviewHtml = `<p class="review-question"><strong>Structural prediction committed before current-data counts:</strong></p><ul>${state.structuralAnswers.map((item) => `<li>${escapeHtml(item.answer)}</li>`).join('')}</ul>`;
+  function renderPrediction() {
+    if (state.predictionIndex >= PREDICTION_STEPS.length) {
+      if (!state.predictionRecorded) {
         recordCompleted({
-          id: 'structural-prediction',
-          label: 'Structural prediction',
-          answer: 'Multiple rows · repeated source information · source–article match Grain',
-          assistance,
-          reviewHtml,
+          id: 'prediction',
+          label: 'Pre-execution prediction',
+          answer: 'One round can occupy several participation rows; shared round context can repeat across distinct rows.',
+          assistance: state.predictionAssistance,
+          reviewHtml: `<p class="review-question"><strong>Prediction committed before SQL:</strong></p><ul>${state.predictionAnswers.map((item) => `<li>${escapeHtml(item.answer)}</li>`).join('')}</ul>`,
         });
-        state.structuralRecorded = true;
+        state.predictionRecorded = true;
       }
       interactionLifecycle.renderCurrent(stepShell(
-        'Structural prediction committed.',
-        `${predictionSummaryMarkup()}<div class="success-feedback">You established the JOIN’s structural behavior from the 1 → M relationship before seeing current-data counts.</div><div class="assistance-stamp">Assistance provenance: <strong>${escapeHtml(assistanceLabel(assistance))}</strong></div><button id="continue-to-numeric" class="primary continue-after-feedback">Use the current data</button>`,
+        'Prediction committed before execution.',
+        `${rowMultiplicationConceptMarkup()}<div class="success-feedback">You used the target Grain and the one-to-many relationship to predict the result shape before seeing query output.</div><div class="assistance-stamp">Assistance provenance: <strong>${escapeHtml(assistanceLabel(state.predictionAssistance))}</strong></div><button id="continue-to-application" class="primary continue-after-feedback">Apply the prediction to a concrete case</button>`,
       ));
-      renderCompleted();
-      document.getElementById('continue-to-numeric').addEventListener('click', () => setCurrent('numericPrediction'));
+      document.getElementById('continue-to-application').addEventListener('click', () => setCurrent('application'));
       return;
     }
 
-    const step = STRUCTURAL_STEPS[state.structuralIndex];
-    const draftKey = `structural-${step.id}`;
+    const step = PREDICTION_STEPS[state.predictionIndex];
+    const draftKey = `prediction-${step.id}`;
     const draft = state.drafts[draftKey] || '';
     interactionLifecycle.renderCurrent(stepShell(
-      'Predict the raw JOIN before using current-data counts.',
+      'Predict the result shape before SQL.',
       `<div class="prediction-workspace">
-        <div class="prediction-header"><span>Structural prediction</span><strong>${state.structuralIndex + 1} of ${STRUCTURAL_STEPS.length}</strong></div>
-        ${predictionSummaryMarkup()}
-        <div class="prediction-current"><h3>${step.prompt}</h3>${choiceForm('structural-form', step.options, draft)}${feedbackMarkup()}${predictionHintsMarkup(step)}</div>
+        <div class="prediction-header"><span>Core evidence</span><strong>${state.predictionIndex + 1} of ${PREDICTION_STEPS.length}</strong></div>
+        ${predictionProgressMarkup()}
+        <div class="prediction-current"><h3>${step.prompt}</h3>${choiceForm('prediction-form', step.options, draft)}${feedbackMarkup()}${predictionHintsMarkup()}</div>
       </div>`,
-      teacherVoice('Use the known relationship and JOIN matching semantics. Current source/article counts stay out of view until these structural judgments are committed.'),
+      teacherVoice('Use only the Grain and Cardinality you already established. No current-data row count is needed for this prediction.'),
     ));
     wirePredictionHints();
-    document.getElementById('structural-form').addEventListener('submit', (event) => {
+    document.getElementById('prediction-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const answer = new FormData(event.currentTarget).get('answer');
       state.drafts[draftKey] = answer || '';
       if (answer !== step.correct) {
-        if (step.id === 'multiplicity') state.structuralWrongAttempts += 1;
+        state.predictionWrongAttempts += 1;
         return wrong(step.wrong);
       }
-      state.structuralAnswers.push({ id: step.id, answer: step.answer, value: answer });
-      state.structuralIndex += 1;
+      state.predictionAnswers.push({ id: step.id, answer: step.answer, value: answer });
+      state.predictionIndex += 1;
       state.localFeedback = '';
       hideSolution();
       render();
     });
   }
 
-  function renderNumericPrediction() {
+  function rowMultiplicationConceptMarkup() {
+    return `<section class="concept-callout fanout-concept"><strong>CONCEPT MOMENT</strong><b>JOIN row multiplication</b><span>When one row on the one-side matches several rows on the many-side, the JOIN can produce several output rows for that one-side entity. At a finer Grain, one-side values repeat because each result row represents a different matched detail record.</span><div class="fanout-mechanism" aria-label="One funding round can contribute context to several participation rows"><span>one funding round</span><i>→</i><span>several matching participations</span><i>→</i><span>several participation rows</span></div></section>`;
+  }
+
+  function renderApplication() {
     const options = [
-      ['18', '18 source–article matches.'],
-      ['source-count', 'One result row per source, regardless of how many articles match.'],
-      ['more', 'More than 18 rows.'],
+      ['1', '1 row.'],
+      ['3', '3 distinct participation rows.'],
+      ['9', '9 rows.'],
+      ['unknown', 'Impossible to tell after the number of matching participations is known.'],
     ];
-    const draft = state.drafts.numericPrediction || '';
+    const draft = state.drafts.application || '';
     interactionLifecycle.renderCurrent(stepShell(
-      'What is the current-data consequence?',
-      `<div class="current-data-fact"><span>Current data</span><strong>18 article rows</strong><p>Every article belongs to exactly one source.</p></div>${choiceForm('numeric-form', options, draft)}${feedbackMarkup()}`,
-      teacherVoice('The structural prediction is already fixed. Now use the current instance data only to calculate the exact number of source–article matches.'),
+      'Apply the structural prediction.',
+      `<div class="current-data-fact"><span>Concrete application · supporting evidence</span><strong>One funding round has 3 recorded participations</strong><p>The target Grain remains one participation per result row.</p></div>${choiceForm('application-form', options, draft)}${feedbackMarkup()}`,
+      teacherVoice('The qualitative result shape is already committed. This step applies it to a concrete multiplicity; it is not the core evidence by itself.'),
     ));
-    document.getElementById('numeric-form').addEventListener('submit', (event) => {
+    document.getElementById('application-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const answer = new FormData(event.currentTarget).get('answer');
-      state.drafts.numericPrediction = answer || '';
-      if (answer !== '18') return wrong('There are 18 article rows, and each belongs to one source. How many source–article matches does that create?');
+      state.drafts.application = answer || '';
+      if (answer !== '3') return wrong('At participation Grain, each of the three recorded participations must remain represented by its own row.');
       recordCompleted({
-        id: 'numeric-prediction',
-        label: 'Current-data prediction',
-        prompt: 'How many source–article matches will the direct INNER JOIN produce?',
-        answer: '18 source–article matches.',
-        assistance: state.numericAssistance,
+        id: 'application',
+        label: 'Concrete application',
+        prompt: 'If one round has three recorded participations, how many participation-grain rows represent them?',
+        answer: 'Three distinct participation rows.',
+        assistance: state.applicationAssistance,
       });
       setCurrent('sql');
     });
-  }
-
-  function fanOutConceptMarkup() {
-    return `<section class="concept-callout fanout-concept"><strong>CONCEPT MOMENT</strong><b>Fan-out</b><span>When one starting row matches multiple rows on the many side, that starting row can contribute multiple result rows. The one-side information can therefore repeat across those matches.</span><div class="fanout-mechanism" aria-label="One starting row can produce multiple result rows through multiple matches"><span>one starting row</span><i>→</i><span>multiple matching rows</span><i>→</i><span>multiple result rows</span></div></section>`;
   }
 
   function clearRenderedResults() {
@@ -447,44 +412,46 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
       state.sqlPrepared = true;
     }
     interactionLifecycle.renderCurrent(stepShell(
-      state.sqlVerified ? 'The verification query returned the required evidence.' : 'Implement the proposed direct INNER JOIN.',
-      `${fanOutConceptMarkup()}${teacherVoice('Use SQL now to test the prediction you already committed. Return source and article detail so the resulting row meaning can be inspected.')}${state.sqlVerified ? '<div class="success-feedback">The query returned the source/article evidence needed for inspection. Execution success does not decide the relational diagnosis for you.</div><button id="continue-to-verification" class="primary continue-after-feedback">Inspect and reconcile the result</button>' : '<p class="step-copy">Author the direct JOIN from <code>news_source</code> to <code>news_article</code>, using their established <code>news_source_id</code> relationship. Include source name and article title in the result.</p>'}${feedbackMarkup()}`,
+      state.sqlVerified ? 'The participation audit query returned the required evidence.' : 'Implement the participation audit in SQL.',
+      `${teacherVoice('Translate the relational plan you already established. SQL verifies the prediction; it does not replace it.')}${state.sqlVerified ? '<div class="success-feedback">Query executed — 72 rows returned. The result is ready for inspection; the system has not interpreted the repeated round context for you.</div><button id="continue-to-verification" class="primary continue-after-feedback">Inspect the actual result</button>' : '<p class="step-copy">Return <code>funding_round_id</code>, <code>round_type</code>, <code>announced_date</code>, <code>round_investment_id</code>, <code>investor_id</code>, and <code>is_lead</code> by directly joining <code>funding_round</code> and <code>round_investment</code> on their established relationship.</p>'}${feedbackMarkup()}`,
     ));
     if (state.sqlVerified) document.getElementById('continue-to-verification').addEventListener('click', () => {
       recordCompleted({
-        id: 'sql-verification',
-        label: 'SQL verification',
-        answer: 'Direct INNER JOIN executed; source/article detail returned.',
+        id: 'sql',
+        label: 'SQL implementation',
+        answer: 'Participation-grain INNER JOIN executed with 72 current rows.',
         assistance: state.sqlAssistance,
       });
       setCurrent('verification');
     });
   }
 
-  function canonicalPairs() {
+  function canonicalRows() {
     const db = getDatabase();
     if (!db) return [];
     const result = db.exec(`
-      SELECT news_source.name AS source_name, news_article.title AS article_title
-      FROM news_source
-      INNER JOIN news_article
-        ON news_source.news_source_id = news_article.news_source_id;
+      SELECT
+        funding_round.funding_round_id,
+        funding_round.round_type,
+        funding_round.announced_date,
+        round_investment.round_investment_id,
+        round_investment.investor_id,
+        round_investment.is_lead
+      FROM funding_round
+      INNER JOIN round_investment
+        ON funding_round.funding_round_id = round_investment.funding_round_id;
     `)[0];
-    return (result?.values || []).map(([source, article]) => `${String(source)}\u0000${String(article)}`).sort();
+    return (result?.values || []).map((row) => JSON.stringify(row)).sort();
   }
 
-  function resultContainsCanonicalPairs(resultSet) {
-    if (!resultSet || resultSet.values.length !== 18 || resultSet.columns.length < 2) return false;
-    const expected = canonicalPairs();
-    const width = resultSet.columns.length;
-    for (let sourceIndex = 0; sourceIndex < width; sourceIndex += 1) {
-      for (let articleIndex = 0; articleIndex < width; articleIndex += 1) {
-        if (sourceIndex === articleIndex) continue;
-        const actual = resultSet.values.map((row) => `${String(row[sourceIndex])}\u0000${String(row[articleIndex])}`).sort();
-        if (actual.length === expected.length && actual.every((value, index) => value === expected[index])) return true;
-      }
-    }
-    return false;
+  function resultMatchesCanonical(resultSet) {
+    if (!resultSet || resultSet.values.length !== 72) return false;
+    const required = ['funding_round_id', 'round_type', 'announced_date', 'round_investment_id', 'investor_id', 'is_lead'];
+    const indexes = required.map((name) => resultSet.columns.indexOf(name));
+    if (indexes.some((index) => index < 0)) return false;
+    const actual = resultSet.values.map((row) => JSON.stringify(indexes.map((index) => row[index]))).sort();
+    const expected = canonicalRows();
+    return actual.length === expected.length && actual.every((value, index) => value === expected[index]);
   }
 
   function validateSql(statement, resultSets) {
@@ -502,11 +469,12 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
       /\bmin\s*\(/,
       /\bmax\s*\(/,
     ];
-    if (forbidden.some((pattern) => pattern.test(normalized))) return { ok: false, message: 'Use the proposed raw direct INNER JOIN only. Do not introduce aggregation, DISTINCT, LEFT JOIN, EXISTS, or another repair mechanism.' };
-    if (!/\bfrom\s+news_source\b/.test(normalized)) return { ok: false, message: 'Start from the source-level relation <code>news_source</code> so this query tests the proposed source-to-article JOIN.' };
-    if (!/\b(?:inner\s+)?join\s+news_article\b/.test(normalized) || !/\bon\b/.test(normalized)) return { ok: false, message: 'Use a direct INNER JOIN to <code>news_article</code> with an <code>ON</code> match condition.' };
+    if (forbidden.some((pattern) => pattern.test(normalized))) return { ok: false, message: 'Keep this encounter to the direct participation-grain INNER JOIN. Do not add aggregation, DISTINCT, LEFT JOIN, EXISTS, or another repair mechanism.' };
+    if (!/\bfrom\s+(?:funding_round|round_investment)\b/.test(normalized)) return { ok: false, message: 'Use funding_round and round_investment as the two relations for this audit.' };
+    const hasBothRelations = /\bfunding_round\b/.test(normalized) && /\bround_investment\b/.test(normalized);
+    if (!hasBothRelations || !/\b(?:inner\s+)?join\b/.test(normalized) || !/\bon\b/.test(normalized)) return { ok: false, message: 'Use a direct INNER JOIN between funding_round and round_investment with the established funding_round_id relationship in ON.' };
     const resultSet = resultSets.at(-1);
-    if (!resultContainsCanonicalPairs(resultSet)) return { ok: false, message: 'The query ran, but the returned rows do not yet expose the 18 source–article matches with both source and article detail required for verification.' };
+    if (!resultMatchesCanonical(resultSet)) return { ok: false, message: 'The query ran, but the result does not yet match the required six-field participation audit with all 72 current participation rows.' };
     return { ok: true };
   }
 
@@ -514,71 +482,77 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
     if (state.current !== 'sql' || state.sqlVerified) return;
     const validation = validateSql(statement, resultSets);
     if (!validation.ok) {
-      state.localFeedback = stripMarkup(validation.message);
+      state.localFeedback = validation.message;
       render();
       return;
     }
+    state.lastResultSet = resultSets.at(-1);
     state.sqlVerified = true;
     state.localFeedback = '';
     render();
   }
 
   function committedPredictionMarkup() {
-    return `<aside class="committed-prediction"><div><span>Committed before SQL</span><strong>Prediction</strong></div><ul>${state.structuralAnswers.map((item) => `<li>${escapeHtml(item.answer)}</li>`).join('')}<li>Current-data consequence: 18 source–article matches.</li></ul><small>Structural assistance: ${escapeHtml(assistanceLabel(state.structuralAssistance))}</small></aside>`;
+    return `<aside class="committed-prediction"><div><span>Committed before SQL</span><strong>Prediction</strong></div><ul>${state.predictionAnswers.map((item) => `<li>${escapeHtml(item.answer)}</li>`).join('')}<li>Concrete application: three participations require three participation-grain rows.</li></ul><small>Core prediction assistance: ${escapeHtml(assistanceLabel(state.predictionAssistance))}</small></aside>`;
   }
 
-  function verificationProgressMarkup() {
-    if (!state.verificationAnswers.length) return '';
-    return `<div class="verification-progress">${state.verificationAnswers.map((item, index) => `<div><span>✓ ${index + 1}</span><p>${escapeHtml(item.answer)}</p></div>`).join('')}</div>`;
+  function actualSliceRows() {
+    const resultSet = state.lastResultSet;
+    if (!resultSet) return [];
+    const indexes = ['funding_round_id', 'round_type', 'announced_date', 'round_investment_id', 'investor_id', 'is_lead'].map((name) => resultSet.columns.indexOf(name));
+    if (indexes.some((index) => index < 0)) return [];
+    return resultSet.values
+      .filter((row) => String(row[indexes[0]]) === '1003')
+      .map((row) => indexes.map((index) => row[index]));
+  }
+
+  function actualSliceMarkup() {
+    const rows = actualSliceRows();
+    return `<div class="actual-evidence-slice"><div class="verification-heading"><span>Actual query evidence</span><strong>funding_round_id = 1003</strong></div><div class="result-content"><table><thead><tr>${['funding_round_id', 'round_type', 'announced_date', 'round_investment_id', 'investor_id', 'is_lead'].map((column) => `<th>${column}</th>`).join('')}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((value) => `<td>${escapeHtml(value)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`;
   }
 
   function renderVerification() {
-    if (state.verificationIndex >= VERIFICATION_STEPS.length) {
-      const reviewHtml = `<p class="review-question"><strong>Result-based reconciliation:</strong></p><ul>${state.verificationAnswers.map((item) => `<li>${escapeHtml(item.answer)}</li>`).join('')}</ul>`;
-      recordCompleted({
-        id: 'result-verification',
-        label: 'Result verification',
-        answer: 'Structural repetition diagnosed and prediction reconciled.',
-        assistance: state.verificationAssistance,
-        reviewHtml,
-      });
-      setCurrent('complete');
-      return;
-    }
-    const step = VERIFICATION_STEPS[state.verificationIndex];
-    const draftKey = `verification-${step.id}`;
-    const draft = state.drafts[draftKey] || '';
+    const options = [
+      ['distinct', 'They are four distinct participation-grain rows for the same funding round. The round context repeats because each row represents a different participation.'],
+      ['duplicates', 'They are four accidental duplicate rows that should collapse to one.'],
+      ['different-rounds', 'They represent four different funding rounds.'],
+      ['same-participation', 'They show one participation repeated four times.'],
+    ];
+    const draft = state.drafts.verification || '';
     const action = renderWorkspaceAction(`
       ${committedPredictionMarkup()}
+      ${actualSliceMarkup()}
       <div class="verification-workspace">
-        <div class="verification-heading"><span>Reconcile the result</span><strong>${state.verificationIndex + 1} of ${VERIFICATION_STEPS.length}</strong></div>
-        ${verificationProgressMarkup()}
-        <h3>${step.prompt}</h3>
-        ${choiceForm('verification-form', step.options, draft)}
+        <div class="verification-heading"><span>Final verification</span><strong>Use the rows above</strong></div>
+        <h3>What do these rows show about funding round 1003?</h3>
+        ${choiceForm('verification-form', options, draft)}
         ${feedbackMarkup()}
       </div>
     `, 'cycle1-verification-action');
     interactionLifecycle.renderCurrent(stepShell(
-      'Use the actual returned rows as the primary evidence.',
-      teacherVoice('Keep the result in view while you diagnose what repeated source values mean and compare the observation with your committed prediction.'),
+      'Interpret the actual result without treating repeated round values as the conclusion by themselves.',
+      teacherVoice('Keep the 1003 result slice in view. Compare the repeated round context with the different participation and investor identifiers.'),
     ));
     action.querySelector('#verification-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const answer = new FormData(event.currentTarget).get('answer');
-      state.drafts[draftKey] = answer || '';
-      if (answer !== step.correct) return wrong(step.wrong);
-      state.verificationAnswers.push({ id: step.id, answer: step.answer, value: answer });
-      state.verificationIndex += 1;
-      state.localFeedback = '';
-      hideSolution();
-      render();
+      state.drafts.verification = answer || '';
+      if (answer !== 'distinct') return wrong('Compare the repeated funding-round fields with the changing round_investment_id and investor_id values.');
+      recordCompleted({
+        id: 'verification',
+        label: 'Result verification',
+        prompt: 'What do the 1003 rows show?',
+        answer: 'Four distinct participation rows for one round; repeated round context is expected.',
+        assistance: state.verificationAssistance,
+      });
+      setCurrent('complete');
     });
   }
 
   function renderComplete() {
     interactionLifecycle.renderCurrent(stepShell(
-      'The raw JOIN does not preserve the requested source-level Grain.',
-      `<div class="completion-summary"><div class="success-feedback">The observed multiplication follows from the one-to-many match structure. Repeated source values occur across distinct source–article matches, and the raw result therefore does not preserve one source per row.</div><p>No repair mechanism is introduced in this encounter.</p></div>`,
+      'Prediction and actual result agree.',
+      `<div class="completion-summary"><div class="success-feedback">One funding round can contribute several participation-grain rows. The funding-round context repeats because each result row represents a different recorded participation.</div><p>The current audit contains 72 participation rows. This encounter does not introduce aggregation, LEFT JOIN, metric reconciliation, or the term fan-out.</p></div>`,
     ));
   }
 
@@ -611,8 +585,8 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
       clearButton.hidden = true;
       clearButton.disabled = true;
     }
-    document.querySelector('.editor-header h2').textContent = verificationActive || state.sqlVerified ? 'SQL result' : 'JOIN implementation';
-    document.getElementById('editor-note').textContent = verificationActive || state.sqlVerified ? 'Actual returned rows' : 'SQLite · verification only';
+    document.querySelector('.editor-header h2').textContent = verificationActive || state.sqlVerified ? 'SQL result' : 'Participation audit SQL';
+    document.getElementById('editor-note').textContent = verificationActive || state.sqlVerified ? 'Actual returned rows' : 'SQLite · implementation only';
   }
 
   function canRunSql() {
@@ -620,29 +594,31 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function solutionForCurrentTask() {
-    if (state.current === 'requestedGrain') return '<strong>Solution:</strong> one publishing source per requested row.';
-    if (state.current === 'structuralPrediction') {
-      const step = STRUCTURAL_STEPS[state.structuralIndex];
-      if (!step) return '<strong>Solution:</strong> one source can contribute several rows; source information can repeat; one raw row represents one source–article match.';
+    if (state.current === 'grain') return '<strong>Solution:</strong> one recorded round-investor participation per result row.';
+    if (state.current === 'cardinality') return '<strong>Solution:</strong> each participation belongs to one funding round, and one funding round can have multiple participation records.';
+    if (state.current === 'prediction') {
+      const step = PREDICTION_STEPS[state.predictionIndex];
+      if (!step) return '<strong>Solution:</strong> one round can occupy several participation rows, and shared round context can repeat across those distinct rows.';
       return `<strong>Solution:</strong> ${escapeHtml(step.answer)}`;
     }
-    if (state.current === 'numericPrediction') return '<strong>Solution:</strong> 18 source–article matches.';
-    if (state.current === 'sql') return `<strong>Solution SQL:</strong><pre>SELECT news_source.name AS source_name,
-       news_article.title AS article_title
-FROM news_source
-INNER JOIN news_article
-  ON news_source.news_source_id = news_article.news_source_id;</pre><p>This is shown as assistance only. It has not been inserted or run.</p>`;
-    if (state.current === 'verification') {
-      const step = VERIFICATION_STEPS[state.verificationIndex];
-      return step ? `<strong>Solution:</strong> ${escapeHtml(step.answer)}` : '<strong>Solution:</strong> the observed multiplication is structural fan-out across legitimate source–article matches.';
-    }
-    if (state.current === 'complete') return '<strong>Completed reasoning:</strong> the direct raw JOIN fans out source rows across their matching articles and does not preserve one source per row.';
+    if (state.current === 'application') return '<strong>Solution:</strong> three recorded participations require three participation-grain rows.';
+    if (state.current === 'sql') return `<strong>Solution SQL:</strong><pre>SELECT
+  funding_round.funding_round_id,
+  funding_round.round_type,
+  funding_round.announced_date,
+  round_investment.round_investment_id,
+  round_investment.investor_id,
+  round_investment.is_lead
+FROM funding_round
+JOIN round_investment
+  ON funding_round.funding_round_id = round_investment.funding_round_id;</pre><p>This is assistance only. It has not been inserted or run.</p>`;
+    if (state.current === 'verification') return '<strong>Solution:</strong> the four rows are distinct participation-grain rows for the same funding round; repeated round context is expected because the participation records differ.';
+    if (state.current === 'complete') return '<strong>Completed reasoning:</strong> Cardinality plus participation Grain predicts row multiplication and repeated one-side context across distinct participation rows.';
     return '<strong>Solution:</strong> no current answer is available.';
   }
 
   function showSolution() {
     markSolutionUse();
-    if (state.current === 'requestedGrain') state.requestedGrainAssistance = 'solution-assisted';
     solutionPanel.innerHTML = `<div class="solution-panel-heading"><span>Solution assistance</span><button id="close-solution" type="button" aria-label="Close solution">Close</button></div><div class="solution-panel-body">${solutionForCurrentTask()}</div>`;
     solutionPanel.hidden = false;
     document.getElementById('close-solution').addEventListener('click', hideSolution);
@@ -665,9 +641,10 @@ INNER JOIN news_article
     renderCompleted();
     updateWorkspaceVisibility();
 
-    if (state.current === 'requestedGrain') renderRequestedGrain();
-    else if (state.current === 'structuralPrediction') renderStructuralPrediction();
-    else if (state.current === 'numericPrediction') renderNumericPrediction();
+    if (state.current === 'grain') renderGrain();
+    else if (state.current === 'cardinality') renderCardinality();
+    else if (state.current === 'prediction') renderPrediction();
+    else if (state.current === 'application') renderApplication();
     else if (state.current === 'sql') renderSql();
     else if (state.current === 'verification') renderVerification();
     else if (state.current === 'complete') renderComplete();
