@@ -88,14 +88,28 @@ Status:
 
 The reconciled design packet was written directly to the repository in the same reconciliation commit. It records the integrated design changes resulting from the independent design reviews while preserving the originally reviewed Encounter Design Packet unchanged.
 
+## Post-reconciliation authority clarification — Show solution
+
+Path:
+
+`course-design/production/cycle-1/authority-clarification-show-solution-assistance.md`
+
+Status:
+
+**CURRENT AUTHORITY CLARIFICATION**
+
+The Course Authority Owner clarified that `Show solution` remains available during the protected prediction and is pedagogically treated as a stronger assistance level on the same assistance continuum as hints. It is not a separate owner gate for Cycle 1. The original reconciliation artifact remains preserved verbatim and is not rewritten retroactively.
+
 ## Cycle 1 execution consequence
 
-All completed inter-phase artifacts through Architect Reconciliation are now **VERBATIM VERIFIED**.
+All completed inter-phase artifacts through Architect Reconciliation are **VERBATIM VERIFIED**.
 
-The independent review findings received explicit Architect dispositions. The reconciliation is complete to current authority.
+The independent review findings received explicit Architect dispositions. The reconciliation is complete to the authority that existed at the time it was produced.
 
-One scoped **OWNER DECISION REQUIRED** remains before Auditor Pre-Build Control: the evidence-sensitive behavior of Back / Retry / Redo and Show solution around the protected pre-execution prediction state.
+The later Show solution clarification resolves the Show-solution portion of the scoped owner issue without altering the original reconciliation record.
+
+One scoped **OWNER DECISION REQUIRED** remains before Auditor Pre-Build Control: the evidence-sensitive behavior of Back / Retry / Redo when an already committed pre-execution prediction is revisited after SQL/result evidence has been seen.
 
 The unresolved owner matter is intentionally narrower than a complete future course-wide global-control policy.
 
-Auditor Pre-Build Control, frozen implementation authority, and implementation remain blocked until that scoped owner decision is resolved and incorporated into durable authority.
+Auditor Pre-Build Control, frozen implementation authority, and implementation remain blocked until that remaining scoped owner decision is resolved and incorporated into durable authority.
