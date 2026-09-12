@@ -32,6 +32,8 @@ The exact shell placement, responsive treatment, labels, icons, and grouping rem
 
 The control should be presented as an explicit button/action in the course-level control layer. When activated, it reveals the solution relevant to the learner's current solvable task.
 
+**Availability is established:** `Show solution` remains available throughout the learner journey, including protected pre-execution prediction states. A Stage or evidence state must not silently disable or remove the control in order to protect assessment evidence.
+
 The solution content itself is context-specific, but the mechanism belongs to the course shell and should remain recognizable across later Stages.
 
 `Show solution` is distinct from:
@@ -58,7 +60,7 @@ The following are not yet determined:
 - the visual surface in which the revealed solution appears;
 - whether the solution remains open while the learner continues working;
 - how solution availability is represented when a task has no meaningful single solution;
-- whether revealing a solution affects later assessment, analytics, or progress metadata.
+- whether revealing a solution affects later assessment, analytics, or progress metadata beyond any encounter-local evidence provenance required to distinguish assisted from unassisted work.
 
 These questions must not be silently resolved in implementation.
 
