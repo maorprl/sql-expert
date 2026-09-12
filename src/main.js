@@ -5,6 +5,7 @@ import 'ace-builds/src-noconflict/ext-language_tools';
 import initSqlJs from 'sql.js';
 import wasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
 import './styles.css';
+import './course-navigation.css';
 import { createStage1 } from './stage1.js';
 import { createCycle1 } from './cycle1.js';
 import { createInteractionLifecycle } from './interaction-lifecycle.js';
@@ -24,6 +25,9 @@ let activeEncounter;
 let activeEncounterName = 'stage1';
 let stage1;
 let rowMultiplicationEncounter;
+const encounterEditorText = { stage1: '', 'row-multiplication': '' };
+const encounterResults = { stage1: null, 'row-multiplication': null };
+
 const el = (id) => document.getElementById(id);
 const status = el('db-status');
 const errorPanel = el('error-panel');
@@ -169,9 +173,11 @@ function selectedOrCurrent() {
   const cursor = editor.session.doc.positionToIndex(editor.getCursorPosition());
   return statementAtCursor(editor.getValue(), cursor)?.text || '';
 }
+
 function resultTable(resultSets) {
   const container = el('result-content'); container.textContent = '';
   clearButton.disabled = false;
+  encounterResults[activeEncounterName] = resultSets;
   if (!resultSets.length) { container.innerHTML = '<p class="empty">Statement executed successfully. No rows returned.</p>'; el('result-meta').textContent = 'No rows returned'; return; }
   const result = resultSets.at(-1), { columns, values } = result;
   el('result-meta').textContent = `${values.length} row${values.length === 1 ? '' : 's'} · ${columns.length} column${columns.length === 1 ? '' : 's'}`;
@@ -182,10 +188,17 @@ function resultTable(resultSets) {
   table.append(body); container.append(table);
 }
 
-function clearRenderedResults() {
+function clearRenderedResults({ forget = false } = {}) {
   el('result-content').innerHTML = '<p class="empty">Results will appear here.</p>';
   el('result-meta').textContent = 'No query run';
   clearButton.disabled = true;
+  if (forget) encounterResults[activeEncounterName] = null;
+}
+
+function restoreEncounterResults(name) {
+  const resultSets = encounterResults[name];
+  if (resultSets) resultTable(resultSets);
+  else clearRenderedResults();
 }
 
 function runCurrentQuery() {
@@ -203,83 +216,147 @@ function runCurrentQuery() {
   } catch (error) { showError('SQL error', error, statement); }
 }
 
-function ensureCycleSupportControls() {
+function ensureSqlSolutionControls() {
+  const editorActions = document.querySelector('.editor-actions');
   if (!el('show-solution')) {
-    const actions = document.querySelector('.topbar > .actions');
-    const shell = document.createElement('div');
-    shell.className = 'course-shell-actions';
-    actions.before(shell);
-    shell.append(actions);
-    const controls = document.createElement('div');
-    controls.className = 'course-controls';
-    controls.setAttribute('aria-label', 'Course controls');
-    controls.innerHTML = '<span class="course-controls-label">Course support</span><button id="show-solution" type="button">Show solution</button>';
-    shell.prepend(controls);
+    const button = document.createElement('button');
+    button.id = 'show-solution';
+    button.type = 'button';
+    button.className = 'sql-solution-button';
+    button.textContent = 'Show solution';
+    editorActions.insertBefore(button, runButton);
   }
   if (!el('solution-panel')) {
     const panel = document.createElement('section');
     panel.id = 'solution-panel';
-    panel.className = 'solution-panel';
+    panel.className = 'solution-panel sql-solution-panel';
     panel.hidden = true;
     panel.setAttribute('aria-live', 'polite');
-    document.querySelector('.topbar').insertAdjacentElement('afterend', panel);
+    el('lab-workspace').append(panel);
   }
+}
+
+function hideSqlSolutionSurface() {
+  const panel = el('solution-panel');
+  if (!panel) return;
+  panel.hidden = true;
+  panel.innerHTML = '';
+}
+
+function ensureChapterNavigation() {
+  if (el('course-chapter-nav')) return;
+  const nav = document.createElement('nav');
+  nav.id = 'course-chapter-nav';
+  nav.className = 'course-chapter-nav';
+  nav.setAttribute('aria-label', 'Course chapters');
+  nav.innerHTML = `
+    <span class="course-chapter-nav-label">Chapters</span>
+    <div class="course-chapter-list">
+      <button type="button" class="course-chapter-button" data-chapter="stage1">Stage 1</button>
+      <button type="button" class="course-chapter-button" data-chapter="row-multiplication">Row multiplication</button>
+    </div>`;
+  document.querySelector('.topbar').insertAdjacentElement('afterend', nav);
+  nav.querySelectorAll('[data-chapter]').forEach((button) => button.addEventListener('click', () => activateEncounter(button.dataset.chapter)));
+}
+
+function updateChapterNavigation() {
+  document.querySelectorAll('[data-chapter]').forEach((button) => {
+    const active = button.dataset.chapter === activeEncounterName;
+    if (active) button.setAttribute('aria-current', 'step');
+    else button.removeAttribute('aria-current');
+  });
+}
+
+function saveEncounterSurface() {
+  if (!editor || !activeEncounterName) return;
+  encounterEditorText[activeEncounterName] = editor.getValue();
+}
+
+function resetEncounterDom() {
+  document.getElementById('workspace-evidence-action')?.remove();
+  el('completed-steps').innerHTML = '';
+  el('current-step').innerHTML = '';
+  el('relation-preview').innerHTML = '';
+  hideSqlSolutionSurface();
+}
+
+function applyStage1Shell() {
+  document.title = 'SQL Lab';
+  const stageLabel = document.querySelector('.stage-label');
+  stageLabel.hidden = false;
+  stageLabel.textContent = 'Stage 1';
+  el('business-request-title').textContent = 'The research team is reviewing media coverage and wants every article to include the source that published it.';
+  document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
+  document.querySelector('.learning-panel').classList.remove('cycle1-sql-active', 'cycle1-results-active', 'cycle1-verification-active');
+}
+
+function applyRowMultiplicationShell() {
+  document.title = 'SQL Lab · Participation audit';
+  document.querySelector('.stage-label').hidden = true;
+  el('business-request-title').textContent = 'Build a participation audit for the recorded investments attached to funding rounds. For every recorded round-investor participation, show the round context together with the participation record, investor identifier, and whether that participation is marked as lead.';
+  document.querySelector('.working-schema-header .eyebrow').textContent = 'Structural reference';
+  el('working-schema-status').textContent = 'Known relations supplied for the participation audit';
+}
+
+function activateStage1() {
+  if (activeEncounterName === 'stage1') return;
+  saveEncounterSurface();
+  activeEncounterName = 'stage1';
+  clearError();
+  resetEncounterDom();
+  applyStage1Shell();
+  activeEncounter = stage1;
+  editor.setValue(encounterEditorText.stage1 || '', -1);
+  restoreEncounterResults('stage1');
+  activeEncounter.refresh?.();
+  renderSchema();
+  updateChapterNavigation();
+  el('stage-scroll').scrollTop = 0;
 }
 
 function activateRowMultiplicationEncounter() {
   if (activeEncounterName === 'row-multiplication') return;
+  saveEncounterSurface();
   activeEncounterName = 'row-multiplication';
-  ensureCycleSupportControls();
   clearError();
-  clearRenderedResults();
-  editor.setValue('', -1);
-  document.title = 'SQL Lab · Participation audit';
-  document.querySelector('.stage-label').hidden = true;
-  el('business-request-title').innerHTML = 'Build a participation audit for the recorded investments attached to funding rounds. For every recorded round-investor participation, show the round context together with the participation record, investor identifier, and whether that participation is marked as lead.';
-  document.querySelector('.working-schema-header .eyebrow').textContent = 'Structural reference';
-  el('working-schema-status').textContent = 'Known relations supplied for the participation audit';
-  el('completed-steps').innerHTML = '';
-  el('current-step').innerHTML = '';
-  el('relation-preview').innerHTML = '';
+  resetEncounterDom();
+  applyRowMultiplicationShell();
+  editor.setValue(encounterEditorText['row-multiplication'] || '', -1);
+  restoreEncounterResults('row-multiplication');
 
-  activeEncounter = null;
-  rowMultiplicationEncounter = createCycle1({
-    editor,
-    getDatabase: () => db,
-    getSchema: () => schema,
-    onSelectionChange: renderSchema,
-    interactionLifecycle,
-  });
+  if (!rowMultiplicationEncounter) {
+    rowMultiplicationEncounter = createCycle1({
+      editor,
+      getDatabase: () => db,
+      getSchema: () => schema,
+      onSelectionChange: renderSchema,
+      interactionLifecycle,
+    });
+  }
   activeEncounter = rowMultiplicationEncounter;
-  renderSchema();
   activeEncounter.refresh?.();
+  renderSchema();
+  updateChapterNavigation();
   el('stage-scroll').scrollTop = 0;
 }
 
-function offerNextEncounter() {
-  if (activeEncounterName !== 'stage1') return;
-  const currentStep = el('current-step');
-  if (el('continue-next-encounter')) return;
-  const button = document.createElement('button');
-  button.id = 'continue-next-encounter';
-  button.className = 'continue-after-feedback';
-  button.type = 'button';
-  button.textContent = stage1?.current?.() === 'complete' ? 'Continue to the next encounter' : 'Go to the next encounter';
-  button.addEventListener('click', activateRowMultiplicationEncounter);
-  currentStep.append(button);
+function activateEncounter(name) {
+  if (name === 'stage1') activateStage1();
+  else if (name === 'row-multiplication') activateRowMultiplicationEncounter();
 }
 
 el('run-query').addEventListener('click', runCurrentQuery);
-el('clear-results').addEventListener('click', () => { el('result-content').innerHTML = '<p class="empty">Results cleared.</p>'; el('result-meta').textContent = 'No query run'; clearError(); });
+el('clear-results').addEventListener('click', () => { clearRenderedResults({ forget: true }); clearError(); });
 el('reset-db').addEventListener('click', loadDatabase);
 el('schema-search').addEventListener('input', renderSchema);
+
 configureEditor();
+ensureSqlSolutionControls();
+ensureChapterNavigation();
 const interactionLifecycle = createInteractionLifecycle({ currentElement: el('current-step'), completedElement: el('completed-steps') });
 stage1 = createStage1({ editor, getDatabase: () => db, getSchema: () => schema, onSelectionChange: renderSchema, interactionLifecycle });
 activeEncounter = stage1;
-const completionObserver = new MutationObserver(offerNextEncounter);
-completionObserver.observe(el('current-step'), { childList: true, subtree: true });
-offerNextEncounter();
+updateChapterNavigation();
 SQL = await initSqlJs({ locateFile: () => wasmUrl });
 db = new SQL.Database();
 await loadDatabase();
