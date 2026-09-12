@@ -31,8 +31,9 @@ Current sequence status:
 3. Encounter Design — completed; verbatim durable handoff verified.
 4. Independent Pedagogy Design Review — completed; verbatim durable handoff verified.
 5. Independent UX Design Review — completed; verbatim durable handoff verified.
-6. Architect Reconciliation — completed to current authority; verbatim durable handoff verified.
-7. Scoped Course Authority Owner decision — required next before Auditor Pre-Build Control.
+6. Architect Reconciliation — completed to the authority available at the time; verbatim durable handoff verified.
+7. Show solution authority clarification — completed: always available; treated pedagogically as a stronger assistance level rather than a separate owner gate.
+8. Scoped Course Authority Owner decision on post-result Back / Retry / Redo treatment — required next before Auditor Pre-Build Control.
 
 The remaining canonical process continues from there as defined in `learner-encounter-production-process.md`.
 
@@ -64,10 +65,11 @@ The following completed Cycle 1 outputs are stored as durable process records:
 - `course-design/production/cycle-1/independent-ux-design-review.md`
 - `course-design/production/cycle-1/architect-reconciliation.md`
 - `course-design/production/cycle-1/reconciled-encounter-design-packet.md`
+- `course-design/production/cycle-1/authority-clarification-show-solution-assistance.md`
 
-These records preserve the completed handoffs through Architect Reconciliation.
+These records preserve the completed handoffs through Architect Reconciliation plus the subsequent narrow authority clarification.
 
-They are process/evidence records. They do not independently create new course authority.
+They are process/evidence records. They do not independently create new course authority except where a record explicitly captures a Course Authority Owner clarification.
 
 ### 4.1 Verbatim durable-handoff rule
 
@@ -103,23 +105,28 @@ Until that review occurs, the current separate-chat approach is temporary execut
 
 ## 6. Current next action
 
-Cycle 1 requires a **scoped Course Authority Owner decision** before Auditor Pre-Build Control.
+Cycle 1 requires one remaining **scoped Course Authority Owner decision** before Auditor Pre-Build Control.
 
-The Encounter Architect completed reconciliation of all independent review findings and narrowed the remaining authority issue to the evidence-sensitive behavior of the global course controls around the protected pre-execution prediction state.
+`Show solution` is no longer part of that unresolved decision. Current course authority now makes the distinction explicit:
 
-The owner decision is limited to:
+- the control remains available during protected prediction;
+- pedagogically, revealing it is a stronger assistance level on the same assistance continuum as hints;
+- encounter-local evidence may preserve that assistance provenance;
+- solution use is not a separate owner gate.
 
-1. whether a committed prediction can be reopened/edited after SQL/result evidence has been seen, and how a new protected attempt is represented; and
-2. whether Show solution is available during the protected prediction state and, if used, how its evidence status is recorded.
+The remaining owner decision is limited to what happens when the learner revisits an already committed pre-execution prediction **after SQL/result evidence has been seen**:
 
-The durable decision alternatives and consequences are recorded in:
+1. whether the committed prediction remains frozen for that attempt and Retry / Redo starts a new attempt; or
+2. whether reopening/editing is permitted, with any edit creating a new protected attempt and making prior downstream SQL/result evidence inactive for that new attempt.
+
+The original alternatives and consequences are recorded in:
 
 `course-design/production/cycle-1/architect-reconciliation.md`
 
-and carried into:
+The later Show solution clarification is recorded in:
 
-`course-design/production/cycle-1/reconciled-encounter-design-packet.md`
+`course-design/production/cycle-1/authority-clarification-show-solution-assistance.md`
 
-This is **not** a request to settle the complete future course-wide Back / Retry / Redo / Show solution policy.
+This is **not** a request to settle the complete future course-wide Back / Retry / Redo policy.
 
-No Auditor Pre-Build Control, frozen implementation authority, or implementation work is authorized until the scoped owner decision is resolved and recorded durably.
+No Auditor Pre-Build Control, frozen implementation authority, or implementation work is authorized until the remaining scoped Back / Retry / Redo decision is resolved and recorded durably.
