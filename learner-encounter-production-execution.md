@@ -235,3 +235,44 @@ The prior `case-selection-delta-review.md` remains a historical process record. 
 The rerun must produce a new durable delta artifact under `course-design/production/cycle-1/`, update provenance minimally, and hand the result to the independent Lightweight Pedagogy Gate required by §12.4.
 
 Rule-Based Acceptance remains paused until this rerun and its required independent review are resolved.
+
+---
+
+## 9. Operationalized Case Validation rerun completed — current execution override
+
+This section is the **current execution state** and supersedes Section 8's next-action statement.
+
+The Encounter Architect has completed the authorized operationalized Case Validation rerun and recorded the durable handoff at:
+
+- `course-design/production/cycle-1/case-validation-operationalized-rerun.md`
+
+The rerun:
+
+- retains the existing Cycle 1 target capability;
+- independently screened the current schema rather than inheriting the historical delta's candidate set;
+- fully compared `news_source → news_article`, `company → funding_round`, and `funding_round → round_investment` as serious candidates;
+- applied factual schema/seed validation, consequence-grounded professional judgment, the operational analytical-authenticity test, and explicit trade-off reasoning;
+- re-selects `news_source → news_article` because it makes first focused fan-out evidence most attributable to the intended Grain/Cardinality reasoning at the learner's current course position;
+- identifies the familiar relation pair / prior 18-row fact as the selected case's material complication and records that the existing protected structural-prediction design already controls that shortcut risk;
+- changes no Cycle 1 design, learner-evidence, UX, implementation, schema, seed, or existing validation artifact.
+
+The historical `course-design/production/cycle-1/case-selection-delta-review.md` remains preserved and is not current case-selection authority.
+
+Under `learner-encounter-production-process.md` §12.4, the exact next authorized action is:
+
+**Targeted Independent Lightweight Pedagogy Gate — Operationalized Cycle 1 Case Validation Rerun Review**
+
+The independent Pedagogy Reviewer must review:
+
+- `course-design/production/cycle-1/case-validation-operationalized-rerun.md`;
+- the current Case Validation requirements in `learner-encounter-production-process.md`;
+- the existing Capability & Case Brief and Lightweight Pedagogy Gate as needed for traceability;
+- the current schema/seed, Stage 1 authority, and pedagogical foundations needed to test the rerun rationale.
+
+The review is narrow: determine whether the rerun satisfies the current consequence-grounding, analytical-authenticity, comparative-alternative, and trade-off requirements and whether the retained case is preferable for the learner's current course position.
+
+If the targeted gate accepts the retained case without requiring a case, capability, pedagogical, learner-evidence, UX, implementation, schema, or seed change, no broader re-review is triggered. Existing Cycle 1 design, implementation, and post-build review artifacts remain preserved.
+
+If the targeted gate requires a material change, follow the applicable Change Impact rule before resuming acceptance.
+
+Rule-Based Acceptance remains paused until the targeted gate is durable and resolved.

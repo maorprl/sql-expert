@@ -209,3 +209,35 @@ The targeted reviewer must review `case-selection-delta-review.md` as the narrow
 If the targeted Pedagogy review accepts the retained case without requiring a case, capability, pedagogical, learner-evidence, UX, or implementation change, no broader re-review is triggered by this delta. If it requires such a change, subsequent review follows the applicable Change Impact rule.
 
 Rule-Based Acceptance remains paused until this targeted delta review is durably resolved.
+
+---
+
+## Operationalized Case Validation Delta Rerun
+
+Path:
+
+`course-design/production/cycle-1/case-validation-operationalized-rerun.md`
+
+Status:
+
+**DURABLE ARCHITECT RERUN RECORDED — AWAITS TARGETED INDEPENDENT LIGHTWEIGHT PEDAGOGY GATE**
+
+The current execution state reopened only the Cycle 1 Case Validation decision after the production process added consequence-grounding, the operational analytical-authenticity test, explicit trade-off reasoning, and consequence-based materiality requirements.
+
+The new rerun independently re-screened the current schema rather than inheriting the historical delta's candidate set. It retained the target capability and selected `news_source → news_article` after full comparison with `company → funding_round` and `funding_round → round_investment` as serious candidates.
+
+The decisive rationale is learner-evidence attribution at the current course position: the selected case reuses a known relationship while reversing the direction and row consequence, all seeded source rows participate, and the protected prediction design prevents the familiar 18-row fact from substituting for structural fan-out reasoning. The serious alternatives provide stronger novelty or transfer but introduce unmatched-row/population semantics or additional investor-identity/missing-disclosure demands that make first fan-out evidence less diagnostic.
+
+The historical `case-selection-delta-review.md` remains unchanged and historical. The reconciled design, implementation, and existing post-build review artifacts also remain unchanged.
+
+### Current rerun execution consequence
+
+This rerun supersedes the preceding comparative-delta next-action statement.
+
+Under `learner-encounter-production-process.md` §12.4, the exact next authorized review is:
+
+**Targeted Independent Lightweight Pedagogy Gate — Operationalized Cycle 1 Case Validation Rerun Review**
+
+The independent Pedagogy Reviewer must review `case-validation-operationalized-rerun.md` against the current operationalized Case Validation requirements. If the gate accepts the retained case without requiring a case, capability, pedagogical, learner-evidence, UX, implementation, schema, or seed change, no broader re-review is triggered and the previously completed Cycle 1 work remains preserved.
+
+Rule-Based Acceptance remains paused until that targeted review is durable and resolved.
