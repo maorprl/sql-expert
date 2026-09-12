@@ -19,6 +19,8 @@ Where `learner-encounter-production-process.md` requires a specific independent 
 
 The functional roles in the learner-encounter production process do not, by themselves, require a permanent one-role-per-agent topology. Concrete agent/run mapping may be decided separately as long as the mandatory independence boundaries are preserved.
 
+For learner-encounter production, any completed role output that becomes an input to a later role must be stored in the repository **verbatim before the dependent role begins**. A summary, reconstruction, paraphrase, or conversational restatement is not a valid durable handoff. If the actual completed output cannot be established, the dependent work remains blocked unless the Course Authority Owner explicitly authorizes another provenance treatment.
+
 ## 1. Classify the work before choosing the worker
 
 A task should first be treated as one of these kinds of work:
@@ -90,6 +92,8 @@ An implementation handoff should normally identify:
 - what to do if a material ambiguity or authority conflict is discovered.
 
 The handoff should not duplicate the authority into a second competing specification or dictate technical implementation details that are not themselves locked decisions.
+
+For role-to-role production handoffs, the receiving role should read the durable repository artifact directly. Do not manually retype, summarize, or reinterpret another role's completed output when the repository artifact is available.
 
 ## 4. Decision and implementation gates
 
