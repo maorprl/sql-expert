@@ -24,12 +24,12 @@ Path:
 
 Status:
 
-**VERBATIM NOT YET VERIFIED — HANDOFF BLOCKED**
+**VERBATIM VERIFIED**
 
-The current repository file is substantively consistent with the completed Pedagogy Gate decision, including the `PROCEED` verdict and the material constraints carried into Encounter Design. However, the original completed Chat 2 output has not yet been recovered in a form that permits full line-by-line verification against this repository file.
-
-Until that source is recovered and the repository artifact is verified or replaced verbatim, this artifact must not be represented as a completed verbatim handoff under `learner-encounter-production-execution.md`.
+The original completed Chat 2 output was supplied directly by the Course Authority Owner and written to the durable repository record verbatim.
 
 ## Cycle 1 execution consequence
 
-Encounter Design remains blocked by provenance control until both prerequisite artifacts are recorded as **VERBATIM VERIFIED** or the Course Authority Owner explicitly authorizes another provenance treatment.
+Both prerequisite inter-phase artifacts are now **VERBATIM VERIFIED**.
+
+The provenance block on Encounter Design is cleared. Cycle 1 may proceed to Encounter Design under the Encounter Architect role, subject to the normal entry gate and current process requirements.
