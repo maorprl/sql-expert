@@ -726,3 +726,77 @@ It begins again with:
 > What capability, if any, is now genuinely required?
 
 ---
+
+## 14. Minimum Durable Record Set
+
+Avoid creating a new file for every conceptual distinction.
+
+The minimum useful durable records are:
+
+1. **Capability & Case Brief**
+2. **Encounter Design Packet**
+3. **Expert Review + Reconciliation Record**
+4. **Implementation / Deviation Record**
+5. **Validation / Acceptance Record**
+6. existing **Capability Coverage / Work Management state**
+
+OPEN decisions remain in the appropriate authority/management location rather than requiring a duplicate universal register.
+
+---
+
+## 15. Required Independence
+
+Mandatory:
+
+- Encounter Architect ≠ formal Pedagogy Reviewer;
+- Encounter Architect ≠ formal UX Reviewer;
+- Implementer ≠ Conformance & Validation Auditor;
+- OPEN authority decisions ≠ autonomous agent decisions.
+
+Permitted combinations:
+
+- capability planning + encounter design;
+- design + initial traceability;
+- pre-build and post-build review by the same independent discipline reviewer;
+- conformance checking + runtime validation;
+- orchestration + mechanical gate enforcement.
+
+“Independent” means independent judgment and context, not necessarily a different model vendor.
+
+---
+
+## 16. Core Process
+
+```text
+Current trusted course state
+        ↓
+Capability + Case + Course-Assumed Learner-State Brief
+        ↓
+Lightweight Independent Pedagogy Gate
+        ↓
+Encounter Design
+        ↓
+Independent Pedagogy Review + Independent UX Review
+        ↓
+Architect Reconciliation
+        ↓
+Auditor Pre-Build Control
+        ↓
+Frozen Implementation Authority
+        ↓
+Implementation
+        ↓
+Runtime/Conformance Validation
++ Post-Build Pedagogy Review
++ Post-Build UX Review
+        ↓
+Rule-Based Acceptance Gate
+        ↓
+Capability Coverage + Evidence + Residual Gap Update
+        ↓
+Next cycle
+```
+
+The process is autonomous wherever current authority and evidence are sufficient.
+
+It stops where continuing would require an agent to invent authority, assume unavailable evidence, or certify its own material judgment.
