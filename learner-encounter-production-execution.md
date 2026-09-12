@@ -28,7 +28,7 @@ Current sequence status:
 
 1. Capability & Case Brief — completed.
 2. Lightweight Independent Pedagogy Gate — completed with `PROCEED`.
-3. Encounter Design — next.
+3. Encounter Design — next, but may begin only after the required durable handoff records satisfy the verbatim-handoff rule in Section 4.
 
 The remaining canonical process continues from there as defined in `learner-encounter-production-process.md`.
 
@@ -60,6 +60,26 @@ These records preserve the handoff between the Capability & Case decision and En
 
 They are process/evidence records. They do not independently create new course authority.
 
+### 4.1 Verbatim durable-handoff rule
+
+When the output of one learner-encounter production phase is an input to a later phase, the durable repository record must preserve the **actual completed output verbatim** before the dependent phase begins.
+
+For this purpose, verbatim means:
+
+- no summary;
+- no reconstruction from memory or notes;
+- no paraphrase;
+- no silent cleanup that changes wording or structure;
+- no replacement by a later assistant's interpretation of what the prior role decided.
+
+Formatting changes are permitted only when they are mechanically required to store the text and do not alter its substantive wording or structure.
+
+The dependent role must consume the durable repository artifact, not a conversational restatement of it.
+
+If the verbatim source cannot be established, the record must not be represented as a completed durable handoff. The dependent phase remains blocked until the actual output is recovered and stored or the Course Authority Owner explicitly authorizes another provenance treatment.
+
+This rule applies to all inter-phase production artifacts, including review outputs, reconciliation records, implementation/deviation records, validation verdicts, and acceptance records.
+
 ## 5. Agent-topology decision deferred until after Cycle 1
 
 Do **not** finalize the permanent mapping of the five functional roles to concrete agents before Cycle 1 has completed.
@@ -74,6 +94,6 @@ Until that review occurs, the current separate-chat approach is temporary execut
 
 ## 6. Current next action
 
-Cycle 1 proceeds to **Encounter Design** under the `Encounter Architect` functional role.
+Cycle 1 proceeds to **Encounter Design** under the `Encounter Architect` functional role only after the two prerequisite durable records satisfy Section 4.1.
 
 No implementation work is authorized yet.
