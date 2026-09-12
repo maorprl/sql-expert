@@ -33,7 +33,8 @@ Current sequence status:
 5. Independent UX Design Review — completed; verbatim durable handoff verified.
 6. Architect Reconciliation — completed to the authority available at the time; verbatim durable handoff verified.
 7. Show solution authority clarification — completed: always available; treated pedagogically as a stronger assistance level rather than a separate owner gate.
-8. Scoped Course Authority Owner decision on post-result Back / Retry / Redo treatment — required next before Auditor Pre-Build Control.
+8. Current-scope necessity clarification — completed: unresolved post-result Back / Retry / Redo semantics remain Backlog and are outside the current Cycle 1 implementation scope.
+9. Auditor Pre-Build Control — unblocked and next.
 
 The remaining canonical process continues from there as defined in `learner-encounter-production-process.md`.
 
@@ -66,8 +67,9 @@ The following completed Cycle 1 outputs are stored as durable process records:
 - `course-design/production/cycle-1/architect-reconciliation.md`
 - `course-design/production/cycle-1/reconciled-encounter-design-packet.md`
 - `course-design/production/cycle-1/authority-clarification-show-solution-assistance.md`
+- `course-design/production/cycle-1/current-scope-necessity-clarification.md`
 
-These records preserve the completed handoffs through Architect Reconciliation plus the subsequent narrow authority clarification.
+These records preserve the completed handoffs through Architect Reconciliation plus the subsequent narrow authority and process/execution clarifications.
 
 They are process/evidence records. They do not independently create new course authority except where a record explicitly captures a Course Authority Owner clarification.
 
@@ -105,28 +107,30 @@ Until that review occurs, the current separate-chat approach is temporary execut
 
 ## 6. Current next action
 
-Cycle 1 requires one remaining **scoped Course Authority Owner decision** before Auditor Pre-Build Control.
+Cycle 1 proceeds to **Auditor Pre-Build Control** under the independent `Conformance & Validation Auditor` functional role.
 
-`Show solution` is no longer part of that unresolved decision. Current course authority now makes the distinction explicit:
+The Auditor must consume the current durable inputs directly from the repository, including:
 
-- the control remains available during protected prediction;
-- pedagogically, revealing it is a stronger assistance level on the same assistance continuum as hints;
-- encounter-local evidence may preserve that assistance provenance;
-- solution use is not a separate owner gate.
+- `course-design/production/cycle-1/capability-and-case-brief.md`
+- `course-design/production/cycle-1/lightweight-pedagogy-gate-review.md`
+- `course-design/production/cycle-1/encounter-design-packet.md`
+- `course-design/production/cycle-1/independent-pedagogy-design-review.md`
+- `course-design/production/cycle-1/independent-ux-design-review.md`
+- `course-design/production/cycle-1/architect-reconciliation.md`
+- `course-design/production/cycle-1/reconciled-encounter-design-packet.md`
+- `course-design/production/cycle-1/authority-clarification-show-solution-assistance.md`
+- `course-design/production/cycle-1/current-scope-necessity-clarification.md`
+- `course-design/production/cycle-1/provenance.md`
+- `learner-encounter-production-process.md`
 
-The remaining owner decision is limited to what happens when the learner revisits an already committed pre-execution prediction **after SQL/result evidence has been seen**:
+For the deferred Back / Retry / Redo matter, the Auditor must apply the current-scope boundary rather than reopen the future global-control policy:
 
-1. whether the committed prediction remains frozen for that attempt and Retry / Redo starts a new attempt; or
-2. whether reopening/editing is permitted, with any edit creating a new protected attempt and making prior downstream SQL/result evidence inactive for that new attempt.
+- post-result Back / Retry / Redo semantics for reopening/editing protected prediction evidence are **OPEN / BACKLOG / OUT OF CURRENT IMPLEMENTATION SCOPE**;
+- the current build must not silently establish those deferred semantics;
+- this deferred matter is nonblocking unless the proposed current implementation itself introduces or depends on that behavior.
 
-The original alternatives and consequences are recorded in:
+`Show solution` remains available and is treated pedagogically as a stronger assistance level on the same assistance continuum as hints. Its availability is not an owner gate.
 
-`course-design/production/cycle-1/architect-reconciliation.md`
+The Auditor now determines whether the reconciled design and current clarifications provide sufficient implementation authority and acceptance evidence for the accepted Cycle 1 scope.
 
-The later Show solution clarification is recorded in:
-
-`course-design/production/cycle-1/authority-clarification-show-solution-assistance.md`
-
-This is **not** a request to settle the complete future course-wide Back / Retry / Redo policy.
-
-No Auditor Pre-Build Control, frozen implementation authority, or implementation work is authorized until the remaining scoped Back / Retry / Redo decision is resolved and recorded durably.
+No frozen implementation authority or implementation work is authorized unless and until Auditor Pre-Build Control returns **PASS**.
