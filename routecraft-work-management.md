@@ -26,6 +26,12 @@ Primary management record:
 
 `course-work-management.md`
 
+`course-work-management.md` predates this Program structure and retains its historical `Epic: Course Build` / central-management wording during the current Cycle 1. Under the project-level structure defined here, treat that existing record as the management record for Program A rather than as the management container for Program B.
+
+Do not rewrite or reorganize that large historical management record merely to make its labels match this taxonomy during Cycle 1. Its planning labels can be reconciled after the cycle without changing its historical milestones or course authority.
+
+Where its legacy `Next Planning Gate` / `Immediate Next Action` text describes the pre-Cycle-1 capability-planning state, the current Cycle 1 execution state is determined by `learner-encounter-production-execution.md` and the durable Cycle 1 production records. This is a management-state reconciliation only; it does not alter course authority.
+
 ### A1 — Course Foundations
 
 #### Capability & Pedagogy Architecture
@@ -205,11 +211,12 @@ For the current Cycle 1:
 
 - do not move existing files merely to fit this hierarchy;
 - do not rewrite authority documents to match management labels;
+- do not rewrite large historical management records solely for taxonomy consistency;
 - do not change active role contracts, gates, or handoffs;
 - do not finalize permanent agent topology;
 - do not select RAG, embeddings, vector storage, or persistent memory as implementation decisions.
 
-After Cycle 1, use the completed cycle as evidence for the next production-system architecture decisions.
+After Cycle 1, use the completed cycle as evidence for the next production-system architecture decisions and reconcile legacy management labels where useful.
 
 ## 7. Management hierarchy
 
