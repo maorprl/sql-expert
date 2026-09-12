@@ -2,9 +2,17 @@
 
 A browser-only SQLite workspace for the startup ecosystem dataset.
 
-The active learner encounter is the accepted **Cycle 1** participation row-multiplication encounter using:
+The learner journey starts with the existing validated **Stage 1** `news_article → news_source` encounter. Stage 1 remains implemented by:
+
+- `src/stage1.js`
+- `course-design/stage-1/stage-1-learner-route.md`
+- `course-design/stage-1/stage-1-interaction-decisions.md`
+
+After Stage 1 reaches its existing completion state, the learner can continue to the current Cycle 1 participation row-multiplication encounter using:
 
 `funding_round → round_investment`
+
+The row-multiplication encounter is implemented in `src/cycle1.js` as a separate encounter module that reuses the same SQL Lab runtime, editor, schema viewer, result renderer, interaction lifecycle, and visual infrastructure. It does not replace or rewrite Stage 1.
 
 Its current implementation authority is recorded in:
 
@@ -18,8 +26,6 @@ The owner-directed revision corrects the core evidence sequence so the learner f
 The implementation record is:
 
 - `course-design/production/cycle-1/implementation-record-owner-directed-2026-09-13.md`
-
-The implementation reuses the existing editor, SQLite runtime, schema viewer, autocomplete, results table, reset behavior, interaction lifecycle, course controls, and shared visual infrastructure. The prior source-to-article Cycle 1 implementation and Stage 1 implementation remain in repository history/artifacts but are not the active runtime authority.
 
 No new Stage number is assigned to the Cycle 1 encounter.
 
@@ -42,7 +48,7 @@ npm run build
 `startup-ecosystem/startup-ecosystem-seed.sql` are the database source of
 truth. The browser fetches and executes those files in a fresh `sql.js`
 SQLite database during initialization and reset. The schema viewer, editor
-autocomplete, and Cycle 1 result-contract verification read from that loaded
+autocomplete, and encounter result-contract verification read from that loaded
 database rather than maintaining a second schema or data representation.
 
 The build script copies those exact SQL source files into
