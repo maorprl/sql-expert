@@ -257,14 +257,14 @@ function activateRowMultiplicationEncounter() {
 }
 
 function offerNextEncounter() {
-  if (activeEncounterName !== 'stage1' || stage1?.current?.() !== 'complete') return;
+  if (activeEncounterName !== 'stage1') return;
   const currentStep = el('current-step');
-  if (!currentStep.querySelector('.completion-state') || el('continue-next-encounter')) return;
+  if (el('continue-next-encounter')) return;
   const button = document.createElement('button');
   button.id = 'continue-next-encounter';
-  button.className = 'primary continue-after-feedback';
+  button.className = 'continue-after-feedback';
   button.type = 'button';
-  button.textContent = 'Continue to the next encounter';
+  button.textContent = stage1?.current?.() === 'complete' ? 'Continue to the next encounter' : 'Go to the next encounter';
   button.addEventListener('click', activateRowMultiplicationEncounter);
   currentStep.append(button);
 }
@@ -279,6 +279,7 @@ stage1 = createStage1({ editor, getDatabase: () => db, getSchema: () => schema, 
 activeEncounter = stage1;
 const completionObserver = new MutationObserver(offerNextEncounter);
 completionObserver.observe(el('current-step'), { childList: true, subtree: true });
+offerNextEncounter();
 SQL = await initSqlJs({ locateFile: () => wasmUrl });
 db = new SQL.Database();
 await loadDatabase();
