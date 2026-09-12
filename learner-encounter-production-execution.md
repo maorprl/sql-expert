@@ -3,276 +3,142 @@
 **Status:** CURRENT — Cycle 1 execution policy  
 **Role:** Execution companion to `learner-encounter-production-process.md`
 
-This document records how the current learner-encounter production process is being executed during Cycle 1.
+This document records only how the current learner-encounter production process is being executed during Cycle 1.
 
-It does **not** change the functional roles, gates, authority boundaries, or review requirements defined in `learner-encounter-production-process.md`. It also does **not** establish the final long-term agent topology.
+It does **not** define or summarize pedagogical, visual, Stage, schema, data, case-selection, business-situation, learner-evidence, or implementation-content decisions. Those decisions remain in their dedicated authority and durable production artifacts.
 
-## 1. Relationship between the two execution/process documents
+## 1. Execution-state boundary
+
+This file may record:
+
+- which process phase or corrective delta is currently authorized;
+- which required handoffs exist;
+- which role may act next;
+- which durable artifacts must exist before that action;
+- whether acceptance is open, paused, or blocked;
+- execution topology and independence requirements.
+
+This file must **not** record or restate:
+
+- selected or rejected course cases;
+- candidate relation sets;
+- business-question content;
+- schema-specific rationale;
+- row counts or data-instance facts used in a course decision;
+- pedagogical trade-off conclusions;
+- learner-facing design decisions;
+- the substantive outcome of a role's professional judgment.
+
+Those belong in the role's durable artifact and, where useful, in provenance. This separation prevents execution-state files from leaking prior content decisions into later independent discovery or review.
+
+## 2. Relationship between execution/process documents
 
 For learner-encounter production:
 
-- `learner-encounter-production-process.md` defines the **workflow, functional roles, required gates, independence requirements, durable artifacts, and acceptance logic**.
+- `learner-encounter-production-process.md` defines the **workflow, functional roles, required gates, independence requirements, durable artifacts, change-impact rules, and acceptance logic**.
 - `agent-assisted-work-protocol.md` defines **worker/tool selection, handoff mechanics, implementation-agent usage, branch coordination, remote/local synchronization, and general execution efficiency**.
+- this file records the **current execution state and authorization only**.
 
-The two documents are complementary, not competing sources.
+The documents are complementary, not competing sources.
 
-Where `learner-encounter-production-process.md` requires a specific independent review, gate, or role separation for learner-encounter production, that requirement remains mandatory. General efficiency guidance in `agent-assisted-work-protocol.md` does not remove such a required control; it governs how the required control is executed.
+Where `learner-encounter-production-process.md` requires a specific independent review, gate, or role separation, that requirement remains mandatory regardless of the temporary execution mechanism.
 
-Neither document is pedagogical, visual, Stage, schema, or data authority.
+## 3. Temporary Cycle 1 execution topology
 
-## 2. Cycle 1 temporary execution decision
+Cycle 1 continues manually through the canonical learner-encounter production process.
 
-Cycle 1 will continue **manually through the canonical learner-encounter production process**.
+Separate chats or isolated model executions may be used to instantiate functional roles and preserve required independence. This is execution scaffolding only; it does not establish a permanent one-role-per-agent architecture.
 
-Current sequence status:
+Mandatory independence boundaries in `learner-encounter-production-process.md` remain controlling.
 
-1. Capability & Case Brief — completed; verbatim durable handoff verified.
-2. Lightweight Independent Pedagogy Gate — completed with `PROCEED`; verbatim durable handoff verified.
-3. Encounter Design — completed; verbatim durable handoff verified.
-4. Independent Pedagogy Design Review — completed; verbatim durable handoff verified.
-5. Independent UX Design Review — completed; verbatim durable handoff verified.
-6. Architect Reconciliation — completed to the authority available at the time; verbatim durable handoff verified.
-7. Show solution authority clarification — completed: always available; treated pedagogically as a stronger assistance level rather than a separate owner gate.
-8. Current-scope necessity clarification — completed: unresolved post-result Back / Retry / Redo semantics remain Backlog and are outside the current Cycle 1 implementation scope.
-9. Auditor Pre-Build Control — completed with **PASS → FROZEN IMPLEMENTATION AUTHORITY**; verbatim durable handoff verified.
-10. Frozen Implementation Authority — established for the accepted Cycle 1 scope.
-11. Cycle 1 Implementation — completed; durable implementation handoff recorded. Implementer self-testing is not independent validation.
-12. Independent Post-Build Review — **authorized and next**, consisting of Runtime / Conformance Validation, Post-Build Pedagogy Review, and Post-Build Learning Experience / UX Review under the independent roles required by the canonical process.
+The permanent agent topology remains deferred until after Cycle 1.
 
-The remaining canonical process continues from there as defined in `learner-encounter-production-process.md`.
+## 4. Durable handoff rule
 
-## 3. Temporary use of separate chats / executions
+When the output of one production phase becomes an input to a later phase, the durable repository record must preserve the actual completed output verbatim before the dependent phase begins.
 
-During Cycle 1, separate chats or isolated model executions may be used to instantiate functional roles and preserve review independence.
+A summary, reconstruction, paraphrase, conversational restatement, or execution-file synopsis is not a valid substitute for the durable handoff.
 
-This is an **execution mechanism only**.
+The receiving role must consume the required durable artifact directly when that artifact is part of its authorized input set.
 
-It does not establish that:
+If the verbatim handoff cannot be established, dependent work remains blocked unless the Course Authority Owner explicitly authorizes another provenance treatment.
 
-- every functional role must permanently map to a separate agent;
-- the final system will contain five agent instances;
-- every process phase requires a new chat;
-- the current manual chat topology is the desired automation architecture.
+## 5. Cycle 1 coarse execution status
 
-The functional-role architecture remains canonical. The final mapping from roles to agents/runs remains deliberately undecided during Cycle 1.
+The following canonical work has been completed and durably recorded:
 
-Mandatory independence boundaries from `learner-encounter-production-process.md` still apply regardless of the temporary execution mechanism.
+1. Capability & Case Brief.
+2. Lightweight Independent Pedagogy Gate.
+3. Encounter Design.
+4. Independent Pedagogy Design Review.
+5. Independent UX Design Review.
+6. Architect Reconciliation and required clarifications.
+7. Auditor Pre-Build Control.
+8. Frozen Implementation Authority.
+9. Cycle 1 Implementation.
+10. Independent Post-Build Runtime / Conformance Review.
+11. Independent Post-Build Pedagogy Review.
+12. Independent Post-Build Learning Experience / UX Review.
 
-## 4. Durable Cycle 1 records
+Rule-Based Acceptance is currently paused because Case Validation was reopened after the production process was strengthened.
 
-The following completed Cycle 1 outputs are stored as durable process records:
+Corrective Case Validation work has already produced historical durable delta artifacts. Those artifacts remain preserved as process history, but their substantive candidate sets, weighting, and conclusions are **not execution state** and must not be copied into this file.
 
-- `course-design/production/cycle-1/capability-and-case-brief.md`
-- `course-design/production/cycle-1/lightweight-pedagogy-gate-review.md`
-- `course-design/production/cycle-1/encounter-design-packet.md`
-- `course-design/production/cycle-1/independent-pedagogy-design-review.md`
-- `course-design/production/cycle-1/independent-ux-design-review.md`
-- `course-design/production/cycle-1/architect-reconciliation.md`
-- `course-design/production/cycle-1/reconciled-encounter-design-packet.md`
-- `course-design/production/cycle-1/authority-clarification-show-solution-assistance.md`
-- `course-design/production/cycle-1/current-scope-necessity-clarification.md`
-- `course-design/production/cycle-1/auditor-pre-build-control.md`
-- `course-design/production/cycle-1/implementation-record.md`
+## 6. Durable Cycle 1 record locations
 
-These records preserve the completed handoffs through Cycle 1 Implementation plus the narrow post-reconciliation authority and process/execution clarifications that form part of current frozen implementation authority.
+Completed and historical Cycle 1 handoffs are stored under:
 
-They are process/evidence records. They do not independently create new course authority except where a record explicitly captures a Course Authority Owner clarification or, in the case of the Auditor Pre-Build Control, records the process consequence of a PASS under already-existing authority.
+`course-design/production/cycle-1/`
 
-The implementation record documents what the Implementer built, material implementation-discretion choices, Implementer self-checks, deviations, and unresolved matters. It is not an independent validation or acceptance artifact.
+Current records include:
 
-### 4.1 Verbatim durable-handoff rule
+- `capability-and-case-brief.md`
+- `lightweight-pedagogy-gate-review.md`
+- `encounter-design-packet.md`
+- `independent-pedagogy-design-review.md`
+- `independent-ux-design-review.md`
+- `architect-reconciliation.md`
+- `reconciled-encounter-design-packet.md`
+- `authority-clarification-show-solution-assistance.md`
+- `current-scope-necessity-clarification.md`
+- `auditor-pre-build-control.md`
+- `implementation-record.md`
+- `post-build-runtime-conformance-review.md`
+- `post-build-pedagogy-review.md`
+- `post-build-ux-review.md`
+- `case-selection-delta-review.md`
+- `case-validation-operationalized-rerun.md`
+- `provenance.md`
 
-When the output of one learner-encounter production phase is an input to a later phase, the durable repository record must preserve the **actual completed output verbatim** before the dependent phase begins.
+The existence of a record in this list does not make its substantive decision current authority for a newly reopened decision. Current authority and authorized inputs are determined by the canonical process and the current action below.
 
-For this purpose, verbatim means:
+## 7. Current execution override
 
-- no summary;
-- no reconstruction from memory or notes;
-- no paraphrase;
-- no silent cleanup that changes wording or structure;
-- no replacement by a later assistant's interpretation of what the prior role decided.
+After the most recent Case Validation rerun, `learner-encounter-production-process.md` was strengthened again to require that analytical authenticity extend to the **additional information need and relational move themselves**, not only to a plausible starting task or report.
 
-Formatting changes are permitted only when they are mechanically required to store the text and do not alter its substantive wording or structure.
-
-The dependent role must consume the durable repository artifact, not a conversational restatement of it.
-
-If the verbatim source cannot be established, the record must not be represented as a completed durable handoff. The dependent phase remains blocked until the actual output is recovered and stored or the Course Authority Owner explicitly authorizes another provenance treatment.
-
-This rule applies to all inter-phase production artifacts, including review outputs, reconciliation records, implementation/deviation records, validation verdicts, and acceptance records.
-
-## 5. Agent-topology decision deferred until after Cycle 1
-
-Do **not** finalize the permanent mapping of the five functional roles to concrete agents before Cycle 1 has completed.
-
-After one full production cycle, review the actual handoffs, independence needs, context requirements, coordination cost, and failure modes, then decide whether the five functional roles should map operationally to:
-
-- five separate agents;
-- a smaller number of agents with isolated role executions;
-- another execution topology that preserves the mandatory separations.
-
-Until that review occurs, the current separate-chat approach is temporary execution scaffolding, not architecture authority.
-
-## 6. Current next action
-
-Cycle 1 proceeds to **Independent Post-Build Review**.
-
-The next authorized review streams are:
-
-- **Runtime / Conformance Validation** by the independent Conformance & Validation Auditor;
-- **Post-Build Pedagogy Review** by the independent Pedagogy Reviewer;
-- **Post-Build Learning Experience / UX Review** by the independent Learning Experience / UX Reviewer.
-
-Those reviewers must inspect the actual implemented learner experience against the frozen implementation authority and the durable implementation handoff at:
-
-- `course-design/production/cycle-1/implementation-record.md`.
-
-The Implementer's own checks recorded there are implementation self-testing only and must not be substituted for any of the independent post-build verdicts.
-
-The frozen implementation authority remains:
-
-- `course-design/production/cycle-1/reconciled-encounter-design-packet.md`
-- `course-design/production/cycle-1/authority-clarification-show-solution-assistance.md`
-- `course-design/production/cycle-1/current-scope-necessity-clarification.md`
-- `course-design/production/cycle-1/auditor-pre-build-control.md`
-
-The current source authorities explicitly incorporated by the reconciled design remain applicable where referenced, including:
-
-- `pedagogical-foundations.md`
-- `course-design/course-visual-language.md`
-- `course-design/course-controls.md`
-- `startup-ecosystem/startup-ecosystem-schema.sql`
-- `startup-ecosystem/startup-ecosystem-seed.sql`
-
-The original reviewed Encounter Design Packet, both independent design reviews, and Architect Reconciliation remain preserved durable traceability artifacts. They must not be rewritten. Where their historical blocking conclusions conflict with the later current clarifications, the later current clarifications control current execution consequence.
-
-For the deferred Back / Retry / Redo matter, the boundary remains explicit:
-
-- post-result Back / Retry / Redo semantics for reopening/editing protected prediction evidence are **OPEN / BACKLOG / OUT OF CURRENT IMPLEMENTATION SCOPE**;
-- the implementation must not be interpreted as establishing those deferred semantics;
-- post-build review should verify that no such semantics were silently introduced.
-
-`Show solution` remains available throughout the learner journey, including the protected prediction state, and is treated pedagogically as a stronger assistance level on the same assistance continuum as hints. Revealing it does not by itself populate the learner response, execute SQL, complete required evidence, or bypass later verification. Where the encounter records assistance provenance, solution use is recorded as stronger / solution-assisted evidence rather than unassisted performance.
-
-After all three post-build verdicts are durable and every material finding has explicit disposition, Cycle 1 proceeds to the Rule-Based Acceptance Gate defined in `learner-encounter-production-process.md`.
-
----
-
-## 7. Targeted comparative Case Validation delta — current execution override
-
-This section is the **current execution state** and supersedes Section 6's earlier next-action statement.
-
-Since Section 6 was recorded, the repository has received durable post-build review artifacts for all three independent streams:
-
-- `course-design/production/cycle-1/post-build-runtime-conformance-review.md`
-- `course-design/production/cycle-1/post-build-pedagogy-review.md`
-- `course-design/production/cycle-1/post-build-ux-review.md`
-
-The production process was subsequently amended to require comparative Case Validation when more than one materially plausible current case can exercise the same target capability. The earlier Cycle 1 Case Validation did not contain that comparison.
-
-The Encounter Architect has now completed the narrow corrective artifact:
-
-- `course-design/production/cycle-1/case-selection-delta-review.md`
-
-The delta retains:
-
-- the existing Cycle 1 target capability;
-- `news_source → news_article` as the selected case after explicit comparison with `company → funding_round`;
-- the reconciled reasoning architecture;
-- the existing learner-evidence design;
-- the existing implementation unchanged.
-
-Under `learner-encounter-production-process.md` §12.4, a case-justification change returns to the Capability & Case Brief / Lightweight Pedagogy Gate layer. For this narrow correction, the delta artifact functions as the amendment to the existing Brief rather than rewriting it.
+Because the most recent Case Validation rerun predates that strengthened requirement, its Case Validation conclusion has not been evaluated under the current standard.
 
 ### Current next authorized action
 
-**Targeted Independent Lightweight Pedagogy Gate — Comparative Case Validation Delta Review**
-
-The independent Pedagogy Reviewer must review:
-
-- `course-design/production/cycle-1/case-selection-delta-review.md`;
-- the current amended Case Validation requirements in `learner-encounter-production-process.md`;
-- the existing Capability & Case Brief and lightweight gate as necessary for traceability;
-- the current schema/seed and Stage 1 authority needed to test the comparative rationale.
-
-The review is narrow: determine whether the comparative evaluation is adequate and whether retaining `news_source → news_article` is preferable to the serious alternative for the learner's current course position.
-
-Rule-Based Acceptance is paused until that targeted review is durable and its finding is resolved.
-
-If the targeted review accepts the retained case without requiring a pedagogical, learner-evidence, UX, implementation, schema, or seed change, the earlier design, implementation, and post-build review artifacts remain preserved and no broader re-review is triggered by this delta.
-
-If the targeted review requires a case change or another material change, follow the applicable Change Impact rule before resuming acceptance.
-
----
-
-## 8. Operationalized Case Validation rerun — current execution override
-
-This section is the **current execution state** and supersedes Section 7's next-action statement.
-
-After the first comparative Case Validation delta was completed, the production process was further strengthened to operationalize professional judgment that can affect case selection or review severity. The current process now requires:
-
-- consequence-grounding for material professional judgments;
-- an operational business / analytical authenticity test;
-- explicit rationale for trade-offs between competing case strengths;
-- consequence-based justification for classifying a professional defect as material.
-
-Because the existing `case-selection-delta-review.md` predates those requirements, its retained-case decision has not yet been evaluated under the current Case Validation standard.
-
-### Current next authorized action
-
-**Encounter Architect — targeted Cycle 1 Case Validation delta rerun under the current operationalized process**
+**Encounter Architect — targeted Cycle 1 Case Validation delta rerun under the current strengthened analytical-authenticity standard**
 
 The Architect must:
 
-- treat the existing Cycle 1 target capability as unchanged unless current evidence provides a material reason to reopen it;
-- perform the comparative Case Validation afresh under the current `learner-encounter-production-process.md`;
-- independently identify and assess the materially plausible current-schema alternatives rather than treating the prior delta's candidate set or conclusion as binding;
-- ground material professional judgments in concrete learner consequences;
-- apply the current analytical-authenticity and explicit trade-off requirements;
-- preserve existing Cycle 1 design, implementation, and validation work wherever the resulting case decision does not affect it.
+- read the current `learner-encounter-production-process.md` and this execution file first;
+- verify that this targeted rerun is authorized;
+- treat the existing target capability as presumptively unchanged unless current permitted evidence gives a material reason to reopen it;
+- perform Case Validation afresh under the current process requirements;
+- independently identify materially plausible current-schema candidates from the current schema/data and permitted current course authority;
+- apply the current comparative, consequence-grounding, analytical-authenticity, and trade-off requirements;
+- preserve existing Cycle 1 work wherever the resulting Case Validation decision does not materially affect it;
+- produce a new durable delta artifact and minimal provenance/execution updates.
 
-The prior `case-selection-delta-review.md` remains a historical process record. It must not be silently rewritten or treated as current authority for the rerun conclusion.
+### Independence / contamination rule for this rerun
 
-The rerun must produce a new durable delta artifact under `course-design/production/cycle-1/`, update provenance minimally, and hand the result to the independent Lightweight Pedagogy Gate required by §12.4.
+Before independent candidate discovery and initial comparative judgment are complete, the Architect must **not** read historical case-selection delta artifacts or provenance entries that disclose their candidate sets, selected cases, or comparative conclusions.
 
-Rule-Based Acceptance remains paused until this rerun and its required independent review are resolved.
+Historical case-selection artifacts may be inspected only afterward for traceability and change-impact comparison.
 
----
+The mandatory pre-discovery input set must therefore remain limited to current process/execution authority plus the current course/schema/data sources needed to discover and evaluate candidates independently.
 
-## 9. Operationalized Case Validation rerun completed — current execution override
-
-This section is the **current execution state** and supersedes Section 8's next-action statement.
-
-The Encounter Architect has completed the authorized operationalized Case Validation rerun and recorded the durable handoff at:
-
-- `course-design/production/cycle-1/case-validation-operationalized-rerun.md`
-
-The rerun:
-
-- retains the existing Cycle 1 target capability;
-- independently screened the current schema rather than inheriting the historical delta's candidate set;
-- fully compared `news_source → news_article`, `company → funding_round`, and `funding_round → round_investment` as serious candidates;
-- applied factual schema/seed validation, consequence-grounded professional judgment, the operational analytical-authenticity test, and explicit trade-off reasoning;
-- re-selects `news_source → news_article` because it makes first focused fan-out evidence most attributable to the intended Grain/Cardinality reasoning at the learner's current course position;
-- identifies the familiar relation pair / prior 18-row fact as the selected case's material complication and records that the existing protected structural-prediction design already controls that shortcut risk;
-- changes no Cycle 1 design, learner-evidence, UX, implementation, schema, seed, or existing validation artifact.
-
-The historical `course-design/production/cycle-1/case-selection-delta-review.md` remains preserved and is not current case-selection authority.
-
-Under `learner-encounter-production-process.md` §12.4, the exact next authorized action is:
-
-**Targeted Independent Lightweight Pedagogy Gate — Operationalized Cycle 1 Case Validation Rerun Review**
-
-The independent Pedagogy Reviewer must review:
-
-- `course-design/production/cycle-1/case-validation-operationalized-rerun.md`;
-- the current Case Validation requirements in `learner-encounter-production-process.md`;
-- the existing Capability & Case Brief and Lightweight Pedagogy Gate as needed for traceability;
-- the current schema/seed, Stage 1 authority, and pedagogical foundations needed to test the rerun rationale.
-
-The review is narrow: determine whether the rerun satisfies the current consequence-grounding, analytical-authenticity, comparative-alternative, and trade-off requirements and whether the retained case is preferable for the learner's current course position.
-
-If the targeted gate accepts the retained case without requiring a case, capability, pedagogical, learner-evidence, UX, implementation, schema, or seed change, no broader re-review is triggered. Existing Cycle 1 design, implementation, and post-build review artifacts remain preserved.
-
-If the targeted gate requires a material change, follow the applicable Change Impact rule before resuming acceptance.
-
-Rule-Based Acceptance remains paused until the targeted gate is durable and resolved.
+Rule-Based Acceptance remains paused until this rerun and the downstream review required by `learner-encounter-production-process.md` are resolved.
