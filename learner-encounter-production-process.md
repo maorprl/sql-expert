@@ -397,6 +397,26 @@ It must answer:
 
 > What must the learner actually do that would constitute meaningful evidence of the capability approved at the Capability Gate?
 
+### Evidence Independence Test
+
+For every evidence-bearing learner action, the Encounter Architect must identify the target reasoning that the action is intended to evidence and ask:
+
+> Could a learner produce the correct response from quantities, wording, conclusions, answer structure, or scaffolds already supplied without performing that target reasoning?
+
+If yes, that action may still serve as guidance, practice, or supporting evidence, but it must not by itself be treated as sufficient core evidence of the capability. The design must either revise the action so that the target reasoning is required or rely on another evidence-bearing action that does require it.
+
+This test does not prohibit closed or constrained interactions, nor does it prohibit supplying premises that the learner legitimately needs in order to reason. The issue is whether the interaction supplies the conclusion, or a shortcut to the conclusion, such that the claimed target reasoning can be bypassed.
+
+### Scaffolding-to-Evidence Calibration
+
+Scaffolding must be calibrated to both the Course-Assumed Learner State and the evidence purpose of the encounter.
+
+A scaffold appropriate for first exposure or supported practice must not be inherited automatically into an encounter whose stated purpose is reduced scaffolding, transfer, integration, stronger validation evidence, or another stronger form of learner evidence.
+
+For each core evidence-bearing action, the design must make clear what support is present and why that support does not perform the target reasoning for the learner. Assistance, hints, or solution use must remain distinguishable in evidence provenance where they could affect the strength of the resulting capability claim.
+
+This does not create a general rule that less scaffolding is always better. The required support depends on learner state and encounter purpose; the requirement is that the claimed evidence strength match the reasoning the learner actually has to perform.
+
 ### Durable artifact — Encounter Design Packet
 
 This may map onto existing learner-route / interaction-decision documents rather than requiring a new repository file type.
@@ -411,6 +431,14 @@ The same frozen Design Packet is reviewed independently by:
 - UX Reviewer.
 
 Neither reviewer should depend on the other's judgment when forming the initial review.
+
+For the full Pedagogy Design Review, the Pedagogy Reviewer must specifically verify:
+
+- whether each claimed core evidence-bearing action actually requires the learner to perform the target reasoning, rather than allowing the correct response to be produced from quantities, wording, conclusions, answer structure, or scaffolds already supplied;
+- whether the level of scaffolding matches the encounter's stated evidence purpose and the Course-Assumed Learner State, especially where the encounter claims reduced-scaffolding, transfer, integration, or stronger validation evidence;
+- whether an interaction classified as core evidence is in fact evidence of the target capability rather than guided practice whose support performs material parts of the reasoning.
+
+A defect in these checks is material when it weakens the capability claim the encounter is intended to support. The reviewer should classify the finding according to the existing finding rules below rather than create a separate review category.
 
 Each finding is classified as:
 
@@ -698,77 +726,3 @@ It begins again with:
 > What capability, if any, is now genuinely required?
 
 ---
-
-## 14. Minimum Durable Record Set
-
-Avoid creating a new file for every conceptual distinction.
-
-The minimum useful durable records are:
-
-1. **Capability & Case Brief**
-2. **Encounter Design Packet**
-3. **Expert Review + Reconciliation Record**
-4. **Implementation / Deviation Record**
-5. **Validation / Acceptance Record**
-6. existing **Capability Coverage / Work Management state**
-
-OPEN decisions remain in the appropriate authority/management location rather than requiring a duplicate universal register.
-
----
-
-## 15. Required Independence
-
-Mandatory:
-
-- Encounter Architect ≠ formal Pedagogy Reviewer;
-- Encounter Architect ≠ formal UX Reviewer;
-- Implementer ≠ Conformance & Validation Auditor;
-- OPEN authority decisions ≠ autonomous agent decisions.
-
-Permitted combinations:
-
-- capability planning + encounter design;
-- design + initial traceability;
-- pre-build and post-build review by the same independent discipline reviewer;
-- conformance checking + runtime validation;
-- orchestration + mechanical gate enforcement.
-
-“Independent” means independent judgment and context, not necessarily a different model vendor.
-
----
-
-## 16. Core Process
-
-```text
-Current trusted course state
-        ↓
-Capability + Case + Course-Assumed Learner-State Brief
-        ↓
-Lightweight Independent Pedagogy Gate
-        ↓
-Encounter Design
-        ↓
-Independent Pedagogy Review + Independent UX Review
-        ↓
-Architect Reconciliation
-        ↓
-Auditor Pre-Build Control
-        ↓
-Frozen Implementation Authority
-        ↓
-Implementation
-        ↓
-Runtime/Conformance Validation
-+ Post-Build Pedagogy Review
-+ Post-Build UX Review
-        ↓
-Rule-Based Acceptance Gate
-        ↓
-Capability Coverage + Evidence + Residual Gap Update
-        ↓
-Next cycle
-```
-
-The process is autonomous wherever current authority and evidence are sufficient.
-
-It stops where continuing would require an agent to invent authority, assume unavailable evidence, or certify its own material judgment.
