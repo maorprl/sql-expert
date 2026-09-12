@@ -2,14 +2,24 @@
 
 A browser-only SQLite workspace for the startup ecosystem dataset.
 
-The active learner encounter is the accepted **Cycle 1** source-to-article fan-out encounter. It is implemented from the frozen authority recorded in:
+The active learner encounter is the accepted **Cycle 1** participation row-multiplication encounter using:
 
-- `course-design/production/cycle-1/reconciled-encounter-design-packet.md`
-- `course-design/production/cycle-1/authority-clarification-show-solution-assistance.md`
-- `course-design/production/cycle-1/current-scope-necessity-clarification.md`
-- `course-design/production/cycle-1/auditor-pre-build-control.md`
+`funding_round → round_investment`
 
-The implementation reuses the existing editor, SQLite runtime, schema viewer, autocomplete, results table, reset behavior, interaction lifecycle, and shared visual infrastructure. The prior Stage 1 implementation remains in the repository as existing substrate/history; it is not the authority for the Cycle 1 encounter.
+Its current implementation authority is recorded in:
+
+- `course-design/production/cycle-1/case-validation-row-multiplication-2026-09-12.md`
+- `course-design/production/cycle-1/lightweight-pedagogy-gate-row-multiplication-2026-09-12.md`
+- `course-design/production/cycle-1/encounter-design-row-multiplication-2026-09-13.md`
+- `course-design/production/cycle-1/owner-directed-targeted-revision-and-waiver-2026-09-13.md`
+
+The owner-directed revision corrects the core evidence sequence so the learner first makes a qualitative row-multiplication prediction from target Grain + Cardinality before receiving a concrete numerical multiplicity. The Course Authority Owner explicitly authorized direct implementation of that targeted correction without rerunning the remaining pre-build review chain; the waiver does not represent the skipped gates as passed.
+
+The implementation record is:
+
+- `course-design/production/cycle-1/implementation-record-owner-directed-2026-09-13.md`
+
+The implementation reuses the existing editor, SQLite runtime, schema viewer, autocomplete, results table, reset behavior, interaction lifecycle, course controls, and shared visual infrastructure. The prior source-to-article Cycle 1 implementation and Stage 1 implementation remain in repository history/artifacts but are not the active runtime authority.
 
 No new Stage number is assigned to the Cycle 1 encounter.
 
