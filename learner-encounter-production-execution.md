@@ -201,3 +201,37 @@ Rule-Based Acceptance is paused until that targeted review is durable and its fi
 If the targeted review accepts the retained case without requiring a pedagogical, learner-evidence, UX, implementation, schema, or seed change, the earlier design, implementation, and post-build review artifacts remain preserved and no broader re-review is triggered by this delta.
 
 If the targeted review requires a case change or another material change, follow the applicable Change Impact rule before resuming acceptance.
+
+---
+
+## 8. Operationalized Case Validation rerun — current execution override
+
+This section is the **current execution state** and supersedes Section 7's next-action statement.
+
+After the first comparative Case Validation delta was completed, the production process was further strengthened to operationalize professional judgment that can affect case selection or review severity. The current process now requires:
+
+- consequence-grounding for material professional judgments;
+- an operational business / analytical authenticity test;
+- explicit rationale for trade-offs between competing case strengths;
+- consequence-based justification for classifying a professional defect as material.
+
+Because the existing `case-selection-delta-review.md` predates those requirements, its retained-case decision has not yet been evaluated under the current Case Validation standard.
+
+### Current next authorized action
+
+**Encounter Architect — targeted Cycle 1 Case Validation delta rerun under the current operationalized process**
+
+The Architect must:
+
+- treat the existing Cycle 1 target capability as unchanged unless current evidence provides a material reason to reopen it;
+- perform the comparative Case Validation afresh under the current `learner-encounter-production-process.md`;
+- independently identify and assess the materially plausible current-schema alternatives rather than treating the prior delta's candidate set or conclusion as binding;
+- ground material professional judgments in concrete learner consequences;
+- apply the current analytical-authenticity and explicit trade-off requirements;
+- preserve existing Cycle 1 design, implementation, and validation work wherever the resulting case decision does not affect it.
+
+The prior `case-selection-delta-review.md` remains a historical process record. It must not be silently rewritten or treated as current authority for the rerun conclusion.
+
+The rerun must produce a new durable delta artifact under `course-design/production/cycle-1/`, update provenance minimally, and hand the result to the independent Lightweight Pedagogy Gate required by §12.4.
+
+Rule-Based Acceptance remains paused until this rerun and its required independent review are resolved.
