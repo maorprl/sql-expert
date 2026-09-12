@@ -234,6 +234,17 @@ These are useful quality judgments but must not be represented as existing cours
 - cognitive-load judgment beyond explicit existing principles;
 - whether repetition is pedagogically worthwhile.
 
+When more than one materially plausible current case can exercise the same target capability, Case Validation must compare the relevant alternatives rather than validate only the first sufficient case. The comparison should be proportionate, not exhaustive, and should consider where applicable:
+
+- how directly each case exposes the target reasoning and intended evidence;
+- instructional distinctness from recent encounters, including whether familiarity helps isolate the new reasoning or merely reduces meaningful transfer;
+- continuity from the learner's current course position and usefulness for later transfer, without pre-deciding future Stage structure or encounter order;
+- credibility of the business or analytical situation;
+- additional concepts or confounds introduced by the actual data, such as unmatched rows, NULL behavior, or mechanisms outside the target capability;
+- cognitive load and data cleanliness.
+
+The Architect must record why the selected case is preferable to the materially plausible alternatives considered. Technical validity or local cleanliness alone is not sufficient justification when another available case may better serve the learner's current progression.
+
 A previously covered capability may legitimately recur when there is a distinct justified purpose, for example:
 
 - reinforcement;
@@ -284,6 +295,7 @@ Contains only what is needed to make the decision:
 - prerequisite reasoning;
 - Course-Assumed Learner State;
 - Case Validation;
+- comparative case rationale when materially relevant;
 - intended evidence;
 - source-required vs. process-proposal distinctions;
 - missing evidence;
@@ -303,6 +315,7 @@ The reviewer checks only:
 - are claimed prerequisites genuinely necessary?
 - does the Course-Assumed Learner State avoid unsupported assumptions?
 - can the proposed case exercise the intended capability?
+- when multiple materially plausible cases exist, did the Brief compare the relevant alternatives and justify why the selected case is preferable for the learner's current course position rather than merely sufficient?
 - is the proposed learner evidence relevant to that capability?
 - does proceeding require an unresolved authority decision?
 
