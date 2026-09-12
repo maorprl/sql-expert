@@ -584,5 +584,13 @@ JOIN news_source
   }
 
   render();
-  return { handleSqlSuccess, current: () => state.current, addRelation, isRelationSelected: (name) => state.selectedRelations.includes(name), relationshipLevel, canAddRelations: () => state.current === 'relations' && !state.pendingAdvance };
+  return {
+    handleSqlSuccess,
+    current: () => state.current,
+    addRelation,
+    isRelationSelected: (name) => state.selectedRelations.includes(name),
+    relationshipLevel,
+    canAddRelations: () => state.current === 'relations' && !state.pendingAdvance,
+    refresh: render,
+  };
 }
