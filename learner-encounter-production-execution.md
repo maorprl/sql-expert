@@ -26,9 +26,9 @@ Cycle 1 will continue **manually through the canonical learner-encounter product
 
 Current sequence status:
 
-1. Capability & Case Brief — completed.
-2. Lightweight Independent Pedagogy Gate — completed with `PROCEED`.
-3. Encounter Design — next, but may begin only after the required durable handoff records satisfy the verbatim-handoff rule in Section 4.
+1. Capability & Case Brief — completed; verbatim durable handoff verified.
+2. Lightweight Independent Pedagogy Gate — completed with `PROCEED`; verbatim durable handoff verified.
+3. Encounter Design — unblocked and next.
 
 The remaining canonical process continues from there as defined in `learner-encounter-production-process.md`.
 
@@ -94,6 +94,8 @@ Until that review occurs, the current separate-chat approach is temporary execut
 
 ## 6. Current next action
 
-Cycle 1 proceeds to **Encounter Design** under the `Encounter Architect` functional role only after the two prerequisite durable records satisfy Section 4.1.
+Cycle 1 proceeds to **Encounter Design** under the `Encounter Architect` functional role.
+
+The two prerequisite durable records have been verified as verbatim, so no provenance block remains.
 
 No implementation work is authorized yet.
