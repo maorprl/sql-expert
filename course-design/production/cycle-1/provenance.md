@@ -64,16 +64,38 @@ Status:
 
 The completed independent Learning Experience / UX Design Review was written directly to the durable repository record as the reviewer's completed output. The review commit added only this review artifact and did not modify the frozen Encounter Design Packet or other Cycle 1 authority / state records.
 
+## Architect Reconciliation
+
+Path:
+
+`course-design/production/cycle-1/architect-reconciliation.md`
+
+Status:
+
+**VERBATIM VERIFIED**
+
+The completed Encounter Architect reconciliation was written directly to the durable repository record as the architect's completed output. The reconciliation commit preserved the original frozen Encounter Design Packet and added the reconciliation artifact plus a separate reconciled design packet.
+
+## Reconciled Encounter Design Packet
+
+Path:
+
+`course-design/production/cycle-1/reconciled-encounter-design-packet.md`
+
+Status:
+
+**VERBATIM VERIFIED**
+
+The reconciled design packet was written directly to the repository in the same reconciliation commit. It records the integrated design changes resulting from the independent design reviews while preserving the originally reviewed Encounter Design Packet unchanged.
+
 ## Cycle 1 execution consequence
 
-All completed inter-phase artifacts through both independent pre-implementation design reviews are now **VERBATIM VERIFIED**.
+All completed inter-phase artifacts through Architect Reconciliation are now **VERBATIM VERIFIED**.
 
-Both reviews were formed independently from the same frozen Encounter Design Packet and are now available as durable inputs to Architect Reconciliation.
+The independent review findings received explicit Architect dispositions. The reconciliation is complete to current authority.
 
-The independent Pedagogy Design Review contains no BLOCKER, two **REVISION REQUIRED** findings, and no OWNER DECISION REQUIRED finding.
+One scoped **OWNER DECISION REQUIRED** remains before Auditor Pre-Build Control: the evidence-sensitive behavior of Back / Retry / Redo and Show solution around the protected pre-execution prediction state.
 
-The independent UX Design Review contains no BLOCKER, two **REVISION REQUIRED** findings, one **OWNER DECISION REQUIRED** finding, and one ADVISORY finding.
+The unresolved owner matter is intentionally narrower than a complete future course-wide global-control policy.
 
-The provenance block on Architect Reconciliation is cleared.
-
-No Architect Reconciliation, Auditor Pre-Build Control, frozen implementation authority, or implementation is recorded as completed by this provenance update.
+Auditor Pre-Build Control, frozen implementation authority, and implementation remain blocked until that scoped owner decision is resolved and incorporated into durable authority.
