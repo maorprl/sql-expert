@@ -9,6 +9,16 @@ It is not a pedagogical, visual, Stage, schema, or data source of truth. Those d
 
 The purpose of this protocol is to reduce unnecessary handoff loops, preserve source-of-truth discipline, reduce token and coordination cost, and make the workflow safer as more work or more agents are introduced.
 
+## Relationship to learner-encounter production
+
+For learner-encounter production, `learner-encounter-production-process.md` defines the **workflow, functional roles, required gates, independence requirements, durable artifacts, and acceptance logic**.
+
+This document governs **how those required functions are assigned and executed**: worker/tool selection, handoff mechanics, implementation-agent usage, branch coordination, remote/local synchronization, and general execution efficiency.
+
+Where `learner-encounter-production-process.md` requires a specific independent review, gate, or role separation, that requirement remains mandatory. General efficiency guidance in this document does not remove a required learner-encounter production control; it governs how that control is executed.
+
+The functional roles in the learner-encounter production process do not, by themselves, require a permanent one-role-per-agent topology. Concrete agent/run mapping may be decided separately as long as the mandatory independence boundaries are preserved.
+
 ## 1. Classify the work before choosing the worker
 
 A task should first be treated as one of these kinds of work:
