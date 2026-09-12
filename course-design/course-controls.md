@@ -36,11 +36,12 @@ The control should be presented as an explicit button/action in the course-level
 
 The solution content itself is context-specific, but the mechanism belongs to the course shell and should remain recognizable across later Stages.
 
-`Show solution` is distinct from:
+`Show solution` is interactionally distinct from local hints because it is exposed through the global course-control layer. Pedagogically, however, revealing the solution is part of the same assistance continuum as hints and represents a stronger level of assistance, not a separate learning category.
+
+`Show solution` is also distinct from:
 
 - Desired Output;
 - SQL Structure;
-- hints;
 - correctness feedback;
 - answer checking.
 
@@ -51,7 +52,9 @@ Revealing a solution must not by itself:
 - mark required learner evidence complete;
 - bypass later verification required by the Stage.
 
-The current Stage 1-local decision that placed Solution as another optional scaffold inside the SQL task is superseded by this course-level decision.
+Where an encounter tracks assistance provenance, use of `Show solution` may be recorded as a stronger assistance level in the same way that hint use can distinguish supported from unassisted work. This does not create a separate owner gate for solution use.
+
+The current Stage 1-local decision that placed Solution as another optional scaffold inside the SQL task is superseded only in placement: the assistance mechanism belongs to the global course-control layer rather than inside the task card.
 
 ### OPEN — solution behavior
 
@@ -60,7 +63,7 @@ The following are not yet determined:
 - the visual surface in which the revealed solution appears;
 - whether the solution remains open while the learner continues working;
 - how solution availability is represented when a task has no meaningful single solution;
-- whether revealing a solution affects later assessment, analytics, or progress metadata beyond any encounter-local evidence provenance required to distinguish assisted from unassisted work.
+- broader course-level analytics or progress semantics beyond encounter-local assistance provenance.
 
 These questions must not be silently resolved in implementation.
 
