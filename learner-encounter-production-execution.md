@@ -28,7 +28,8 @@ Current sequence status:
 
 1. Capability & Case Brief — completed; verbatim durable handoff verified.
 2. Lightweight Independent Pedagogy Gate — completed with `PROCEED`; verbatim durable handoff verified.
-3. Encounter Design — unblocked and next.
+3. Encounter Design — completed; verbatim durable handoff verified.
+4. Independent Pedagogy Design Review + Independent UX Design Review — unblocked and next.
 
 The remaining canonical process continues from there as defined in `learner-encounter-production-process.md`.
 
@@ -55,8 +56,9 @@ The following completed Cycle 1 outputs are stored as durable process records:
 
 - `course-design/production/cycle-1/capability-and-case-brief.md`
 - `course-design/production/cycle-1/lightweight-pedagogy-gate-review.md`
+- `course-design/production/cycle-1/encounter-design-packet.md`
 
-These records preserve the handoff between the Capability & Case decision and Encounter Design.
+These records preserve the completed handoffs through Encounter Design and provide the frozen durable input for the next independent design reviews.
 
 They are process/evidence records. They do not independently create new course authority.
 
@@ -94,8 +96,12 @@ Until that review occurs, the current separate-chat approach is temporary execut
 
 ## 6. Current next action
 
-Cycle 1 proceeds to **Encounter Design** under the `Encounter Architect` functional role.
+Cycle 1 proceeds to the **Independent Pedagogy Design Review** and **Independent UX Design Review**.
 
-The two prerequisite durable records have been verified as verbatim, so no provenance block remains.
+Both reviews must consume the same frozen durable Encounter Design Packet:
 
-No implementation work is authorized yet.
+`course-design/production/cycle-1/encounter-design-packet.md`
+
+The reviews must remain independent as required by `learner-encounter-production-process.md`.
+
+No Architect Reconciliation or implementation work is authorized until the required design reviews are complete and their durable handoffs exist.
