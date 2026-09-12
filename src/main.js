@@ -5,6 +5,7 @@ import 'ace-builds/src-noconflict/ext-language_tools';
 import initSqlJs from 'sql.js';
 import wasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
 import './styles.css';
+import { createStage1 } from './stage1.js';
 import { createCycle1 } from './cycle1.js';
 import { createInteractionLifecycle } from './interaction-lifecycle.js';
 
@@ -19,7 +20,10 @@ let SQL;
 let db;
 let schema = [];
 let editor;
-let cycle1;
+let activeEncounter;
+let activeEncounterName = 'stage1';
+let stage1;
+let rowMultiplicationEncounter;
 const el = (id) => document.getElementById(id);
 const status = el('db-status');
 const errorPanel = el('error-panel');
@@ -56,7 +60,7 @@ async function loadDatabase() {
     renderSchema();
     setStatus('Database ready', 'ready');
     resetButton.disabled = false;
-    cycle1?.refresh();
+    activeEncounter?.refresh?.();
   } catch (error) {
     setStatus('Database failed to initialize', 'failed');
     showError('Database initialization failed', error);
@@ -76,17 +80,17 @@ function readSchema(database) {
 function renderSchema() {
   const filter = el('schema-search').value.trim().toLowerCase();
   const viewer = el('schema-viewer'); viewer.textContent = '';
-  const relationshipLevel = cycle1?.relationshipLevel() ?? 0;
-  const canAddRelations = cycle1?.canAddRelations() ?? false;
+  const relationshipLevel = activeEncounter?.relationshipLevel?.() ?? 0;
+  const canAddRelations = activeEncounter?.canAddRelations?.() ?? true;
   for (const table of schema) {
     const matches = !filter || table.name.toLowerCase().includes(filter) || table.columns.some(c => c.column.toLowerCase().includes(filter));
     if (!matches) continue;
     const details = document.createElement('details'); details.className = 'relation'; details.open = Boolean(filter);
     const summary = document.createElement('summary'); summary.title = 'Double-click to insert relation name';
-    const selected = cycle1?.isRelationSelected(table.name);
+    const selected = activeEncounter?.isRelationSelected?.(table.name) ?? false;
     summary.innerHTML = `<span class="relation-name">${escapeHtml(table.name)}</span><span class="count">${table.columns.length} columns</span><button type="button" class="add-relation" ${selected || !canAddRelations ? 'disabled' : ''} ${canAddRelations ? '' : 'hidden'} aria-label="Add ${escapeHtml(table.name)} to working schema">${selected ? 'Added' : '+'}</button>`;
     summary.addEventListener('dblclick', (event) => { event.preventDefault(); insertAtCursor(table.name); });
-    summary.querySelector('.add-relation').addEventListener('click', (event) => { event.preventDefault(); event.stopPropagation(); cycle1?.addRelation(table.name); });
+    summary.querySelector('.add-relation').addEventListener('click', (event) => { event.preventDefault(); event.stopPropagation(); activeEncounter?.addRelation?.(table.name); });
     details.append(summary);
     const body = document.createElement('div'); body.className = 'relation-body';
     for (const column of table.columns) {
@@ -121,7 +125,7 @@ function getAliases(sql) {
 
 function configureEditor() {
   ace.require('ace/ext/language_tools');
-  editor = ace.edit('editor'); editor.setTheme('ace/theme/tomorrow_night'); editor.session.setMode('ace/mode/sql');
+  editor = ace.edit('editor'); editor.setTheme('ace/theme/tomorrow_night'); editor.session.setMode('ace/mode-sql');
   editor.setOptions({ enableBasicAutocompletion: true, enableLiveAutocompletion: true, enableSnippets: false, showPrintMargin: false, fontSize: 14, tabSize: 2, useSoftTabs: true });
   editor.setValue(localStorage.getItem(STORAGE_KEY) || '', -1);
   editor.session.on('change', () => localStorage.setItem(STORAGE_KEY, editor.getValue()));
@@ -178,10 +182,16 @@ function resultTable(resultSets) {
   table.append(body); container.append(table);
 }
 
+function clearRenderedResults() {
+  el('result-content').innerHTML = '<p class="empty">Results will appear here.</p>';
+  el('result-meta').textContent = 'No query run';
+  clearButton.disabled = true;
+}
+
 function runCurrentQuery() {
   clearError(); if (!db) return;
-  if (!cycle1?.canRunSql()) {
-    showError('SQL is not available yet', 'Commit the required prediction before using SQL for verification.');
+  if (activeEncounter?.canRunSql && !activeEncounter.canRunSql()) {
+    showError('SQL is not available yet', 'Complete the required reasoning before using SQL for verification.');
     return;
   }
   const statement = selectedOrCurrent();
@@ -189,8 +199,74 @@ function runCurrentQuery() {
   try {
     const resultSets = db.exec(statement);
     resultTable(resultSets);
-    cycle1?.handleSqlSuccess(statement, resultSets);
+    activeEncounter?.handleSqlSuccess?.(statement, resultSets);
   } catch (error) { showError('SQL error', error, statement); }
+}
+
+function ensureCycleSupportControls() {
+  if (!el('show-solution')) {
+    const actions = document.querySelector('.topbar > .actions');
+    const shell = document.createElement('div');
+    shell.className = 'course-shell-actions';
+    actions.before(shell);
+    shell.append(actions);
+    const controls = document.createElement('div');
+    controls.className = 'course-controls';
+    controls.setAttribute('aria-label', 'Course controls');
+    controls.innerHTML = '<span class="course-controls-label">Course support</span><button id="show-solution" type="button">Show solution</button>';
+    shell.prepend(controls);
+  }
+  if (!el('solution-panel')) {
+    const panel = document.createElement('section');
+    panel.id = 'solution-panel';
+    panel.className = 'solution-panel';
+    panel.hidden = true;
+    panel.setAttribute('aria-live', 'polite');
+    document.querySelector('.topbar').insertAdjacentElement('afterend', panel);
+  }
+}
+
+function activateRowMultiplicationEncounter() {
+  if (activeEncounterName === 'row-multiplication') return;
+  activeEncounterName = 'row-multiplication';
+  ensureCycleSupportControls();
+  clearError();
+  clearRenderedResults();
+  editor.setValue('', -1);
+  document.title = 'SQL Lab · Participation audit';
+  document.querySelector('.stage-label').hidden = true;
+  el('business-request-title').innerHTML = 'Build a participation audit for the recorded investments attached to funding rounds. For every recorded round-investor participation, show the round context together with the participation record, investor identifier, and whether that participation is marked as lead.';
+  document.querySelector('.working-schema-header .eyebrow').textContent = 'Structural reference';
+  el('working-schema-status').textContent = 'Known relations supplied for the participation audit';
+  el('completed-steps').innerHTML = '';
+  el('current-step').innerHTML = '';
+  el('relation-preview').innerHTML = '';
+
+  activeEncounter = null;
+  rowMultiplicationEncounter = createCycle1({
+    editor,
+    getDatabase: () => db,
+    getSchema: () => schema,
+    onSelectionChange: renderSchema,
+    interactionLifecycle,
+  });
+  activeEncounter = rowMultiplicationEncounter;
+  renderSchema();
+  activeEncounter.refresh?.();
+  el('stage-scroll').scrollTop = 0;
+}
+
+function offerNextEncounter() {
+  if (activeEncounterName !== 'stage1' || stage1?.current?.() !== 'complete') return;
+  const currentStep = el('current-step');
+  if (!currentStep.querySelector('.completion-state') || el('continue-next-encounter')) return;
+  const button = document.createElement('button');
+  button.id = 'continue-next-encounter';
+  button.className = 'primary continue-after-feedback';
+  button.type = 'button';
+  button.textContent = 'Continue to the next encounter';
+  button.addEventListener('click', activateRowMultiplicationEncounter);
+  currentStep.append(button);
 }
 
 el('run-query').addEventListener('click', runCurrentQuery);
@@ -199,7 +275,10 @@ el('reset-db').addEventListener('click', loadDatabase);
 el('schema-search').addEventListener('input', renderSchema);
 configureEditor();
 const interactionLifecycle = createInteractionLifecycle({ currentElement: el('current-step'), completedElement: el('completed-steps') });
-cycle1 = createCycle1({ editor, getDatabase: () => db, getSchema: () => schema, onSelectionChange: renderSchema, interactionLifecycle });
+stage1 = createStage1({ editor, getDatabase: () => db, getSchema: () => schema, onSelectionChange: renderSchema, interactionLifecycle });
+activeEncounter = stage1;
+const completionObserver = new MutationObserver(offerNextEncounter);
+completionObserver.observe(el('current-step'), { childList: true, subtree: true });
 SQL = await initSqlJs({ locateFile: () => wasmUrl });
 db = new SQL.Database();
 await loadDatabase();
