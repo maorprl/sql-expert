@@ -29,7 +29,9 @@ Current sequence status:
 1. Capability & Case Brief — completed; verbatim durable handoff verified.
 2. Lightweight Independent Pedagogy Gate — completed with `PROCEED`; verbatim durable handoff verified.
 3. Encounter Design — completed; verbatim durable handoff verified.
-4. Independent Pedagogy Design Review + Independent UX Design Review — unblocked and next.
+4. Independent Pedagogy Design Review — completed; verbatim durable handoff verified.
+5. Independent UX Design Review — completed; verbatim durable handoff verified.
+6. Architect Reconciliation — unblocked and next.
 
 The remaining canonical process continues from there as defined in `learner-encounter-production-process.md`.
 
@@ -57,8 +59,10 @@ The following completed Cycle 1 outputs are stored as durable process records:
 - `course-design/production/cycle-1/capability-and-case-brief.md`
 - `course-design/production/cycle-1/lightweight-pedagogy-gate-review.md`
 - `course-design/production/cycle-1/encounter-design-packet.md`
+- `course-design/production/cycle-1/independent-pedagogy-design-review.md`
+- `course-design/production/cycle-1/independent-ux-design-review.md`
 
-These records preserve the completed handoffs through Encounter Design and provide the frozen durable input for the next independent design reviews.
+These records preserve the completed handoffs through both independent pre-implementation design reviews and provide the durable inputs for Architect Reconciliation.
 
 They are process/evidence records. They do not independently create new course authority.
 
@@ -96,12 +100,23 @@ Until that review occurs, the current separate-chat approach is temporary execut
 
 ## 6. Current next action
 
-Cycle 1 proceeds to the **Independent Pedagogy Design Review** and **Independent UX Design Review**.
+Cycle 1 proceeds to **Architect Reconciliation** under the `Encounter Architect` functional role.
 
-Both reviews must consume the same frozen durable Encounter Design Packet:
+The Encounter Architect must consume:
 
-`course-design/production/cycle-1/encounter-design-packet.md`
+- `course-design/production/cycle-1/encounter-design-packet.md`
+- `course-design/production/cycle-1/independent-pedagogy-design-review.md`
+- `course-design/production/cycle-1/independent-ux-design-review.md`
 
-The reviews must remain independent as required by `learner-encounter-production-process.md`.
+Each material review finding must receive one of the dispositions defined in `learner-encounter-production-process.md`:
 
-No Architect Reconciliation or implementation work is authorized until the required design reviews are complete and their durable handoffs exist.
+- **ACCEPTED**;
+- **ACCEPTED WITH MODIFICATION**;
+- **REJECTED WITH RATIONALE**;
+- **OWNER DECISION REQUIRED**.
+
+The independent Pedagogy Design Review contains two REVISION REQUIRED findings and no owner decision.
+
+The independent UX Design Review contains two REVISION REQUIRED findings and one OWNER DECISION REQUIRED finding concerning the subset of global Back / Retry / Show solution semantics that can affect protected pre-execution prediction evidence.
+
+No Auditor Pre-Build Control or implementation work is authorized until Architect Reconciliation is complete and all required owner matters affecting implementation have been resolved through the appropriate authority path.
