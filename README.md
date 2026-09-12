@@ -2,24 +2,32 @@
 
 A browser-only SQLite workspace for the startup ecosystem dataset.
 
-The learner journey starts with the existing validated **Stage 1** `news_article → news_source` encounter. Stage 1 remains implemented by:
+The learner journey currently contains two available encounters in one shared SQL Lab runtime:
+
+1. the existing validated **Stage 1** `news_article → news_source` encounter;
+2. the current **Row multiplication** `funding_round → round_investment` encounter.
+
+Stage 1 remains implemented by:
 
 - `src/stage1.js`
 - `course-design/stage-1/stage-1-learner-route.md`
 - `course-design/stage-1/stage-1-interaction-decisions.md`
 
-After Stage 1 reaches its existing completion state, the learner can continue to the current Cycle 1 participation row-multiplication encounter using:
+The row-multiplication encounter is implemented in `src/cycle1.js` as a separate encounter module that reuses the same SQL Lab runtime, editor, schema viewer, result renderer, interaction lifecycle, and visual infrastructure. It does not replace or rewrite the Stage 1 learning sequence.
 
-`funding_round → round_investment`
+A course-level chapter selector allows the learner to switch directly between the two currently available encounters without completing the current encounter first. Chapter selection is navigation rather than learner evidence and is visually separated from task actions such as `Check answer`, `Continue`, and `Run query`.
 
-The row-multiplication encounter is implemented in `src/cycle1.js` as a separate encounter module that reuses the same SQL Lab runtime, editor, schema viewer, result renderer, interaction lifecycle, and visual infrastructure. It does not replace or rewrite Stage 1.
+Within the current browser run, each encounter keeps its own in-memory reasoning state, editor text, and rendered SQL result when the learner switches away and back. This does not establish a broader persistence contract across reloads or browser sessions.
 
-Its current implementation authority is recorded in:
+`Show solution` is not a persistent course-shell control. For the row-multiplication encounter it appears only with the SQL editor while the SQL-authoring state is active, in accordance with `course-design/course-controls.md` and the current Cycle 1 clarification.
+
+The row-multiplication encounter's current implementation authority is recorded in:
 
 - `course-design/production/cycle-1/case-validation-row-multiplication-2026-09-12.md`
 - `course-design/production/cycle-1/lightweight-pedagogy-gate-row-multiplication-2026-09-12.md`
 - `course-design/production/cycle-1/encounter-design-row-multiplication-2026-09-13.md`
 - `course-design/production/cycle-1/owner-directed-targeted-revision-and-waiver-2026-09-13.md`
+- `course-design/production/cycle-1/authority-clarification-show-solution-sql-workspace-2026-09-13.md`
 
 The owner-directed revision corrects the core evidence sequence so the learner first makes a qualitative row-multiplication prediction from target Grain + Cardinality before receiving a concrete numerical multiplicity. The Course Authority Owner explicitly authorized direct implementation of that targeted correction without rerunning the remaining pre-build review chain; the waiver does not represent the skipped gates as passed.
 
@@ -27,7 +35,7 @@ The implementation record is:
 
 - `course-design/production/cycle-1/implementation-record-owner-directed-2026-09-13.md`
 
-No new Stage number is assigned to the Cycle 1 encounter.
+No new Stage number is assigned to the row-multiplication encounter.
 
 ## Run
 
