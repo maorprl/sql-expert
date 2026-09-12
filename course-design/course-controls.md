@@ -4,41 +4,51 @@
 
 WORKING
 
-This document defines course-level learner controls that belong to the course shell rather than to any one Stage or task card.
+This document defines course-level learner controls and establishes where course-wide controls end and task-local assistance begins.
 
 It is intentionally narrow. It does not define the broader stage sequence, hint policy, or persistence model.
 
-When this document conflicts with a Stage-local placement decision for one of these controls, the course-level control decision here takes precedence.
+When this document conflicts with a Stage-local placement decision for a control covered here, the current course-level decision here takes precedence.
 
 ---
 
 ## 1. Global control layer
 
-Controls that manage navigation or learner support across the course should be presented as a stable course-level layer rather than re-created as local content inside individual tasks.
+Controls that manage navigation across the course should be presented as a stable course-level layer rather than re-created as local content inside individual tasks.
 
 At the current point in the design, this layer includes:
 
 - **Back**
 - **Retry / Redo**
-- **Show solution**
 
-These controls are distinct from local task actions such as `Check answer`, `Run query`, `Continue`, `Desired Output`, or `SQL Structure`.
+These controls are distinct from local task actions such as `Check answer`, `Run query`, `Continue`, `Desired Output`, `SQL Structure`, or `Show solution`.
 
-The exact shell placement, responsive treatment, labels, icons, and grouping remain implementation decisions, but the controls should have a consistent role and predictable location across Stages where they are available.
+The exact shell placement, responsive treatment, labels, icons, and grouping of global controls remain implementation decisions, but those controls should have a consistent role and predictable location across Stages where they are available.
 
-## 2. Show solution — established course-level behavior
+## 2. Show solution — SQL-workspace assistance
 
-`Show solution` is a **global course control**, not a Stage-specific disclosure embedded inside the current task card.
+`Show solution` is **not a global course-shell control**.
 
-The control should be presented as an explicit button/action in the course-level control layer. When activated, it reveals the solution relevant to the learner's current solvable task.
+It is local assistance for a concrete SQL authoring task and belongs inside the active **SQL Workspace / SQL editor surface**.
 
-**Availability is established:** `Show solution` remains available throughout the learner journey, including protected pre-execution prediction states. A Stage or evidence state must not silently disable or remove the control in order to protect assessment evidence.
+### Placement and availability
 
-The solution content itself is context-specific, but the mechanism belongs to the course shell and should remain recognizable across later Stages.
+`Show solution` should:
 
-`Show solution` is interactionally distinct from local hints because it is exposed through the global course-control layer. Pedagogically, however, revealing the solution is part of the same assistance continuum as hints and represents a stronger level of assistance, not a separate learning category.
+- appear only when the learner has reached an active SQL authoring task for which a concrete SQL solution exists;
+- be placed with the SQL editor / SQL Workspace controls rather than in the topbar or another persistent course-shell area;
+- remain absent during earlier reasoning, prediction, relationship, Grain, Cardinality, or other pre-SQL states;
+- disappear when the SQL Workspace is not the active learner surface.
 
-`Show solution` is also distinct from:
+The learner should therefore not see a persistent `Show solution` control while reasoning toward the SQL task.
+
+This decision supersedes the earlier course-level placement and availability rule that treated `Show solution` as a global control available throughout the learner journey.
+
+### Assistance semantics
+
+Pedagogically, revealing the solution is part of the same assistance continuum as hints and represents a stronger level of assistance, not a separate learning category.
+
+`Show solution` remains distinct from:
 
 - Desired Output;
 - SQL Structure;
@@ -47,22 +57,20 @@ The solution content itself is context-specific, but the mechanism belongs to th
 
 Revealing a solution must not by itself:
 
-- populate the learner's answer or SQL editor;
+- populate the learner's SQL editor;
 - run SQL;
 - mark required learner evidence complete;
-- bypass later verification required by the Stage.
+- bypass later verification required by the Stage or encounter.
 
 Where an encounter tracks assistance provenance, use of `Show solution` may be recorded as a stronger assistance level in the same way that hint use can distinguish supported from unassisted work. This does not create a separate owner gate for solution use.
-
-The current Stage 1-local decision that placed Solution as another optional scaffold inside the SQL task is superseded only in placement: the assistance mechanism belongs to the global course-control layer rather than inside the task card.
 
 ### OPEN — solution behavior
 
 The following are not yet determined:
 
-- the visual surface in which the revealed solution appears;
-- whether the solution remains open while the learner continues working;
-- how solution availability is represented when a task has no meaningful single solution;
+- the exact visual treatment inside the SQL Workspace;
+- whether the revealed solution remains open while the learner continues working;
+- how solution availability is represented when a SQL task has no meaningful single solution;
 - broader course-level analytics or progress semantics beyond encounter-local assistance provenance.
 
 These questions must not be silently resolved in implementation.
@@ -111,15 +119,17 @@ Implementation must not silently decide the fate of:
 
 Global controls should support the learner's movement through the course without replacing pedagogically meaningful local actions.
 
-A Stage may still define its own local controls where those controls are part of the learner encounter — for example `Check answer`, `Run query`, `Continue`, or a local optional scaffold. Those actions remain governed by the Stage interaction authority.
+A Stage may still define its own local controls where those controls are part of the learner encounter — for example `Check answer`, `Run query`, `Continue`, `Desired Output`, `SQL Structure`, or the SQL-workspace `Show solution` action established above. Those actions remain governed by the Stage interaction authority together with this course-level boundary.
 
-Back, Retry / Redo, and Show solution should not be independently redesigned inside each Stage.
+Back and Retry / Redo should not be independently redesigned inside each Stage.
 
 ## 6. Visual role
 
 The global control layer should be easy to find without becoming the primary visual focus of the lesson.
 
 Its visual identity should make clear that these are persistent course actions rather than content belonging to the current reasoning card or SQL task.
+
+`Show solution` is deliberately excluded from that global layer. When available, it should read visually as secondary assistance attached to the SQL Workspace rather than as a primary course-level action.
 
 The current learner task, evidence, or authoring surface should remain visually dominant.
 
