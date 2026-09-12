@@ -100,6 +100,26 @@ Status:
 
 The Course Authority Owner clarified that `Show solution` remains available during the protected prediction and is pedagogically treated as a stronger assistance level on the same assistance continuum as hints. It is not a separate owner gate for Cycle 1. The original reconciliation artifact remains preserved verbatim and is not rewritten retroactively.
 
+## Post-reconciliation process clarification — current-scope necessity
+
+Path:
+
+`course-design/production/cycle-1/current-scope-necessity-clarification.md`
+
+Status:
+
+**CURRENT PROCESS / EXECUTION CLARIFICATION**
+
+The remaining Back / Retry / Redo semantic question was re-evaluated under the explicit Current-Scope Necessity Test now established in `learner-encounter-production-process.md`.
+
+Current course work management already places unresolved global-control semantics in Backlog and requires them to be resolved only when implementation requires them. Repository code inspection also found no current global Back / Retry implementation that the Cycle 1 encounter must preserve or extend.
+
+Accordingly, post-result Back / Retry / Redo semantics for reopening or editing protected prediction evidence remain:
+
+**OPEN / BACKLOG / OUT OF CURRENT IMPLEMENTATION SCOPE — NONBLOCKING**
+
+The original UX review and Architect Reconciliation remain preserved verbatim as historical durable artifacts. This later clarification changes only the current execution consequence of that deferred matter; it does not retroactively rewrite either artifact.
+
 ## Cycle 1 execution consequence
 
 All completed inter-phase artifacts through Architect Reconciliation are **VERBATIM VERIFIED**.
@@ -108,8 +128,8 @@ The independent review findings received explicit Architect dispositions. The re
 
 The later Show solution clarification resolves the Show-solution portion of the scoped owner issue without altering the original reconciliation record.
 
-One scoped **OWNER DECISION REQUIRED** remains before Auditor Pre-Build Control: the evidence-sensitive behavior of Back / Retry / Redo when an already committed pre-execution prediction is revisited after SQL/result evidence has been seen.
+The later Current-Scope Necessity clarification establishes that the remaining Back / Retry / Redo semantics are not required for the current Cycle 1 implementation or validation scope and therefore do not require an owner decision before the pre-build gate.
 
-The unresolved owner matter is intentionally narrower than a complete future course-wide global-control policy.
+No unresolved owner matter currently blocks Cycle 1 from entering **Auditor Pre-Build Control**.
 
-Auditor Pre-Build Control, frozen implementation authority, and implementation remain blocked until that remaining scoped owner decision is resolved and incorporated into durable authority.
+Auditor Pre-Build Control is now the authorized next phase. Frozen implementation authority and implementation are not yet authorized unless and until that audit passes.
