@@ -248,7 +248,19 @@ and:
 
 > Does the relational difficulty arise naturally from that analytical need, or is the need mainly constructed in order to manufacture the target behavior?
 
-A case does not fail merely because the target concept becomes visible in it. The concern is whether the analytical purpose independently justifies the task and output shape.
+Analytical authenticity requires more than a plausible starting report plus a plausible relational modification. The analytical need that introduces an additional relation, detail, or relational operation must itself have an independently coherent purpose.
+
+The Architect must identify:
+
+1. what information required by the business or analytical task is not already available at the starting Grain;
+2. why that additional information is useful to the stated task independently of the teaching objective;
+3. why consulting the additional relation or performing the proposed relational operation is a natural consequence of that information need rather than a device introduced mainly to expose the target concept.
+
+If the target relational behavior appears only because the scenario adds an otherwise unmotivated field, detail request, or proposed operation, the case is concept-driven rather than analytically grounded.
+
+A deliberately flawed relational proposal may still be analytically authentic, but only when evaluating that proposal is itself a credible work task and the proposal has a plausible independent business or analytical motivation. “A teammate proposed it” is not, by itself, sufficient motivation.
+
+A case does not fail merely because the target concept becomes visible in it. The concern is whether the analytical purpose independently justifies the task, the additional information need, the relational move, and the output shape.
 
 When more than one materially plausible current case can exercise the same target capability, Case Validation must compare the relevant alternatives rather than validate only the first sufficient case. The comparison should be proportionate, not exhaustive, and should consider where applicable:
 
@@ -337,6 +349,8 @@ The reviewer checks only:
 - are material professional judgments consequence-grounded rather than asserted only as labels?
 - where alternatives involve real trade-offs, does the rationale explain which learner consequence should dominate now and why?
 - where business / analytical credibility materially affects selection, is it supported by an independently coherent analytical task, requested output, and Grain rather than by concept-driven framing alone?
+- where an additional relation, detail request, or relational operation creates the target behavior, is the need for that information or operation independently motivated by the analytical task rather than introduced mainly to manufacture the concept?
+- if the case centers on evaluating a deliberately flawed proposal, is evaluating that proposal itself a credible work task and is the proposal independently motivated rather than justified only by having been suggested?
 - is the proposed learner evidence relevant to that capability?
 - does proceeding require an unresolved authority decision?
 
