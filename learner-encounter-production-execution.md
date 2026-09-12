@@ -36,7 +36,8 @@ Current sequence status:
 8. Current-scope necessity clarification — completed: unresolved post-result Back / Retry / Redo semantics remain Backlog and are outside the current Cycle 1 implementation scope.
 9. Auditor Pre-Build Control — completed with **PASS → FROZEN IMPLEMENTATION AUTHORITY**; verbatim durable handoff verified.
 10. Frozen Implementation Authority — established for the accepted Cycle 1 scope.
-11. Cycle 1 Implementation — authorized and next.
+11. Cycle 1 Implementation — completed; durable implementation handoff recorded. Implementer self-testing is not independent validation.
+12. Independent Post-Build Review — **authorized and next**, consisting of Runtime / Conformance Validation, Post-Build Pedagogy Review, and Post-Build Learning Experience / UX Review under the independent roles required by the canonical process.
 
 The remaining canonical process continues from there as defined in `learner-encounter-production-process.md`.
 
@@ -71,10 +72,13 @@ The following completed Cycle 1 outputs are stored as durable process records:
 - `course-design/production/cycle-1/authority-clarification-show-solution-assistance.md`
 - `course-design/production/cycle-1/current-scope-necessity-clarification.md`
 - `course-design/production/cycle-1/auditor-pre-build-control.md`
+- `course-design/production/cycle-1/implementation-record.md`
 
-These records preserve the completed handoffs through Auditor Pre-Build Control plus the narrow post-reconciliation authority and process/execution clarifications that form part of current frozen implementation authority.
+These records preserve the completed handoffs through Cycle 1 Implementation plus the narrow post-reconciliation authority and process/execution clarifications that form part of current frozen implementation authority.
 
 They are process/evidence records. They do not independently create new course authority except where a record explicitly captures a Course Authority Owner clarification or, in the case of the Auditor Pre-Build Control, records the process consequence of a PASS under already-existing authority.
+
+The implementation record documents what the Implementer built, material implementation-discretion choices, Implementer self-checks, deviations, and unresolved matters. It is not an independent validation or acceptance artifact.
 
 ### 4.1 Verbatim durable-handoff rule
 
@@ -110,9 +114,21 @@ Until that review occurs, the current separate-chat approach is temporary execut
 
 ## 6. Current next action
 
-Cycle 1 proceeds to **Implementation** under the `Implementer` functional role.
+Cycle 1 proceeds to **Independent Post-Build Review**.
 
-The Implementer must consume the frozen implementation authority directly from the repository. The primary current implementation authority is:
+The next authorized review streams are:
+
+- **Runtime / Conformance Validation** by the independent Conformance & Validation Auditor;
+- **Post-Build Pedagogy Review** by the independent Pedagogy Reviewer;
+- **Post-Build Learning Experience / UX Review** by the independent Learning Experience / UX Reviewer.
+
+Those reviewers must inspect the actual implemented learner experience against the frozen implementation authority and the durable implementation handoff at:
+
+- `course-design/production/cycle-1/implementation-record.md`.
+
+The Implementer's own checks recorded there are implementation self-testing only and must not be substituted for any of the independent post-build verdicts.
+
+The frozen implementation authority remains:
 
 - `course-design/production/cycle-1/reconciled-encounter-design-packet.md`
 - `course-design/production/cycle-1/authority-clarification-show-solution-assistance.md`
@@ -127,16 +143,14 @@ The current source authorities explicitly incorporated by the reconciled design 
 - `startup-ecosystem/startup-ecosystem-schema.sql`
 - `startup-ecosystem/startup-ecosystem-seed.sql`
 
-The original reviewed Encounter Design Packet, both independent reviews, and Architect Reconciliation remain preserved durable traceability artifacts. They must not be rewritten. Where their historical blocking conclusions conflict with the later current clarifications, the later current clarifications control current execution consequence.
+The original reviewed Encounter Design Packet, both independent design reviews, and Architect Reconciliation remain preserved durable traceability artifacts. They must not be rewritten. Where their historical blocking conclusions conflict with the later current clarifications, the later current clarifications control current execution consequence.
 
-For the deferred Back / Retry / Redo matter, the frozen implementation boundary is explicit:
+For the deferred Back / Retry / Redo matter, the boundary remains explicit:
 
 - post-result Back / Retry / Redo semantics for reopening/editing protected prediction evidence are **OPEN / BACKLOG / OUT OF CURRENT IMPLEMENTATION SCOPE**;
-- the current build must not silently establish those deferred semantics;
-- implementation does not need to implement or validate that future behavior in order to satisfy the accepted Cycle 1 scope.
+- the implementation must not be interpreted as establishing those deferred semantics;
+- post-build review should verify that no such semantics were silently introduced.
 
 `Show solution` remains available throughout the learner journey, including the protected prediction state, and is treated pedagogically as a stronger assistance level on the same assistance continuum as hints. Revealing it does not by itself populate the learner response, execute SQL, complete required evidence, or bypass later verification. Where the encounter records assistance provenance, solution use is recorded as stronger / solution-assisted evidence rather than unassisted performance.
 
-The Implementer may decide only details explicitly within delegated implementation discretion. If implementation exposes a pedagogy or UX ambiguity, missing authority/evidence, design infeasibility, likely design defect, or a need for behavior explicitly outside the accepted scope, the Implementer must stop and raise the corresponding decision/change request rather than silently choosing semantics.
-
-After implementation, Cycle 1 proceeds through the independent post-build review and acceptance sequence defined in `learner-encounter-production-process.md`.
+After all three post-build verdicts are durable and every material finding has explicit disposition, Cycle 1 proceeds to the Rule-Based Acceptance Gate defined in `learner-encounter-production-process.md`.

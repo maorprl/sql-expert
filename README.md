@@ -2,14 +2,16 @@
 
 A browser-only SQLite workspace for the startup ecosystem dataset.
 
-The application currently includes Stage 1. Its learner sequence and
-interaction behavior are implemented from:
+The active learner encounter is the accepted **Cycle 1** source-to-article fan-out encounter. It is implemented from the frozen authority recorded in:
 
-- `course-design/stage-1/stage-1-learner-route.md`
-- `course-design/stage-1/stage-1-interaction-decisions.md`
+- `course-design/production/cycle-1/reconciled-encounter-design-packet.md`
+- `course-design/production/cycle-1/authority-clarification-show-solution-assistance.md`
+- `course-design/production/cycle-1/current-scope-necessity-clarification.md`
+- `course-design/production/cycle-1/auditor-pre-build-control.md`
 
-Stage 1 uses the same editor, SQLite runtime, schema viewer, autocomplete,
-results table, and reset behavior as the underlying SQL Lab.
+The implementation reuses the existing editor, SQLite runtime, schema viewer, autocomplete, results table, reset behavior, interaction lifecycle, and shared visual infrastructure. The prior Stage 1 implementation remains in the repository as existing substrate/history; it is not the authority for the Cycle 1 encounter.
+
+No new Stage number is assigned to the Cycle 1 encounter.
 
 ## Run
 
@@ -29,12 +31,12 @@ npm run build
 `startup-ecosystem/startup-ecosystem-schema.sql` and
 `startup-ecosystem/startup-ecosystem-seed.sql` are the database source of
 truth. The browser fetches and executes those files in a fresh `sql.js`
-SQLite database during initialization and reset. The schema viewer and editor
-autocomplete are then read from that loaded database via SQLite metadata.
+SQLite database during initialization and reset. The schema viewer, editor
+autocomplete, and Cycle 1 result-contract verification read from that loaded
+database rather than maintaining a second schema or data representation.
 
 The build script copies those exact SQL source files into
-`dist/startup-ecosystem/` as static runtime assets. It does not generate or
-maintain a second schema representation.
+`dist/startup-ecosystem/` as static runtime assets.
 
 The editor text is stored only in browser local storage. Database state is
 in-memory and reconstructed from the SQL source files when reset or reloaded.

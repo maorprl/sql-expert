@@ -138,20 +138,42 @@ The audit verdict is:
 
 The audit preserves the original review and reconciliation artifacts unchanged, applies the later Show solution and current-scope clarifications as current authority, and records the accepted implementation boundary for Cycle 1.
 
+## Cycle 1 Implementation Record
+
+Path:
+
+`course-design/production/cycle-1/implementation-record.md`
+
+Status:
+
+**DURABLE IMPLEMENTATION HANDOFF RECORDED**
+
+The implementation record is the Implementer's completed durable output for the Cycle 1 build and is stored directly with the implementation changes rather than reconstructed or summarized by a later phase.
+
+It records what was implemented, material implementation-discretion choices, files changed, Implementer validation/self-checks, deviations, unresolved ambiguity/change requests, and the handoff consequence.
+
+This status does **not** mean the implementation is independently validated. Runtime/Conformance, Pedagogy, UX, and rule-based acceptance remain separate later controls.
+
 ## Cycle 1 execution consequence
 
-All completed inter-phase artifacts through Architect Reconciliation are **VERBATIM VERIFIED**.
-
-The independent review findings received explicit Architect dispositions. The reconciliation is complete to the authority that existed at the time it was produced.
+All completed inter-phase artifacts through Architect Reconciliation remain **VERBATIM VERIFIED** and unchanged.
 
 The later Show solution clarification resolves the Show-solution portion of the scoped owner issue without altering the original reconciliation record.
 
-The later Current-Scope Necessity clarification establishes that the remaining Back / Retry / Redo semantics are not required for the current Cycle 1 implementation or validation scope and therefore do not require an owner decision before the pre-build gate.
+The later Current-Scope Necessity clarification establishes that the remaining Back / Retry / Redo semantics are not required for the current Cycle 1 implementation or validation scope and therefore remain deferred.
 
-Auditor Pre-Build Control has now completed with **PASS → FROZEN IMPLEMENTATION AUTHORITY**.
+Auditor Pre-Build Control completed with **PASS → FROZEN IMPLEMENTATION AUTHORITY**.
 
-No unresolved matter currently blocks implementation within the accepted Cycle 1 scope.
+Cycle 1 Implementation has now completed within that frozen authority and the durable implementation handoff is recorded at `course-design/production/cycle-1/implementation-record.md`.
 
-The exact next authorized phase is **Cycle 1 Implementation** under the Implementer functional role.
+No deviation from frozen authority is claimed by the Implementer. That statement is an implementation record, not an independent validation verdict.
 
-Post-result Back / Retry / Redo semantics remain **OPEN / BACKLOG / OUT OF CURRENT IMPLEMENTATION SCOPE** and must not be silently implemented as part of this build.
+Post-result Back / Retry / Redo semantics remain **OPEN / BACKLOG / OUT OF CURRENT IMPLEMENTATION SCOPE** and were not established by this build.
+
+The exact next authorized phase is **Independent Post-Build Review**, consisting of:
+
+- Runtime / Conformance Validation by the independent Conformance & Validation Auditor;
+- Post-Build Pedagogy Review by the independent Pedagogy Reviewer;
+- Post-Build Learning Experience / UX Review by the independent UX Reviewer.
+
+Rule-Based Acceptance is not yet authorized because those independent post-build verdicts do not yet exist.

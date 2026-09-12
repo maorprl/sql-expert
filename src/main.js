@@ -5,7 +5,7 @@ import 'ace-builds/src-noconflict/ext-language_tools';
 import initSqlJs from 'sql.js';
 import wasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
 import './styles.css';
-import { createStage1 } from './stage1.js';
+import { createCycle1 } from './cycle1.js';
 import { createInteractionLifecycle } from './interaction-lifecycle.js';
 
 const SOURCE_FILES = [
@@ -19,7 +19,7 @@ let SQL;
 let db;
 let schema = [];
 let editor;
-let stage1;
+let cycle1;
 const el = (id) => document.getElementById(id);
 const status = el('db-status');
 const errorPanel = el('error-panel');
@@ -55,7 +55,8 @@ async function loadDatabase() {
     schema = readSchema(db);
     renderSchema();
     setStatus('Database ready', 'ready');
-    runButton.disabled = false; resetButton.disabled = false;
+    resetButton.disabled = false;
+    cycle1?.refresh();
   } catch (error) {
     setStatus('Database failed to initialize', 'failed');
     showError('Database initialization failed', error);
@@ -75,17 +76,17 @@ function readSchema(database) {
 function renderSchema() {
   const filter = el('schema-search').value.trim().toLowerCase();
   const viewer = el('schema-viewer'); viewer.textContent = '';
-  const relationshipLevel = stage1?.relationshipLevel() ?? 0;
-  const canAddRelations = stage1?.canAddRelations() ?? true;
+  const relationshipLevel = cycle1?.relationshipLevel() ?? 0;
+  const canAddRelations = cycle1?.canAddRelations() ?? false;
   for (const table of schema) {
     const matches = !filter || table.name.toLowerCase().includes(filter) || table.columns.some(c => c.column.toLowerCase().includes(filter));
     if (!matches) continue;
     const details = document.createElement('details'); details.className = 'relation'; details.open = Boolean(filter);
     const summary = document.createElement('summary'); summary.title = 'Double-click to insert relation name';
-    const selected = stage1?.isRelationSelected(table.name);
+    const selected = cycle1?.isRelationSelected(table.name);
     summary.innerHTML = `<span class="relation-name">${escapeHtml(table.name)}</span><span class="count">${table.columns.length} columns</span><button type="button" class="add-relation" ${selected || !canAddRelations ? 'disabled' : ''} ${canAddRelations ? '' : 'hidden'} aria-label="Add ${escapeHtml(table.name)} to working schema">${selected ? 'Added' : '+'}</button>`;
     summary.addEventListener('dblclick', (event) => { event.preventDefault(); insertAtCursor(table.name); });
-    summary.querySelector('.add-relation').addEventListener('click', (event) => { event.preventDefault(); event.stopPropagation(); stage1?.addRelation(table.name); });
+    summary.querySelector('.add-relation').addEventListener('click', (event) => { event.preventDefault(); event.stopPropagation(); cycle1?.addRelation(table.name); });
     details.append(summary);
     const body = document.createElement('div'); body.className = 'relation-body';
     for (const column of table.columns) {
@@ -179,12 +180,16 @@ function resultTable(resultSets) {
 
 function runCurrentQuery() {
   clearError(); if (!db) return;
+  if (!cycle1?.canRunSql()) {
+    showError('SQL is not available yet', 'Commit the required prediction before using SQL for verification.');
+    return;
+  }
   const statement = selectedOrCurrent();
   if (!statement.trim()) { showError('No SQL to run', 'Select SQL or place the cursor within a statement.'); return; }
   try {
     const resultSets = db.exec(statement);
     resultTable(resultSets);
-    stage1?.handleSqlSuccess(statement, resultSets);
+    cycle1?.handleSqlSuccess(statement, resultSets);
   } catch (error) { showError('SQL error', error, statement); }
 }
 
@@ -194,7 +199,7 @@ el('reset-db').addEventListener('click', loadDatabase);
 el('schema-search').addEventListener('input', renderSchema);
 configureEditor();
 const interactionLifecycle = createInteractionLifecycle({ currentElement: el('current-step'), completedElement: el('completed-steps') });
-stage1 = createStage1({ editor, getDatabase: () => db, getSchema: () => schema, onSelectionChange: renderSchema, interactionLifecycle });
+cycle1 = createCycle1({ editor, getDatabase: () => db, getSchema: () => schema, onSelectionChange: renderSchema, interactionLifecycle });
 SQL = await initSqlJs({ locateFile: () => wasmUrl });
 db = new SQL.Database();
 await loadDatabase();
