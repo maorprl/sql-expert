@@ -154,3 +154,50 @@ For the deferred Back / Retry / Redo matter, the boundary remains explicit:
 `Show solution` remains available throughout the learner journey, including the protected prediction state, and is treated pedagogically as a stronger assistance level on the same assistance continuum as hints. Revealing it does not by itself populate the learner response, execute SQL, complete required evidence, or bypass later verification. Where the encounter records assistance provenance, solution use is recorded as stronger / solution-assisted evidence rather than unassisted performance.
 
 After all three post-build verdicts are durable and every material finding has explicit disposition, Cycle 1 proceeds to the Rule-Based Acceptance Gate defined in `learner-encounter-production-process.md`.
+
+---
+
+## 7. Targeted comparative Case Validation delta — current execution override
+
+This section is the **current execution state** and supersedes Section 6's earlier next-action statement.
+
+Since Section 6 was recorded, the repository has received durable post-build review artifacts for all three independent streams:
+
+- `course-design/production/cycle-1/post-build-runtime-conformance-review.md`
+- `course-design/production/cycle-1/post-build-pedagogy-review.md`
+- `course-design/production/cycle-1/post-build-ux-review.md`
+
+The production process was subsequently amended to require comparative Case Validation when more than one materially plausible current case can exercise the same target capability. The earlier Cycle 1 Case Validation did not contain that comparison.
+
+The Encounter Architect has now completed the narrow corrective artifact:
+
+- `course-design/production/cycle-1/case-selection-delta-review.md`
+
+The delta retains:
+
+- the existing Cycle 1 target capability;
+- `news_source → news_article` as the selected case after explicit comparison with `company → funding_round`;
+- the reconciled reasoning architecture;
+- the existing learner-evidence design;
+- the existing implementation unchanged.
+
+Under `learner-encounter-production-process.md` §12.4, a case-justification change returns to the Capability & Case Brief / Lightweight Pedagogy Gate layer. For this narrow correction, the delta artifact functions as the amendment to the existing Brief rather than rewriting it.
+
+### Current next authorized action
+
+**Targeted Independent Lightweight Pedagogy Gate — Comparative Case Validation Delta Review**
+
+The independent Pedagogy Reviewer must review:
+
+- `course-design/production/cycle-1/case-selection-delta-review.md`;
+- the current amended Case Validation requirements in `learner-encounter-production-process.md`;
+- the existing Capability & Case Brief and lightweight gate as necessary for traceability;
+- the current schema/seed and Stage 1 authority needed to test the comparative rationale.
+
+The review is narrow: determine whether the comparative evaluation is adequate and whether retaining `news_source → news_article` is preferable to the serious alternative for the learner's current course position.
+
+Rule-Based Acceptance is paused until that targeted review is durable and its finding is resolved.
+
+If the targeted review accepts the retained case without requiring a pedagogical, learner-evidence, UX, implementation, schema, or seed change, the earlier design, implementation, and post-build review artifacts remain preserved and no broader re-review is triggered by this delta.
+
+If the targeted review requires a case change or another material change, follow the applicable Change Impact rule before resuming acceptance.

@@ -177,3 +177,35 @@ The exact next authorized phase is **Independent Post-Build Review**, consisting
 - Post-Build Learning Experience / UX Review by the independent UX Reviewer.
 
 Rule-Based Acceptance is not yet authorized because those independent post-build verdicts do not yet exist.
+
+---
+
+## Comparative Case Validation Delta Review
+
+Path:
+
+`course-design/production/cycle-1/case-selection-delta-review.md`
+
+Status:
+
+**DURABLE ARCHITECT DELTA RECORDED — AWAITS TARGETED INDEPENDENT PEDAGOGY REVIEW**
+
+After the production process was amended to require comparative Case Validation when more than one materially plausible current case exists, the Encounter Architect performed the missing Cycle 1 comparison without rewriting prior artifacts.
+
+The delta retains the original target capability and re-selects `news_source → news_article` after explicit comparison with `company → funding_round`. It records the seeded zero-funding-round company and the resulting unmatched-row confound in the unrestricted company case, while also documenting the narrower conditions under which that alternative could be isolated without changing schema or seed data.
+
+The reconciled design, implementation, and existing review artifacts remain unchanged.
+
+### Current delta execution consequence
+
+This later delta supersedes the earlier paragraph above that named Independent Post-Build Review as the next authorized phase. The repository now already contains durable Runtime/Conformance, Post-Build Pedagogy, and Post-Build UX review artifacts, and the amended Case Validation rule requires the case-justification defect to be closed before Rule-Based Acceptance advances.
+
+Under `learner-encounter-production-process.md` §12.4, the exact next required review is:
+
+**Targeted Independent Lightweight Pedagogy Gate — Comparative Case Validation Delta Review**
+
+The targeted reviewer must review `case-selection-delta-review.md` as the narrow amendment to the existing Capability & Case Brief. No prior Cycle 1 artifact is rewritten or invalidated merely by recording this delta.
+
+If the targeted Pedagogy review accepts the retained case without requiring a case, capability, pedagogical, learner-evidence, UX, or implementation change, no broader re-review is triggered by this delta. If it requires such a change, subsequent review follows the applicable Change Impact rule.
+
+Rule-Based Acceptance remains paused until this targeted delta review is durably resolved.
