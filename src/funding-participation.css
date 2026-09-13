@@ -16,9 +16,11 @@
 
 .learning-panel:has([data-cycle1-state="grain"]) .working-schema-panel,
 .learning-panel:has([data-cycle1-state="cardinality"]) .working-schema-panel,
+.learning-panel:has([data-cycle1-state="baseline"]) .working-schema-panel,
 .learning-panel:has([data-cycle1-state="prediction"]) .working-schema-panel,
 .learning-panel:has([data-cycle1-state="concept"]) .working-schema-panel,
 .learning-panel:has([data-cycle1-state="application"]) .working-schema-panel,
+.learning-panel:has([data-cycle1-state="bridge"]) .working-schema-panel,
 .learning-panel:has([data-cycle1-state="complete"]) .working-schema-panel {
   min-height: 0;
   background: #f8fafc;
@@ -27,9 +29,11 @@
 
 .learning-panel:has([data-cycle1-state="grain"]) .relation-preview,
 .learning-panel:has([data-cycle1-state="cardinality"]) .relation-preview,
+.learning-panel:has([data-cycle1-state="baseline"]) .relation-preview,
 .learning-panel:has([data-cycle1-state="prediction"]) .relation-preview,
 .learning-panel:has([data-cycle1-state="concept"]) .relation-preview,
 .learning-panel:has([data-cycle1-state="application"]) .relation-preview,
+.learning-panel:has([data-cycle1-state="bridge"]) .relation-preview,
 .learning-panel:has([data-cycle1-state="complete"]) .relation-preview {
   min-height: 220px;
 }
@@ -261,6 +265,206 @@
   font-size: 13px;
 }
 
+/* Corrective item 2: compact baseline/orientation measurement. */
+.cycle1-baseline-card {
+  display: grid;
+  gap: 7px;
+  margin: 4px 0 12px;
+  padding: 12px;
+  border: 1px solid #d8e2ed;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.cycle1-baseline-card > span,
+.cycle1-baseline-result > span {
+  color: #66758a;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.cycle1-baseline-card pre {
+  margin: 0;
+  padding: 9px 10px;
+  overflow: auto;
+  border-radius: 8px;
+  background: #20283a;
+  color: #eef4ff;
+  font-size: 11px;
+}
+
+.cycle1-baseline-card p { margin: 0; color: #607086; font-size: 11px; line-height: 1.45; }
+
+.cycle1-baseline-result {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 12px;
+  padding: 9px 11px;
+  border-left: 3px solid var(--green);
+  border-radius: 8px;
+  background: var(--green-soft);
+}
+
+.cycle1-baseline-result strong { color: #236744; font-size: 13px; }
+
+/* Corrective item 3: reduced normal-path reasoning → SQL bridge. */
+.cycle1-join-bridge {
+  display: grid;
+  gap: 7px;
+  margin: 4px 0 14px;
+  padding: 11px 12px;
+  border: 1px solid #d8e2ed;
+  border-radius: 10px;
+  background: #f8fafc;
+}
+
+.cycle1-join-bridge p {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 10px;
+  align-items: baseline;
+  margin: 0;
+  color: #53677e;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.cycle1-join-bridge > p > code {
+  color: #2457ad;
+  font-weight: 850;
+}
+
+/* Corrective item 7: keep the committed prediction locally available through implementation and verification. */
+.cycle1-continuity-strip {
+  display: grid;
+  gap: 3px;
+  margin: 10px 0 2px;
+  padding: 9px 11px;
+  border-left: 3px solid #8aaee0;
+  border-radius: 8px;
+  background: #f7faff;
+}
+
+.cycle1-continuity-strip span {
+  color: #66758a;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.cycle1-continuity-strip strong {
+  color: #294b70;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+/* Corrective items 4–5: optional authoring assistance is local to the editor surface. */
+.cycle1-editor-assist-button {
+  padding: 5px 7px;
+  border-color: #cbd7e5;
+  color: #425d7b;
+  font-size: 10px;
+}
+
+.learning-panel.cycle1-sql-active #editor {
+  position: relative;
+}
+
+.cycle1-editor-assist-panel {
+  position: absolute;
+  z-index: 30;
+  top: 10px;
+  right: 10px;
+  width: min(390px, calc(100% - 20px));
+  max-height: calc(100% - 20px);
+  overflow: auto;
+  border: 1px solid #d9d1f3;
+  border-radius: 10px;
+  background: #fbfaff;
+  box-shadow: 0 12px 28px rgba(42, 54, 78, .20);
+  color: #4f466b;
+}
+
+.cycle1-editor-assist-panel[hidden] { display: none; }
+
+.cycle1-editor-assist-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #e3dcfb;
+  color: #574192;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.cycle1-editor-assist-heading button {
+  padding: 3px 6px;
+  border-color: #cfc3f7;
+  color: #574192;
+  font-size: 9px;
+}
+
+.cycle1-editor-assist-body {
+  padding: 10px 11px 12px;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.cycle1-editor-assist-body > strong { display: block; margin-bottom: 7px; color: #574192; }
+.cycle1-editor-assist-body p { margin: 8px 0 0; }
+
+.cycle1-editor-assist-body pre {
+  margin: 7px 0 0;
+  padding: 9px 10px;
+  overflow: auto;
+  border-radius: 8px;
+  background: #20283a;
+  color: #eef4ff;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.cycle1-editor-output-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.cycle1-editor-output-grid code {
+  padding: 5px 6px;
+  border-radius: 6px;
+  background: #f0edfb;
+  color: #574192;
+  font-size: 10px;
+}
+
+/* Corrective item 6: Results must not replace the learner-authored SQL. */
+.learning-panel:is(.cycle1-results-active, .cycle1-verification-active) .lab-workspace {
+  height: clamp(500px, 62vh, 640px);
+  min-height: 500px;
+  grid-template-rows: 42px minmax(150px, .75fr) minmax(220px, 1.25fr);
+}
+
+.learning-panel:is(.cycle1-results-active, .cycle1-verification-active) #editor {
+  display: block !important;
+  min-height: 0;
+  border-bottom: 1px solid #cbd3dd;
+}
+
+.learning-panel:is(.cycle1-results-active, .cycle1-verification-active) .results-panel {
+  min-height: 0;
+  box-shadow: inset 0 3px 0 var(--blue);
+}
+
 .cycle1-result-action,
 .cycle1-verification-action {
   margin-top: 0;
@@ -357,9 +561,19 @@
 @media (max-width: 760px) {
   .cycle1-connection-action { align-items: stretch; flex-direction: column; }
   .cycle1-connection-action .primary { align-self: flex-start; }
-  .cycle1-premises p { grid-template-columns: 1fr; gap: 2px; }
+  .cycle1-premises p,
+  .cycle1-join-bridge p { grid-template-columns: 1fr; gap: 2px; }
   .cycle1-multiplication-visual { flex-direction: column; align-items: stretch; }
   .cycle1-multiplication-visual i { transform: rotate(90deg); text-align: center; }
   .cycle1-result-handoff .primary { width: 100%; margin-left: 0; }
   .cycle1-slice-heading { display: grid; }
+  .cycle1-baseline-result { display: grid; gap: 3px; }
+  .cycle1-editor-assist-button { display: none; }
+  .cycle1-editor-assist-panel { top: 6px; right: 6px; width: calc(100% - 12px); max-height: calc(100% - 12px); }
+  .cycle1-editor-output-grid { grid-template-columns: 1fr; }
+  .learning-panel:is(.cycle1-results-active, .cycle1-verification-active) .lab-workspace {
+    height: clamp(520px, 78vh, 680px);
+    min-height: 520px;
+    grid-template-rows: 42px minmax(150px, .72fr) minmax(240px, 1.28fr);
+  }
 }
