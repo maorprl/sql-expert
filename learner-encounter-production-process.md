@@ -556,6 +556,8 @@ In addition to its normal findings, the full Independent Pedagogy Design Review 
 
 A full-review approval is incomplete if these required elements are absent.
 
+These review controls strengthen **how pedagogy is evaluated**; they do not establish a reusable learner-facing template. They do not require every encounter to contain a baseline, the same SQL scaffold, the same number of steps, the same visual composition, or the same degree of support. Differences must be justified by learner state, instructional function, intended evidence, and concrete learner consequence.
+
 For the full Pedagogy Design Review, the Pedagogy Reviewer must also specifically verify:
 
 - whether each claimed core evidence-bearing action actually requires the learner to perform the target reasoning, rather than allowing the correct response to be produced from quantities, wording, conclusions, answer structure, or scaffolds already supplied;
