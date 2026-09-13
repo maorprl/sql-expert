@@ -8,6 +8,7 @@ import './styles.css';
 import './course-navigation.css';
 import { createMediaCoverage } from './media-coverage.js';
 import { createFundingParticipation } from './funding-participation.js';
+import { createFanout } from './fanout.js';
 import { createInteractionLifecycle } from './interaction-lifecycle.js';
 
 const SOURCE_FILES = [
@@ -25,8 +26,9 @@ let activeEncounter;
 let activeEncounterName = 'media-coverage';
 let mediaCoverageEncounter;
 let fundingParticipationEncounter;
-const encounterEditorText = { 'media-coverage': '', 'funding-participation': '' };
-const encounterResults = { 'media-coverage': null, 'funding-participation': null };
+let fanoutEncounter;
+const encounterEditorText = { 'media-coverage': '', 'funding-participation': '', 'fanout': '' };
+const encounterResults = { 'media-coverage': null, 'funding-participation': null, 'fanout': null };
 
 const el = (id) => document.getElementById(id);
 const status = el('db-status');
@@ -271,6 +273,7 @@ function ensureChapterNavigation() {
     <div class="course-chapter-list">
       <button type="button" class="course-chapter-button" data-chapter="media-coverage">Media coverage</button>
       <button type="button" class="course-chapter-button" data-chapter="funding-participation">Funding participation</button>
+      <button type="button" class="course-chapter-button" data-chapter="fanout">Fanout risk</button>
     </div>`;
   document.querySelector('.topbar').insertAdjacentElement('afterend', nav);
   nav.querySelectorAll('[data-chapter]').forEach((button) => button.addEventListener('click', () => activateEncounter(button.dataset.chapter)));
@@ -294,6 +297,7 @@ function resetEncounterDom() {
   el('completed-steps').innerHTML = '';
   el('current-step').innerHTML = '';
   el('relation-preview').innerHTML = '';
+  el('relation-preview').classList.remove('fanout-layout');
   hideSqlSolutionSurface();
 }
 
@@ -310,6 +314,23 @@ function applyFundingParticipationShell() {
   document.title = 'SQL Lab · Funding participation';
   document.querySelector('.stage-label').hidden = true;
   el('business-request-title').textContent = 'The investment team is reviewing participation in funding rounds and needs funding-round context together with recorded investor-participation details.';
+  document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
+  el('working-schema-status').textContent = 'Build it from the Live Schema';
+  document.querySelector('.learning-panel').classList.remove(
+    'sql-active',
+    'baseline-workspace-active',
+    'baseline-evidence-active',
+    'prediction-evidence-active',
+    'join-teaching-active',
+    'sql-implementation-active',
+    'results-evidence-active',
+  );
+}
+
+function applyFanoutShell() {
+  document.title = 'SQL Lab · Fanout risk';
+  document.querySelector('.stage-label').hidden = true;
+  el('business-request-title').textContent = 'The strategy team wants a working table that pairs each recorded funding round with the founder records for the same company so it can review funding activity alongside founder context.';
   document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
   el('working-schema-status').textContent = 'Build it from the Live Schema';
   document.querySelector('.learning-panel').classList.remove(
@@ -365,9 +386,36 @@ function activateFundingParticipationEncounter() {
   el('stage-scroll').scrollTop = 0;
 }
 
+function activateFanoutEncounter() {
+  if (activeEncounterName === 'fanout') return;
+  saveEncounterSurface();
+  activeEncounterName = 'fanout';
+  clearError();
+  resetEncounterDom();
+  applyFanoutShell();
+  editor.setValue(encounterEditorText.fanout || '', -1);
+  restoreEncounterResults('fanout');
+
+  if (!fanoutEncounter) {
+    fanoutEncounter = createFanout({
+      editor,
+      getDatabase: () => db,
+      getSchema: () => schema,
+      onSelectionChange: renderSchema,
+      interactionLifecycle,
+    });
+  }
+  activeEncounter = fanoutEncounter;
+  activeEncounter.refresh?.();
+  renderSchema();
+  updateChapterNavigation();
+  el('stage-scroll').scrollTop = 0;
+}
+
 function activateEncounter(name) {
   if (name === 'media-coverage') activateMediaCoverageEncounter();
   else if (name === 'funding-participation') activateFundingParticipationEncounter();
+  else if (name === 'fanout') activateFanoutEncounter();
 }
 
 el('run-query').addEventListener('click', runCurrentQuery);
