@@ -1,0 +1,115 @@
+/* Stage 3-only layout. Shared learner, SQL, result, and concept styles remain in styles.css. */
+
+.relation-preview.fanout-layout {
+  grid-template-columns: minmax(125px, 1fr) 48px minmax(125px, 1fr) 48px minmax(125px, 1fr);
+  gap: 7px;
+}
+
+.relation-preview.fanout-layout .data-card[data-relation="company"],
+.relation-preview.fanout-layout .data-card[data-relation="company_founder"] {
+  transform: translateY(32px);
+}
+
+.relation-preview.fanout-layout .schema-connector {
+  min-width: 0;
+}
+
+.relation-preview.fanout-layout .fanout-connector-placeholder {
+  min-height: 130px;
+}
+
+.relation-preview.fanout-layout.cardinality-visible .founder-connector::before {
+  content: '1';
+}
+
+.relation-preview.fanout-layout.cardinality-visible .founder-connector::after {
+  content: 'M';
+}
+
+.fanout-case-evidence {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.fanout-case-evidence > div {
+  display: grid;
+  gap: 4px;
+  padding: 11px 12px;
+  border: 1px solid #c9d9ec;
+  border-radius: 10px;
+  background: #f7faff;
+}
+
+.fanout-case-evidence span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.fanout-case-evidence strong {
+  color: #294b70;
+  font-size: 18px;
+}
+
+/* Keep Stage 3 solution assistance in normal flow instead of covering learner-authored SQL. */
+.learning-panel.sql-implementation-active:has(.data-card[data-relation="company_founder"]) .lab-workspace {
+  grid-template-rows: 42px auto minmax(150px, .9fr) minmax(155px, 1fr);
+}
+
+.learning-panel.sql-implementation-active:has(.data-card[data-relation="company_founder"]) .editor-header {
+  grid-row: 1;
+}
+
+.learning-panel.sql-implementation-active:has(.data-card[data-relation="company_founder"]) .lab-workspace > .sql-solution-panel {
+  position: static;
+  z-index: auto;
+  grid-row: 2;
+  width: auto;
+  max-height: 210px;
+  margin: 0;
+  overflow: auto;
+  border-right: 0;
+  border-left: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.learning-panel.sql-implementation-active:has(.data-card[data-relation="company_founder"]) .lab-workspace > .sql-solution-panel .solution-panel-body pre {
+  max-height: 150px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.learning-panel.sql-implementation-active:has(.data-card[data-relation="company_founder"]) #editor {
+  grid-row: 3;
+}
+
+.learning-panel.sql-implementation-active:has(.data-card[data-relation="company_founder"]) .results-panel {
+  grid-row: 4;
+}
+
+@media (max-width: 1180px) {
+  .relation-preview.fanout-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .relation-preview.fanout-layout .data-card[data-relation="company"],
+  .relation-preview.fanout-layout .data-card[data-relation="company_founder"] {
+    transform: none;
+  }
+
+  .relation-preview.fanout-layout .schema-connector,
+  .relation-preview.fanout-layout .fanout-connector-placeholder {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .fanout-case-evidence {
+    grid-template-columns: 1fr;
+  }
+}
