@@ -375,6 +375,7 @@
 .learning-panel.results-evidence-active .current-step { box-shadow: none; }
 .learning-panel.results-evidence-active .workspace-evidence-action { margin-top: 0; }
 
+/* Stage 1 and Row multiplication deliberately share this SQL/result choreography. */
 /* During authoring and result inspection, task + tool + Working Schema form one coherent workspace. */
 @media (min-width: 1101px) {
   .learning-panel.sql-implementation-active .lesson-surface,
