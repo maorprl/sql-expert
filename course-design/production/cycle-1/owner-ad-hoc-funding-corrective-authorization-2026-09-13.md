@@ -1,7 +1,7 @@
 # Cycle 1 — One-Time Owner Ad Hoc Corrective Authorization
 
 **Date:** 2026-09-13  
-**Status:** CURRENT ONE-TIME OWNER AUTHORIZATION  
+**Status:** CURRENT ONE-TIME OWNER AUTHORIZATION — IMPLEMENTED, RUNTIME VISUAL CLOSURE PENDING  
 **Scope:** Funding participation only  
 **Precedent:** NONE
 
@@ -47,6 +47,37 @@ Every implementation change must map to one or more of the seven authorized corr
 After implementation, perform one targeted 7-point runtime/conformance verification against this same list. A correction is closed only when its learner-visible behavior is present in the actual implementation. The verification must also confirm that the accepted capability, case, and core prediction evidence were not changed.
 
 No full-cycle re-review is authorized by this record.
+
+## Targeted verification status
+
+Implementation is present on branch `funding-participation-ad-hoc-corrective-2026-09-13`.
+
+| # | Correction | Static conformance | Runtime visual closure |
+|---|---|---|---|
+| 1 | Business request | **PASS** — Funding now uses natural analytical wording asking which investors participated and which were marked lead. | No additional visual-specific check required. |
+| 2 | Baseline | **PASS** — prepared `SELECT COUNT(*) FROM funding_round;` measurement occurs after Cardinality and before qualitative prediction, explicitly framed as orientation rather than SQL authorship/core evidence. | Interaction rendering still benefits from runtime confirmation. |
+| 3 | Thin JOIN bridge | **PASS** — normal path now reconnects established reasoning to `SELECT` / `FROM` / `JOIN` / `ON` and explicitly says it is reuse rather than a new JOIN lesson. | Interaction rendering still benefits from runtime confirmation. |
+| 4 | SQL Structure assistance | **PASS** — optional `SQL structure` control and incomplete skeleton are implemented for authoring. | **PENDING visual confirmation** inside the actual editor surface. |
+| 5 | Show solution locality | **PASS in DOM/CSS conformance** — Funding solution content is rendered through the Funding authoring-assistance panel appended inside `#editor`, not the shared lab-level solution panel. | **PENDING visual confirmation** that it is spatially bounded to the editor and does not obscure Results. |
+| 6 | SQL/result continuity | **PASS in DOM/CSS conformance** — Funding result/verification states override the shared editor-hiding rule and retain separate editor and Results grid rows. | **PENDING visual confirmation** that authored SQL and Results are simultaneously usable at target viewport sizes. |
+| 7 | Prediction → SQL → result continuity | **PASS in implementation conformance** — committed pre-execution prediction is rendered during SQL authoring, result inspection, and final verification while executed SQL remains retained. | **PENDING visual confirmation** of usable co-presence/recoverability. |
+
+### Boundary verification
+
+Static comparison against the pre-corrective `main` baseline confirms the branch changes are limited to:
+
+- this one-time Owner authorization record;
+- the execution mapping's bounded override pointer;
+- `src/funding-participation.js`;
+- `src/funding-participation.css`.
+
+`learner-encounter-production-process.md` is unchanged. The accepted relation pair remains `funding_round → round_investment`, and the existing qualitative row-multiplication prediction semantics remain intact.
+
+### Current control verdict
+
+**IMPLEMENTATION COMPLETE / AD HOC AUTHORIZATION NOT YET CLOSED.**
+
+The code-level and structural 7-point conformance check passes. Closure is intentionally withheld until the editor-local assistance and SQL+Results choreography are observed in the rendered runtime; static CSS/DOM inspection is not substituted for that visual runtime check.
 
 ## Closure rule
 
