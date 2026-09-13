@@ -1,4 +1,4 @@
-import './cycle1.css';
+import './funding-participation.css';
 
 const REQUIRED_RELATIONS = ['funding_round', 'round_investment'];
 const LABELS = {
@@ -51,7 +51,7 @@ const PREDICTION_STEPS = [
   },
 ];
 
-export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange, interactionLifecycle }) {
+export function createFundingParticipation({ editor, getDatabase, getSchema, onSelectionChange, interactionLifecycle }) {
   const state = {
     current: 'relations',
     completed: [],

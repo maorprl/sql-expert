@@ -6,8 +6,8 @@ import initSqlJs from 'sql.js';
 import wasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
 import './styles.css';
 import './course-navigation.css';
-import { createStage1 } from './stage1.js';
-import { createCycle1 } from './cycle1.js';
+import { createMediaCoverage } from './media-coverage.js';
+import { createFundingParticipation } from './funding-participation.js';
 import { createInteractionLifecycle } from './interaction-lifecycle.js';
 
 const SOURCE_FILES = [
@@ -22,11 +22,11 @@ let db;
 let schema = [];
 let editor;
 let activeEncounter;
-let activeEncounterName = 'stage1';
-let stage1;
-let rowMultiplicationEncounter;
-const encounterEditorText = { stage1: '', 'row-multiplication': '' };
-const encounterResults = { stage1: null, 'row-multiplication': null };
+let activeEncounterName = 'media-coverage';
+let mediaCoverageEncounter;
+let fundingParticipationEncounter;
+const encounterEditorText = { 'media-coverage': '', 'funding-participation': '' };
+const encounterResults = { 'media-coverage': null, 'funding-participation': null };
 
 const el = (id) => document.getElementById(id);
 const status = el('db-status');
@@ -43,7 +43,7 @@ function showError(title, error, statement = '') {
   errorPanel.innerHTML = `<strong>${escapeHtml(title)}.</strong> ${escapeHtml(text)}${near ? `<br><small>${escapeHtml(near)}</small>` : ''}${statement ? `<br><small>Statement: ${escapeHtml(compact(statement, 260))}</small>` : ''}`;
 }
 function clearError() { errorPanel.hidden = true; errorPanel.textContent = ''; }
-function escapeHtml(value) { return String(value).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c])); }
+function escapeHtml(value) { return String(value).replace(/[&<>'\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[c])); }
 function compact(value, length) { return value.replace(/\s+/g, ' ').trim().slice(0, length); }
 
 async function loadDatabase() {
@@ -218,9 +218,9 @@ function runCurrentQuery() {
   } catch (error) { showError('SQL error', error, statement); }
 }
 
-function showStage1Solution() {
+function showMediaCoverageSolution() {
   const learningPanel = document.querySelector('.learning-panel');
-  if (activeEncounterName !== 'stage1' || !learningPanel.classList.contains('sql-implementation-active')) return;
+  if (activeEncounterName !== 'media-coverage' || !learningPanel.classList.contains('sql-implementation-active')) return;
   const panel = el('solution-panel');
   panel.innerHTML = `<div class="solution-panel-heading"><span>Solution assistance</span><button id="close-solution" type="button" aria-label="Close solution">Close</button></div><div class="solution-panel-body"><strong>Solution SQL:</strong><pre>SELECT
   news_article.title,
@@ -240,7 +240,7 @@ function ensureSqlSolutionControls() {
     button.type = 'button';
     button.className = 'sql-solution-button';
     button.textContent = 'Show solution';
-    button.addEventListener('click', showStage1Solution);
+    button.addEventListener('click', showMediaCoverageSolution);
     editorActions.insertBefore(button, runButton);
   }
   if (!el('solution-panel')) {
@@ -269,8 +269,8 @@ function ensureChapterNavigation() {
   nav.innerHTML = `
     <span class="course-chapter-nav-label">Chapters</span>
     <div class="course-chapter-list">
-      <button type="button" class="course-chapter-button" data-chapter="stage1">Media coverage</button>
-      <button type="button" class="course-chapter-button" data-chapter="row-multiplication">Funding participation</button>
+      <button type="button" class="course-chapter-button" data-chapter="media-coverage">Media coverage</button>
+      <button type="button" class="course-chapter-button" data-chapter="funding-participation">Funding participation</button>
     </div>`;
   document.querySelector('.topbar').insertAdjacentElement('afterend', nav);
   nav.querySelectorAll('[data-chapter]').forEach((button) => button.addEventListener('click', () => activateEncounter(button.dataset.chapter)));
@@ -297,7 +297,7 @@ function resetEncounterDom() {
   hideSqlSolutionSurface();
 }
 
-function applyStage1Shell() {
+function applyMediaCoverageShell() {
   document.title = 'SQL Lab · Media coverage';
   const stageLabel = document.querySelector('.stage-label');
   stageLabel.hidden = true;
@@ -306,7 +306,7 @@ function applyStage1Shell() {
   document.querySelector('.learning-panel').classList.remove('cycle1-sql-active', 'cycle1-results-active', 'cycle1-verification-active');
 }
 
-function applyRowMultiplicationShell() {
+function applyFundingParticipationShell() {
   document.title = 'SQL Lab · Funding participation';
   document.querySelector('.stage-label').hidden = true;
   el('business-request-title').textContent = 'The investment team is reviewing participation in funding rounds and needs funding-round context together with recorded investor-participation details.';
@@ -323,34 +323,34 @@ function applyRowMultiplicationShell() {
   );
 }
 
-function activateStage1() {
-  if (activeEncounterName === 'stage1') return;
+function activateMediaCoverageEncounter() {
+  if (activeEncounterName === 'media-coverage') return;
   saveEncounterSurface();
-  activeEncounterName = 'stage1';
+  activeEncounterName = 'media-coverage';
   clearError();
   resetEncounterDom();
-  applyStage1Shell();
-  activeEncounter = stage1;
-  editor.setValue(encounterEditorText.stage1 || '', -1);
-  restoreEncounterResults('stage1');
+  applyMediaCoverageShell();
+  activeEncounter = mediaCoverageEncounter;
+  editor.setValue(encounterEditorText['media-coverage'] || '', -1);
+  restoreEncounterResults('media-coverage');
   activeEncounter.refresh?.();
   renderSchema();
   updateChapterNavigation();
   el('stage-scroll').scrollTop = 0;
 }
 
-function activateRowMultiplicationEncounter() {
-  if (activeEncounterName === 'row-multiplication') return;
+function activateFundingParticipationEncounter() {
+  if (activeEncounterName === 'funding-participation') return;
   saveEncounterSurface();
-  activeEncounterName = 'row-multiplication';
+  activeEncounterName = 'funding-participation';
   clearError();
   resetEncounterDom();
-  applyRowMultiplicationShell();
-  editor.setValue(encounterEditorText['row-multiplication'] || '', -1);
-  restoreEncounterResults('row-multiplication');
+  applyFundingParticipationShell();
+  editor.setValue(encounterEditorText['funding-participation'] || '', -1);
+  restoreEncounterResults('funding-participation');
 
-  if (!rowMultiplicationEncounter) {
-    rowMultiplicationEncounter = createCycle1({
+  if (!fundingParticipationEncounter) {
+    fundingParticipationEncounter = createFundingParticipation({
       editor,
       getDatabase: () => db,
       getSchema: () => schema,
@@ -358,7 +358,7 @@ function activateRowMultiplicationEncounter() {
       interactionLifecycle,
     });
   }
-  activeEncounter = rowMultiplicationEncounter;
+  activeEncounter = fundingParticipationEncounter;
   activeEncounter.refresh?.();
   renderSchema();
   updateChapterNavigation();
@@ -366,8 +366,8 @@ function activateRowMultiplicationEncounter() {
 }
 
 function activateEncounter(name) {
-  if (name === 'stage1') activateStage1();
-  else if (name === 'row-multiplication') activateRowMultiplicationEncounter();
+  if (name === 'media-coverage') activateMediaCoverageEncounter();
+  else if (name === 'funding-participation') activateFundingParticipationEncounter();
 }
 
 el('run-query').addEventListener('click', runCurrentQuery);
@@ -378,10 +378,10 @@ el('schema-search').addEventListener('input', renderSchema);
 configureEditor();
 ensureSqlSolutionControls();
 ensureChapterNavigation();
-applyStage1Shell();
+applyMediaCoverageShell();
 const interactionLifecycle = createInteractionLifecycle({ currentElement: el('current-step'), completedElement: el('completed-steps') });
-stage1 = createStage1({ editor, getDatabase: () => db, getSchema: () => schema, onSelectionChange: renderSchema, interactionLifecycle });
-activeEncounter = stage1;
+mediaCoverageEncounter = createMediaCoverage({ editor, getDatabase: () => db, getSchema: () => schema, onSelectionChange: renderSchema, interactionLifecycle });
+activeEncounter = mediaCoverageEncounter;
 updateChapterNavigation();
 SQL = await initSqlJs({ locateFile: () => wasmUrl });
 db = new SQL.Database();

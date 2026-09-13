@@ -1,4 +1,4 @@
-import './stage1.css';
+import './media-coverage.css';
 
 const BASELINE_SQL = 'SELECT COUNT(*) FROM news_article;';
 
@@ -18,7 +18,7 @@ const INTERACTION_LABELS = {
 
 const REQUIRED_RELATIONS = ['news_article', 'news_source'];
 
-export function createStage1({ editor, getDatabase, getSchema, onSelectionChange, interactionLifecycle }) {
+export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectionChange, interactionLifecycle }) {
   const state = {
     current: 'relations', completed: [], evidence: new Set(), drafts: {}, localFeedback: '',
     selectedRelations: [], selectedColumn: '', baselineExecuted: false, baselinePrepared: false,
@@ -31,7 +31,7 @@ export function createStage1({ editor, getDatabase, getSchema, onSelectionChange
   const learningEl = document.querySelector('.learning-panel');
 
   function escapeHtml(value) {
-    return String(value).replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
+    return String(value).replace(/[&<>'\"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '\"': '&quot;' }[character]));
   }
 
   function stripMarkup(value) {
