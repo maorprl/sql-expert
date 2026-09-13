@@ -471,11 +471,16 @@ The full Pedagogy Design Review must review the **whole material encounter seque
 
 For each material learner-facing step or transition, the Pedagogy Reviewer must identify and test:
 
-1. **Instructional function** — what pedagogical job the step performs now: orientation, reused action, first-exposure teaching, continuity/translation scaffold, measurement/baseline, evidence, practice, concept consolidation, tool work, result interpretation, or assistance.
-2. **Learner action** — what the learner actually has to notice, decide, predict, author, inspect, or interpret.
-3. **Placement and dependency** — what must already be established before the step and what later step depends on it.
-4. **Scaffold level** — what support is supplied, whether it is appropriate to the Course-Assumed Learner State, and whether it performs reasoning that the learner is meant to perform.
-5. **Removal / compression consequence** — what the learner would be forced to infer, recall, translate, or do unsupported if the step were removed or materially compressed.
+1. **Learner state entering the step** — what the course may legitimately assume the learner currently knows, has established locally, or still needs to infer.
+2. **Instructional function** — what pedagogical job the step performs now: orientation, reused action, first-exposure teaching, continuity/translation scaffold, measurement/baseline, evidence, practice, concept consolidation, tool work, result interpretation, or assistance.
+3. **Learner action** — what the learner actually has to notice, decide, predict, author, inspect, or interpret.
+4. **Support present and calibration** — what guidance, visible premises, optional scaffold, prepared measurement, solution assistance, prior completed evidence, or other support is present; why it is appropriate to the Course-Assumed Learner State; and whether it performs reasoning that the learner is meant to perform.
+5. **Placement and dependency** — what must already be established before the step and what later step depends on it.
+6. **Transition function** — what the step makes possible next and whether the handoff into that next action is sufficiently supported.
+7. **Removal / compression consequence** — what the learner would be forced to infer, recall, translate, or do unsupported if the step were removed or materially compressed.
+8. **Finding** — PASS, ADVISORY, REVISION REQUIRED, BLOCKER, or OWNER DECISION REQUIRED under the existing finding rules.
+
+The completed full Pedagogy Design Review must contain an explicit **Step Ledger** covering the material learner sequence in learner order. A review that discusses only episodes, core evidence, or selected key steps without accounting for every material learner-facing step and transition is incomplete.
 
 The reviewer must then test continuity across the encounter's actual transitions. Where present, this includes the chain from business request and schema reasoning through baseline/measurement, prediction, semantic operation or concept introduction, translation into `JOIN ... ON ...` or other SQL structure, learner-authored SQL/tool work, actual results, and final interpretation. The reviewer must also inspect optional scaffolds such as hints, Desired Output, and Show solution separately from the unassisted path.
 
@@ -485,6 +490,71 @@ When a capability is being **reused rather than introduced**, the reviewer must 
 - “this step is not part of the new core evidence.”
 
 If prior first-exposure teaching is removed or compressed, the reviewer must verify that the learner state supports that compression and that any still-necessary conceptual or procedural translation remains available. The question is not whether the later encounter should replay first exposure. The question is whether the function performed by the removed teaching is still needed for the learner to understand and execute the current task.
+
+For reuse of a recent prerequisite encounter, the reviewer must compare progression by **function**, not by visual or step-count symmetry. The review must identify which earlier functions legitimately disappear after first exposure, which become shorter or optional, which still need to remain for continuity/retrieval/measurement/implementation mapping/verification, and what genuinely new reasoning receives the increased cognitive budget. A later encounter may be shorter and more independent without becoming pedagogically thin.
+
+### 5.1 Measurement / Baseline Test
+
+A baseline, prepared measurement, or other empirical starting point is **not automatically required** because an earlier encounter used one. Conversely, determining that a baseline is not a prerequisite for the target concept does not establish that it has no pedagogical function.
+
+Where a measurement could materially affect the learner journey, the Pedagogy Reviewer must ask:
+
+- does it orient the learner to the starting data state?
+- does it create a meaningful before/after or starting/result comparison?
+- does it support prediction without revealing the conclusion the learner is meant to derive?
+- would it strengthen or weaken the diagnostic value of later evidence?
+- if it is omitted, what other step supplies the necessary empirical or structural point of departure, if one is needed?
+
+The disposition must be consequence-grounded. This test does not establish a course-wide requirement that every encounter contain a baseline or `COUNT(*)`.
+
+### 5.2 Business Situation / Prompt Test
+
+The full Pedagogy Design Review must inspect the opening business or analytical situation as part of the learner sequence, not only as Case Validation background.
+
+The opening request must be checked for whether it:
+
+- expresses a coherent analytical need in natural work language;
+- is precise enough to orient the learner;
+- avoids reading primarily as schema description or hidden solution specification;
+- avoids pre-resolving Grain, Cardinality, relation selection, row behavior, or another judgment the learner is expected to make later;
+- provides enough purpose for subsequent information requests and relational operations to make sense.
+
+When exact output fields are needed only for implementation, the reviewer should test whether they are better supplied as a local implementation/output contract rather than loaded into the opening request, unless current authority requires otherwise.
+
+### 5.3 Reasoning-to-SQL and SQL-to-Result Continuity Test
+
+Whenever an encounter moves from relational/business reasoning into learner-authored SQL or another implementation tool, the reviewer must inspect the handoff explicitly.
+
+The reviewer must ask:
+
+- what established relation choice, relationship, Grain, prediction, or operation is being carried into implementation?
+- is the implementation request a natural continuation of that reasoning rather than disconnected syntax recall?
+- is there enough local support to reconnect known SQL vocabulary or structure to the current case without replaying unnecessary first-exposure teaching?
+- is optional assistance available where appropriate without solving the task by default?
+- does the learner remain responsible for the SQL or tool evidence the encounter intends to collect?
+
+A thin instruction such as “write the JOIN” is not acceptable merely because JOIN syntax was introduced previously; the review must determine whether the bridge is appropriately reduced or simply missing.
+
+When SQL or tool execution produces evidence the learner must interpret, the reviewer must also check whether the evidence context preserves the reasoning needed for comparison. Where applicable:
+
+- learner-authored SQL should remain visible or immediately recoverable during result interpretation unless a specific pedagogical reason justifies hiding it;
+- the prior prediction or reasoning claim should remain visible or immediately recoverable during verification;
+- result prominence may increase after execution, but should not erase evidence needed to understand what produced the result;
+- assistance such as Show solution should remain local to the authoring task and should not obscure unrelated result or verification evidence.
+
+These are continuity requirements, not a universal visual-layout template.
+
+### 5.4 Required full Pedagogy Review deliverable
+
+In addition to its normal findings, the full Independent Pedagogy Design Review must contain:
+
+1. the Step Ledger covering the material learner sequence;
+2. a continuity assessment against the relevant prior first-exposure or prerequisite encounter when one materially informs the current learner state;
+3. explicit disposition of any materially removed or reduced teaching/scaffold/measurement/bridge/verification function from that prior encounter;
+4. explicit review of the reasoning→SQL/tool and SQL/tool→result handoffs where those handoffs are in scope;
+5. a final statement answering whether the encounter forms a complete and supportable learner journey, not merely a valid set of capability-evidence checkpoints.
+
+A full-review approval is incomplete if these required elements are absent.
 
 For the full Pedagogy Design Review, the Pedagogy Reviewer must also specifically verify:
 
@@ -521,7 +591,7 @@ Reviewers must clearly distinguish:
 - **SOURCE-DERIVED requirement**;
 - **PROFESSIONAL / PROCESS recommendation**.
 
-### 5.1 Current-Scope Necessity Test
+### 5.5 Current-Scope Necessity Test
 
 Before an existing **OPEN**, **BACKLOG**, deferred, or otherwise unresolved matter may be classified as **BLOCKER** or **OWNER DECISION REQUIRED**, the reviewer must establish that it is necessary to the **current implementation scope**.
 
@@ -567,6 +637,7 @@ It verifies:
 - Capability Gate passed;
 - required evidence sources are available;
 - all design reviews are complete;
+- the full Pedagogy Design Review contains the required Step Ledger and other mandatory review deliverables from Section 5 where applicable;
 - all blockers are closed;
 - all REVISION REQUIRED findings are resolved;
 - every finding has disposition;
@@ -655,7 +726,17 @@ Checks:
 - whether transitions that carry conceptual or procedural translation remain understandable in practice, especially transitions from established relational reasoning into SQL/tool action and from execution evidence into interpretation;
 - whether optional assistance or Show solution changes what the learner must reason about or merely reveals support, and whether evidence provenance reflects that difference.
 
-The post-build Pedagogy Reviewer must re-run the **instructional-function / removal-impact check** against the actual runtime path. A design may have named a continuity or teaching function correctly while the implementation makes it too weak, too remote, too late, visually ignorable, or absent to perform that function. Conversely, runtime must not add a scaffold that performs reasoning reserved for the learner.
+The post-build Pedagogy Reviewer must re-run the **Step Ledger and instructional-function / removal-impact check** against the actual runtime path, in learner order, and record material differences from the approved design. A design may have named a continuity or teaching function correctly while the implementation makes it too weak, too remote, too late, visually ignorable, or absent to perform that function. Conversely, runtime must not add a scaffold that performs reasoning reserved for the learner.
+
+Where applicable, the post-build Pedagogy Review must additionally verify:
+
+- intended continuity scaffolds are actually reachable, legible, and present at the intended moment;
+- optional assistance appears at the intended moment and locality rather than obscuring unrelated evidence;
+- SQL/tool authoring, execution, results, and verification preserve the approved evidence continuity, including visibility or immediate recoverability of the learner's authored operation and prior prediction/reasoning when needed for comparison;
+- CSS, responsive layout, state choreography, or conditional rendering has not effectively removed a pedagogically required surface even when its underlying content technically exists;
+- switching between chapters/encounters or equivalent runtime contexts does not carry stale pedagogical state into another encounter where such switching exists.
+
+Static conformance to design text does not substitute for this runtime pedagogy check.
 
 ### 10.3 UX / Learning Experience Verdict
 
