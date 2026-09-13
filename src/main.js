@@ -312,6 +312,15 @@ function applyRowMultiplicationShell() {
   el('business-request-title').textContent = 'The investment team is reviewing participation in funding rounds and needs funding-round context together with recorded investor-participation details.';
   document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
   el('working-schema-status').textContent = 'Build it from the Live Schema';
+  document.querySelector('.learning-panel').classList.remove(
+    'sql-active',
+    'baseline-workspace-active',
+    'baseline-evidence-active',
+    'prediction-evidence-active',
+    'join-teaching-active',
+    'sql-implementation-active',
+    'results-evidence-active',
+  );
 }
 
 function activateStage1() {
