@@ -6,9 +6,15 @@
 .prompt { max-width: 34ch; margin: 7px 0 14px; font-size: clamp(19px,1.75vw,23px); line-height: 1.28; }
 .step-copy { max-width: 58ch; }
 
-/* Stage 1 ordinary reasoning should not be visually squeezed beside the schema. */
+/* Ordinary reasoning gets enough width to lead. Tool-led relation work keeps its local choreography. */
 @media (min-width:1101px) {
-  .learning-panel:not(:has(.cycle1-state-marker)):not(.sql-active) .lesson-surface { grid-template-columns: minmax(390px,1fr) minmax(430px,1fr); }
+  .learning-panel:not(:has(.cycle1-state-marker)):not(.sql-active) .lesson-surface { grid-template-columns: minmax(410px,1.05fr) minmax(420px,.95fr); }
+  .workspace .learning-panel:has([data-cycle1-state="grain"]) .lesson-surface,
+  .workspace .learning-panel:has([data-cycle1-state="cardinality"]) .lesson-surface,
+  .workspace .learning-panel:has([data-cycle1-state="prediction"]) .lesson-surface,
+  .workspace .learning-panel:has([data-cycle1-state="concept"]) .lesson-surface,
+  .workspace .learning-panel:has([data-cycle1-state="application"]) .lesson-surface,
+  .workspace .learning-panel:has([data-cycle1-state="complete"]) .lesson-surface { grid-template-columns: minmax(430px,1.08fr) minmax(400px,.92fr); }
 }
 
 .completed-steps { display: grid; gap: 5px; margin-top: 12px; margin-bottom: 0; }
@@ -37,6 +43,13 @@
 .workspace .learning-panel.cycle1-sql-active .working-schema-header,
 .workspace .learning-panel.cycle1-results-active .working-schema-header,
 .workspace .learning-panel.cycle1-verification-active .working-schema-header { opacity: .82; }
+
+/* When the tool or result is primary, the task remains available but visually steps back. */
+.workspace .learning-panel.sql-implementation-active .current-step,
+.workspace .learning-panel.cycle1-sql-active .current-step { border-color: #d7e1ec; background: #fbfcfe; box-shadow: inset 3px 0 0 #86a9d7; }
+.workspace .learning-panel.results-evidence-active .current-step,
+.workspace .learning-panel.cycle1-results-active .current-step,
+.workspace .learning-panel.cycle1-verification-active .current-step { border-color: #e0e6ed; background: #fbfcfe; box-shadow: none; }
 
 @media (min-width:1101px) {
   .workspace .learning-panel.sql-implementation-active .lesson-surface,
