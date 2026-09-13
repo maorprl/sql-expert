@@ -45,3 +45,10 @@
 .learning-panel.sql-implementation-active:has(.data-card[data-relation="company"]) .results-panel {
   grid-row: 4;
 }
+
+@media (max-width: 760px) {
+  .learning-panel:has(.data-card[data-relation="company"]) .relation-preview.relationship-visible .data-card[data-relation="funding_round"],
+  .learning-panel:has(.data-card[data-relation="company"]) .relation-preview.relationship-visible .data-card[data-relation="company"] {
+    transform: none;
+  }
+}
