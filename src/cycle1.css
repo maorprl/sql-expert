@@ -1,45 +1,432 @@
-/* Cycle 1 fan-out encounter. Local implementation styling only. */
+/* Row-multiplication encounter: local visual choreography built from the Stage 1 calibration language. */
 
-.course-shell-actions {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  flex-wrap: wrap;
+/* Pre-SQL states are identified by a marker inside the current task so no Cycle 1 class leaks into Stage 1. */
+.cycle1-state-marker { display: none; }
+
+.learning-panel:has([data-cycle1-state="relations"]) .lesson-surface,
+.learning-panel:has([data-cycle1-state="connection"]) .lesson-surface {
+  grid-template-columns: minmax(340px, .78fr) minmax(480px, 1.22fr);
+  align-items: start;
 }
 
-.course-controls {
+.learning-panel:has([data-cycle1-state="relations"]) .working-schema-panel,
+.learning-panel:has([data-cycle1-state="connection"]) .working-schema-panel {
+  border-color: #b9cce3;
+  box-shadow: 0 10px 28px rgba(27, 55, 92, .09);
+}
+
+.learning-panel:has([data-cycle1-state="grain"]) .working-schema-panel,
+.learning-panel:has([data-cycle1-state="cardinality"]) .working-schema-panel,
+.learning-panel:has([data-cycle1-state="prediction"]) .working-schema-panel,
+.learning-panel:has([data-cycle1-state="concept"]) .working-schema-panel,
+.learning-panel:has([data-cycle1-state="application"]) .working-schema-panel,
+.learning-panel:has([data-cycle1-state="complete"]) .working-schema-panel {
+  min-height: 0;
+  background: #f8fafc;
+  box-shadow: none;
+}
+
+.learning-panel:has([data-cycle1-state="grain"]) .relation-preview,
+.learning-panel:has([data-cycle1-state="cardinality"]) .relation-preview,
+.learning-panel:has([data-cycle1-state="prediction"]) .relation-preview,
+.learning-panel:has([data-cycle1-state="concept"]) .relation-preview,
+.learning-panel:has([data-cycle1-state="application"]) .relation-preview,
+.learning-panel:has([data-cycle1-state="complete"]) .relation-preview {
+  min-height: 220px;
+}
+
+/* Reuse checkpoint: act on round_investment while keeping funding_round available as a quiet reference. */
+.cycle1-connection-target {
+  border-color: #8fb4ec;
+  box-shadow: 0 8px 22px rgba(47, 111, 237, .10);
+}
+
+.cycle1-connection-target .data-card-title {
+  border-bottom-color: #b8cdec;
+  background: #eaf2ff;
+}
+
+.cycle1-connection-reference {
+  opacity: .68;
+  box-shadow: none;
+}
+
+.cycle1-card-heading {
+  min-width: 0;
   display: flex;
-  align-items: center;
+  align-items: baseline;
   gap: 8px;
-  padding: 5px 7px 5px 10px;
-  border: 1px solid rgba(255,255,255,.28);
-  border-radius: 11px;
-  background: rgba(7, 23, 43, .18);
 }
 
-.course-controls-label {
-  color: #dce8f8;
-  font-size: 9px;
+.cycle1-card-heading > code {
+  min-width: 0;
+  overflow: hidden;
+  color: #223c61;
+  font-size: 12px;
   font-weight: 850;
-  letter-spacing: .075em;
+  text-overflow: ellipsis;
+}
+
+.cycle1-card-heading > span {
+  flex: 0 0 auto;
+  color: #66788c;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .035em;
   text-transform: uppercase;
 }
 
-.course-controls button {
-  border-color: rgba(255,255,255,.34);
-  background: rgba(255,255,255,.12);
-  color: #fff;
+/* The relationship joins the second field on round_investment to the first field on funding_round.
+   Shift the one-side card exactly as Stage 1 shifts news_source so the established connector meets both fields. */
+.relation-preview.relationship-visible .data-card[data-relation="funding_round"] {
+  transform: translateY(32px);
 }
 
-.solution-panel {
-  position: relative;
-  z-index: 4;
-  margin: 12px 20px 0;
-  border: 1px solid #d6cdfa;
-  border-radius: 12px;
-  background: #fbfaff;
-  box-shadow: 0 8px 22px rgba(73, 53, 142, .10);
+/* Prediction premises are one established-reasoning strip, not a stack of competing cards. */
+.cycle1-premises {
+  display: grid;
+  gap: 7px;
+  margin: 4px 0 14px;
+  padding: 10px 12px;
+  border-left: 3px solid #8aaee0;
+  border-radius: 8px;
+  background: #f7faff;
+}
+
+.cycle1-premises p {
+  display: grid;
+  grid-template-columns: 105px minmax(0, 1fr);
+  gap: 9px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.cycle1-premises span {
+  color: #728197;
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+}
+
+.cycle1-premises strong {
+  color: #294b70;
+  font-size: 11px;
+}
+
+.cycle1-established-answer {
+  margin: 0 0 12px;
+  padding: 7px 0 8px;
+  border-bottom: 1px solid #e3eaf2;
+  color: #526579;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.cycle1-established-answer span {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--green);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.local-assistance {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.assistance-button {
+  padding: 6px 9px;
+  border-color: #c8d7e6;
+  background: #fff;
+  color: #425d7b;
+  font-size: 10px;
+}
+
+.hint-text {
+  flex-basis: 100%;
+  padding: 9px 10px;
+  border-left: 3px solid #7b8ea5;
+  border-radius: 7px;
+  background: #f4f7fa;
+  color: #516174;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.assistance-review {
+  color: #66758a;
+  font-size: 10px;
+}
+
+/* The Concept Moment is the single dominant learning surface in this state. */
+.cycle1-concept {
+  margin-top: 2px;
+  padding: 14px 15px;
+}
+
+.cycle1-multiplication-visual {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  color: #574192;
+  font-size: 10px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.cycle1-multiplication-visual span {
+  min-width: 0;
+  flex: 1 1 0;
+  padding-top: 7px;
+  border-top: 1px solid #d9d0f6;
+  text-align: center;
+}
+
+.cycle1-multiplication-visual i {
+  color: var(--concept);
+  font-style: normal;
+  font-weight: 900;
+}
+
+.cycle1-case-fact {
+  display: grid;
+  gap: 3px;
+  margin: 3px 0 14px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--blue);
+  border-radius: 8px;
+  background: var(--blue-soft);
+}
+
+.cycle1-case-fact span {
+  color: var(--blue-dark);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.cycle1-case-fact strong {
+  color: #294b70;
+  font-size: 13px;
+}
+
+/* SQL authoring mirrors the Stage 1 composition: task + schema on the left, editor as the primary tool on the right. */
+@media (min-width: 1101px) {
+  .learning-panel.cycle1-sql-active .lesson-surface,
+  .learning-panel.cycle1-results-active .lesson-surface,
+  .learning-panel.cycle1-verification-active .lesson-surface {
+    grid-template-columns: minmax(390px, .82fr) minmax(500px, 1.18fr);
+    align-items: start;
+  }
+
+  .learning-panel.cycle1-sql-active .lesson-surface {
+    grid-template-areas:
+      "current lab"
+      "schema lab"
+      "completed lab";
+  }
+
+  .learning-panel.cycle1-results-active .lesson-surface,
+  .learning-panel.cycle1-verification-active .lesson-surface {
+    grid-template-areas:
+      "current result"
+      "schema result"
+      "completed action";
+  }
+
+  .learning-panel.cycle1-sql-active .reasoning-column,
+  .learning-panel.cycle1-sql-active .implementation-column,
+  .learning-panel.cycle1-results-active .reasoning-column,
+  .learning-panel.cycle1-results-active .implementation-column,
+  .learning-panel.cycle1-verification-active .reasoning-column,
+  .learning-panel.cycle1-verification-active .implementation-column {
+    display: contents;
+  }
+
+  .learning-panel.cycle1-sql-active .current-step,
+  .learning-panel.cycle1-results-active .current-step,
+  .learning-panel.cycle1-verification-active .current-step {
+    grid-area: current;
+    min-height: 0;
+  }
+
+  .learning-panel.cycle1-sql-active .working-schema-panel,
+  .learning-panel.cycle1-results-active .working-schema-panel,
+  .learning-panel.cycle1-verification-active .working-schema-panel {
+    grid-area: schema;
+    min-height: 0;
+    margin-top: 0;
+    background: #f8fafc;
+    box-shadow: none;
+  }
+
+  .learning-panel.cycle1-sql-active .completed-steps,
+  .learning-panel.cycle1-results-active .completed-steps,
+  .learning-panel.cycle1-verification-active .completed-steps {
+    grid-area: completed;
+    margin: 0;
+  }
+
+  .learning-panel.cycle1-sql-active .lab-workspace {
+    grid-area: lab;
+  }
+
+  .learning-panel.cycle1-results-active .lab-workspace,
+  .learning-panel.cycle1-verification-active .lab-workspace {
+    grid-area: result;
+  }
+
+  .learning-panel.cycle1-results-active .workspace-evidence-action,
+  .learning-panel.cycle1-verification-active .workspace-evidence-action {
+    grid-area: action;
+  }
+}
+
+.learning-panel.cycle1-sql-active .lab-workspace,
+.learning-panel.cycle1-results-active .lab-workspace,
+.learning-panel.cycle1-verification-active .lab-workspace {
+  border-color: #b9cce3;
+  box-shadow: 0 10px 28px rgba(27, 55, 92, .11);
+}
+
+.learning-panel.cycle1-sql-active .relation-preview,
+.learning-panel.cycle1-results-active .relation-preview,
+.learning-panel.cycle1-verification-active .relation-preview {
+  min-height: 205px;
+  grid-template-columns: minmax(120px, 1fr) 68px minmax(120px, 1fr);
+  gap: 8px;
+  padding: 25px 8px 10px;
+}
+
+.learning-panel.cycle1-sql-active .lab-workspace {
+  height: 430px;
+  min-height: 430px;
+  grid-template-rows: 42px minmax(150px, .82fr) minmax(190px, 1.18fr);
+}
+
+/* Once SQL has run, the actual result becomes the evidence surface and the inactive editor disappears. */
+.learning-panel.cycle1-results-active #editor,
+.learning-panel.cycle1-verification-active #editor {
+  display: none;
+}
+
+.learning-panel.cycle1-results-active .lab-workspace,
+.learning-panel.cycle1-verification-active .lab-workspace {
+  height: 320px;
+  min-height: 320px;
+  grid-template-rows: 42px minmax(270px, 1fr);
+}
+
+.learning-panel.cycle1-results-active .results-panel,
+.learning-panel.cycle1-verification-active .results-panel {
+  min-height: 0;
+  box-shadow: inset 0 3px 0 var(--blue);
+}
+
+.learning-panel.cycle1-results-active .current-step,
+.learning-panel.cycle1-verification-active .current-step {
+  box-shadow: none;
+}
+
+.cycle1-result-action,
+.cycle1-verification-action {
+  margin-top: 0;
+}
+
+.cycle1-result-handoff {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cycle1-result-handoff > span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.cycle1-result-handoff > strong {
+  color: #294b70;
+  font-size: 14px;
+}
+
+.cycle1-result-handoff .primary {
+  margin-left: auto;
+}
+
+.cycle1-slice {
+  display: grid;
+  gap: 8px;
+}
+
+.cycle1-slice-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cycle1-slice-heading span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+
+.cycle1-slice-heading strong {
+  color: #294b70;
+  font-size: 12px;
+}
+
+.cycle1-slice .result-content {
+  max-height: 190px;
+  overflow: auto;
+  border: 1px solid #dfe7f0;
+  border-radius: 9px;
+}
+
+.cycle1-verification-question {
+  display: grid;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid #e3eaf2;
+}
+
+.cycle1-verification-question h3 {
+  margin: 0;
+}
+
+.cycle1-completion {
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
+  padding: 12px 0 2px;
+  border-top: 1px solid #e3eaf2;
+  color: #44566c;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.cycle1-completion p { margin: 0; }
+.cycle1-completion strong { color: #4f389f; }
+
+/* SQL solution stays local to the editor and only exists while SQL authoring is active. */
+.sql-solution-panel {
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .solution-panel-heading {
@@ -82,365 +469,45 @@
   line-height: 1.5;
 }
 
-.cycle1-relation-preview {
-  grid-template-columns: minmax(180px, 1fr) minmax(180px, 1fr);
-  gap: 18px;
-  padding-top: 18px;
-}
-
-.cycle1-relation-preview.relationship-visible {
-  grid-template-columns: minmax(180px, 1fr) 92px minmax(180px, 1fr);
-  gap: 10px;
-  align-items: start;
-}
-
-.cycle1-schema-card .schema-role {
-  color: #67788c;
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: .035em;
-  text-transform: uppercase;
-}
-
-.cycle1-schema-card .working-column code {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.cycle1-schema-connector {
-  position: relative;
-  min-height: 150px;
-  margin-top: 0;
-}
-
-/* The SVG endpoints align with news_source.news_source_id (first field)
-   and news_article.news_source_id (second field). */
-.cycle1-connector-line {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 120px;
-  overflow: visible;
-}
-
-.cycle1-connector-line line {
-  stroke: var(--blue);
-  stroke-width: 3;
-  vector-effect: non-scaling-stroke;
-}
-
-.cycle1-connector-line circle {
-  fill: var(--blue);
-  vector-effect: non-scaling-stroke;
-}
-
-.cycle1-cardinality {
-  position: absolute;
-  top: 7px;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  width: 29px;
-  height: 23px;
-  border: 1px solid #91b5e8;
-  border-radius: 7px;
-  background: #edf4ff;
-  color: var(--blue-dark);
-  font-size: 11px;
-  font-weight: 950;
-}
-
-.cycle1-cardinality.one { top: 25px; left: 0; }
-.cycle1-cardinality.many { top: 57px; right: 0; }
-
-.cycle1-connector-caption {
-  position: absolute;
-  top: 104px;
-  left: 50%;
-  width: max-content;
-  max-width: 88px;
-  color: #67788c;
-  font-size: 9px;
-  text-align: center;
-  transform: translateX(-50%);
-}
-
-.prediction-workspace,
-.verification-workspace {
-  display: grid;
-  gap: 12px;
-}
-
-.prediction-header,
-.verification-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  color: #53647a;
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-}
-
-.prediction-current {
-  padding: 13px;
-  border: 1px solid #c9d9ec;
-  border-radius: 12px;
-  background: #f9fbfe;
-}
-
-.prediction-current h3,
-.verification-workspace h3 {
-  margin: 0 0 11px;
-  color: var(--ink);
-  font-size: 15px;
-  line-height: 1.4;
-}
-
-.micro-evidence-list,
-.verification-progress {
-  display: grid;
-  gap: 6px;
-}
-
-.micro-evidence,
-.verification-progress > div {
-  display: grid;
-  grid-template-columns: 24px minmax(0, 1fr);
-  gap: 8px;
-  align-items: start;
-  padding: 7px 9px;
-  border: 1px solid #dfe7f0;
-  border-radius: 8px;
-  background: #f7fafc;
-  color: #5c6d80;
-  font-size: 10px;
-}
-
-.micro-evidence span,
-.verification-progress span {
-  color: var(--green);
-  font-weight: 900;
-}
-
-.micro-evidence p,
-.verification-progress p { margin: 0; }
-
-.local-assistance {
-  display: flex;
-  gap: 7px;
-  flex-wrap: wrap;
-  margin-top: 10px;
-}
-
-.assistance-button {
-  padding: 6px 9px;
-  border-color: #c8d7e6;
-  background: #fff;
-  color: #425d7b;
-  font-size: 10px;
-}
-
-.hint-text {
-  flex-basis: 100%;
-  padding: 9px 10px;
-  border-left: 3px solid #7b8ea5;
-  border-radius: 7px;
-  background: #f4f7fa;
-  color: #516174;
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-.assistance-stamp,
-.assistance-review {
-  color: #66758a;
-  font-size: 10px;
-}
-
-.current-data-fact {
-  display: grid;
-  gap: 4px;
-  margin-bottom: 13px;
-  padding: 12px 13px;
-  border: 1px solid #cbd8e7;
-  border-radius: 11px;
-  background: #f7faff;
-}
-
-.current-data-fact > span {
-  color: var(--blue-dark);
-  font-size: 9px;
-  font-weight: 850;
-  letter-spacing: .075em;
-  text-transform: uppercase;
-}
-
-.current-data-fact strong {
-  color: #294b70;
-  font-size: 16px;
-}
-
-.current-data-fact p {
-  margin: 0;
-  color: #53647a;
-  font-size: 11px;
-}
-
-.fanout-concept {
-  margin: 0 0 13px;
-  padding: 14px;
-}
-
-.fanout-mechanism {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
-  gap: 7px;
-  align-items: center;
-  margin-top: 10px;
-}
-
-.fanout-mechanism span {
-  padding: 7px 8px;
-  border: 1px solid #ddd5fa;
-  border-radius: 8px;
-  background: #fff;
-  color: #574192;
-  font-size: 10px;
-  font-weight: 750;
-  text-align: center;
-}
-
-.fanout-mechanism i {
-  color: var(--concept);
-  font-style: normal;
-  font-weight: 900;
-}
-
-.committed-prediction {
-  display: grid;
-  gap: 8px;
-  padding: 11px 12px;
-  border: 1px solid #c9d9ec;
-  border-left: 4px solid var(--blue);
-  border-radius: 10px;
-  background: #f7faff;
-  color: #445b75;
-  font-size: 10px;
-}
-
-.committed-prediction > div {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.committed-prediction > div span {
-  color: var(--blue-dark);
-  font-size: 9px;
-  font-weight: 850;
-  letter-spacing: .055em;
-  text-transform: uppercase;
-}
-
-.committed-prediction ul {
-  margin: 0;
-  padding-left: 18px;
-  line-height: 1.45;
-}
-
-.committed-prediction small { color: #708096; }
-
-.cycle1-verification-action { margin-top: 0; }
-
-.completion-summary p {
-  margin: 12px 0 0;
-  color: #596a7e;
-  font-size: 12px;
-}
-
-/* SQL authoring: task, editor, and schema remain one coherent workspace. */
-.learning-panel.cycle1-sql-active .lesson-surface,
-.learning-panel.cycle1-results-active .lesson-surface,
-.learning-panel.cycle1-verification-active .lesson-surface {
-  grid-template-columns: minmax(330px, .78fr) minmax(500px, 1.22fr);
-  align-items: start;
-}
-
-.learning-panel.cycle1-sql-active .implementation-column,
-.learning-panel.cycle1-results-active .implementation-column,
-.learning-panel.cycle1-verification-active .implementation-column {
-  align-content: start;
-}
-
-.learning-panel.cycle1-sql-active .lab-workspace,
-.learning-panel.cycle1-results-active .lab-workspace,
-.learning-panel.cycle1-verification-active .lab-workspace {
-  order: 1;
-  border-color: #b9cce3;
-  box-shadow: 0 10px 28px rgba(27, 55, 92, .11);
-}
-
-.learning-panel.cycle1-sql-active .working-schema-panel,
-.learning-panel.cycle1-results-active .working-schema-panel,
-.learning-panel.cycle1-verification-active .working-schema-panel {
-  order: 3;
-  min-height: 0;
-  background: #f8fafc;
-  box-shadow: none;
-}
-
-.learning-panel.cycle1-sql-active .relation-preview,
-.learning-panel.cycle1-results-active .relation-preview,
-.learning-panel.cycle1-verification-active .relation-preview {
-  min-height: 220px;
-}
-
-.learning-panel.cycle1-sql-active .lab-workspace {
-  height: 445px;
-  min-height: 445px;
-  grid-template-rows: 42px minmax(185px, .95fr) minmax(185px, 1.05fr);
-}
-
-.learning-panel.cycle1-results-active #editor,
-.learning-panel.cycle1-verification-active #editor {
-  display: none;
-}
-
-.learning-panel.cycle1-results-active .lab-workspace,
-.learning-panel.cycle1-verification-active .lab-workspace {
-  height: 360px;
-  min-height: 360px;
-  grid-template-rows: 42px minmax(310px, 1fr);
-}
-
-.learning-panel.cycle1-results-active .results-panel,
-.learning-panel.cycle1-verification-active .results-panel {
-  min-height: 0;
-  box-shadow: inset 0 3px 0 var(--blue);
-}
-
-.learning-panel.cycle1-verification-active .workspace-evidence-action {
-  order: 2;
-}
-
-@media (max-width: 1040px) {
-  .course-shell-actions { justify-content: flex-start; }
-  .cycle1-relation-preview.relationship-visible {
-    grid-template-columns: minmax(150px, 1fr) 70px minmax(150px, 1fr);
-    overflow-x: auto;
-  }
+@media (max-width: 1100px) {
+  .learning-panel:has([data-cycle1-state="relations"]) .lesson-surface,
+  .learning-panel:has([data-cycle1-state="connection"]) .lesson-surface,
   .learning-panel.cycle1-sql-active .lesson-surface,
   .learning-panel.cycle1-results-active .lesson-surface,
-  .learning-panel.cycle1-verification-active .lesson-surface { grid-template-columns: 1fr; }
+  .learning-panel.cycle1-verification-active .lesson-surface {
+    grid-template-columns: 1fr;
+  }
+
+  .learning-panel.cycle1-sql-active .reasoning-column,
+  .learning-panel.cycle1-results-active .reasoning-column,
+  .learning-panel.cycle1-verification-active .reasoning-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .learning-panel.cycle1-sql-active .current-step,
+  .learning-panel.cycle1-results-active .current-step,
+  .learning-panel.cycle1-verification-active .current-step { order: 1; }
+
+  .learning-panel.cycle1-sql-active .completed-steps,
+  .learning-panel.cycle1-results-active .completed-steps,
+  .learning-panel.cycle1-verification-active .completed-steps { order: 2; margin: 12px 0 0; }
 }
 
 @media (max-width: 760px) {
-  .course-controls-label { display: none; }
-  .solution-panel { margin: 10px 12px 0; }
-  .fanout-mechanism { grid-template-columns: 1fr; }
-  .fanout-mechanism i { transform: rotate(90deg); text-align: center; }
+  .cycle1-premises p { grid-template-columns: 1fr; gap: 2px; }
+  .cycle1-multiplication-visual { flex-direction: column; align-items: stretch; }
+  .cycle1-multiplication-visual i { transform: rotate(90deg); text-align: center; }
+  .cycle1-result-handoff .primary { width: 100%; margin-left: 0; }
+  .cycle1-slice-heading { display: grid; }
+
+  .learning-panel.cycle1-sql-active .lab-workspace {
+    height: 540px;
+  }
+
+  .learning-panel.cycle1-results-active .lab-workspace,
+  .learning-panel.cycle1-verification-active .lab-workspace {
+    height: 420px;
+    min-height: 420px;
+  }
 }
