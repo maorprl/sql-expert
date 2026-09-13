@@ -82,6 +82,47 @@
   transform: translateY(32px);
 }
 
+.cycle1-connection-action {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 2px;
+  padding: 10px 11px 0;
+  border-top: 1px solid #e1e8f0;
+  color: #53677e;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.cycle1-connection-action code {
+  color: #2457ad;
+  font-weight: 750;
+}
+
+.cycle1-prediction-review {
+  display: grid;
+  gap: 10px;
+}
+
+.cycle1-prediction-review p {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+}
+
+.cycle1-prediction-review strong {
+  color: #44566c;
+  font-size: 11px;
+}
+
+.cycle1-prediction-review span {
+  color: #526276;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
 /* Prediction premises are one established-reasoning strip, not a stack of competing cards. */
 .cycle1-premises {
   display: grid;
@@ -495,6 +536,8 @@
 }
 
 @media (max-width: 760px) {
+  .cycle1-connection-action { align-items: stretch; flex-direction: column; }
+  .cycle1-connection-action .primary { align-self: flex-start; }
   .cycle1-premises p { grid-template-columns: 1fr; gap: 2px; }
   .cycle1-multiplication-visual { flex-direction: column; align-items: stretch; }
   .cycle1-multiplication-visual i { transform: rotate(90deg); text-align: center; }
