@@ -215,7 +215,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
     }
 
     if (item.id === 'sql' && next === 'finalGrain') {
-      interactionLifecycle.renderCurrent(stepShell('Inspect the result.', teacherVoice('Use the returned rows and columns as evidence before deciding whether the earlier prediction held.')));
+      interactionLifecycle.renderCurrent(stepShell('Inspect the result.', teacherVoice('Your activity has moved from authoring to evidence. Inspect Results: use the returned columns, row count, and article/source rows before deciding whether the earlier prediction held.')));
       renderWorkspaceAction(`
         ${item.feedback}
         ${teacherVoice('Compare what you see with the earlier prediction: 18 rows, one article per row.')}
@@ -338,7 +338,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       ['multiplied', 'More than 18 rows because some articles were duplicated by the JOIN'],
     ];
     const draft = state.drafts.finalGrain || '';
-    interactionLifecycle.renderCurrent(stepShell('Verify the result.', teacherVoice('Keep the actual result in view. Compare its row count and row meaning with the prediction you made before writing SQL.')));
+    interactionLifecycle.renderCurrent(stepShell('Verify the result.', teacherVoice('Keep Results in view. Compare its row count and row meaning with the 18-row, one-article-per-row prediction you made before writing SQL.')));
     const action = renderWorkspaceAction(`
       <div class="verification-prompt"><strong>Compare the result with your prediction</strong><span>Earlier prediction: 18 rows, one news article per row.</span></div>
       <h3>What does the result show?</h3>
@@ -396,11 +396,14 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
     learningEl.classList.toggle('join-teaching-active', state.current === 'joinTeaching');
     learningEl.classList.toggle('sql-implementation-active', sqlImplementation);
     learningEl.classList.toggle('results-evidence-active', resultsEvidence);
+    learningEl.dataset.stage1State = resultsEvidence ? 'results' : state.current;
 
     document.querySelector('.editor-header h2').textContent = baselineWorkspace ? 'Baseline measurement' : 'JOIN implementation';
     document.querySelectorAll('.lab-action').forEach((element) => {
       element.hidden = !visible || baselineEvidence || resultsEvidence;
     });
+    const runButton = document.getElementById('run-query');
+    runButton.disabled = runButton.hidden;
   }
 
   function renderJoinTeaching() {
@@ -440,7 +443,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       <div class="teaching-navigation">
         <button id="join-teaching-next" class="primary">${beat < 3 ? (beat === 1 ? 'Next: express the match in SQL' : 'Next: map the whole query') : 'Continue to SQL implementation'}</button>
       </div>
-    `));
+    `, teacherVoice('Your relational reasoning is established. Stay with the Working Schema as we turn that same relationship into SQL, one layer at a time.')));
 
     document.getElementById('join-teaching-next').addEventListener('click', () => {
       if (state.joinTeachingBeat < 3) {
@@ -464,7 +467,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
     }
 
     if (state.current === 'relations') {
-      interactionLifecycle.renderCurrent(stepShell('Which relations contain the information we need?', '<p class="step-copy">Add the relevant relations from the Live Schema to the Working Schema.</p><button id="continue-relations" class="primary" disabled>Check selection</button>' + feedbackMarkup()));
+      interactionLifecycle.renderCurrent(stepShell('Which relations contain the information we need?', '<p class="step-copy">In the Live Schema on the left, find the relevant relations and add them to the Working Schema beside this task.</p><button id="continue-relations" class="primary" disabled>Check selection</button>' + feedbackMarkup()));
       const relationButton = document.getElementById('continue-relations');
       relationButton.disabled = !state.selectedRelations.length;
       relationButton.addEventListener('click', () => {
@@ -491,7 +494,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       });
     } else if (state.current === 'cardinality') {
       choiceQuestion({
-        intro: teacherVoice('We know how an article points to its source. Now look at that relationship from both directions.'),
+        intro: teacherVoice('In the Working Schema, the key connection you found is now visible. Use it to look at the relationship from both directions.'),
         prompt: 'Which statement best describes what can happen across the two relations?',
         options: [
           ['correct', 'One source can publish many articles; each article has one publishing source.'],
@@ -514,7 +517,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       });
     } else if (state.current === 'baselineRun') {
       if (!state.baselineExecuted) {
-        interactionLifecycle.renderCurrent(stepShell('How many article rows do we start with?', `${teacherVoice('We established that one result row should represent one article. Before we add source information, establish the starting point.')}<div class="measurement-note"><code>COUNT(*)</code> counts the rows in <code>news_article</code>. Run the prepared measurement beside this step; you do not need to write SQL yet.</div>${feedbackMarkup()}`));
+        interactionLifecycle.renderCurrent(stepShell('How many article rows do we start with?', `${teacherVoice('You established the Grain: one result row should represent one article. Now move to the SQL Workspace beside this task and measure the starting article rows.')}<div class="measurement-note"><code>COUNT(*)</code> counts the rows in <code>news_article</code>. Run the prepared measurement in the SQL Workspace; you do not need to write SQL yet. Then inspect Results directly below it.</div>${feedbackMarkup()}`));
       } else {
         renderBaselineInterpretation();
       }
@@ -532,7 +535,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
     } else if (state.current === 'joinTeaching') {
       renderJoinTeaching();
     } else if (state.current === 'sql') {
-      interactionLifecycle.renderCurrent(stepShell('Now translate the relationship into SQL.', `<p class="step-copy">Write the query you just mapped from the business request and the established relationship.</p>
+      interactionLifecycle.renderCurrent(stepShell('Now translate the relationship into SQL.', `<p class="step-copy">Move to the SQL Workspace and write the query you just mapped from the business request and the established relationship in the Working Schema.</p>
         <details class="optional-scaffold desired-output"><summary>Show desired output</summary><div class="optional-scaffold-body"><div class="desired-output-grid"><code>title</code><code>source_name</code></div><p>Use <code>news_source.name AS source_name</code> for the publishing-source column.</p></div></details>
         <details class="optional-scaffold sql-structure"><summary>Show SQL structure</summary><div class="optional-scaffold-body"><pre>SELECT ...
 FROM news_article
