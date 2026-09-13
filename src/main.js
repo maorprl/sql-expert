@@ -301,7 +301,9 @@ function resetEncounterDom() {
 }
 
 function resetLearningPanelState() {
-  document.querySelector('.learning-panel').classList.remove(
+  const learningPanel = document.querySelector('.learning-panel');
+  delete learningPanel.dataset.stage1State;
+  learningPanel.classList.remove(
     'sql-active',
     'baseline-workspace-active',
     'baseline-evidence-active',
