@@ -2,15 +2,21 @@
 
 **Epic:** Course Build  
 **Status:** WORKING  
-**Role:** Central work-management document
+**Role:** Program A / Learning Product work-management record
 
 This document manages the work of designing, implementing, and validating the course.
 
 It is not a pedagogical or course-design source of truth. Pedagogical, visual, Stage, schema, and data decisions remain in their dedicated source documents.
 
+The **current learner-encounter production execution state, current phase, and next authorized action are maintained only in**:
+
+`learner-encounter-production-execution.md`
+
 Execution and agent-coordination rules are maintained separately in:
 
 `agent-assisted-work-protocol.md`
+
+Sections below that retain labels such as `Current Position`, `Active Plan`, `Next Planning Gate`, or `Immediate Next Action` preserve course-planning state from the period in which they were recorded. They do not override the current Cycle 1 execution mapping.
 
 ## 1. Project Goal
 
