@@ -5,6 +5,7 @@
 **Authority:**
 - `course-design/production/cycle-1/encounter-design-row-multiplication-2026-09-13.md`
 - `course-design/production/cycle-1/owner-directed-targeted-revision-and-waiver-2026-09-13.md`
+- `course-design/production/cycle-1/owner-directed-targeted-revision-structural-reuse-2026-09-13.md`
 - `course-design/production/cycle-1/authority-clarification-show-solution-sql-workspace-2026-09-13.md`
 - `course-design/course-controls.md`
 
@@ -24,23 +25,50 @@ No broader reload/session persistence policy, Back semantics, Retry semantics, o
 
 `Show solution` is no longer represented as a persistent topbar/course-shell action.
 
-For the Cycle 1 row-multiplication encounter it is attached to the SQL editor controls and is visible only while the active state is SQL authoring. It is absent during Grain, Cardinality, prediction, concrete application, result-only, verification, and completion states.
+For the Cycle 1 row-multiplication encounter it is attached to the SQL editor controls and is visible only while the active state is SQL authoring. It is absent during relation reuse, connection reuse, Grain, Cardinality, prediction, concrete application, result-only, verification, and completion states.
 
 Revealing the SQL solution remains assistance only. It does not populate the editor, execute SQL, complete evidence, or bypass later verification.
 
+## Structural reuse correction from runtime test drive
+
+The targeted 2026-09-13 runtime test drive exposed a design defect in the encounter entry state: both relevant relations and the FK → PK connection were supplied before learner action.
+
+The current targeted revision supersedes that pre-resolved entry state. The governing rule is:
+
+> **Previously learned does not mean pre-resolved.**
+
+Relation identification and direct connection reading were already introduced in Stage 1, so they are reused without being retaught. They are nevertheless learner actions in this encounter rather than work performed by the system in advance.
+
+The runtime now starts the row-multiplication encounter with an empty Working Schema. The learner must:
+
+1. select `funding_round` and `round_investment` from Live Schema;
+2. identify `round_investment.funding_round_id` as the participation field that connects to the funding round;
+3. only then receive the visual PK/FK connection;
+4. establish requested participation Grain;
+5. interpret Cardinality from the relationship they established;
+6. only after the Cardinality judgment receive the compact `1 : M` marking.
+
+The relation-selection and connection actions are **reuse checkpoints**, not new Concept Moments and not the accepted target capability's core evidence.
+
+The previous Cardinality teacher voice that referred to "Reuse Cardinality from Stage 1" is superseded by learner-facing guidance grounded in the current relationship:
+
+> You found how a participation connects to a funding round. Now consider what that relationship allows in each direction.
+
 ## Implemented Cycle 1 learner flow
 
-The Cycle 1 encounter uses the accepted `funding_round → round_investment` case and the revised evidence sequence:
+The Cycle 1 encounter now uses the accepted `funding_round → round_investment` case in this sequence:
 
-1. establish participation Grain;
-2. interpret funding-round → participation Cardinality;
-3. qualitatively predict that one funding round can occupy several result rows when several participation records must remain represented;
-4. predict that round-level context can repeat across those distinct participation rows;
-5. introduce the JOIN row-multiplication Concept Moment only after those predictions;
-6. apply the prediction to a three-participation concrete case as supporting evidence;
-7. author the six-field direct INNER JOIN;
-8. inspect actual result evidence for `funding_round_id = 1003`;
-9. verify that the four rows are distinct participation-grain rows with repeated round context.
+1. identify and select the relevant relations as a reuse checkpoint;
+2. identify the direct participation → funding-round connection field as a reuse checkpoint;
+3. establish participation Grain;
+4. interpret funding-round → participation Cardinality;
+5. qualitatively predict that one funding round can occupy several result rows when several participation records must remain represented;
+6. predict that round-level context can repeat across those distinct participation rows;
+7. introduce the JOIN row-multiplication Concept Moment only after those predictions;
+8. apply the prediction to a three-participation concrete case as supporting evidence;
+9. author the six-field direct INNER JOIN;
+10. inspect actual result evidence for `funding_round_id = 1003`;
+11. verify that the four rows are distinct participation-grain rows with repeated round context.
 
 The implementation deliberately does not introduce `fan-out`, aggregation, LEFT JOIN, amount reconciliation, investor-name resolution, or a new global solution-control semantic.
 
@@ -50,7 +78,9 @@ The implementation deliberately does not introduce `fan-out`, aggregation, LEFT 
 - `src/stage1.js` — existing Stage 1 implementation plus a narrow `refresh` export used only to re-render preserved Stage 1 state after chapter switching.
 - `src/main.js` — encounter orchestrator, chapter selector, per-encounter editor/result surface retention, and shared runtime routing.
 - `src/course-navigation.css` — course-shell chapter navigation and SQL-local `Show solution` placement styling.
-- `src/cycle1.js` — separate Cycle 1 `funding_round → round_investment` encounter and revised evidence logic.
+- `src/cycle1.js` — thin Cycle 1 entry/reuse layer that requires relation selection and connection identification before delegating to the previously implemented row-multiplication flow.
+- `src/cycle1-core.js` — byte-for-byte copy of the previously active `src/cycle1.js` row-multiplication implementation, preserved as the post-reuse core encounter logic.
+- `src/cycle1-entry.css` — local entry/reuse styling plus enforcement that `Show solution` is hidden once SQL authoring is no longer active.
 
 The same editor, SQLite runtime, schema viewer, autocomplete, results table, interaction lifecycle, visual infrastructure, and database are reused rather than rebuilt for the second encounter.
 
@@ -66,17 +96,21 @@ The final 1003 evidence slice is derived from the learner's actual accepted resu
 
 ## Evidence safeguards
 
-- SQL remains unavailable in the Cycle 1 encounter until the qualitative prediction, repetition interpretation, and supporting concrete application are resolved.
+- Relation identification and direct-connection reading are learner-performed reuse actions but are not promoted to the core target evidence.
+- PK/FK is not visually resolved until the learner identifies the connecting participation field.
+- `1 : M` is not shown until the learner completes the Cardinality judgment.
+- SQL remains unavailable until the qualitative prediction, repetition interpretation, and supporting concrete application are resolved.
 - The numerical `3 → 3` application occurs only after the qualitative core prediction and is not treated as sufficient core evidence by itself.
-- `Show solution` is unavailable before SQL authoring; when used during SQL authoring it is recorded as assistance provenance and does not auto-fill SQL, run SQL, or complete evidence.
+- `Show solution` is unavailable before SQL authoring and hidden again in result-only / verification states; when used during SQL authoring it remains assistance and does not auto-fill SQL, run SQL, or complete evidence.
 - Local hints remain governed by the encounter's existing assistance logic.
 - Successful SQL execution reports the row count but does not perform the final relational interpretation.
 
 ## Validation performed in this implementation pass
 
-- The Stage 1 change was diff-checked against the immediately prior runtime and consists only of exposing the existing internal `render` function as `refresh`; no Stage 1 pedagogical content was changed.
+- The previously active row-multiplication implementation was preserved exactly as `src/cycle1-core.js`; its blob SHA remains `84993811c8b959089d48d1500a02933f0769d577`.
+- The new `src/cycle1.js` entry wrapper was reconstructed locally from the exact repository blob and passed `node --check`; its checked Git blob SHA is `4ebbfece746af3d18e5122c65e8c052510f8d3f5`.
+- The Stage 1 learning sequence was not changed by this structural-reuse correction.
 - The runtime still derives the expected six-field Cycle 1 rows from the loaded SQLite database and compares the learner result semantically, independent of row order.
-- The new navigation is implemented outside task cards and is not completion-gated.
-- The SQL-local solution control is created inside the SQL Workspace controls rather than the topbar and is shown only by the Cycle 1 SQL-authoring state styling.
-- A full production build could not be executed in the available container because outbound network/DNS access was unavailable for cloning/installing repository dependencies. This is an environment limitation, not a successful runtime validation claim.
-- No formal Pedagogy, UX, reconciliation, or pre-build audit rerun was performed; those steps were explicitly waived by the Course Authority Owner for this targeted correction.
+- The chapter navigation remains outside task cards and is not completion-gated.
+- A full browser/runtime test is still required; this correction was produced specifically so the targeted test drive can restart from the Row multiplication entry state.
+- No formal Pedagogy, UX, reconciliation, or pre-build audit rerun was performed for this targeted owner-directed correction.
