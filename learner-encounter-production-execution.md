@@ -83,7 +83,9 @@ The following canonical work has been completed and durably recorded:
 
 Subsequent runtime test driving and course reconstruction exposed a process-level pedagogy-review defect: prior review could validate the target capability/evidence while failing to account explicitly for every learner step, continuity scaffold, and reasoning/tool handoff in the complete learner journey.
 
-Rule-Based Acceptance is therefore paused for the affected encounter until corrective pedagogy review is performed under the current step-review protocol and any required design/runtime changes are resolved.
+A corrective step-level Pedagogy Review has now been completed under `learner-encounter-pedagogy-step-review-protocol.md` and returned **REVISION REQUIRED**.
+
+Rule-Based Acceptance remains paused for the affected encounter until the required design reconciliation, implementation changes, and downstream validation are resolved.
 
 Historical corrective Case Validation artifacts remain preserved as process history. Their substantive candidate sets, weighting, and conclusions are **not execution state** and must not be copied into this file.
 
@@ -111,37 +113,33 @@ Current records include:
 - `post-build-ux-review.md`
 - `case-selection-delta-review.md`
 - `case-validation-operationalized-rerun.md`
+- `corrective-step-level-pedagogy-review-2026-09-13.md`
 - `provenance.md`
 
 The existence of a record in this list does not make its substantive decision current authority for a newly reopened decision. Current authority and authorized inputs are determined by the canonical process, the current pedagogy step-review amendment, and the current action below.
 
 ## 7. Current execution override
 
-A targeted process defect has been identified in the full Pedagogy Review mechanism: the existing process strongly validates core capability evidence and scaffolding-to-evidence calibration, but does not require an explicit disposition for every learner step and transition or an explicit functional comparison with the relevant prerequisite encounter.
+A targeted process defect was identified in the full Pedagogy Review mechanism: the existing process strongly validated core capability evidence and scaffolding-to-evidence calibration, but did not require an explicit disposition for every learner step and transition or an explicit functional comparison with the relevant prerequisite encounter.
 
 The current process amendment `learner-encounter-pedagogy-step-review-protocol.md` closes that control gap for the present corrective work and for subsequent full Pedagogy Reviews while the amendment remains current.
 
+The corrective review completed under that amendment found material learner-journey defects and issued **REVISION REQUIRED**.
+
 ### Current next authorized action
 
-**Independent Pedagogy Reviewer — corrective step-by-step review of the current Funding participation learner encounter under the current process plus `learner-encounter-pedagogy-step-review-protocol.md`.**
+**Encounter Architect — targeted reconciliation and learner-journey design revision for the current Funding participation encounter.**
 
-The reviewer must:
+The Architect must:
 
-- read `learner-encounter-production-process.md`, this execution file, and `learner-encounter-pedagogy-step-review-protocol.md` first;
-- verify that the corrective Pedagogy Review is authorized;
-- read the current course authority and the current implemented learner encounter needed to review the actual learner journey;
-- use the most relevant validated prerequisite encounter as the continuity comparator without treating it as a template to clone;
-- construct the mandatory Step Ledger for the entire learner sequence;
-- explicitly classify first-exposure teaching, continuity scaffolds, evidence scaffolds, and redundant re-teaching where prior encounter support is materially changed;
-- review the opening business situation, reasoning progression, measurement/baseline decision where materially relevant, reasoning→SQL handoff, SQL assistance, SQL→result evidence continuity, and final verification;
-- distinguish SOURCE-DERIVED requirements from PROFESSIONAL / PROCESS recommendations;
-- produce a durable corrective pedagogy-review artifact under `course-design/production/cycle-1/`;
-- stop short of directly rewriting the encounter implementation.
+- read `learner-encounter-production-process.md`, this execution file, `learner-encounter-pedagogy-step-review-protocol.md`, and `course-design/production/cycle-1/corrective-step-level-pedagogy-review-2026-09-13.md` first;
+- disposition every corrective-review finding explicitly;
+- preserve the accepted capability and case unless a finding cannot be resolved without reopening them;
+- revise only the learner-journey surfaces needed to resolve accepted findings;
+- distinguish first-exposure teaching from continuity scaffolding and avoid simply cloning the prerequisite encounter;
+- define the revised opening business situation, measurement/baseline decision, reasoning→SQL bridge, optional SQL assistance, SQL→result evidence continuity, and final verification context with sufficient implementation authority;
+- preserve the existing valid row-multiplication evidence sequence unless a documented accepted finding requires a change;
+- produce a durable reconciliation / targeted design-revision artifact under `course-design/production/cycle-1/`;
+- stop before implementation until the revised design has a clear implementation boundary.
 
-### Independence / contamination rule for this corrective review
-
-The reviewer must form its step-level pedagogical judgment from current authority, current implementation, and the relevant prerequisite learner experience. It must not treat prior review verdicts as evidence that a current step is sound merely because those reviews passed.
-
-Prior review artifacts may be read for traceability after the reviewer has independently inspected the current learner sequence, but their conclusions must not substitute for the required Step Ledger.
-
-Rule-Based Acceptance remains paused until the corrective review, required design reconciliation, implementation changes, and downstream validation required by `learner-encounter-production-process.md` are resolved.
+Rule-Based Acceptance remains paused until the design revision, implementation changes, and downstream validation required by `learner-encounter-production-process.md` are resolved.
