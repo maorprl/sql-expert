@@ -1,6 +1,5 @@
-/* Row-multiplication encounter: local visual choreography built from the Stage 1 calibration language. */
+/* Funding-participation encounter-only visual states. Shared learner, SQL, result, scaffold, and solution roles live in styles.css. */
 
-/* Pre-SQL states are identified by a marker inside the current task so no Cycle 1 class leaks into Stage 1. */
 .cycle1-state-marker { display: none; }
 
 .learning-panel:has([data-cycle1-state="relations"]) .lesson-surface,
@@ -70,14 +69,13 @@
 .cycle1-card-heading > span {
   flex: 0 0 auto;
   color: #66788c;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: .035em;
   text-transform: uppercase;
 }
 
-/* The relationship joins the second field on round_investment to the first field on funding_round.
-   Shift the one-side card exactly as Stage 1 shifts news_source so the established connector meets both fields. */
+/* Align funding_round.funding_round_id with round_investment.funding_round_id on the shared relationship connector. */
 .relation-preview.relationship-visible .data-card[data-relation="funding_round"] {
   transform: translateY(32px);
 }
@@ -129,7 +127,6 @@
   font-style: normal;
 }
 
-/* Prediction premises are one established-reasoning strip, not a stack of competing cards. */
 .cycle1-premises {
   display: grid;
   gap: 7px;
@@ -150,7 +147,7 @@
 
 .cycle1-premises span {
   color: #728197;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 850;
   letter-spacing: .045em;
   text-transform: uppercase;
@@ -174,7 +171,7 @@
   display: block;
   margin-bottom: 3px;
   color: var(--green);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 850;
   letter-spacing: .055em;
   text-transform: uppercase;
@@ -211,7 +208,6 @@
   font-size: 10px;
 }
 
-/* The Concept Moment is the single dominant learning surface in this state. */
 .cycle1-concept {
   margin-top: 2px;
   padding: 14px 15px;
@@ -254,7 +250,7 @@
 
 .cycle1-case-fact span {
   color: var(--blue-dark);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 850;
   letter-spacing: .055em;
   text-transform: uppercase;
@@ -263,124 +259,6 @@
 .cycle1-case-fact strong {
   color: #294b70;
   font-size: 13px;
-}
-
-/* SQL authoring and result inspection use the same composition as Stage 1. */
-@media (min-width: 1101px) {
-  .learning-panel.cycle1-sql-active .lesson-surface,
-  .learning-panel.cycle1-results-active .lesson-surface,
-  .learning-panel.cycle1-verification-active .lesson-surface {
-    grid-template-columns: minmax(390px, .82fr) minmax(500px, 1.18fr);
-    align-items: start;
-  }
-
-  .learning-panel.cycle1-sql-active .lesson-surface {
-    grid-template-areas:
-      "current lab"
-      "schema lab"
-      "completed lab";
-  }
-
-  .learning-panel.cycle1-results-active .lesson-surface,
-  .learning-panel.cycle1-verification-active .lesson-surface {
-    grid-template-areas:
-      "current result"
-      "schema result"
-      "completed action";
-  }
-
-  .learning-panel.cycle1-sql-active .reasoning-column,
-  .learning-panel.cycle1-sql-active .implementation-column,
-  .learning-panel.cycle1-results-active .reasoning-column,
-  .learning-panel.cycle1-results-active .implementation-column,
-  .learning-panel.cycle1-verification-active .reasoning-column,
-  .learning-panel.cycle1-verification-active .implementation-column {
-    display: contents;
-  }
-
-  .learning-panel.cycle1-sql-active .current-step,
-  .learning-panel.cycle1-results-active .current-step,
-  .learning-panel.cycle1-verification-active .current-step {
-    grid-area: current;
-    min-height: 0;
-  }
-
-  .learning-panel.cycle1-sql-active .working-schema-panel,
-  .learning-panel.cycle1-results-active .working-schema-panel,
-  .learning-panel.cycle1-verification-active .working-schema-panel {
-    grid-area: schema;
-    min-height: 0;
-    margin-top: 0;
-    background: #f8fafc;
-    box-shadow: none;
-  }
-
-  .learning-panel.cycle1-sql-active .completed-steps,
-  .learning-panel.cycle1-results-active .completed-steps,
-  .learning-panel.cycle1-verification-active .completed-steps {
-    grid-area: completed;
-    margin: 0;
-  }
-
-  .learning-panel.cycle1-sql-active .lab-workspace {
-    grid-area: lab;
-  }
-
-  .learning-panel.cycle1-results-active .lab-workspace,
-  .learning-panel.cycle1-verification-active .lab-workspace {
-    grid-area: result;
-  }
-
-  .learning-panel.cycle1-results-active .workspace-evidence-action,
-  .learning-panel.cycle1-verification-active .workspace-evidence-action {
-    grid-area: action;
-  }
-}
-
-.learning-panel.cycle1-sql-active .lab-workspace,
-.learning-panel.cycle1-results-active .lab-workspace,
-.learning-panel.cycle1-verification-active .lab-workspace {
-  border-color: #b9cce3;
-  box-shadow: 0 10px 28px rgba(27, 55, 92, .11);
-}
-
-.learning-panel.cycle1-sql-active .relation-preview,
-.learning-panel.cycle1-results-active .relation-preview,
-.learning-panel.cycle1-verification-active .relation-preview {
-  min-height: 205px;
-  grid-template-columns: minmax(120px, 1fr) 68px minmax(120px, 1fr);
-  gap: 8px;
-  padding: 25px 8px 10px;
-}
-
-.learning-panel.cycle1-sql-active .lab-workspace {
-  height: 430px;
-  min-height: 430px;
-  grid-template-rows: 42px minmax(150px, .82fr) minmax(190px, 1.18fr);
-}
-
-/* Once SQL has run, the actual result becomes the evidence surface and the inactive editor disappears. */
-.learning-panel.cycle1-results-active #editor,
-.learning-panel.cycle1-verification-active #editor {
-  display: none;
-}
-
-.learning-panel.cycle1-results-active .lab-workspace,
-.learning-panel.cycle1-verification-active .lab-workspace {
-  height: 320px;
-  min-height: 320px;
-  grid-template-rows: 42px minmax(270px, 1fr);
-}
-
-.learning-panel.cycle1-results-active .results-panel,
-.learning-panel.cycle1-verification-active .results-panel {
-  min-height: 0;
-  box-shadow: inset 0 3px 0 var(--blue);
-}
-
-.learning-panel.cycle1-results-active .current-step,
-.learning-panel.cycle1-verification-active .current-step {
-  box-shadow: none;
 }
 
 .cycle1-result-action,
@@ -426,7 +304,7 @@
 
 .cycle1-slice-heading span {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 850;
   letter-spacing: .055em;
   text-transform: uppercase;
@@ -469,73 +347,11 @@
 .cycle1-completion p { margin: 0; }
 .cycle1-completion strong { color: #4f389f; }
 
-/* SQL solution is local assistance inside the editor, not a competing workspace. */
-.sql-solution-panel { margin: 0; }
-
-.solution-panel-heading {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 8px 11px;
-  border-bottom: 1px solid #e3dcfb;
-  color: #574192;
-  font-size: 10px;
-  font-weight: 850;
-  letter-spacing: .055em;
-  text-transform: uppercase;
-}
-
-.solution-panel-heading button {
-  padding: 4px 7px;
-  border-color: #cfc3f7;
-  color: #574192;
-  font-size: 10px;
-}
-
-.solution-panel-body {
-  padding: 10px 12px 12px;
-  color: #4f466b;
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-.solution-panel-body p { margin: 8px 0 0; }
-.solution-panel-body pre {
-  max-height: 205px;
-  margin: 8px 0 0;
-  padding: 9px 10px;
-  overflow: auto;
-  border-radius: 8px;
-  background: #20283a;
-  color: #eef4ff;
-  font-size: 10px;
-  line-height: 1.48;
-}
-
 @media (max-width: 1100px) {
   .learning-panel:has([data-cycle1-state="relations"]) .lesson-surface,
-  .learning-panel:has([data-cycle1-state="connection"]) .lesson-surface,
-  .learning-panel.cycle1-sql-active .lesson-surface,
-  .learning-panel.cycle1-results-active .lesson-surface,
-  .learning-panel.cycle1-verification-active .lesson-surface {
+  .learning-panel:has([data-cycle1-state="connection"]) .lesson-surface {
     grid-template-columns: 1fr;
   }
-
-  .learning-panel.cycle1-sql-active .reasoning-column,
-  .learning-panel.cycle1-results-active .reasoning-column,
-  .learning-panel.cycle1-verification-active .reasoning-column {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .learning-panel.cycle1-sql-active .current-step,
-  .learning-panel.cycle1-results-active .current-step,
-  .learning-panel.cycle1-verification-active .current-step { order: 1; }
-
-  .learning-panel.cycle1-sql-active .completed-steps,
-  .learning-panel.cycle1-results-active .completed-steps,
-  .learning-panel.cycle1-verification-active .completed-steps { order: 2; margin: 12px 0 0; }
 }
 
 @media (max-width: 760px) {
@@ -546,14 +362,4 @@
   .cycle1-multiplication-visual i { transform: rotate(90deg); text-align: center; }
   .cycle1-result-handoff .primary { width: 100%; margin-left: 0; }
   .cycle1-slice-heading { display: grid; }
-
-  .learning-panel.cycle1-sql-active .lab-workspace {
-    height: 540px;
-  }
-
-  .learning-panel.cycle1-results-active .lab-workspace,
-  .learning-panel.cycle1-verification-active .lab-workspace {
-    height: 420px;
-    min-height: 420px;
-  }
 }
