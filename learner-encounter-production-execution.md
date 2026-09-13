@@ -36,12 +36,13 @@ Those belong in the role's durable artifact and, where useful, in provenance. Th
 For learner-encounter production:
 
 - `learner-encounter-production-process.md` defines the **workflow, functional roles, required gates, independence requirements, durable artifacts, change-impact rules, and acceptance logic**.
+- `learner-encounter-pedagogy-step-review-protocol.md` is the **current mandatory process amendment for full pre-build and post-build Pedagogy Review**, adding step-level learner-journey, continuity, and handoff checks without establishing course content.
 - `agent-assisted-work-protocol.md` defines **worker/tool selection, handoff mechanics, implementation-agent usage, branch coordination, remote/local synchronization, and general execution efficiency**.
 - this file records the **current execution state and authorization only**.
 
 The documents are complementary, not competing sources.
 
-Where `learner-encounter-production-process.md` requires a specific independent review, gate, or role separation, that requirement remains mandatory regardless of the temporary execution mechanism.
+Where `learner-encounter-production-process.md` or the current pedagogy step-review amendment requires a specific independent review, gate, or role separation, that requirement remains mandatory regardless of the temporary execution mechanism.
 
 ## 3. Temporary Cycle 1 execution topology
 
@@ -80,9 +81,11 @@ The following canonical work has been completed and durably recorded:
 11. Independent Post-Build Pedagogy Review.
 12. Independent Post-Build Learning Experience / UX Review.
 
-Rule-Based Acceptance is currently paused because Case Validation was reopened after the production process was strengthened.
+Subsequent runtime test driving and course reconstruction exposed a process-level pedagogy-review defect: prior review could validate the target capability/evidence while failing to account explicitly for every learner step, continuity scaffold, and reasoning/tool handoff in the complete learner journey.
 
-Corrective Case Validation work has already produced historical durable delta artifacts. Those artifacts remain preserved as process history, but their substantive candidate sets, weighting, and conclusions are **not execution state** and must not be copied into this file.
+Rule-Based Acceptance is therefore paused for the affected encounter until corrective pedagogy review is performed under the current step-review protocol and any required design/runtime changes are resolved.
+
+Historical corrective Case Validation artifacts remain preserved as process history. Their substantive candidate sets, weighting, and conclusions are **not execution state** and must not be copied into this file.
 
 ## 6. Durable Cycle 1 record locations
 
@@ -110,35 +113,35 @@ Current records include:
 - `case-validation-operationalized-rerun.md`
 - `provenance.md`
 
-The existence of a record in this list does not make its substantive decision current authority for a newly reopened decision. Current authority and authorized inputs are determined by the canonical process and the current action below.
+The existence of a record in this list does not make its substantive decision current authority for a newly reopened decision. Current authority and authorized inputs are determined by the canonical process, the current pedagogy step-review amendment, and the current action below.
 
 ## 7. Current execution override
 
-After the most recent Case Validation rerun, `learner-encounter-production-process.md` was strengthened again to require that analytical authenticity extend to the **additional information need and relational move themselves**, not only to a plausible starting task or report.
+A targeted process defect has been identified in the full Pedagogy Review mechanism: the existing process strongly validates core capability evidence and scaffolding-to-evidence calibration, but does not require an explicit disposition for every learner step and transition or an explicit functional comparison with the relevant prerequisite encounter.
 
-Because the most recent Case Validation rerun predates that strengthened requirement, its Case Validation conclusion has not been evaluated under the current standard.
+The current process amendment `learner-encounter-pedagogy-step-review-protocol.md` closes that control gap for the present corrective work and for subsequent full Pedagogy Reviews while the amendment remains current.
 
 ### Current next authorized action
 
-**Encounter Architect — targeted Cycle 1 Case Validation delta rerun under the current strengthened analytical-authenticity standard**
+**Independent Pedagogy Reviewer — corrective step-by-step review of the current Funding participation learner encounter under the current process plus `learner-encounter-pedagogy-step-review-protocol.md`.**
 
-The Architect must:
+The reviewer must:
 
-- read the current `learner-encounter-production-process.md` and this execution file first;
-- verify that this targeted rerun is authorized;
-- treat the existing target capability as presumptively unchanged unless current permitted evidence gives a material reason to reopen it;
-- perform Case Validation afresh under the current process requirements;
-- independently identify materially plausible current-schema candidates from the current schema/data and permitted current course authority;
-- apply the current comparative, consequence-grounding, analytical-authenticity, and trade-off requirements;
-- preserve existing Cycle 1 work wherever the resulting Case Validation decision does not materially affect it;
-- produce a new durable delta artifact and minimal provenance/execution updates.
+- read `learner-encounter-production-process.md`, this execution file, and `learner-encounter-pedagogy-step-review-protocol.md` first;
+- verify that the corrective Pedagogy Review is authorized;
+- read the current course authority and the current implemented learner encounter needed to review the actual learner journey;
+- use the most relevant validated prerequisite encounter as the continuity comparator without treating it as a template to clone;
+- construct the mandatory Step Ledger for the entire learner sequence;
+- explicitly classify first-exposure teaching, continuity scaffolds, evidence scaffolds, and redundant re-teaching where prior encounter support is materially changed;
+- review the opening business situation, reasoning progression, measurement/baseline decision where materially relevant, reasoning→SQL handoff, SQL assistance, SQL→result evidence continuity, and final verification;
+- distinguish SOURCE-DERIVED requirements from PROFESSIONAL / PROCESS recommendations;
+- produce a durable corrective pedagogy-review artifact under `course-design/production/cycle-1/`;
+- stop short of directly rewriting the encounter implementation.
 
-### Independence / contamination rule for this rerun
+### Independence / contamination rule for this corrective review
 
-Before independent candidate discovery and initial comparative judgment are complete, the Architect must **not** read historical case-selection delta artifacts or provenance entries that disclose their candidate sets, selected cases, or comparative conclusions.
+The reviewer must form its step-level pedagogical judgment from current authority, current implementation, and the relevant prerequisite learner experience. It must not treat prior review verdicts as evidence that a current step is sound merely because those reviews passed.
 
-Historical case-selection artifacts may be inspected only afterward for traceability and change-impact comparison.
+Prior review artifacts may be read for traceability after the reviewer has independently inspected the current learner sequence, but their conclusions must not substitute for the required Step Ledger.
 
-The mandatory pre-discovery input set must therefore remain limited to current process/execution authority plus the current course/schema/data sources needed to discover and evaluate candidates independently.
-
-Rule-Based Acceptance remains paused until this rerun and the downstream review required by `learner-encounter-production-process.md` are resolved.
+Rule-Based Acceptance remains paused until the corrective review, required design reconciliation, implementation changes, and downstream validation required by `learner-encounter-production-process.md` are resolved.
