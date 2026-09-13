@@ -20,8 +20,8 @@ Chapter navigation belongs to the **course shell**, not inside a reasoning card,
 
 For the currently implemented course surface, the navigation exposes:
 
-- the existing validated **Stage 1** `news_article → news_source` encounter;
-- the current **Row multiplication** `funding_round → round_investment` encounter.
+- the existing validated `news_article → news_source` encounter;
+- the current `funding_round → round_investment` row-multiplication encounter.
 
 The navigation must:
 
@@ -34,6 +34,16 @@ The navigation must:
 The chapter selector is navigation, not a forward-progression reward and not part of the current task's evidence.
 
 The exact visual treatment may vary, but it should read as a compact, stable course-level chapter control rather than as another button inside the active exercise.
+
+### Navigation naming consistency
+
+Learner-facing chapter labels should use one naming scheme across the selector.
+
+A stage/order identifier such as `Stage 1` should not be mixed beside a descriptive encounter title such as `Row multiplication` as though they were equivalent kinds of labels. Because the broader Stage structure beyond the established current Stage 1 remains OPEN, navigation must not infer or invent a `Stage 2` label merely to create symmetry.
+
+For the current course surface, descriptive encounter titles should be used consistently for learner-facing chapter selection. If an established Stage number or sequence identifier is also shown, it should appear as separate metadata rather than replace the descriptive title for only some encounters.
+
+The exact descriptive titles remain an implementation/content decision, but the naming role must be consistent.
 
 ### OPEN — chapter-state persistence
 
@@ -71,6 +81,8 @@ It is local assistance for a concrete SQL authoring task and belongs inside the 
 - remain absent during earlier reasoning, prediction, relationship, Grain, Cardinality, or other pre-SQL states;
 - disappear when the SQL Workspace is no longer the active SQL-authoring surface, including result-only and verification states.
 
+Availability follows the task condition above, not the identity of a particular Stage or encounter. If multiple encounters each contain an active SQL authoring task with a concrete solution, the learner should receive the same control role and a consistent placement/treatment unless an explicit encounter-level authority establishes a real pedagogical exception.
+
 The learner should therefore not see a persistent `Show solution` control while reasoning toward the SQL task.
 
 This decision supersedes the earlier course-level placement and availability rule that treated `Show solution` as a global control available throughout the learner journey.
@@ -106,7 +118,23 @@ The following are not yet determined:
 
 These questions must not be silently resolved in implementation.
 
-## 4. Back — established need, semantics still OPEN
+## 4. Desired Output — local SQL-authoring scaffold
+
+`Desired Output` is optional local assistance for a SQL authoring task. Its role is to make the required output contract inspectable without revealing the complete SQL solution.
+
+Where used, `Desired Output` may expose information such as:
+
+- required output columns;
+- required aliases or learner-facing column names;
+- the concrete result fields the authored SQL must return.
+
+It should not silently become a full worked query, specify the entire relational implementation, or duplicate `Show solution`.
+
+`Desired Output` is not mandatory in every SQL task. Its availability should be determined by whether the task benefits from separating the output contract from the learner's relational/SQL reasoning. When equivalent SQL authoring tasks across encounters use this scaffold for the same role, its placement and treatment should remain consistent.
+
+`SQL Structure`, where used, remains a separate scaffold: it can support query shape or syntax structure without supplying the complete answer.
+
+## 5. Back — established need, semantics still OPEN
 
 The course requires a clear **Back** control owned by the course experience. The learner should not have to rely on browser history or on opening Completed Steps merely to revisit the previous point in the learning journey.
 
@@ -122,7 +150,7 @@ The exact semantics of returning to an earlier state are not yet established. In
 
 Those behaviors remain OPEN until explicitly resolved.
 
-## 5. Retry / Redo — established need, reset semantics still OPEN
+## 6. Retry / Redo — established need, reset semantics still OPEN
 
 The course requires a clear learner action for trying an activity again. Review of a completed step is not a substitute for Retry / Redo.
 
@@ -147,7 +175,7 @@ Implementation must not silently decide the fate of:
 - Concept Moment visibility;
 - downstream completed work.
 
-## 6. Relationship to Stage-local interactions
+## 7. Relationship to Stage-local interactions
 
 Course-shell controls should support movement through the course without replacing pedagogically meaningful local actions.
 
@@ -155,7 +183,7 @@ A Stage may still define its own local controls where those controls are part of
 
 Chapter navigation, Back, and Retry / Redo should not be independently redesigned inside each Stage.
 
-## 7. Visual role
+## 8. Visual role
 
 Course-shell navigation should be easy to find without becoming the primary visual focus of the lesson.
 
@@ -165,7 +193,7 @@ Its visual identity should make clear that it is persistent navigation rather th
 
 The current learner task, evidence, or authoring surface should remain visually dominant.
 
-## 8. Out of scope / still OPEN
+## 9. Out of scope / still OPEN
 
 This document does **not** currently establish:
 
