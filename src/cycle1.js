@@ -64,15 +64,26 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
       : '';
   }
 
+  function relationRole(name) {
+    if (name === 'funding_round') return 'Round context';
+    if (name === 'round_investment') return 'Participation records';
+    return '';
+  }
+
   function renderSelectedRelation(name) {
     const relation = relationByName(name);
     if (!relation) return '';
     const selectingConnection = state.phase === 'connection' && name === 'round_investment';
+    const connectionReference = state.phase === 'connection' && name === 'funding_round';
+    const role = state.phase === 'connection' ? relationRole(name) : '';
 
     return `
-      <article class="data-card cycle1-setup-card" data-relation="${escapeHtml(name)}">
+      <article class="data-card cycle1-setup-card ${selectingConnection ? 'cycle1-connection-target' : ''} ${connectionReference ? 'cycle1-connection-reference' : ''}" data-relation="${escapeHtml(name)}">
         <div class="data-card-title">
-          <code>${escapeHtml(name)}</code>
+          <div class="cycle1-card-title-copy">
+            <code>${escapeHtml(name)}</code>
+            ${role ? `<span class="cycle1-relation-role">${escapeHtml(role)}</span>` : ''}
+          </div>
           ${state.phase === 'relations' ? `<button type="button" class="remove-relation" data-remove-relation="${escapeHtml(name)}">Remove</button>` : ''}
         </div>
         <ul class="working-columns">
@@ -88,19 +99,55 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
       </article>`;
   }
 
+  function checkConnection() {
+    if (!state.selectedColumn) return;
+    if (state.selectedColumn !== 'funding_round_id') {
+      state.localFeedback = 'Look for the participation field whose value identifies the funding round that participation belongs to.';
+      render();
+      return;
+    }
+    recordSetup(
+      'connection',
+      'Which column in round_investment tells you which funding round a participation belongs to?',
+      'round_investment.funding_round_id',
+    );
+    state.phase = 'core';
+    state.localFeedback = '';
+    startCoreEncounter();
+    onSelectionChange();
+  }
+
   function renderWorkingSchema() {
-    relationEl.className = 'relation-preview cycle1-setup-relation-preview';
+    const connectionPhase = state.phase === 'connection';
+    relationEl.className = `relation-preview cycle1-setup-relation-preview${connectionPhase ? ' cycle1-connection-preview' : ''}`;
     workingStatusEl.hidden = false;
     workingStatusEl.textContent = state.phase === 'relations'
       ? 'Build it from the live schema'
-      : 'Use the selected relations to identify the connecting field';
+      : 'Choose the connecting field in the highlighted participation relation';
 
     if (!state.selectedRelations.length) {
       relationEl.innerHTML = '<div class="working-empty">Choose relevant relations from the live schema.</div>';
       return;
     }
 
-    relationEl.innerHTML = state.selectedRelations.map(renderSelectedRelation).join('');
+    const displayRelations = connectionPhase
+      ? ['round_investment', 'funding_round'].filter((name) => state.selectedRelations.includes(name))
+      : state.selectedRelations;
+
+    relationEl.innerHTML = `
+      ${displayRelations.map(renderSelectedRelation).join('')}
+      ${connectionPhase ? `
+        <div class="cycle1-connection-action">
+          <span class="cycle1-selection-status">
+            ${state.selectedColumn
+              ? `Selected: <code>round_investment.${escapeHtml(state.selectedColumn)}</code>`
+              : 'Select one column in the highlighted relation.'}
+          </span>
+          <button id="cycle1-check-connection" class="primary" type="button" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>
+        </div>
+      ` : ''}
+    `;
+
     relationEl.querySelectorAll('[data-remove-relation]').forEach((button) => {
       button.addEventListener('click', () => removeRelation(button.dataset.removeRelation));
     });
@@ -111,6 +158,7 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
         render();
       });
     });
+    document.getElementById('cycle1-check-connection')?.addEventListener('click', checkConnection);
   }
 
   function exactRequiredRelationsSelected() {
@@ -174,29 +222,15 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
   function renderConnectionStep() {
     interactionLifecycle.renderCurrent(`
       <div class="step-kicker">${SETUP_LABELS.connection}</div>
-      ${teacherVoice('Use the participation relation to find the field that tells you which funding round each participation belongs to.')}
-      <h2 class="prompt">Which column in <code>round_investment</code> connects each participation to its funding round?</h2>
-      <p class="step-copy">Select the column directly in the Working Schema.</p>
-      <button id="cycle1-check-connection" class="primary" type="button" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>
+      ${teacherVoice('You have the two relations. Now work from the participation record: which field tells you the funding round it belongs to?')}
+      <div class="cycle1-relation-meaning" aria-label="Selected relation roles">
+        <p><code>funding_round</code><span>one funding round and its round-level context</span></p>
+        <p><code>round_investment</code><span>one recorded investor participation</span></p>
+      </div>
+      <h2 class="prompt">In <code>round_investment</code>, which column tells you which funding round a participation belongs to?</h2>
+      <p class="step-copy">Select the column in the highlighted relation. Check the selection beside the schema.</p>
       ${feedbackMarkup()}
     `);
-
-    document.getElementById('cycle1-check-connection').addEventListener('click', () => {
-      if (state.selectedColumn !== 'funding_round_id') {
-        state.localFeedback = 'Look for the participation field whose value identifies the funding round that participation belongs to.';
-        render();
-        return;
-      }
-      recordSetup(
-        'connection',
-        'Which column in round_investment connects each participation to its funding round?',
-        'round_investment.funding_round_id',
-      );
-      state.phase = 'core';
-      state.localFeedback = '';
-      startCoreEncounter();
-      onSelectionChange();
-    });
   }
 
   function improveCoreLearnerCopy() {
@@ -220,6 +254,7 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
   }
 
   function startCoreEncounter() {
+    learningEl.classList.remove('cycle1-relations-active', 'cycle1-connection-active');
     if (!core) {
       core = createCycle1Core({
         editor,
@@ -240,7 +275,14 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
     }
 
     labEl.hidden = true;
-    learningEl.classList.remove('cycle1-sql-active', 'cycle1-results-active', 'cycle1-verification-active');
+    learningEl.classList.remove(
+      'cycle1-sql-active',
+      'cycle1-results-active',
+      'cycle1-verification-active',
+      'cycle1-relations-active',
+      'cycle1-connection-active',
+    );
+    learningEl.classList.add(state.phase === 'connection' ? 'cycle1-connection-active' : 'cycle1-relations-active');
     document.getElementById('workspace-evidence-action')?.remove();
     renderWorkingSchema();
     renderSetupCompleted();
