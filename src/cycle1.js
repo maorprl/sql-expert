@@ -205,9 +205,8 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
     const prompt = currentStep?.querySelector('.prompt')?.textContent?.trim();
     if (prompt === 'Which statement matches the relationship?') {
       const guidance = currentStep.querySelector('.teacher-voice p');
-      if (guidance) {
-        guidance.textContent = 'You found how a participation connects to a funding round. Now consider what that relationship allows in each direction.';
-      }
+      const desired = 'You found how a participation connects to a funding round. Now consider what that relationship allows in each direction.';
+      if (guidance && guidance.textContent !== desired) guidance.textContent = desired;
     }
   }
 
