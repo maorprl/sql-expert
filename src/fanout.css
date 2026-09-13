@@ -1,20 +1,20 @@
 /* Stage 3-only layout. Shared learner, SQL, result, and concept styles remain in styles.css. */
 
-.relation-preview.fanout-layout {
+.relation-preview:has(.data-card[data-relation="funding_round"]):has(.data-card[data-relation="company"]):has(.data-card[data-relation="company_founder"]) {
   grid-template-columns: minmax(125px, 1fr) 48px minmax(125px, 1fr) 48px minmax(125px, 1fr);
   gap: 7px;
 }
 
-.relation-preview.fanout-layout .data-card[data-relation="company"],
-.relation-preview.fanout-layout .data-card[data-relation="company_founder"] {
+.relation-preview:has(.data-card[data-relation="funding_round"]):has(.data-card[data-relation="company"]):has(.data-card[data-relation="company_founder"]) .data-card[data-relation="company"],
+.relation-preview:has(.data-card[data-relation="funding_round"]):has(.data-card[data-relation="company"]):has(.data-card[data-relation="company_founder"]) .data-card[data-relation="company_founder"] {
   transform: translateY(32px);
 }
 
-.relation-preview.fanout-layout .schema-connector {
+.relation-preview:has(.data-card[data-relation="funding_round"]):has(.data-card[data-relation="company"]):has(.data-card[data-relation="company_founder"]) .schema-connector {
   min-width: 0;
 }
 
-.relation-preview.fanout-layout .fanout-connector-placeholder {
+.relation-preview:has(.data-card[data-relation="funding_round"]):has(.data-card[data-relation="company"]):has(.data-card[data-relation="company_founder"]) .fanout-connector-placeholder {
   min-height: 130px;
 }
 
@@ -93,17 +93,17 @@
 }
 
 @media (max-width: 1180px) {
-  .relation-preview.fanout-layout {
+  .relation-preview:has(.data-card[data-relation="funding_round"]):has(.data-card[data-relation="company"]):has(.data-card[data-relation="company_founder"]) {
     grid-template-columns: 1fr;
   }
 
-  .relation-preview.fanout-layout .data-card[data-relation="company"],
-  .relation-preview.fanout-layout .data-card[data-relation="company_founder"] {
+  .relation-preview:has(.data-card[data-relation="funding_round"]):has(.data-card[data-relation="company"]):has(.data-card[data-relation="company_founder"]) .data-card[data-relation="company"],
+  .relation-preview:has(.data-card[data-relation="funding_round"]):has(.data-card[data-relation="company"]):has(.data-card[data-relation="company_founder"]) .data-card[data-relation="company_founder"] {
     transform: none;
   }
 
-  .relation-preview.fanout-layout .schema-connector,
-  .relation-preview.fanout-layout .fanout-connector-placeholder {
+  .relation-preview:has(.data-card[data-relation="funding_round"]):has(.data-card[data-relation="company"]):has(.data-card[data-relation="company_founder"]) .schema-connector,
+  .relation-preview:has(.data-card[data-relation="funding_round"]):has(.data-card[data-relation="company"]):has(.data-card[data-relation="company_founder"]) .fanout-connector-placeholder {
     display: none;
   }
 }
