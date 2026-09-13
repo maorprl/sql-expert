@@ -1,0 +1,89 @@
+/* Shared learner-experience visual contract. */
+
+.business-request { padding: 10px 14px; border-left-width: 3px; box-shadow: none; }
+.business-request h2 { margin-top: 3px; font-size: 13px; line-height: 1.45; }
+.current-step { min-height: 0; padding: 20px 22px 23px; border-color: #bfd1e6; box-shadow: 0 10px 26px rgba(27,55,92,.09), inset 4px 0 0 var(--blue); }
+.prompt { max-width: 34ch; margin: 7px 0 14px; font-size: clamp(19px,1.75vw,23px); line-height: 1.28; }
+.step-copy { max-width: 58ch; }
+
+.completed-steps { display: grid; gap: 5px; margin-top: 12px; margin-bottom: 0; }
+.completed-step { margin: 0; border-color: #e5ebf2; border-radius: 8px; background: transparent; }
+.completed-step summary { min-height: 34px; padding: 7px 9px; color: #718094; font-size: 10px; }
+.completed-step[open] { border-color: #dbe4ee; background: #fbfcfe; box-shadow: none; }
+.completed-answer { max-width: 38%; color: #4d8468; font-size: 10px; }
+.completed-body { padding: 3px 12px 11px 25px; color: #607084; font-size: 10px; }
+.review-choices label { background: #fff; }
+
+.teacher-voice { margin: 9px 0 15px; padding: 10px 12px 11px; border: 0; border-left: 3px solid #6f98cf; border-radius: 7px; background: #f3f7fc; box-shadow: none; color: #365571; }
+.teacher-voice-label { margin-bottom: 4px; padding: 0; border-radius: 0; background: transparent; color: #416f9f; font-size: 8px; letter-spacing: .09em; }
+.teacher-voice p { max-width: 62ch; color: #365571; font-size: 12px; font-weight: 570; line-height: 1.52; }
+
+.working-schema-panel { border-color: #d6e0ea; box-shadow: none; }
+.working-schema-header { margin-bottom: 10px; }
+.working-schema-header h2 { font-size: 16px; }
+.working-schema-header > span { color: #748398; font-size: 10px; }
+.learning-panel.sql-implementation-active .working-schema-panel,
+.learning-panel.results-evidence-active .working-schema-panel,
+.learning-panel.cycle1-sql-active .working-schema-panel,
+.learning-panel.cycle1-results-active .working-schema-panel,
+.learning-panel.cycle1-verification-active .working-schema-panel { border-color: #e0e7ef; background: #f8fafc; box-shadow: none; }
+.learning-panel.sql-implementation-active .working-schema-header,
+.learning-panel.results-evidence-active .working-schema-header,
+.learning-panel.cycle1-sql-active .working-schema-header,
+.learning-panel.cycle1-results-active .working-schema-header,
+.learning-panel.cycle1-verification-active .working-schema-header { opacity: .82; }
+
+@media (min-width:1101px) {
+  .learning-panel.sql-implementation-active .lesson-surface,
+  .learning-panel.cycle1-sql-active .lesson-surface { grid-template-columns: minmax(410px,.94fr) minmax(520px,1.06fr); column-gap: 20px; align-items: start; }
+  .learning-panel.results-evidence-active .lesson-surface,
+  .learning-panel.cycle1-results-active .lesson-surface,
+  .learning-panel.cycle1-verification-active .lesson-surface { grid-template-columns: minmax(360px,.78fr) minmax(560px,1.22fr); column-gap: 20px; align-items: start; }
+}
+
+.learning-panel.sql-implementation-active .lab-workspace,
+.learning-panel.cycle1-sql-active .lab-workspace { border-color: #b8cbe2; border-radius: 13px; box-shadow: 0 10px 28px rgba(27,55,92,.11); }
+.editor-header { min-height: 48px; gap: 10px; padding: 7px 10px 7px 12px; background: #f8fafc; }
+.editor-header h2 { min-width: 0; margin: 0; color: #1f3551; font-size: 13px; line-height: 1.25; }
+.editor-actions { min-width: 0; margin-left: auto; gap: 6px; flex-wrap: nowrap; }
+#editor-note { max-width: 155px; overflow: hidden; color: #748398; font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.editor-actions .sql-solution-button,
+.editor-actions #run-query { flex: 0 0 auto; min-height: 31px; padding: 6px 9px; border-radius: 8px; font-size: 10px; line-height: 1.2; white-space: nowrap; }
+.editor-actions .sql-solution-button { border-color: #cbd8e7; background: #fff; color: #48627d; font-weight: 760; }
+.editor-actions .sql-solution-button:hover { border-color: #aebfd2; background: #f7f9fc; }
+.editor-actions #run-query { padding-inline: 11px; }
+.editor-actions #run-query kbd { display: none; }
+.results-header { min-height: 38px; padding: 8px 11px; }
+
+.learning-panel .lab-workspace > .sql-solution-panel { position: absolute; z-index: 8; top: 58px; right: 12px; left: auto; width: min(430px,calc(100% - 24px)); max-height: calc(100% - 72px); margin: 0; overflow: auto; border: 1px solid #d9d1f3; border-radius: 10px; background: #fbfaff; box-shadow: 0 12px 28px rgba(42,54,78,.16); }
+.solution-panel-heading { position: sticky; top: 0; z-index: 1; min-height: 36px; padding: 7px 9px; border-bottom: 1px solid #e5def8; background: #f7f4ff; color: #5b4791; }
+.solution-panel-heading button { min-height: 27px; padding: 4px 7px; background: #fff; font-size: 9px; }
+.solution-panel-body { padding: 11px 12px 13px; color: #4f466b; font-size: 11px; line-height: 1.5; }
+.solution-panel-body pre { max-height: 240px; margin: 8px 0 0; padding: 10px 11px; overflow: auto; border-radius: 8px; background: #20283a; color: #eef4ff; font-size: 10px; line-height: 1.48; }
+.solution-panel-body p { margin: 8px 0 0; }
+
+.learning-panel.results-evidence-active .lab-workspace,
+.learning-panel.cycle1-results-active .lab-workspace,
+.learning-panel.cycle1-verification-active .lab-workspace { border-color: #b8cbe2; box-shadow: 0 10px 28px rgba(27,55,92,.10); }
+.learning-panel.results-evidence-active .results-panel,
+.learning-panel.cycle1-results-active .results-panel,
+.learning-panel.cycle1-verification-active .results-panel { box-shadow: inset 0 3px 0 var(--blue); }
+.workspace-evidence-action { border-color: #d5e0ec; border-radius: 11px; box-shadow: none; }
+.concept-callout, .cycle1-concept { border-color: #d8d0f4; background: #f6f3ff; box-shadow: none; }
+.success-feedback { border-color: #c5e3d4; background: #f0f8f4; }
+
+@media (max-width:1100px) {
+  .learning-panel.sql-implementation-active .lesson-surface,
+  .learning-panel.results-evidence-active .lesson-surface,
+  .learning-panel.cycle1-sql-active .lesson-surface,
+  .learning-panel.cycle1-results-active .lesson-surface,
+  .learning-panel.cycle1-verification-active .lesson-surface { grid-template-columns: 1fr; }
+}
+@media (max-width:760px) {
+  .current-step { padding: 17px; }
+  .prompt { max-width: none; }
+  .editor-header { align-items: flex-start; flex-wrap: wrap; }
+  .editor-actions { width: 100%; margin-left: 0; }
+  #editor-note { margin-right: auto; }
+  .learning-panel .lab-workspace > .sql-solution-panel { top: 92px; right: 8px; width: calc(100% - 16px); max-height: calc(100% - 104px); }
+}
