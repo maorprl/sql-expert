@@ -56,14 +56,21 @@
   position: relative;
 }
 
+/* Keep revealed SQL assistance local and secondary to the active editor. */
 .lab-workspace > .sql-solution-panel {
   position: absolute;
   z-index: 8;
-  top: 48px;
+  top: 54px;
   right: 12px;
-  left: 12px;
+  left: auto;
+  width: min(420px, calc(100% - 24px));
+  max-height: min(300px, calc(100% - 68px));
   margin: 0;
-  box-shadow: 0 12px 28px rgba(73, 53, 142, .16);
+  overflow: auto;
+  border: 1px solid #d9d1f3;
+  border-radius: 10px;
+  background: #fbfaff;
+  box-shadow: 0 12px 28px rgba(42, 54, 78, .16);
 }
 
 @media (max-width: 760px) {
@@ -78,5 +85,12 @@
 
   .course-chapter-button {
     padding: 7px 9px;
+  }
+
+  .lab-workspace > .sql-solution-panel {
+    top: 90px;
+    right: 8px;
+    width: calc(100% - 16px);
+    max-height: min(280px, calc(100% - 102px));
   }
 }
