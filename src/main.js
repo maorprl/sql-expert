@@ -8,6 +8,7 @@ import './styles.css';
 import './course-navigation.css';
 import { createMediaCoverage } from './media-coverage.js';
 import { createFundingParticipation } from './funding-participation.js';
+import { createInnerJoinUnmatched } from './inner-join-unmatched.js';
 import { createInteractionLifecycle } from './interaction-lifecycle.js';
 
 const SOURCE_FILES = [
@@ -25,8 +26,9 @@ let activeEncounter;
 let activeEncounterName = 'media-coverage';
 let mediaCoverageEncounter;
 let fundingParticipationEncounter;
-const encounterEditorText = { 'media-coverage': '', 'funding-participation': '' };
-const encounterResults = { 'media-coverage': null, 'funding-participation': null };
+let innerJoinUnmatchedEncounter;
+const encounterEditorText = { 'media-coverage': '', 'funding-participation': '', 'inner-join-unmatched': '' };
+const encounterResults = { 'media-coverage': null, 'funding-participation': null, 'inner-join-unmatched': null };
 
 const el = (id) => document.getElementById(id);
 const status = el('db-status');
@@ -271,6 +273,7 @@ function ensureChapterNavigation() {
     <div class="course-chapter-list">
       <button type="button" class="course-chapter-button" data-chapter="media-coverage">Media coverage</button>
       <button type="button" class="course-chapter-button" data-chapter="funding-participation">Funding participation</button>
+      <button type="button" class="course-chapter-button" data-chapter="inner-join-unmatched">INNER JOIN · 0 matches</button>
     </div>`;
   document.querySelector('.topbar').insertAdjacentElement('afterend', nav);
   nav.querySelectorAll('[data-chapter]').forEach((button) => button.addEventListener('click', () => activateEncounter(button.dataset.chapter)));
@@ -297,21 +300,7 @@ function resetEncounterDom() {
   hideSqlSolutionSurface();
 }
 
-function applyMediaCoverageShell() {
-  document.title = 'SQL Lab · Media coverage';
-  const stageLabel = document.querySelector('.stage-label');
-  stageLabel.hidden = true;
-  el('business-request-title').textContent = 'The research team is reviewing media coverage and needs article details together with information about the sources that published them.';
-  document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
-  document.querySelector('.learning-panel').classList.remove('cycle1-sql-active', 'cycle1-results-active', 'cycle1-verification-active');
-}
-
-function applyFundingParticipationShell() {
-  document.title = 'SQL Lab · Funding participation';
-  document.querySelector('.stage-label').hidden = true;
-  el('business-request-title').textContent = 'The investment team is reviewing participation in funding rounds and needs funding-round context together with recorded investor-participation details.';
-  document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
-  el('working-schema-status').textContent = 'Build it from the Live Schema';
+function resetLearningPanelState() {
   document.querySelector('.learning-panel').classList.remove(
     'sql-active',
     'baseline-workspace-active',
@@ -320,7 +309,37 @@ function applyFundingParticipationShell() {
     'join-teaching-active',
     'sql-implementation-active',
     'results-evidence-active',
+    'cycle1-sql-active',
+    'cycle1-results-active',
+    'cycle1-verification-active',
   );
+}
+
+function applyMediaCoverageShell() {
+  document.title = 'SQL Lab · Media coverage';
+  const stageLabel = document.querySelector('.stage-label');
+  stageLabel.hidden = true;
+  el('business-request-title').textContent = 'The research team is reviewing media coverage and needs article details together with information about the sources that published them.';
+  document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
+  resetLearningPanelState();
+}
+
+function applyFundingParticipationShell() {
+  document.title = 'SQL Lab · Funding participation';
+  document.querySelector('.stage-label').hidden = true;
+  el('business-request-title').textContent = 'The investment team is reviewing participation in funding rounds and needs funding-round context together with recorded investor-participation details.';
+  document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
+  el('working-schema-status').textContent = 'Build it from the Live Schema';
+  resetLearningPanelState();
+}
+
+function applyInnerJoinUnmatchedShell() {
+  document.title = 'SQL Lab · INNER JOIN unmatched rows';
+  document.querySelector('.stage-label').hidden = true;
+  el('business-request-title').textContent = 'The investment team wants a table of companies that have recorded funding rounds, with each company\'s status alongside the round type and announced date.';
+  document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
+  el('working-schema-status').textContent = 'Build it from the Live Schema';
+  resetLearningPanelState();
 }
 
 function activateMediaCoverageEncounter() {
@@ -365,9 +384,36 @@ function activateFundingParticipationEncounter() {
   el('stage-scroll').scrollTop = 0;
 }
 
+function activateInnerJoinUnmatchedEncounter() {
+  if (activeEncounterName === 'inner-join-unmatched') return;
+  saveEncounterSurface();
+  activeEncounterName = 'inner-join-unmatched';
+  clearError();
+  resetEncounterDom();
+  applyInnerJoinUnmatchedShell();
+  editor.setValue(encounterEditorText['inner-join-unmatched'] || '', -1);
+  restoreEncounterResults('inner-join-unmatched');
+
+  if (!innerJoinUnmatchedEncounter) {
+    innerJoinUnmatchedEncounter = createInnerJoinUnmatched({
+      editor,
+      getDatabase: () => db,
+      getSchema: () => schema,
+      onSelectionChange: renderSchema,
+      interactionLifecycle,
+    });
+  }
+  activeEncounter = innerJoinUnmatchedEncounter;
+  activeEncounter.refresh?.();
+  renderSchema();
+  updateChapterNavigation();
+  el('stage-scroll').scrollTop = 0;
+}
+
 function activateEncounter(name) {
   if (name === 'media-coverage') activateMediaCoverageEncounter();
   else if (name === 'funding-participation') activateFundingParticipationEncounter();
+  else if (name === 'inner-join-unmatched') activateInnerJoinUnmatchedEncounter();
 }
 
 el('run-query').addEventListener('click', runCurrentQuery);
