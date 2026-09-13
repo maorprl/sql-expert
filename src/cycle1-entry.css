@@ -1,0 +1,31 @@
+/* Entry/reuse layer for the row-multiplication encounter. */
+
+.cycle1-setup-relation-preview {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+.cycle1-setup-card .working-column {
+  width: 100%;
+}
+
+.cycle1-setup-card button.working-column {
+  text-align: left;
+}
+
+/* Show solution belongs to active SQL authoring only. */
+.learning-panel.cycle1-results-active #show-solution,
+.learning-panel.cycle1-verification-active #show-solution {
+  display: none;
+}
+
+.sql-solution-button {
+  white-space: nowrap;
+}
+
+.sql-solution-panel {
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
