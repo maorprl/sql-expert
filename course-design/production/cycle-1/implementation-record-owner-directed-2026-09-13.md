@@ -108,7 +108,7 @@ The final 1003 evidence slice is derived from the learner's actual accepted resu
 ## Validation performed in this implementation pass
 
 - The previously active row-multiplication implementation was preserved exactly as `src/cycle1-core.js`; its blob SHA remains `84993811c8b959089d48d1500a02933f0769d577`.
-- The new `src/cycle1.js` entry wrapper was reconstructed locally from the exact repository blob and passed `node --check`; its checked Git blob SHA is `4ebbfece746af3d18e5122c65e8c052510f8d3f5`.
+- The final `src/cycle1.js` entry wrapper was reconstructed locally from the exact repository blob and passed `node --check`; its checked Git blob SHA is `d00a64021718da83e17e0ad252ce70550dbef2f0`.
 - The Stage 1 learning sequence was not changed by this structural-reuse correction.
 - The runtime still derives the expected six-field Cycle 1 rows from the loaded SQLite database and compares the learner result semantically, independent of row order.
 - The chapter navigation remains outside task cards and is not completion-gated.
