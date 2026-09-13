@@ -219,8 +219,8 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
   function workingSchemaCopy() {
     if (state.current === 'relations' && !state.pendingAdvance) return ['Reasoning surface', 'Build it from the Live Schema'];
     if (state.current === 'connection' && !state.pendingAdvance) return ['Current action', 'Select the field in round_investment'];
-    if (relationshipLevel() === 1) return ['Working reference', 'Relationship established · Cardinality still to decide'];
-    if (relationshipLevel() === 2) return ['Working reference', 'Established relationship · many participations to one round'];
+    if (relationshipLevel() === 1) return ['Working reference', 'round_investment.funding_round_id → funding_round.funding_round_id'];
+    if (relationshipLevel() === 2) return ['Working reference', 'One funding round can relate to many participations'];
     return ['Working reference', 'Selected relations'];
   }
 
@@ -242,6 +242,14 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
     if (showRelationship && cards.length >= 2) {
       cards.splice(1, 0, '<div class="schema-connector" aria-label="round_investment.funding_round_id references funding_round.funding_round_id"><span class="connector-line"></span></div>');
     }
+    if (state.current === 'connection' && !state.pendingAdvance) {
+      cards.push(`
+        <div class="cycle1-connection-action">
+          <span>${state.selectedColumn ? `Selected: <code>round_investment.${escapeHtml(state.selectedColumn)}</code>` : 'Select one column in round_investment.'}</span>
+          <button id="check-connection" class="primary" type="button" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>
+        </div>
+      `);
+    }
     relationEl.innerHTML = cards.join('');
 
     relationEl.querySelectorAll('[data-remove-relation]').forEach((button) => button.addEventListener('click', () => removeRelation(button.dataset.removeRelation)));
@@ -250,13 +258,14 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
       state.localFeedback = '';
       render();
     }));
+    document.getElementById('check-connection')?.addEventListener('click', checkConnection);
   }
 
   function renderCompleted() {
     interactionLifecycle.renderCompleted(state.completed.map((item) => ({
       id: item.id,
       summaryHtml: `<span class="complete-mark">✓</span><span>${escapeHtml(item.label)}</span><span class="completed-answer" title="${escapeHtml(item.answer)}">${escapeHtml(item.answer)}</span>`,
-      reviewHtml: `<p class="review-question"><strong>${escapeHtml(stripMarkup(item.prompt))}</strong></p><p><strong>${escapeHtml(item.answerLabel || 'Your answer')}:</strong> ${escapeHtml(item.answer)}</p>${item.options ? `<fieldset class="choices review-choices" disabled>${item.options.map(([value, label]) => `<label class="${value === item.value ? 'selected-choice' : ''}"><input type="radio" ${value === item.value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>` : ''}${item.feedback ? `<div class="review-feedback">${item.feedback}</div>` : ''}${item.assistance ? `<p class="assistance-review"><strong>Assistance:</strong> ${escapeHtml(assistanceLabel(item.assistance))}</p>` : ''}`,
+      reviewHtml: `${item.reviewHtml || `<p class="review-question"><strong>${escapeHtml(stripMarkup(item.prompt))}</strong></p><p><strong>${escapeHtml(item.answerLabel || 'Your answer')}:</strong> ${escapeHtml(item.answer)}</p>${item.options ? `<fieldset class="choices review-choices" disabled>${item.options.map(([value, label]) => `<label class="${value === item.value ? 'selected-choice' : ''}"><input type="radio" ${value === item.value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>` : ''}${item.feedback ? `<div class="review-feedback">${item.feedback}</div>` : ''}`}${item.assistance ? `<p class="assistance-review"><strong>Assistance:</strong> ${escapeHtml(assistanceLabel(item.assistance))}</p>` : ''}`,
     })));
   }
 
@@ -348,23 +357,25 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
     });
   }
 
+  function checkConnection() {
+    if (!state.selectedColumn) return;
+    if (state.selectedColumn !== 'funding_round_id') return wrong('Look for the participation field whose value identifies the funding round that participation belongs to.');
+    record({
+      evidence: 'connection',
+      prompt: 'Which column in round_investment tells you which funding round a participation belongs to?',
+      answer: 'round_investment.funding_round_id',
+      next: 'grain',
+      label: LABELS.connection,
+      feedback: '<div class="success-feedback">Correct. <code>round_investment.funding_round_id</code> points to <code>funding_round.funding_round_id</code>.</div>',
+    });
+  }
+
   function renderConnectionStep() {
     interactionLifecycle.renderCurrent(stepShell(
       'In round_investment, which column tells you which funding round a participation belongs to?',
-      `<p class="step-copy">Select the column directly in the highlighted relation, then check it here.</p><button id="check-connection" class="primary" type="button" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`,
+      `<p class="step-copy">Select the column in the highlighted relation. The check stays with the schema action.</p>${feedbackMarkup()}`,
       teacherVoice('Start from one participation record. Which field identifies the funding round that participation belongs to?'),
     ));
-    document.getElementById('check-connection').addEventListener('click', () => {
-      if (state.selectedColumn !== 'funding_round_id') return wrong('Look for the participation field whose value identifies the funding round that participation belongs to.');
-      record({
-        evidence: 'connection',
-        prompt: 'Which column in round_investment tells you which funding round a participation belongs to?',
-        answer: 'round_investment.funding_round_id',
-        next: 'grain',
-        label: LABELS.connection,
-        feedback: '<div class="success-feedback">Correct. <code>round_investment.funding_round_id</code> points to <code>funding_round.funding_round_id</code>.</div>',
-      });
-    });
   }
 
   function renderGrain() {
@@ -501,7 +512,7 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
         label: LABELS.prediction,
         prompt: 'What did you predict before running SQL?',
         answer: 'One round can occupy several participation rows, and its round-level context can repeat across those distinct rows.',
-        feedback: '<div class="review-feedback">The prediction was committed before execution.</div>',
+        reviewHtml: `<div class="cycle1-prediction-review">${state.predictionAnswers.map((item) => `<p><strong>${escapeHtml(item.prompt)}</strong><span>${escapeHtml(item.answer)}</span></p>`).join('')}</div>`,
         assistance: state.predictionAssistance,
       });
       state.current = 'concept';
@@ -566,7 +577,7 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
     interactionLifecycle.renderCurrent(stepShell(
       'Write the JOIN that produces the participation audit.',
       `<p class="step-copy">Return <code>funding_round_id</code>, <code>round_type</code>, <code>announced_date</code>, <code>round_investment_id</code>, <code>investor_id</code>, and <code>is_lead</code> by joining the two established relations.</p>${feedbackMarkup()}`,
-      teacherVoice('Translate the relationship you already established into SQL. The editor is now the main working surface; use the schema beside it as a reference.'),
+      teacherVoice('Use the relationship you already established to write the JOIN. Keep the Working Schema nearby for the fields and matching key.'),
     ));
   }
 
@@ -656,7 +667,7 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
   function renderResult() {
     interactionLifecycle.renderCurrent(stepShell(
       'The query returned 72 rows. Inspect the actual result before interpreting it.',
-      teacherVoice('The row count is execution evidence, not the conclusion. Use the returned rows next to check the prediction you made before SQL.'),
+      teacherVoice('The 72-row count tells you what the query returned; it does not explain why the rows look that way. Inspect the rows before deciding whether your prediction held.'),
     ));
     const action = renderWorkspaceAction(`
       <div class="cycle1-result-handoff"><span>Query executed</span><strong>72 rows returned</strong><button id="inspect-1003" class="primary" type="button">Inspect funding round 1003</button></div>
