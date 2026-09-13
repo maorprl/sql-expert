@@ -13,7 +13,7 @@ Stage 1 remains implemented by:
 - `course-design/stage-1/stage-1-learner-route.md`
 - `course-design/stage-1/stage-1-interaction-decisions.md`
 
-The row-multiplication encounter is implemented in `src/cycle1.js` as a separate encounter module that reuses the same SQL Lab runtime, editor, schema viewer, result renderer, interaction lifecycle, and visual infrastructure. It does not replace or rewrite the Stage 1 learning sequence.
+The row-multiplication encounter is implemented as a separate encounter that reuses the same SQL Lab runtime, editor, schema viewer, result renderer, interaction lifecycle, and visual infrastructure. It does not replace or rewrite the Stage 1 learning sequence.
 
 A course-level chapter selector allows the learner to switch directly between the two currently available encounters without completing the current encounter first. Chapter selection is navigation rather than learner evidence and is visually separated from task actions such as `Check answer`, `Continue`, and `Run query`.
 
@@ -21,15 +21,18 @@ Within the current browser run, each encounter keeps its own in-memory reasoning
 
 `Show solution` is not a persistent course-shell control. For the row-multiplication encounter it appears only with the SQL editor while the SQL-authoring state is active, in accordance with `course-design/course-controls.md` and the current Cycle 1 clarification.
 
+The row-multiplication encounter now begins with two **reuse checkpoints** rather than a pre-resolved relationship: the learner selects the relevant relations from Live Schema, then identifies the participation field that connects to the funding round. Only after that learner action is the PK/FK relationship revealed. These are reuse actions, not new first-exposure teaching and not the encounter's core row-multiplication evidence.
+
 The row-multiplication encounter's current implementation authority is recorded in:
 
 - `course-design/production/cycle-1/case-validation-row-multiplication-2026-09-12.md`
 - `course-design/production/cycle-1/lightweight-pedagogy-gate-row-multiplication-2026-09-12.md`
 - `course-design/production/cycle-1/encounter-design-row-multiplication-2026-09-13.md`
 - `course-design/production/cycle-1/owner-directed-targeted-revision-and-waiver-2026-09-13.md`
+- `course-design/production/cycle-1/owner-directed-targeted-revision-structural-reuse-2026-09-13.md`
 - `course-design/production/cycle-1/authority-clarification-show-solution-sql-workspace-2026-09-13.md`
 
-The owner-directed revision corrects the core evidence sequence so the learner first makes a qualitative row-multiplication prediction from target Grain + Cardinality before receiving a concrete numerical multiplicity. The Course Authority Owner explicitly authorized direct implementation of that targeted correction without rerunning the remaining pre-build review chain; the waiver does not represent the skipped gates as passed.
+The first owner-directed revision corrects the core evidence sequence so the learner first makes a qualitative row-multiplication prediction from target Grain + Cardinality before receiving a concrete numerical multiplicity. The structural-reuse revision supersedes the earlier decision to pre-resolve the relation set and FK/PK connection. The governing rule is: **previously learned does not mean pre-resolved**.
 
 The implementation record is:
 
