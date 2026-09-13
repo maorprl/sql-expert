@@ -1,0 +1,47 @@
+/* Stage 3 reuses the existing learner and SQL surfaces. Keep overrides local to this relation pair. */
+
+/* Funding Stage 2 globally offsets funding_round. Reset it here and align company.company_id with funding_round.company_id. */
+.learning-panel:has(.data-card[data-relation="company"]) .relation-preview.relationship-visible .data-card[data-relation="funding_round"] {
+  transform: none;
+}
+
+.learning-panel:has(.data-card[data-relation="company"]) .relation-preview.relationship-visible .data-card[data-relation="company"] {
+  transform: translateY(32px);
+}
+
+/* Keep solution assistance in normal flow so it never covers learner-authored SQL. */
+.learning-panel.sql-implementation-active:has(.data-card[data-relation="company"]) .lab-workspace {
+  grid-template-rows: 42px auto minmax(150px, .9fr) minmax(155px, 1fr);
+}
+
+.learning-panel.sql-implementation-active:has(.data-card[data-relation="company"]) .editor-header {
+  grid-row: 1;
+}
+
+.learning-panel.sql-implementation-active:has(.data-card[data-relation="company"]) .lab-workspace > .sql-solution-panel {
+  position: static;
+  z-index: auto;
+  grid-row: 2;
+  width: auto;
+  max-height: 190px;
+  margin: 0;
+  overflow: auto;
+  border-right: 0;
+  border-left: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.learning-panel.sql-implementation-active:has(.data-card[data-relation="company"]) .lab-workspace > .sql-solution-panel .solution-panel-body pre {
+  max-height: 130px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.learning-panel.sql-implementation-active:has(.data-card[data-relation="company"]) #editor {
+  grid-row: 3;
+}
+
+.learning-panel.sql-implementation-active:has(.data-card[data-relation="company"]) .results-panel {
+  grid-row: 4;
+}
