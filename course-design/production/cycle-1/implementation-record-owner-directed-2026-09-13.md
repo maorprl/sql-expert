@@ -6,6 +6,7 @@
 - `course-design/production/cycle-1/encounter-design-row-multiplication-2026-09-13.md`
 - `course-design/production/cycle-1/owner-directed-targeted-revision-and-waiver-2026-09-13.md`
 - `course-design/production/cycle-1/owner-directed-targeted-revision-structural-reuse-2026-09-13.md`
+- `course-design/production/cycle-1/test-drive-finding-connection-focus-2026-09-13.md`
 - `course-design/production/cycle-1/authority-clarification-show-solution-sql-workspace-2026-09-13.md`
 - `course-design/course-controls.md`
 
@@ -54,6 +55,22 @@ The previous Cardinality teacher voice that referred to "Reuse Cardinality from 
 
 > You found how a participation connects to a funding round. Now consider what that relationship allows in each direction.
 
+## Connecting-field focus correction from runtime test drive
+
+A subsequent targeted test drive exposed a second problem in the reuse entry sequence: the connecting-field question was on the left while the actual selectable `round_investment` columns were displaced in the Working Schema by a larger `funding_round` card, and the confirmation control remained back in the reasoning card.
+
+That composition violated the current visual-language requirement that the active learner action lead the page and that action, evidence, and immediate interpretation remain spatially coherent.
+
+The connection state now uses a focused Working Schema treatment:
+
+- `round_investment` is rendered first and visually primary because it is the relation on which the learner must act;
+- `funding_round` remains visible as a quieter reference rather than competing as a co-primary card;
+- the selected-column status and `Check selected column` control live beside the Working Schema action instead of in the distant reasoning card;
+- the reasoning card supplies only the prompt, teacher orientation, and a concise semantic reminder of the two already-selected relation roles;
+- completed relation-selection work remains reviewable but visually subordinate.
+
+No PK/FK badge, connector, or Cardinality marking is introduced by this focus treatment before the learner establishes the connecting field.
+
 ## Implemented Cycle 1 learner flow
 
 The Cycle 1 encounter now uses the accepted `funding_round → round_investment` case in this sequence:
@@ -78,9 +95,9 @@ The implementation deliberately does not introduce `fan-out`, aggregation, LEFT 
 - `src/stage1.js` — existing Stage 1 implementation plus a narrow `refresh` export used only to re-render preserved Stage 1 state after chapter switching.
 - `src/main.js` — encounter orchestrator, chapter selector, per-encounter editor/result surface retention, and shared runtime routing.
 - `src/course-navigation.css` — course-shell chapter navigation and SQL-local `Show solution` placement styling.
-- `src/cycle1.js` — thin Cycle 1 entry/reuse layer that requires relation selection and connection identification before delegating to the previously implemented row-multiplication flow.
+- `src/cycle1.js` — thin Cycle 1 entry/reuse layer that requires relation selection and connection identification before delegating to the previously implemented row-multiplication flow; it now also owns the connection-focus composition and local confirmation action.
 - `src/cycle1-core.js` — byte-for-byte copy of the previously active `src/cycle1.js` row-multiplication implementation, preserved as the post-reuse core encounter logic.
-- `src/cycle1-entry.css` — local entry/reuse styling plus enforcement that `Show solution` is hidden once SQL authoring is no longer active.
+- `src/cycle1-entry.css` — local entry/reuse styling, connection-focus hierarchy, evidence-local confirmation placement, and enforcement that `Show solution` is hidden once SQL authoring is no longer active.
 
 The same editor, SQLite runtime, schema viewer, autocomplete, results table, interaction lifecycle, visual infrastructure, and database are reused rather than rebuilt for the second encounter.
 
@@ -107,10 +124,11 @@ The final 1003 evidence slice is derived from the learner's actual accepted resu
 
 ## Validation performed in this implementation pass
 
-- The previously active row-multiplication implementation was preserved exactly as `src/cycle1-core.js`; its blob SHA remains `84993811c8b959089d48d1500a02933f0769d577`.
-- The final `src/cycle1.js` entry wrapper was reconstructed locally from the exact repository blob and passed `node --check`; its checked Git blob SHA is `d00a64021718da83e17e0ad252ce70550dbef2f0`.
-- The Stage 1 learning sequence was not changed by this structural-reuse correction.
+- The previously active row-multiplication implementation remains preserved exactly as `src/cycle1-core.js`; its blob SHA remains `84993811c8b959089d48d1500a02933f0769d577`.
+- The corrected `src/cycle1.js` passed `node --check` before repository write; the exact checked Git blob SHA now on `main` is `1621bc6fd1040e42c3202731d1e3f6cfd39965a3`.
+- The exact checked `src/cycle1-entry.css` Git blob SHA now on `main` is `5fc69c3d28edd96e808aa7b0a334c46204c5b1f8`.
+- The Stage 1 learning sequence was not changed by either Cycle 1 reuse correction.
 - The runtime still derives the expected six-field Cycle 1 rows from the loaded SQLite database and compares the learner result semantically, independent of row order.
 - The chapter navigation remains outside task cards and is not completion-gated.
-- A full browser/runtime test is still required; this correction was produced specifically so the targeted test drive can restart from the Row multiplication entry state.
+- A full browser/runtime test is still required; the current correction was made specifically so the targeted test drive can restart from the relation-selection → connecting-field transition.
 - No formal Pedagogy, UX, reconciliation, or pre-build audit rerun was performed for this targeted owner-directed correction.
