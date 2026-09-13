@@ -65,21 +65,26 @@ If the verbatim handoff cannot be established, dependent work remains blocked un
 
 ## 5. Cycle 1 coarse execution status
 
-Cycle 1 has accumulated completed and historical artifacts through design, implementation, post-build review, and corrective case/design work under:
+Cycle 1 has accumulated completed and historical artifacts through design, implementation, post-build review, corrective case/design work, and the strengthened full Pedagogy Design re-review under:
 
 `course-design/production/cycle-1/`
 
 Rule-Based Acceptance remains **paused**.
 
-A learner-experience defect exposed a process weakness: the Pedagogy Review could evaluate evidence independence and scaffold strength without being forced to test the instructional function and removal cost of every material step. `learner-encounter-production-process.md` has now been strengthened so that full Pedagogy Review must examine the whole material sequence, including teaching and continuity steps that are not themselves core evidence.
+The strengthened Pedagogy Design re-review has now been durably completed at:
 
-Existing runtime and prior Pedagogy Review verdicts remain historical evidence. They do **not** waive the newly required re-review of the current design under the strengthened process.
+`course-design/production/cycle-1/independent-pedagogy-strengthened-full-design-rereview-2026-09-13.md`
+
+Its formal verdict requires targeted design revision before implementation may proceed. The substantive finding and rationale remain in that review artifact and are not restated here.
 
 ## 6. Current durable input set
 
-The current targeted re-review must consume the current authority needed to understand the learner state, first-exposure JOIN teaching, and the current Cycle 1 design. At minimum this includes:
+The currently authorized Encounter Architect action must consume the current process/execution authority, current Cycle 1 design authority, and the durable strengthened Pedagogy Review finding it is required to reconcile.
+
+At minimum this includes:
 
 - `learner-encounter-production-process.md`
+- `learner-encounter-production-execution.md`
 - `course-work-management.md`
 - `course-exit-criteria.md`
 - `course-knowledge-map.md`
@@ -93,51 +98,63 @@ The current targeted re-review must consume the current authority needed to unde
 - `course-design/production/cycle-1/owner-directed-targeted-revision-and-waiver-2026-09-13.md`
 - `course-design/production/cycle-1/owner-directed-targeted-revision-structural-reuse-2026-09-13.md`
 - current Show-solution / SQL-workspace authority clarifications that affect the learner path
+- `course-design/production/cycle-1/independent-pedagogy-strengthened-full-design-rereview-2026-09-13.md`
 
-Historical Pedagogy Review conclusions must not be used as substitutes for the new review judgment.
+Historical reviewer conclusions may be consulted only when needed for traceability. They do not replace the current strengthened review finding or current authority.
 
 ## 7. Current next authorized action
 
-**Independent Pedagogy Reviewer — targeted full design re-review of the current Cycle 1 learner encounter under the strengthened instructional-function / continuity / removal-impact standard.**
+**Encounter Architect — targeted design reconciliation/revision of the current Cycle 1 learner encounter to resolve the material finding in the strengthened full Pedagogy Design re-review.**
 
-This is not a new Capability Gate and not a new Case Validation unless the review discovers a defect that genuinely requires reopening those phases.
+This action is narrowly scoped to resolving the current review finding.
 
-The reviewer must examine the current encounter **step by step**, including material steps that are guidance, teaching, continuity, measurement, tool transition, or assistance rather than core evidence.
+It does **not** reopen:
 
-For each material learner-facing step or transition, the reviewer must establish:
+- the accepted target capability;
+- the accepted case;
+- Case Validation;
+- the Lightweight Pedagogy Gate;
+- unaffected parts of the current learner encounter.
 
-1. its instructional function;
-2. the learner action it requires;
-3. its placement and dependency in the reasoning sequence;
-4. the scaffold/support supplied;
-5. the concrete consequence of removing or materially compressing it.
+The Architect must:
 
-The review must explicitly test continuity from the persistent business request through the reused relational-reading work, target Grain and Cardinality, qualitative prediction, concept consolidation, the transition from established relational reasoning into `JOIN ... ON ...` and learner-authored SQL, SQL scaffolding, editor/result interpretation, and optional assistance / Show solution behavior where those are present in the current design.
+1. read the durable strengthened Pedagogy Review finding directly;
+2. reconcile it under the current `learner-encounter-production-process.md`;
+3. preserve unaffected current authority and learner evidence;
+4. revise only the material design scope required to resolve the finding;
+5. explicitly trace how the revision addresses the review's instructional-function / continuity / removal-impact concern;
+6. preserve the distinction between reduced reuse support and first-exposure re-teaching;
+7. avoid changing capability, case, or evidence semantics unless the finding cannot be resolved without doing so;
+8. produce a durable targeted design-reconciliation/revision artifact under `course-design/production/cycle-1/`;
+9. state the exact downstream review/control required by the process change-impact rules.
 
-The reviewer must compare the current reuse treatment with the relevant first-exposure JOIN teaching and the Course-Assumed Learner State. “Already introduced,” “reused,” “reduced scaffolding,” and “not core evidence” are not sufficient reasons by themselves to remove a teaching or translation function.
+The Architect must not implement learner-facing code during this action.
 
-### Required outcome
+### Required result
 
-The reviewer must produce a durable targeted review artifact with one of the normal Pedagogy Design Review outcomes/findings under the current process.
+The revision must either:
 
-If the review finds a material continuity or teaching defect, the next action is **Encounter Architect targeted design reconciliation/revision**. Runtime implementation is not authorized until the resulting pedagogical finding is resolved through the applicable downstream review/control path.
+- resolve the material Pedagogy finding within current authority and route the resulting design through the applicable downstream reviews/control; or
+- report that resolving the finding would require authority, evidence, capability, or case changes outside the authorized scope.
 
-If the review finds no material defect, the next action is the applicable downstream control needed to establish implementation authority under the current process.
+Implementation is not authorized merely because the Architect produces a revision.
 
-## 8. Independence requirement for this re-review
+## 8. Downstream boundary
 
-The formal re-review must be formed from the current source set and the strengthened process, not from prior reviewer conclusions or a previously accepted narrative.
+Because the current action is a pedagogical / learner-flow design revision, the applicable downstream path must be determined from the current change-impact rules in `learner-encounter-production-process.md`.
 
-Use a fresh independent review context where practical. The reviewer may read prior artifacts that are part of current design authority, but must not treat earlier Pedagogy Review verdicts as evidence that the current design passes the strengthened standard.
+At minimum, the resulting design cannot become implementation authority until the required independent Pedagogy review has confirmed resolution. If the revision materially affects learning experience / UX, the required UX review also applies. Auditor control remains required before implementation authority is frozen unless a current explicit owner waiver says otherwise.
+
+No earlier owner-directed waiver should be assumed to cover this new strengthened-review finding unless a current authority artifact explicitly states that it does.
 
 ## 9. Acceptance boundary
 
 Rule-Based Acceptance remains paused until:
 
-1. the strengthened Pedagogy Design re-review is durably completed;
-2. every material finding receives the required disposition;
-3. any resulting design change is reviewed and controlled according to `learner-encounter-production-process.md`;
-4. implementation/runtime is brought into conformance with the resulting current authority;
+1. the current targeted design finding is reconciled and revised;
+2. every required downstream specialist review/control is completed;
+3. the resulting design is frozen as current implementation authority;
+4. implementation/runtime is brought into conformance with that authority;
 5. required post-build validation is complete.
 
 No existing runtime state should be treated as accepted merely because it predates the strengthened review standard.
