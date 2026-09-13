@@ -1,8 +1,12 @@
 # Cycle 1 Production Artifact Provenance
 
-**Status:** CURRENT
+**Status:** CURRENT AS PROVENANCE RECORD — NOT CURRENT EXECUTION STATE
 
 This record tracks whether Cycle 1 inter-phase artifacts satisfy the verbatim durable-handoff requirement.
+
+The **current Cycle 1 execution state, current phase, and next authorized action are maintained only in** `learner-encounter-production-execution.md`.
+
+Any execution-consequence or next-action statement preserved below is historical context from the point when that provenance entry was recorded. It must not be used to infer the current execution state unless the current execution mapping explicitly points to it.
 
 ## Capability & Case Brief
 
