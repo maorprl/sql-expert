@@ -1,4 +1,3 @@
-import './stage1.css';
 import './cycle1.css';
 
 const REQUIRED_RELATIONS = ['funding_round', 'round_investment'];
@@ -342,10 +341,10 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
     interactionLifecycle.renderCurrent(stepShell(
       'Which relations contain the information needed for this audit?',
       `<p class="step-copy">Add the relevant relations from the Live Schema to the Working Schema.</p><button id="check-relations" class="primary" type="button" ${state.selectedRelations.length ? '' : 'disabled'}>Check selection</button>${feedbackMarkup()}`,
-      teacherVoice('The audit needs round-level context and one record for each investor participation. Find where those two pieces live.'),
+      teacherVoice('The audit needs funding-round context and recorded investor-participation details. Find where those two kinds of information live.'),
     ));
     document.getElementById('check-relations').addEventListener('click', () => {
-      if (!hasExactRequiredRelations()) return wrong('Look for one relation that describes a funding round and one that stores each investor participation in a round.');
+      if (!hasExactRequiredRelations()) return wrong('Look for one relation that describes a funding round and one that stores investor participation in a round.');
       record({
         evidence: 'relations',
         prompt: 'Which relations contain the information needed for this audit?',
@@ -389,13 +388,13 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
     interactionLifecycle.renderCurrent(stepShell(
       'What should one row of the participation audit represent?',
       `${choiceForm('grain-form', options, draft)}${feedbackMarkup()}`,
-      teacherVoice('The request says “for every recorded round-investor participation.” Use that phrase to decide what one output row should represent.'),
+      teacherVoice('The audit combines funding-round context with investor-participation details. Decide what the result needs to keep individually represented from row to row.'),
     ));
     document.getElementById('grain-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const answer = new FormData(event.currentTarget).get('answer');
       state.drafts.grain = answer || '';
-      if (answer !== 'participation') return wrong('The audit asks for every recorded round-investor participation, with round information carried alongside it.');
+      if (answer !== 'participation') return wrong('The audit needs individual participation records to remain distinguishable while round context is carried alongside them. Which row meaning preserves that?');
       record({
         evidence: 'grain',
         prompt: 'What should one row of the participation audit represent?',
@@ -575,9 +574,11 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
       state.sqlPrepared = true;
     }
     interactionLifecycle.renderCurrent(stepShell(
-      'Write the JOIN that produces the participation audit.',
-      `<p class="step-copy">Return <code>funding_round_id</code>, <code>round_type</code>, <code>announced_date</code>, <code>round_investment_id</code>, <code>investor_id</code>, and <code>is_lead</code> by joining the two established relations.</p>${feedbackMarkup()}`,
-      teacherVoice('Use the relationship you already established to write the JOIN. Keep the Working Schema nearby for the fields and matching key.'),
+      'Write the JOIN for the participation audit.',
+      `<p class="step-copy">Join the two established relations so the result matches the audit contract.</p>
+        <details class="optional-scaffold desired-output"><summary>Show desired output</summary><div class="optional-scaffold-body"><div class="desired-output-grid"><code>funding_round_id</code><code>round_type</code><code>announced_date</code><code>round_investment_id</code><code>investor_id</code><code>is_lead</code></div><p>Return these six fields in the participation-level result.</p></div></details>
+        <p class="implementation-check"><strong>Earlier prediction:</strong> one funding round can occupy several participation rows when several participations belong to it.</p>${feedbackMarkup()}`,
+      teacherVoice('Use the relationship you already established to write the JOIN. Keep the Working Schema nearby, and open Desired Output if you need the exact field contract.'),
     ));
   }
 
@@ -653,7 +654,7 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
     state.completed.push({
       id: `sql-${state.completed.length + 1}`,
       label: LABELS.sql,
-      prompt: 'Write the JOIN that produces the participation audit.',
+      prompt: 'Write the JOIN for the participation audit.',
       answer: 'Participation-level INNER JOIN executed with 72 current rows.',
       assistance: state.sqlAssistance,
     });
@@ -794,7 +795,7 @@ JOIN round_investment
   }
 
   function showSolution() {
-    if (state.current !== 'sql') return;
+    if (state.current !== 'sql' || !learningEl.classList.contains('cycle1-sql-active')) return;
     raiseAssistance('sqlAssistance', 'solution-assisted');
     solutionPanel.innerHTML = `<div class="solution-panel-heading"><span>Solution assistance</span><button id="close-solution" type="button" aria-label="Close solution">Close</button></div><div class="solution-panel-body">${solutionForSql()}</div>`;
     solutionPanel.hidden = false;
