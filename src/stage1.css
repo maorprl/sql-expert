@@ -364,31 +364,46 @@
 /* Final verification keeps the actual result visible and removes the inactive editor. */
 .learning-panel.results-evidence-active #editor { display: none; }
 .learning-panel.results-evidence-active .lab-workspace {
-  height: 305px;
-  min-height: 305px;
-  grid-template-rows: 42px minmax(255px, 1fr);
+  height: 320px;
+  min-height: 320px;
+  grid-template-rows: 42px minmax(270px, 1fr);
 }
 .learning-panel.results-evidence-active .results-panel {
   min-height: 0;
   box-shadow: inset 0 3px 0 var(--blue);
 }
+.learning-panel.results-evidence-active .current-step { box-shadow: none; }
 .learning-panel.results-evidence-active .workspace-evidence-action { margin-top: 0; }
 
-/* During authoring, task + editor + Working Schema form one workspace. */
+/* During authoring and result inspection, task + tool + Working Schema form one coherent workspace. */
 @media (min-width: 1101px) {
-  .learning-panel.sql-implementation-active .lesson-surface {
+  .learning-panel.sql-implementation-active .lesson-surface,
+  .learning-panel.results-evidence-active .lesson-surface {
     grid-template-columns: minmax(390px, .82fr) minmax(500px, 1.18fr);
+    align-items: start;
+  }
+
+  .learning-panel.sql-implementation-active .lesson-surface {
     grid-template-areas:
       "current lab"
       "schema lab"
       "completed lab";
-    align-items: start;
+  }
+
+  .learning-panel.results-evidence-active .lesson-surface {
+    grid-template-areas:
+      "current result"
+      "schema result"
+      "completed action";
   }
 
   .learning-panel.sql-implementation-active .reasoning-column,
-  .learning-panel.sql-implementation-active .implementation-column { display: contents; }
+  .learning-panel.sql-implementation-active .implementation-column,
+  .learning-panel.results-evidence-active .reasoning-column,
+  .learning-panel.results-evidence-active .implementation-column { display: contents; }
 
-  .learning-panel.sql-implementation-active .current-step {
+  .learning-panel.sql-implementation-active .current-step,
+  .learning-panel.results-evidence-active .current-step {
     grid-area: current;
     min-height: 0;
   }
@@ -399,18 +414,32 @@
     align-self: start;
   }
 
-  .learning-panel.sql-implementation-active .working-schema-panel {
+  .learning-panel.results-evidence-active .lab-workspace {
+    grid-area: result;
+    order: initial;
+    align-self: start;
+  }
+
+  .learning-panel.sql-implementation-active .working-schema-panel,
+  .learning-panel.results-evidence-active .working-schema-panel {
     grid-area: schema;
     order: initial;
     margin-top: 0;
   }
 
-  .learning-panel.sql-implementation-active .completed-steps {
+  .learning-panel.sql-implementation-active .completed-steps,
+  .learning-panel.results-evidence-active .completed-steps {
     grid-area: completed;
     margin: 0;
   }
 
-  .learning-panel.sql-implementation-active .relation-preview.relationship-visible {
+  .learning-panel.results-evidence-active .workspace-evidence-action {
+    grid-area: action;
+    order: initial;
+  }
+
+  .learning-panel.sql-implementation-active .relation-preview.relationship-visible,
+  .learning-panel.results-evidence-active .relation-preview.relationship-visible {
     grid-template-columns: minmax(120px, 1fr) 68px minmax(120px, 1fr);
     gap: 8px;
     padding: 25px 8px 10px;
@@ -432,13 +461,16 @@
   .learning-panel.sql-implementation-active .working-schema-panel,
   .learning-panel.results-evidence-active .working-schema-panel { order: 3; }
 
-  .learning-panel.sql-implementation-active .reasoning-column {
+  .learning-panel.sql-implementation-active .reasoning-column,
+  .learning-panel.results-evidence-active .reasoning-column {
     display: flex;
     flex-direction: column;
   }
 
-  .learning-panel.sql-implementation-active .current-step { order: 1; }
-  .learning-panel.sql-implementation-active .completed-steps { order: 2; margin: 12px 0 0; }
+  .learning-panel.sql-implementation-active .current-step,
+  .learning-panel.results-evidence-active .current-step { order: 1; }
+  .learning-panel.sql-implementation-active .completed-steps,
+  .learning-panel.results-evidence-active .completed-steps { order: 2; margin: 12px 0 0; }
 }
 
 @media (max-width: 760px) {
