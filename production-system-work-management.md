@@ -85,25 +85,19 @@ Scope includes:
 
 Potential later mechanisms such as embeddings, vector retrieval, RAG, or persistent / episodic agent memory remain conditional research items. They are not current requirements and must not become an alternate source of process state or authority.
 
-## 3. Current Position — Cycle 1
+## 3. Cycle 1 management position
 
 Cycle 1 is the first full execution of the current learner-encounter production process and is also evidence for later production-system architecture decisions.
 
-Current authoritative execution status is maintained in:
+The **current authoritative Cycle 1 execution state, current phase, and next authorized action are maintained only in**:
 
 `learner-encounter-production-execution.md`
 
-At the current recorded state:
-
-1. Capability & Case Brief — completed; verbatim durable handoff verified.
-2. Lightweight Independent Pedagogy Gate — completed with `PROCEED`; verbatim durable handoff verified.
-3. Encounter Design — unblocked / current next production phase.
-
-Durable Cycle 1 records are stored under:
+This management record intentionally does not duplicate a phase-by-phase Cycle 1 status snapshot. Historical phase results and durable role outputs remain in their recorded artifacts under:
 
 `course-design/production/cycle-1/`
 
-This management document does not replace their provenance or phase-specific content.
+This management document does not replace their provenance or phase-specific content, and historical production artifacts do not replace the current execution mapping.
 
 ## 4. Active Work
 
@@ -227,7 +221,8 @@ Production System work may produce learner-product deliverables, but management 
 
 For current Cycle 1:
 
-- primary cycle state belongs here under B1;
+- the production-system planning home is Program B / B1;
+- the **current execution state remains exclusively in `learner-encounter-production-execution.md`**;
 - the resulting encounter belongs to Program A / A2 — Learner Encounter Development;
 - course capability coverage remains managed in Program A;
 - production-system findings remain managed in Program B.
