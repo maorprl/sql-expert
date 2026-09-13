@@ -189,7 +189,7 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
     const selected = connectionChoice && state.selectedColumn === column.column;
     const isParticipationFk = relationship > 0 && relation.name === 'round_investment' && column.column === 'funding_round_id';
     const isRoundPk = relationship > 0 && relation.name === 'funding_round' && column.column === 'funding_round_id';
-    const outputField = ['sql', 'result', 'verification', 'complete'].includes(state.current)
+    const outputField = ['sql', 'result', 'verification'].includes(state.current)
       && ((relation.name === 'funding_round' && ['funding_round_id', 'round_type', 'announced_date'].includes(column.column))
         || (relation.name === 'round_investment' && ['round_investment_id', 'investor_id', 'is_lead'].includes(column.column)));
     const classes = [selected ? 'selected-column' : '', (isParticipationFk || isRoundPk) ? 'relationship-column' : '', outputField ? 'output-column' : ''].filter(Boolean).join(' ');
@@ -373,7 +373,7 @@ export function createCycle1({ editor, getDatabase, getSchema, onSelectionChange
   function renderConnectionStep() {
     interactionLifecycle.renderCurrent(stepShell(
       'In round_investment, which column tells you which funding round a participation belongs to?',
-      `<p class="step-copy">Select the column in the highlighted relation. The check stays with the schema action.</p>${feedbackMarkup()}`,
+      `<p class="step-copy">Select the column in the highlighted relation, then check your selection beside the schema.</p>${feedbackMarkup()}`,
       teacherVoice('Start from one participation record. Which field identifies the funding round that participation belongs to?'),
     ));
   }
