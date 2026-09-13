@@ -119,6 +119,20 @@ The learner must be able to connect the business question, the information requi
 
 This principle is not JOIN-specific. The business question and the relational reasoning needed to answer it determine how many relations are relevant. Relation identification may be its own learner interaction or be embedded in another interaction, depending on the reasoning capability and evidence required by the stage. The requirement is to preserve relational interpretation when that interpretation is itself part of the intended learner capability; this principle does not prescribe a UI mechanism.
 
+## WORKING — Business Question Precision and Non-Preemption
+
+A learner-facing business question should define a concrete analytical or business need precisely enough that the learner can determine what information is required and why the task matters.
+
+Precision does not mean pre-resolving the relational reasoning the learner is expected to perform. When a later interaction is intended to elicit a conclusion such as relevant relations, result Grain, relationship Cardinality, row behavior, or the relational operation to use, the business question should not state that conclusion in equivalent form before the learner reasons it out.
+
+The business question should therefore distinguish between:
+
+- information the business genuinely requests and the learner needs in order to interpret the task;
+- relational conclusions the learner is expected to derive as evidence of capability;
+- implementation details or exact output-contract details that can be disclosed later when they become necessary for SQL authoring.
+
+The question should remain concise enough that incidental field lists, implementation wording, or explanatory detail do not obscure the core business need. This is not a rule to make business questions vague: omitted information must not turn the task into a guessing exercise. The design goal is a precise problem statement without answer leakage.
+
 ## WORKING — First JOIN Teaching Encounter: Reusable Architecture
 
 The first JOIN teaching encounter is a calibrated sequence validated through the current Stage 1 business case, not a universal template for later stages. Its validated progression is: concrete business problem → identify the required relations → relational key connection → PK/FK → Cardinality → requested output-row meaning → Grain → baseline when needed to reason about row-count preservation → prediction before execution → semantic relational action → JOIN terminology → INNER JOIN / ON syntax before independent SQL implementation → SQL implementation → verification against expected grain and relational behavior.
