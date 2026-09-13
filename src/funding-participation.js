@@ -1,6 +1,7 @@
 import './funding-participation.css';
 
 const BASELINE_SQL = 'SELECT COUNT(*) FROM funding_round;';
+const BUSINESS_REQUEST = 'The investment team wants to review which investors took part in each funding round and see which of them were marked as lead.';
 
 const INTERACTION_LABELS = {
   relations: 'Identify relevant relations',
@@ -29,6 +30,7 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
   const workingStatusEl = document.getElementById('working-schema-status');
   const labEl = document.getElementById('lab-workspace');
   const learningEl = document.querySelector('.learning-panel');
+  const solutionButton = document.getElementById('show-solution');
 
   function escapeHtml(value) {
     return String(value).replace(/[&<>'\"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '\"': '&quot;' }[character]));
@@ -43,6 +45,29 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
   function teacherVoice(content) {
     return `<aside class="teacher-voice"><span class="teacher-voice-label">Guidance</span><p>${content}</p></aside>`;
   }
+
+  function showFundingSolution() {
+    if (document.title !== 'SQL Lab · Funding participation' || state.current !== 'sql' || !learningEl.classList.contains('sql-implementation-active')) return;
+    const panel = document.getElementById('solution-panel');
+    if (!panel) return;
+    panel.innerHTML = `<div class="solution-panel-heading"><span>Solution assistance</span><button id="close-solution" type="button" aria-label="Close solution">Close</button></div><div class="solution-panel-body"><strong>Solution SQL:</strong><pre>SELECT
+  funding_round.funding_round_id,
+  funding_round.round_type,
+  funding_round.announced_date,
+  round_investment.round_investment_id,
+  round_investment.investor_id,
+  round_investment.is_lead
+FROM funding_round
+JOIN round_investment
+  ON funding_round.funding_round_id = round_investment.funding_round_id;</pre><p>This is assistance only. It has not been inserted or run.</p></div>`;
+    panel.hidden = false;
+    document.getElementById('close-solution').addEventListener('click', () => {
+      panel.hidden = true;
+      panel.innerHTML = '';
+    });
+  }
+
+  solutionButton?.addEventListener('click', showFundingSolution);
 
   function relationshipLevel() {
     if (state.evidence.has('cardinality')) return 2;
@@ -454,6 +479,7 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
   }
 
   function render() {
+    document.getElementById('business-request-title').textContent = BUSINESS_REQUEST;
     clearWorkspaceAction();
     renderRelations();
     renderCompleted();
