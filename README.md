@@ -23,20 +23,13 @@ Within the current browser run, each encounter keeps its own in-memory reasoning
 
 The row-multiplication encounter now begins with two **reuse checkpoints** rather than a pre-resolved relationship: the learner selects the relevant relations from Live Schema, then identifies the participation field that connects to the funding round. Only after that learner action is the PK/FK relationship revealed. These are reuse actions, not new first-exposure teaching and not the encounter's core row-multiplication evidence.
 
-The row-multiplication encounter's current implementation authority is recorded in:
+This README describes the runnable product and current observable runtime structure. It does **not** define the current Cycle 1 process phase, next authorized action, or complete implementation/design authority set.
 
-- `course-design/production/cycle-1/case-validation-row-multiplication-2026-09-12.md`
-- `course-design/production/cycle-1/lightweight-pedagogy-gate-row-multiplication-2026-09-12.md`
-- `course-design/production/cycle-1/encounter-design-row-multiplication-2026-09-13.md`
-- `course-design/production/cycle-1/owner-directed-targeted-revision-and-waiver-2026-09-13.md`
-- `course-design/production/cycle-1/owner-directed-targeted-revision-structural-reuse-2026-09-13.md`
-- `course-design/production/cycle-1/authority-clarification-show-solution-sql-workspace-2026-09-13.md`
+For current production state and authority boundaries, use:
 
-The first owner-directed revision corrects the core evidence sequence so the learner first makes a qualitative row-multiplication prediction from target Grain + Cardinality before receiving a concrete numerical multiplicity. The structural-reuse revision supersedes the earlier decision to pre-resolve the relation set and FK/PK connection. The governing rule is: **previously learned does not mean pre-resolved**.
-
-The implementation record is:
-
-- `course-design/production/cycle-1/implementation-record-owner-directed-2026-09-13.md`
+- `learner-encounter-production-execution.md` — current Cycle 1 execution state and next authorized action;
+- `learner-encounter-production-process.md` — production roles, gates, independence, review, and acceptance rules;
+- `course-design/production/cycle-1/` — durable Cycle 1 production artifacts and historical records.
 
 No new Stage number is assigned to the row-multiplication encounter.
 
