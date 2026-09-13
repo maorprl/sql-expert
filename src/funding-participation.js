@@ -1,94 +1,37 @@
 import './funding-participation.css';
 
-const REQUIRED_RELATIONS = ['funding_round', 'round_investment'];
-const LABELS = {
+const BASELINE_SQL = 'SELECT COUNT(*) FROM funding_round;';
+
+const INTERACTION_LABELS = {
   relations: 'Identify relevant relations',
-  connection: 'Trace the participation to its round',
-  grain: 'Set the result Grain',
-  cardinality: 'Read the relationship',
-  prediction: 'Predict the result shape',
-  concept: 'Name the behavior',
-  application: 'Apply the prediction',
-  sql: 'Implement the audit',
-  result: 'Inspect the result',
-  verification: 'Verify the prediction',
-  complete: 'Participation audit complete',
+  output: 'Determine row meaning',
+  connection: 'Understand the relationship',
+  cardinality: 'Understand the relationship',
+  baselineRun: 'Establish the baseline',
+  prediction: 'Predict behavior',
+  operation: 'Choose what to do with the rows',
+  joinTeaching: 'Reconnect the reasoning to JOIN',
+  sql: 'Implement the JOIN',
+  finalGrain: 'Verify the result',
+  complete: 'Stage complete',
 };
 
-const ASSISTANCE_STRENGTH = {
-  unassisted: 0,
-  'hint-1': 1,
-  'hint-2': 2,
-  'solution-assisted': 3,
-};
-
-const PREDICTION_STEPS = [
-  {
-    id: 'shape',
-    prompt: 'If the same funding round has several recorded participations, what must happen in a result with one participation per row?',
-    options: [
-      ['multiple', 'That funding round can appear across several result rows — one for each recorded participation.'],
-      ['single', 'That funding round must still appear in exactly one result row.'],
-      ['collapse', 'The participation records must be merged into one funding-round row.'],
-      ['grain-change', 'The result Grain changes from participation to funding round.'],
-    ],
-    correct: 'multiple',
-    answer: 'One funding round can occupy several result rows when several participations must each remain represented.',
-    wrong: 'Keep one participation per result row fixed. Can several different participation records all remain represented in one row?',
-  },
-  {
-    id: 'repetition',
-    prompt: 'Across those participation rows, what should happen to round-level values such as round_type and announced_date?',
-    options: [
-      ['repeat', 'They can repeat while participation identifiers differ. The rows are still distinct participation records.'],
-      ['duplicate', 'Repeated round-level values mean the rows are accidental duplicates and should collapse to one.'],
-      ['first-only', 'Round-level values should appear only on the first participation row.'],
-      ['different-rounds', 'If round-level values repeat, the rows must represent different funding rounds.'],
-    ],
-    correct: 'repeat',
-    answer: 'Round-level context can repeat across distinct participation rows without making those rows duplicates.',
-    wrong: 'Compare what the rows represent. If each row is a different participation for the same round, which values can stay shared while participation identity changes?',
-  },
-];
+const REQUIRED_RELATIONS = ['round_investment', 'funding_round'];
 
 export function createFundingParticipation({ editor, getDatabase, getSchema, onSelectionChange, interactionLifecycle }) {
   const state = {
-    current: 'relations',
-    completed: [],
-    evidence: new Set(),
-    drafts: {},
-    localFeedback: '',
-    pendingAdvance: null,
-    selectedRelations: [],
-    selectedColumn: '',
-    predictionIndex: 0,
-    predictionAnswers: [],
-    predictionWrongAttempts: 0,
-    predictionHintsOpened: new Set(),
-    predictionAssistance: 'unassisted',
-    grainAssistance: 'unassisted',
-    cardinalityAssistance: 'unassisted',
-    applicationAssistance: 'unassisted',
-    sqlAssistance: 'unassisted',
-    verificationAssistance: 'unassisted',
-    sqlPrepared: false,
-    lastResultSet: null,
+    current: 'relations', completed: [], evidence: new Set(), drafts: {}, localFeedback: '',
+    selectedRelations: [], selectedColumn: '', baselineExecuted: false, baselinePrepared: false,
+    implementationPrepared: false, pendingAdvance: null, joinTeachingBeat: 1,
   };
 
   const relationEl = document.getElementById('relation-preview');
   const workingStatusEl = document.getElementById('working-schema-status');
   const labEl = document.getElementById('lab-workspace');
   const learningEl = document.querySelector('.learning-panel');
-  const workingEyebrowEl = document.querySelector('.working-schema-header .eyebrow');
-  const runButton = document.getElementById('run-query');
-  const clearButton = document.getElementById('clear-results');
-  const solutionButton = document.getElementById('show-solution');
-  const solutionPanel = document.getElementById('solution-panel');
 
   function escapeHtml(value) {
-    return String(value).replace(/[&<>'\"]/g, (character) => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '\"': '&quot;',
-    }[character]));
+    return String(value).replace(/[&<>'\"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '\"': '&quot;' }[character]));
   }
 
   function stripMarkup(value) {
@@ -101,64 +44,78 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
     return `<aside class="teacher-voice"><span class="teacher-voice-label">Guidance</span><p>${content}</p></aside>`;
   }
 
-  function stateMarker(name = state.current) {
-    return `<span class="cycle1-state-marker" data-cycle1-state="${escapeHtml(name)}" aria-hidden="true"></span>`;
-  }
-
-  function stepShell(prompt, body, intro = '', name = state.current) {
-    return `${stateMarker(name)}<div class="step-kicker">${escapeHtml(LABELS[name] || '')}</div>${intro}<h2 class="prompt">${prompt}</h2>${body}`;
-  }
-
-  function feedbackMarkup() {
-    return state.localFeedback
-      ? `<div class="local-feedback incorrect" role="alert"><strong>Not quite.</strong> ${escapeHtml(state.localFeedback)}</div>`
-      : '';
-  }
-
-  function choiceForm(id, options, draft = '') {
-    return `<form id="${id}" class="answer-form"><fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${escapeHtml(value)}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset><button class="primary" type="submit">Check answer</button></form>`;
-  }
-
-  function assistanceLabel(value) {
-    return ({
-      unassisted: 'Unassisted',
-      'hint-1': 'After Hint 1',
-      'hint-2': 'After Hint 2',
-      'solution-assisted': 'Solution-assisted',
-    })[value] || value;
-  }
-
-  function raiseAssistance(key, next) {
-    if (ASSISTANCE_STRENGTH[next] > ASSISTANCE_STRENGTH[state[key]]) state[key] = next;
-  }
-
-  function relationByName(name) {
-    return getSchema().find((relation) => relation.name === name);
-  }
-
   function relationshipLevel() {
     if (state.evidence.has('cardinality')) return 2;
     if (state.evidence.has('connection')) return 1;
     return 0;
   }
 
-  function hasExactRequiredRelations() {
-    return state.selectedRelations.length === REQUIRED_RELATIONS.length
-      && REQUIRED_RELATIONS.every((name) => state.selectedRelations.includes(name));
+  function renderColumn(relation, column) {
+    const keyLevel = relationshipLevel();
+    const isConnectingChoice = state.current === 'connection' && !state.pendingAdvance && relation.name === 'round_investment';
+    const isSelected = isConnectingChoice && state.selectedColumn === column.column;
+    const isParticipationForeignKey = keyLevel > 0 && relation.name === 'round_investment' && column.column === 'funding_round_id';
+    const isRoundPrimaryKey = keyLevel > 0 && relation.name === 'funding_round' && column.column === 'funding_round_id';
+    const isOutputField = ['joinTeaching', 'sql', 'finalGrain', 'complete'].includes(state.current)
+      && ((relation.name === 'funding_round' && ['funding_round_id', 'round_type', 'announced_date'].includes(column.column))
+        || (relation.name === 'round_investment' && ['round_investment_id', 'investor_id', 'is_lead'].includes(column.column)));
+    const classes = [isSelected ? 'selected-column' : '', isParticipationForeignKey || isRoundPrimaryKey ? 'relationship-column' : '', isOutputField ? 'output-column' : ''].filter(Boolean).join(' ');
+    const badge = isParticipationForeignKey ? '<span class="key-badge">FK</span>' : isRoundPrimaryKey ? '<span class="key-badge">PK</span>' : '';
+    const content = `<code>${escapeHtml(column.column)}</code>${badge}`;
+    return isConnectingChoice
+      ? `<li><button type="button" class="working-column ${classes}" data-working-column="${escapeHtml(column.column)}">${content}</button></li>`
+      : `<li class="working-column ${classes}">${content}</li>`;
   }
 
-  function isRelationSelected(name) {
-    return state.selectedRelations.includes(name);
+  function orderedSelectedRelations() {
+    const selected = state.selectedRelations.map((name) => getSchema().find((relation) => relation.name === name)).filter(Boolean);
+    if (!REQUIRED_RELATIONS.every((name) => state.selectedRelations.includes(name))) return selected;
+    return [...REQUIRED_RELATIONS.map((name) => selected.find((relation) => relation.name === name)), ...selected.filter((relation) => !REQUIRED_RELATIONS.includes(relation.name))];
   }
 
-  function canAddRelations() {
-    return state.current === 'relations' && !state.pendingAdvance;
+  function workingSchemaStatus() {
+    if (state.current === 'relations' && !state.pendingAdvance) return 'Build it from the live schema';
+    return '';
+  }
+
+  function renderRelations() {
+    const selected = orderedSelectedRelations();
+    const showRelationship = relationshipLevel() > 0 && REQUIRED_RELATIONS.every((name) => state.selectedRelations.includes(name));
+    relationEl.classList.toggle('relationship-visible', showRelationship);
+    relationEl.classList.toggle('cardinality-visible', relationshipLevel() > 1);
+    const status = workingSchemaStatus();
+    workingStatusEl.textContent = status;
+    workingStatusEl.hidden = !status;
+
+    if (!selected.length) {
+      relationEl.innerHTML = '<div class="working-empty">Choose relevant relations from the live schema.</div>';
+      return;
+    }
+
+    const cards = selected.map((relation) => `
+      <article class="data-card" data-relation="${escapeHtml(relation.name)}">
+        <div class="data-card-title"><code>${escapeHtml(relation.name)}</code>${state.current === 'relations' && !state.pendingAdvance ? `<button type="button" class="remove-relation" data-remove-relation="${escapeHtml(relation.name)}">Remove</button>` : ''}</div>
+        <ul class="working-columns">${relation.columns.map((column) => renderColumn(relation, column)).join('')}</ul>
+      </article>
+    `);
+
+    if (showRelationship && cards.length >= 2) {
+      cards.splice(1, 0, '<div class="schema-connector" aria-label="round_investment.funding_round_id matches funding_round.funding_round_id"><span class="connector-line"></span></div>');
+    }
+    relationEl.innerHTML = cards.join('');
+
+    relationEl.querySelectorAll('[data-remove-relation]').forEach((button) => button.addEventListener('click', () => removeRelation(button.dataset.removeRelation)));
+    relationEl.querySelectorAll('[data-working-column]').forEach((button) => button.addEventListener('click', () => {
+      state.selectedColumn = button.dataset.workingColumn;
+      state.localFeedback = '';
+      render();
+    }));
   }
 
   function addRelation(name) {
-    if (!canAddRelations() || state.selectedRelations.includes(name)) return;
+    if (state.current !== 'relations' || state.pendingAdvance || state.selectedRelations.includes(name)) return;
     if (state.selectedRelations.length >= 4) {
-      state.localFeedback = 'The Working Schema can contain up to four relations. Remove one before adding another.';
+      state.localFeedback = 'The Working Schema can contain up to four relations. Remove one to add another.';
       render();
       return;
     }
@@ -169,118 +126,31 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
   }
 
   function removeRelation(name) {
-    if (!canAddRelations()) return;
+    if (state.current !== 'relations' || state.pendingAdvance) return;
     state.selectedRelations = state.selectedRelations.filter((item) => item !== name);
     state.localFeedback = '';
     render();
     onSelectionChange();
   }
 
-  function orderedRelations() {
-    if (state.current === 'relations') return state.selectedRelations;
-    if (!hasExactRequiredRelations()) return state.selectedRelations;
-    return ['round_investment', 'funding_round'];
-  }
-
-  function renderColumn(relation, column) {
-    const relationship = relationshipLevel();
-    const connectionChoice = state.current === 'connection' && !state.pendingAdvance && relation.name === 'round_investment';
-    const selected = connectionChoice && state.selectedColumn === column.column;
-    const isParticipationFk = relationship > 0 && relation.name === 'round_investment' && column.column === 'funding_round_id';
-    const isRoundPk = relationship > 0 && relation.name === 'funding_round' && column.column === 'funding_round_id';
-    const outputField = ['sql', 'result', 'verification'].includes(state.current)
-      && ((relation.name === 'funding_round' && ['funding_round_id', 'round_type', 'announced_date'].includes(column.column))
-        || (relation.name === 'round_investment' && ['round_investment_id', 'investor_id', 'is_lead'].includes(column.column)));
-    const classes = [selected ? 'selected-column' : '', (isParticipationFk || isRoundPk) ? 'relationship-column' : '', outputField ? 'output-column' : ''].filter(Boolean).join(' ');
-    const badge = isParticipationFk ? '<span class="key-badge">FK</span>' : isRoundPk ? '<span class="key-badge">PK</span>' : '';
-    const content = `<code>${escapeHtml(column.column)}</code>${badge}`;
-    return connectionChoice
-      ? `<li><button type="button" class="working-column ${classes}" data-connection-column="${escapeHtml(column.column)}">${content}</button></li>`
-      : `<li class="working-column ${classes}">${content}</li>`;
-  }
-
-  function renderSchemaCard(name) {
-    const relation = relationByName(name);
-    if (!relation) return '';
-    const connectionTarget = state.current === 'connection' && !state.pendingAdvance && name === 'round_investment';
-    const connectionReference = state.current === 'connection' && !state.pendingAdvance && name === 'funding_round';
-    const role = name === 'round_investment' ? 'participation records' : 'round context';
-    return `
-      <article class="data-card ${connectionTarget ? 'cycle1-connection-target' : ''} ${connectionReference ? 'cycle1-connection-reference' : ''}" data-relation="${escapeHtml(name)}">
-        <div class="data-card-title">
-          <div class="cycle1-card-heading"><code>${escapeHtml(name)}</code>${state.current === 'connection' ? `<span>${escapeHtml(role)}</span>` : ''}</div>
-          ${state.current === 'relations' && !state.pendingAdvance ? `<button type="button" class="remove-relation" data-remove-relation="${escapeHtml(name)}">Remove</button>` : ''}
-        </div>
-        <ul class="working-columns">${relation.columns.map((column) => renderColumn(relation, column)).join('')}</ul>
-      </article>`;
-  }
-
-  function workingSchemaCopy() {
-    if (state.current === 'relations' && !state.pendingAdvance) return ['Reasoning surface', 'Build it from the Live Schema'];
-    if (state.current === 'connection' && !state.pendingAdvance) return ['Current action', 'Select the field in round_investment'];
-    if (relationshipLevel() === 1) return ['Working reference', 'round_investment.funding_round_id → funding_round.funding_round_id'];
-    if (relationshipLevel() === 2) return ['Working reference', 'One funding round can relate to many participations'];
-    return ['Working reference', 'Selected relations'];
-  }
-
-  function renderRelations() {
-    const names = orderedRelations();
-    const showRelationship = relationshipLevel() > 0 && hasExactRequiredRelations();
-    relationEl.className = `relation-preview${showRelationship ? ' relationship-visible' : ''}${relationshipLevel() > 1 ? ' cardinality-visible' : ''}`;
-    const [eyebrow, status] = workingSchemaCopy();
-    workingEyebrowEl.textContent = eyebrow;
-    workingStatusEl.textContent = status;
-    workingStatusEl.hidden = !status;
-
-    if (!names.length) {
-      relationEl.innerHTML = '<div class="working-empty">Choose relevant relations from the Live Schema.</div>';
-      return;
-    }
-
-    const cards = names.map(renderSchemaCard);
-    if (showRelationship && cards.length >= 2) {
-      cards.splice(1, 0, '<div class="schema-connector" aria-label="round_investment.funding_round_id references funding_round.funding_round_id"><span class="connector-line"></span></div>');
-    }
-    if (state.current === 'connection' && !state.pendingAdvance) {
-      cards.push(`
-        <div class="cycle1-connection-action">
-          <span>${state.selectedColumn ? `Selected: <code>round_investment.${escapeHtml(state.selectedColumn)}</code>` : 'Select one column in round_investment.'}</span>
-          <button id="check-connection" class="primary" type="button" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>
-        </div>
-      `);
-    }
-    relationEl.innerHTML = cards.join('');
-
-    relationEl.querySelectorAll('[data-remove-relation]').forEach((button) => button.addEventListener('click', () => removeRelation(button.dataset.removeRelation)));
-    relationEl.querySelectorAll('[data-connection-column]').forEach((button) => button.addEventListener('click', () => {
-      state.selectedColumn = button.dataset.connectionColumn;
-      state.localFeedback = '';
-      render();
-    }));
-    document.getElementById('check-connection')?.addEventListener('click', checkConnection);
-  }
-
   function renderCompleted() {
-    interactionLifecycle.renderCompleted(state.completed.map((item) => ({
+    interactionLifecycle.renderCompleted(state.completed.filter((item) => item.id !== state.pendingAdvance?.item.id).map((item) => ({
       id: item.id,
       summaryHtml: `<span class="complete-mark">✓</span><span>${escapeHtml(item.label)}</span><span class="completed-answer" title="${escapeHtml(item.answer)}">${escapeHtml(item.answer)}</span>`,
-      reviewHtml: `${item.reviewHtml || `<p class="review-question"><strong>${escapeHtml(stripMarkup(item.prompt))}</strong></p><p><strong>${escapeHtml(item.answerLabel || 'Your answer')}:</strong> ${escapeHtml(item.answer)}</p>${item.options ? `<fieldset class="choices review-choices" disabled>${item.options.map(([value, label]) => `<label class="${value === item.value ? 'selected-choice' : ''}"><input type="radio" ${value === item.value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>` : ''}${item.feedback ? `<div class="review-feedback">${item.feedback}</div>` : ''}`}${item.assistance ? `<p class="assistance-review"><strong>Assistance:</strong> ${escapeHtml(assistanceLabel(item.assistance))}</p>` : ''}`,
+      reviewHtml: `<p class="review-question"><strong>${escapeHtml(stripMarkup(item.prompt))}</strong></p><p><strong>${escapeHtml(item.answerLabel)}:</strong> ${escapeHtml(item.answer)}</p>${item.options ? `<fieldset class="choices review-choices" disabled>${item.options.map(([value, label]) => `<label class="${value === item.value ? 'selected-choice' : ''}"><input type="radio" ${value === item.value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>` : ''}${item.feedback ? `<div class="review-feedback">${item.feedback}</div>` : ''}`,
     })));
   }
 
-  function record({ evidence, prompt, answer, next, label, value, options, feedback = '', assistance = '' }) {
+  function setCurrent(next) {
+    state.current = next;
+    state.localFeedback = '';
+    render();
+    onSelectionChange();
+  }
+
+  function record({ evidence, prompt, answer, answerLabel = 'Your answer', feedback = '', next, label, value, options }) {
     if (evidence) state.evidence.add(evidence);
-    const item = {
-      id: `${state.current}-${state.completed.length + 1}`,
-      label: label || LABELS[state.current],
-      prompt,
-      answer,
-      answerLabel: 'Your answer',
-      value,
-      options,
-      feedback,
-      assistance,
-    };
+    const item = { id: state.current, label: label || INTERACTION_LABELS[state.current], prompt, answer, answerLabel, feedback, value, options };
     state.completed.push(item);
     state.pendingAdvance = { next, item };
     state.localFeedback = '';
@@ -288,459 +158,15 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
     onSelectionChange();
   }
 
-  function setCurrent(next) {
-    state.current = next;
-    state.localFeedback = '';
-    state.pendingAdvance = null;
-    hideSolution();
-    render();
-    onSelectionChange();
+  function wrong(feedback) { state.localFeedback = feedback; render(); }
+
+  function feedbackMarkup() {
+    return state.localFeedback ? `<div class="local-feedback incorrect" role="alert"><strong>Not quite.</strong> ${state.localFeedback.replace(/^Not quite\.\s*/i, '')}</div>` : '';
   }
 
-  function wrong(message) {
-    state.localFeedback = message;
-    render();
-  }
-
-  function continueFromPending(buttonId) {
-    document.getElementById(buttonId)?.addEventListener('click', () => setCurrent(state.pendingAdvance.next));
-  }
-
-  function renderAcknowledgement() {
-    const { item, next } = state.pendingAdvance;
-    let guidance = '';
-    let button = 'Continue';
-
-    if (next === 'connection') {
-      guidance = 'You now have the round context and the participation records. Next, trace one participation back to the round it belongs to.';
-      button = 'Trace the relationship';
-    } else if (next === 'grain') {
-      guidance = 'That field links each participation to its funding round. The relationship is now visible; next decide what one audit row should represent.';
-      button = 'Continue to row meaning';
-    } else if (next === 'cardinality') {
-      guidance = 'One audit row represents one recorded participation. Round information can appear on that row as context without changing the row meaning.';
-      button = 'Read the relationship';
-    } else if (next === 'prediction') {
-      guidance = 'The relationship allows one funding round to have multiple participation records. Keep that together with the participation-level Grain for the next prediction.';
-      button = 'Predict the result shape';
-    } else if (next === 'sql') {
-      guidance = 'The concrete case follows the same structure you already predicted. Now implement the participation audit in SQL.';
-      button = 'Open the SQL workspace';
-    }
-
-    interactionLifecycle.renderCurrent(stepShell(
-      item.prompt,
-      `<p class="confirmed-answer"><strong>Your answer:</strong> ${escapeHtml(item.answer)}</p>${item.feedback || ''}${teacherVoice(guidance)}<button id="cycle1-continue" class="primary continue-after-feedback">${button}</button>`,
-      '',
-      state.current,
-    ));
-    continueFromPending('cycle1-continue');
-  }
-
-  function renderRelationsStep() {
-    interactionLifecycle.renderCurrent(stepShell(
-      'Which relations contain the information needed for this audit?',
-      `<p class="step-copy">Add the relevant relations from the Live Schema to the Working Schema.</p><button id="check-relations" class="primary" type="button" ${state.selectedRelations.length ? '' : 'disabled'}>Check selection</button>${feedbackMarkup()}`,
-      teacherVoice('The audit needs funding-round context and recorded investor-participation details. Find where those two kinds of information live.'),
-    ));
-    document.getElementById('check-relations').addEventListener('click', () => {
-      if (!hasExactRequiredRelations()) return wrong('Look for one relation that describes a funding round and one that stores investor participation in a round.');
-      record({
-        evidence: 'relations',
-        prompt: 'Which relations contain the information needed for this audit?',
-        answer: 'funding_round and round_investment',
-        next: 'connection',
-        label: LABELS.relations,
-        feedback: '<div class="success-feedback">Correct. <code>funding_round</code> carries round-level context, and <code>round_investment</code> stores the recorded investor participations.</div>',
-      });
-    });
-  }
-
-  function checkConnection() {
-    if (!state.selectedColumn) return;
-    if (state.selectedColumn !== 'funding_round_id') return wrong('Look for the participation field whose value identifies the funding round that participation belongs to.');
-    record({
-      evidence: 'connection',
-      prompt: 'Which column in round_investment tells you which funding round a participation belongs to?',
-      answer: 'round_investment.funding_round_id',
-      next: 'grain',
-      label: LABELS.connection,
-      feedback: '<div class="success-feedback">Correct. <code>round_investment.funding_round_id</code> points to <code>funding_round.funding_round_id</code>.</div>',
-    });
-  }
-
-  function renderConnectionStep() {
-    interactionLifecycle.renderCurrent(stepShell(
-      'In round_investment, which column tells you which funding round a participation belongs to?',
-      `<p class="step-copy">Select the column in the highlighted relation, then check your selection beside the schema.</p>${feedbackMarkup()}`,
-      teacherVoice('Start from one participation record. Which field identifies the funding round that participation belongs to?'),
-    ));
-  }
-
-  function renderGrain() {
-    const options = [
-      ['round', 'One funding round.'],
-      ['participation', 'One recorded round-investor participation.'],
-      ['investor', 'One investor across all funding rounds.'],
-      ['company', 'One company.'],
-    ];
-    const draft = state.drafts.grain || '';
-    interactionLifecycle.renderCurrent(stepShell(
-      'What should one row of the participation audit represent?',
-      `${choiceForm('grain-form', options, draft)}${feedbackMarkup()}`,
-      teacherVoice('The audit combines funding-round context with investor-participation details. Decide what the result needs to keep individually represented from row to row.'),
-    ));
-    document.getElementById('grain-form').addEventListener('submit', (event) => {
-      event.preventDefault();
-      const answer = new FormData(event.currentTarget).get('answer');
-      state.drafts.grain = answer || '';
-      if (answer !== 'participation') return wrong('The audit needs individual participation records to remain distinguishable while round context is carried alongside them. Which row meaning preserves that?');
-      record({
-        evidence: 'grain',
-        prompt: 'What should one row of the participation audit represent?',
-        answer: 'One recorded round-investor participation.',
-        value: answer,
-        options,
-        next: 'cardinality',
-        label: LABELS.grain,
-        assistance: state.grainAssistance,
-        feedback: '<div class="success-feedback">Correct. The audit is participation-level: one output row represents one recorded participation.</div>',
-      });
-    });
-  }
-
-  function renderCardinality() {
-    const options = [
-      ['one-many', 'Each participation belongs to one funding round, and one funding round can have multiple participation records.'],
-      ['round-one', 'Each funding round belongs to exactly one participation record.'],
-      ['participation-many', 'A participation can belong to multiple funding rounds.'],
-      ['exact-one', 'Exactly one participation is allowed for every funding round.'],
-    ];
-    const draft = state.drafts.cardinality || '';
-    interactionLifecycle.renderCurrent(stepShell(
-      'Which statement matches the relationship?',
-      `${choiceForm('cardinality-form', options, draft)}${feedbackMarkup()}`,
-      teacherVoice('You found how a participation points to its funding round. Now read that relationship in both directions.'),
-    ));
-    document.getElementById('cardinality-form').addEventListener('submit', (event) => {
-      event.preventDefault();
-      const answer = new FormData(event.currentTarget).get('answer');
-      state.drafts.cardinality = answer || '';
-      if (answer !== 'one-many') return wrong('Follow the relationship from one participation to its round, then ask whether the same round can be referenced by more than one participation record.');
-      record({
-        evidence: 'cardinality',
-        prompt: 'Which statement matches the relationship?',
-        answer: 'Each participation belongs to one round; one round can have multiple participations.',
-        value: answer,
-        options,
-        next: 'prediction',
-        label: LABELS.cardinality,
-        assistance: state.cardinalityAssistance,
-        feedback: '<div class="success-feedback">Correct. One funding round can relate to multiple participation records, while each participation belongs to one funding round.</div>',
-      });
-    });
-  }
-
-  function predictionPremisesMarkup() {
-    return `<div class="cycle1-premises" aria-label="Established facts">
-      <p><span>Result Grain</span><strong>one recorded participation per row</strong></p>
-      <p><span>Relationship</span><strong>one funding round can have multiple participation records</strong></p>
-    </div>`;
-  }
-
-  function predictionHintsMarkup() {
-    const hint1Available = state.predictionWrongAttempts >= 1;
-    const hint2Available = state.predictionWrongAttempts >= 2;
-    return `<div class="local-assistance" aria-label="Prediction assistance">
-      ${hint1Available ? '<button id="hint-1" type="button" class="assistance-button">Hint 1</button>' : ''}
-      ${hint2Available ? '<button id="hint-2" type="button" class="assistance-button">Hint 2</button>' : ''}
-      ${state.predictionHintsOpened.has('hint-1') ? '<div class="hint-text"><strong>Hint 1:</strong> Keep one participation per result row fixed.</div>' : ''}
-      ${state.predictionHintsOpened.has('hint-2') ? '<div class="hint-text"><strong>Hint 2:</strong> If several participation records belong to the same round, each record still needs its own participation-level row.</div>' : ''}
-    </div>`;
-  }
-
-  function wirePredictionHints() {
-    document.getElementById('hint-1')?.addEventListener('click', () => {
-      state.predictionHintsOpened.add('hint-1');
-      raiseAssistance('predictionAssistance', 'hint-1');
-      render();
-    });
-    document.getElementById('hint-2')?.addEventListener('click', () => {
-      state.predictionHintsOpened.add('hint-2');
-      raiseAssistance('predictionAssistance', 'hint-2');
-      render();
-    });
-  }
-
-  function renderPrediction() {
-    const step = PREDICTION_STEPS[state.predictionIndex];
-    const draftKey = `prediction-${step.id}`;
-    const draft = state.drafts[draftKey] || '';
-    const prior = state.predictionAnswers.length
-      ? `<p class="cycle1-established-answer"><span>Already established</span>${escapeHtml(state.predictionAnswers[0].answer)}</p>`
-      : '';
-    const guidance = state.predictionIndex === 0
-      ? 'Keep both established facts in view. The question is what those two facts require the result to look like.'
-      : 'Now keep the row meaning fixed and compare what stays shared with what changes from participation to participation.';
-
-    interactionLifecycle.renderCurrent(stepShell(
-      step.prompt,
-      `${predictionPremisesMarkup()}${prior}${choiceForm('prediction-form', step.options, draft)}${feedbackMarkup()}${predictionHintsMarkup()}`,
-      teacherVoice(guidance),
-    ));
-    wirePredictionHints();
-    document.getElementById('prediction-form').addEventListener('submit', (event) => {
-      event.preventDefault();
-      const answer = new FormData(event.currentTarget).get('answer');
-      state.drafts[draftKey] = answer || '';
-      if (answer !== step.correct) {
-        state.predictionWrongAttempts += 1;
-        return wrong(step.wrong);
-      }
-      state.predictionAnswers.push({ id: step.id, value: answer, answer: step.answer, prompt: step.prompt, options: step.options });
-      state.localFeedback = '';
-      if (state.predictionIndex === 0) {
-        state.predictionIndex = 1;
-        render();
-        return;
-      }
-
-      state.evidence.add('prediction');
-      state.completed.push({
-        id: `prediction-${state.completed.length + 1}`,
-        label: LABELS.prediction,
-        prompt: 'What did you predict before running SQL?',
-        answer: 'One round can occupy several participation rows, and its round-level context can repeat across those distinct rows.',
-        reviewHtml: `<div class="cycle1-prediction-review">${state.predictionAnswers.map((item) => `<p><strong>${escapeHtml(item.prompt)}</strong><span>${escapeHtml(item.answer)}</span></p>`).join('')}</div>`,
-        assistance: state.predictionAssistance,
-      });
-      state.current = 'concept';
-      render();
-      onSelectionChange();
-    });
-  }
-
-  function renderConcept() {
-    interactionLifecycle.renderCurrent(stepShell(
-      'You have just predicted JOIN row multiplication.',
-      `<section class="concept-callout cycle1-concept"><strong>CONCEPT MOMENT</strong><b>JOIN row multiplication</b><span>When one row on the one-side matches several rows on the many-side, the JOIN can produce several output rows for that one-side entity. At participation Grain, the round values repeat because each row represents a different matched participation.</span><div class="cycle1-multiplication-visual" aria-label="One funding round contributes context to several participation rows"><span>one funding round</span><i>→</i><span>several matching participations</span><i>→</i><span>several result rows</span></div></section><button id="continue-to-application" class="primary continue-after-feedback">Apply it to a concrete case</button>`,
-      teacherVoice('You reached this conclusion from the relationship and the result Grain before seeing any query output.'),
-    ));
-    document.getElementById('continue-to-application').addEventListener('click', () => setCurrent('application'));
-  }
-
-  function renderApplication() {
-    const options = [
-      ['1', '1 row.'],
-      ['3', '3 distinct participation rows.'],
-      ['9', '9 rows.'],
-      ['unknown', 'Impossible to tell even after the number of participations is known.'],
-    ];
-    const draft = state.drafts.application || '';
-    interactionLifecycle.renderCurrent(stepShell(
-      'If one funding round has 3 recorded participations, how many participation-level result rows are needed?',
-      `<div class="cycle1-case-fact"><span>Concrete case</span><strong>1 funding round · 3 recorded participations</strong></div>${choiceForm('application-form', options, draft)}${feedbackMarkup()}`,
-      teacherVoice('Apply the same structure you just predicted. The result Grain is still one recorded participation per row.'),
-    ));
-    document.getElementById('application-form').addEventListener('submit', (event) => {
-      event.preventDefault();
-      const answer = new FormData(event.currentTarget).get('answer');
-      state.drafts.application = answer || '';
-      if (answer !== '3') return wrong('At participation Grain, each of the three recorded participations needs its own result row.');
-      record({
-        evidence: 'application',
-        prompt: 'If one funding round has 3 recorded participations, how many participation-level result rows are needed?',
-        answer: '3 distinct participation rows.',
-        value: answer,
-        options,
-        next: 'sql',
-        label: LABELS.application,
-        assistance: state.applicationAssistance,
-        feedback: '<div class="success-feedback">Correct. Three recorded participations require three participation-level rows.</div>',
-      });
-    });
-  }
-
-  function clearRenderedResults() {
-    document.getElementById('result-content').innerHTML = '<p class="empty">Results will appear here.</p>';
-    document.getElementById('result-meta').textContent = 'No query run';
-    clearButton.disabled = true;
-  }
-
-  function renderSql() {
-    if (!state.sqlPrepared) {
-      editor.setValue('', -1);
-      clearRenderedResults();
-      state.sqlPrepared = true;
-    }
-    interactionLifecycle.renderCurrent(stepShell(
-      'Write the JOIN for the participation audit.',
-      `<p class="step-copy">Join the two established relations so the result matches the audit contract.</p>
-        <details class="optional-scaffold desired-output"><summary>Show desired output</summary><div class="optional-scaffold-body"><div class="desired-output-grid"><code>funding_round_id</code><code>round_type</code><code>announced_date</code><code>round_investment_id</code><code>investor_id</code><code>is_lead</code></div><p>Return these six fields in the participation-level result.</p></div></details>
-        <p class="implementation-check"><strong>Earlier prediction:</strong> one funding round can occupy several participation rows when several participations belong to it.</p>${feedbackMarkup()}`,
-      teacherVoice('Use the relationship you already established to write the JOIN. Keep the Working Schema nearby, and open Desired Output if you need the exact field contract.'),
-    ));
-  }
-
-  function canonicalRows() {
-    const db = getDatabase();
-    if (!db) return [];
-    const result = db.exec(`
-      SELECT
-        funding_round.funding_round_id,
-        funding_round.round_type,
-        funding_round.announced_date,
-        round_investment.round_investment_id,
-        round_investment.investor_id,
-        round_investment.is_lead
-      FROM funding_round
-      INNER JOIN round_investment
-        ON funding_round.funding_round_id = round_investment.funding_round_id;
-    `)[0];
-    return (result?.values || []).map((row) => JSON.stringify(row)).sort();
-  }
-
-  function resultMatchesCanonical(resultSet) {
-    if (!resultSet || resultSet.values.length !== 72) return false;
-    const required = ['funding_round_id', 'round_type', 'announced_date', 'round_investment_id', 'investor_id', 'is_lead'];
-    const indexes = required.map((name) => resultSet.columns.indexOf(name));
-    if (indexes.some((index) => index < 0)) return false;
-    const actual = resultSet.values.map((row) => JSON.stringify(indexes.map((index) => row[index]))).sort();
-    const expected = canonicalRows();
-    return actual.length === expected.length && actual.every((value, index) => value === expected[index]);
-  }
-
-  function validateSql(statement, resultSets) {
-    const normalized = statement.replace(/["`\[\]]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
-    const forbidden = [
-      /\bleft\s+join\b/,
-      /\bgroup\s+by\b/,
-      /\bhaving\b/,
-      /\bdistinct\b/,
-      /\bexists\b/,
-      /\bunion\b/,
-      /\bcount\s*\(/,
-      /\bsum\s*\(/,
-      /\bavg\s*\(/,
-      /\bmin\s*\(/,
-      /\bmax\s*\(/,
-    ];
-    if (forbidden.some((pattern) => pattern.test(normalized))) {
-      return { ok: false, message: 'Keep this audit to the direct participation-level INNER JOIN. Do not add aggregation, DISTINCT, LEFT JOIN, EXISTS, or another repair mechanism.' };
-    }
-    if (!/\bfrom\s+(?:funding_round|round_investment)\b/.test(normalized)) {
-      return { ok: false, message: 'Use funding_round and round_investment as the two relations for this audit.' };
-    }
-    const hasBothRelations = /\bfunding_round\b/.test(normalized) && /\bround_investment\b/.test(normalized);
-    if (!hasBothRelations || !/\b(?:inner\s+)?join\b/.test(normalized) || !/\bon\b/.test(normalized)) {
-      return { ok: false, message: 'Use a direct INNER JOIN between funding_round and round_investment and express their funding_round_id relationship in ON.' };
-    }
-    const resultSet = resultSets.at(-1);
-    if (!resultMatchesCanonical(resultSet)) {
-      return { ok: false, message: 'The query ran, but the result does not yet match the six-field participation audit with all 72 current participation rows.' };
-    }
-    return { ok: true };
-  }
-
-  function handleSqlSuccess(statement, resultSets) {
-    if (state.current !== 'sql') return;
-    const validation = validateSql(statement, resultSets);
-    if (!validation.ok) {
-      state.localFeedback = validation.message;
-      render();
-      return;
-    }
-    state.lastResultSet = resultSets.at(-1);
-    state.completed.push({
-      id: `sql-${state.completed.length + 1}`,
-      label: LABELS.sql,
-      prompt: 'Write the JOIN for the participation audit.',
-      answer: 'Participation-level INNER JOIN executed with 72 current rows.',
-      assistance: state.sqlAssistance,
-    });
-    state.current = 'result';
-    state.localFeedback = '';
-    hideSolution();
-    render();
-    onSelectionChange();
-  }
-
-  function renderResult() {
-    interactionLifecycle.renderCurrent(stepShell(
-      'The query returned 72 rows. Inspect the actual result before interpreting it.',
-      teacherVoice('The 72-row count tells you what the query returned; it does not explain why the rows look that way. Inspect the rows before deciding whether your prediction held.'),
-    ));
-    const action = renderWorkspaceAction(`
-      <div class="cycle1-result-handoff"><span>Query executed</span><strong>72 rows returned</strong><button id="inspect-1003" class="primary" type="button">Inspect funding round 1003</button></div>
-    `, 'cycle1-result-action');
-    action.querySelector('#inspect-1003').addEventListener('click', () => setCurrent('verification'));
-  }
-
-  function actualSliceRows() {
-    const resultSet = state.lastResultSet;
-    if (!resultSet) return [];
-    const indexes = ['funding_round_id', 'round_type', 'announced_date', 'round_investment_id', 'investor_id', 'is_lead'].map((name) => resultSet.columns.indexOf(name));
-    if (indexes.some((index) => index < 0)) return [];
-    return resultSet.values
-      .filter((row) => String(row[indexes[0]]) === '1003')
-      .map((row) => indexes.map((index) => row[index]));
-  }
-
-  function actualSliceMarkup() {
-    const columns = ['funding_round_id', 'round_type', 'announced_date', 'round_investment_id', 'investor_id', 'is_lead'];
-    const rows = actualSliceRows();
-    return `<div class="cycle1-slice"><div class="cycle1-slice-heading"><span>Actual query evidence</span><strong>funding_round_id = 1003</strong></div><div class="result-content"><table><thead><tr>${columns.map((column) => `<th>${column}</th>`).join('')}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((value) => `<td>${escapeHtml(value)}</td>`).join('')}</tr>`).join('')}</tbody></table></div></div>`;
-  }
-
-  function renderVerification() {
-    const options = [
-      ['distinct', 'They are four distinct participation rows for the same funding round. The round context repeats because each row represents a different participation.'],
-      ['duplicates', 'They are four accidental duplicate rows that should collapse to one.'],
-      ['different-rounds', 'They represent four different funding rounds.'],
-      ['same-participation', 'They show one participation repeated four times.'],
-    ];
-    const draft = state.drafts.verification || '';
-    interactionLifecycle.renderCurrent(stepShell(
-      'Use the actual rows to check the prediction.',
-      teacherVoice('Compare the repeated round fields with the participation and investor identifiers that change from row to row.'),
-    ));
-    const action = renderWorkspaceAction(`
-      ${actualSliceMarkup()}
-      <div class="cycle1-verification-question">
-        <div class="evidence-kicker">Verify from the evidence</div>
-        <h3>What do these four rows show about funding round 1003?</h3>
-        ${choiceForm('verification-form', options, draft)}
-        ${feedbackMarkup()}
-      </div>
-    `, 'cycle1-verification-action');
-    action.querySelector('#verification-form').addEventListener('submit', (event) => {
-      event.preventDefault();
-      const answer = new FormData(event.currentTarget).get('answer');
-      state.drafts.verification = answer || '';
-      if (answer !== 'distinct') return wrong('Compare the repeated funding-round fields with the changing round_investment_id and investor_id values.');
-      state.evidence.add('verification');
-      state.completed.push({
-        id: `verification-${state.completed.length + 1}`,
-        label: LABELS.verification,
-        prompt: 'What do these four rows show about funding round 1003?',
-        answer: 'Four distinct participation rows for one round; repeated round context is expected.',
-        value: answer,
-        options,
-        assistance: state.verificationAssistance,
-      });
-      state.current = 'complete';
-      state.localFeedback = '';
-      render();
-      onSelectionChange();
-    });
-  }
-
-  function renderComplete() {
-    interactionLifecycle.renderCurrent(stepShell(
-      'Your prediction matches the result.',
-      `<div class="cycle1-completion"><p>One funding round can contribute several participation-level result rows when it has several recorded participations.</p><p>The round-level context repeats across those rows because each row represents a different participation.</p><strong>That is JOIN row multiplication.</strong></div>`,
-      teacherVoice('You predicted the row shape from Grain and Cardinality before execution, then confirmed it in the actual rows.'),
-    ));
+  function stepShell(prompt, body, intro = '') {
+    const label = INTERACTION_LABELS[state.current];
+    return state.current !== 'complete' ? `<div class="step-kicker">${label}</div>${intro}<h2 class="prompt">${prompt}</h2>${body}` : `<h2 class="prompt">${prompt}</h2>${body}`;
   }
 
   function clearWorkspaceAction() {
@@ -757,55 +183,274 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
     return element;
   }
 
+  function continueFromPending(buttonId) {
+    document.getElementById(buttonId).addEventListener('click', () => {
+      const next = state.pendingAdvance.next;
+      state.pendingAdvance = null;
+      setCurrent(next);
+    });
+  }
+
+  function renderAcknowledgement() {
+    const { next, item } = state.pendingAdvance;
+
+    if (item.id === 'baselineRun' && next === 'prediction') {
+      interactionLifecycle.renderCurrent(stepShell('Baseline established.', teacherVoice('The measurement gives us the one-side starting reference for the next prediction.')));
+      renderWorkspaceAction(`
+        ${item.feedback}
+        ${teacherVoice('Keep this baseline together with the one-round-to-many-participations relationship and the participation-level result Grain.')}
+        <button id="continue-after-baseline" class="primary">Continue</button>
+      `, 'baseline-followup');
+      continueFromPending('continue-after-baseline');
+      return;
+    }
+
+    if (item.id === 'prediction' && next === 'operation') {
+      interactionLifecycle.renderCurrent(stepShell('Prediction established.', teacherVoice('You now have an expectation for the result shape. Next, choose the relational action that can produce it.')));
+      renderWorkspaceAction(`
+        ${item.feedback}
+        <button id="continue-after-prediction" class="primary">Continue</button>
+      `, 'prediction-followup');
+      continueFromPending('continue-after-prediction');
+      return;
+    }
+
+    if (item.id === 'sql' && next === 'finalGrain') {
+      interactionLifecycle.renderCurrent(stepShell('Inspect the result.', teacherVoice('Use the returned rows and columns as evidence before deciding whether the earlier prediction held.')));
+      renderWorkspaceAction(`
+        ${item.feedback}
+        ${teacherVoice('Compare what you see with the earlier prediction: one funding round can appear across several participation rows.')}
+        <button id="continue-to-verification" class="primary">Continue to verification</button>
+      `, 'result-followup');
+      continueFromPending('continue-to-verification');
+      return;
+    }
+
+    if (item.id === 'finalGrain' && next === 'complete') {
+      interactionLifecycle.renderCurrent(stepShell('Verification complete.', teacherVoice('You used the actual result to close the reasoning loop.')));
+      renderWorkspaceAction(`
+        <p class="confirmed-answer"><strong>${escapeHtml(item.answerLabel)}:</strong> ${escapeHtml(item.answer)}</p>
+        ${item.feedback}
+        <button id="complete-after-verification" class="primary">Complete stage</button>
+      `, 'verification-followup');
+      continueFromPending('complete-after-verification');
+      return;
+    }
+
+    const continueLabel = next === 'complete' ? 'Complete stage' : 'Continue';
+    interactionLifecycle.renderCurrent(stepShell(item.prompt, `
+      <p class="confirmed-answer"><strong>${escapeHtml(item.answerLabel)}:</strong> ${escapeHtml(item.answer)}</p>
+      ${item.feedback}
+      <button id="continue-after-feedback" class="primary continue-after-feedback">${continueLabel}</button>
+    `));
+    continueFromPending('continue-after-feedback');
+  }
+
+  function choiceQuestion({ prompt, options, correct, feedback, wrongFeedback, next, evidence, intro = '' }) {
+    const draft = state.drafts[state.current] || '';
+    interactionLifecycle.renderCurrent(stepShell(prompt, `<form id="answer-form" class="answer-form"><fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${escapeHtml(value)}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset><button class="primary" type="submit">Check answer</button></form>${feedbackMarkup()}`, intro));
+    document.getElementById('answer-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const answer = new FormData(event.currentTarget).get('answer');
+      state.drafts[state.current] = answer || '';
+      if (answer !== correct) return wrong(wrongFeedback);
+      record({ evidence, prompt, answer: stripMarkup(options.find(([value]) => value === answer)[1]), value: answer, options, feedback, next });
+    });
+  }
+
+  function renderBaselineInterpretation() {
+    const options = [
+      ['rounds', '26 funding rounds'],
+      ['participations', '26 participation records'],
+      ['investors', '26 investors'],
+      ['companies', '26 companies'],
+    ];
+    const draft = state.drafts.baselineRun || '';
+    interactionLifecycle.renderCurrent(stepShell('Interpret the measurement.', teacherVoice('Keep the returned count in view and identify what it tells us about the one-side starting point.')));
+    const action = renderWorkspaceAction(`
+      <div class="evidence-kicker">Interpret the evidence</div>
+      <h3>What does the number 26 represent here?</h3>
+      <form id="baseline-answer-form" class="answer-form">
+        <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${value}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>
+        <button class="primary" type="submit">Check answer</button>
+      </form>
+      ${feedbackMarkup()}
+    `, 'baseline-interpretation');
+    action.querySelector('#baseline-answer-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const answer = new FormData(event.currentTarget).get('answer');
+      state.drafts.baselineRun = answer || '';
+      if (answer !== 'rounds') return wrong('The prepared query counts rows in funding_round. What does one row in that relation represent?');
+      record({
+        evidence: 'baseline',
+        prompt: 'What does the number 26 represent here?',
+        answer: '26 funding rounds',
+        value: 'rounds',
+        options,
+        feedback: '<div class="success-feedback">Correct. There are 26 funding-round rows on the one-side before participation rows are matched to them.</div>',
+        next: 'prediction',
+      });
+    });
+  }
+
+  function renderPrediction() {
+    const options = [
+      ['multiply', 'A funding round can appear in several result rows — one for each matching participation.'],
+      ['exact', 'The result must stay at exactly 26 rows — one row for each funding round.'],
+      ['collapse', 'All participations for a funding round must collapse into one result row.'],
+    ];
+    const draft = state.drafts.prediction || '';
+    interactionLifecycle.renderCurrent(stepShell('Predict from the evidence.', teacherVoice('We have 26 funding-round rows, one funding round can match several participation records, and the requested result keeps one participation per row. Use those established facts before writing SQL.')));
+    const action = renderWorkspaceAction(`
+      <div class="baseline-result compact"><span>Established baseline</span><strong>26</strong><span>funding rounds</span></div>
+      <div class="prediction-premises" aria-label="Established facts for the prediction">
+        <div><span>Result Grain</span><strong>one participation per row</strong></div>
+        <div><span>Relationship</span><strong>one round can match several participations</strong></div>
+      </div>
+      <div class="evidence-kicker">Predict behavior</div>
+      <h3>What can happen when participation details are added to the funding rounds?</h3>
+      <form id="prediction-answer-form" class="answer-form">
+        <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${value}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>
+        <button class="primary" type="submit">Check answer</button>
+      </form>
+      ${feedbackMarkup()}
+    `, 'prediction-question');
+    action.querySelector('#prediction-answer-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const answer = new FormData(event.currentTarget).get('answer');
+      state.drafts.prediction = answer || '';
+      if (answer !== 'multiply') return wrong('Keep one participation per result row fixed. If one funding round matches several participation records, can all of those records remain represented in a single row?');
+      record({
+        evidence: 'prediction',
+        prompt: 'What can happen when participation details are added to the funding rounds?',
+        answer: stripMarkup(options.find(([value]) => value === answer)[1]),
+        value: answer,
+        options,
+        feedback: '<div class="success-feedback">Correct. A funding round with several matching participations can contribute several result rows while each row still represents a different participation.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>JOIN row multiplication</b><span>When one row on the one-side matches several rows on the many-side, the JOIN can produce several result rows for that one-side entity. The round-level values can repeat because the participation rows are distinct.</span></div>',
+        next: 'operation',
+      });
+    });
+  }
+
+  function renderFinalVerification() {
+    const options = [
+      ['yes', '72 participation rows; the same funding round can appear on several rows with different participation details.'],
+      ['round-grain', '72 rows, but each row represents one funding round rather than one participation.'],
+      ['duplicates', 'Repeated funding-round values mean those rows are accidental duplicates that should collapse.'],
+    ];
+    const draft = state.drafts.finalGrain || '';
+    interactionLifecycle.renderCurrent(stepShell('Verify the result.', teacherVoice('Keep the actual result in view. Compare its row meaning and repeated funding-round values with the prediction you made before writing SQL.')));
+    const action = renderWorkspaceAction(`
+      <div class="verification-prompt"><strong>Compare the result with your prediction</strong><span>Earlier prediction: one funding round can appear across several participation rows.</span></div>
+      <h3>What does the result show?</h3>
+      <form id="verification-answer-form" class="answer-form">
+        <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${value}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>
+        <button class="primary" type="submit">Check answer</button>
+      </form>
+      ${feedbackMarkup()}
+    `, 'verification-question');
+    action.querySelector('#verification-answer-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const answer = new FormData(event.currentTarget).get('answer');
+      state.drafts.finalGrain = answer || '';
+      if (answer !== 'yes') return wrong('Use the visible result as evidence. Look at funding_round_id 1003: its round-level values repeat while round_investment_id and investor_id change.');
+      record({
+        evidence: 'finalGrain',
+        prompt: 'What does the result show?',
+        answer: stripMarkup(options.find(([value]) => value === answer)[1]),
+        value: answer,
+        options,
+        feedback: '<div class="success-feedback">Correct. The result has 72 participation rows. Funding round 1003 appears four times because it has four distinct participation records; the repeated round context is expected.</div>',
+        next: 'complete',
+      });
+    });
+  }
+
+  function hasExactRequiredRelations() {
+    return state.selectedRelations.length === REQUIRED_RELATIONS.length && REQUIRED_RELATIONS.every((relation) => state.selectedRelations.includes(relation));
+  }
+
   function updateWorkspaceVisibility() {
-    const sqlActive = state.current === 'sql';
-    const resultActive = state.current === 'result';
-    const verificationActive = state.current === 'verification';
-    const visible = sqlActive || resultActive || verificationActive;
+    const predictionEvidence = state.current === 'prediction';
+    const baselineWorkspace = state.current === 'baselineRun' || predictionEvidence;
+    const implementationWorkspace = ['sql', 'finalGrain'].includes(state.current);
+    const visible = baselineWorkspace || implementationWorkspace;
+    const baselineEvidence = (state.current === 'baselineRun' && state.baselineExecuted) || predictionEvidence;
+    const resultsEvidence = (state.current === 'sql' && state.pendingAdvance?.next === 'finalGrain') || state.current === 'finalGrain';
+    const sqlImplementation = state.current === 'sql' && !resultsEvidence;
 
-    learningEl.classList.toggle('cycle1-sql-active', sqlActive);
-    learningEl.classList.toggle('cycle1-results-active', resultActive);
-    learningEl.classList.toggle('cycle1-verification-active', verificationActive);
+    if (state.current === 'baselineRun' && !state.baselinePrepared) {
+      editor.setValue(BASELINE_SQL, -1);
+      state.baselinePrepared = true;
+    }
+    if (state.current === 'sql' && !state.implementationPrepared) {
+      editor.setValue('', -1);
+      document.getElementById('clear-results').click();
+      state.implementationPrepared = true;
+    }
+
     labEl.hidden = !visible;
+    learningEl.classList.toggle('sql-active', visible);
+    learningEl.classList.toggle('baseline-workspace-active', baselineWorkspace);
+    learningEl.classList.toggle('baseline-evidence-active', baselineEvidence);
+    learningEl.classList.toggle('prediction-evidence-active', predictionEvidence);
+    learningEl.classList.toggle('join-teaching-active', state.current === 'joinTeaching');
+    learningEl.classList.toggle('sql-implementation-active', sqlImplementation);
+    learningEl.classList.toggle('results-evidence-active', resultsEvidence);
 
-    runButton.hidden = !sqlActive;
-    runButton.disabled = !sqlActive || !getDatabase();
-    clearButton.hidden = !sqlActive;
-    if (!sqlActive) clearButton.disabled = true;
-
-    document.querySelector('.editor-header h2').textContent = sqlActive ? 'Participation audit SQL' : 'SQL result';
-    document.getElementById('editor-note').textContent = sqlActive ? 'SQLite · author the JOIN' : 'Actual returned rows';
+    document.querySelector('.editor-header h2').textContent = baselineWorkspace ? 'Baseline measurement' : 'JOIN implementation';
+    document.querySelectorAll('.lab-action').forEach((element) => {
+      element.hidden = !visible || baselineEvidence || resultsEvidence;
+    });
   }
 
-  function canRunSql() {
-    return state.current === 'sql';
-  }
+  function renderJoinTeaching() {
+    const beat = state.joinTeachingBeat;
+    const beatMarkup = beat === 1 ? `
+      <section class="teaching-beat active-beat">
+        <div class="teaching-beat-heading"><span>1</span><div><strong>Match the rows</strong><p>Reuse the JOIN pattern: a funding-round row matches each participation row with the same <code>funding_round_id</code>.</p></div></div>
+        <div class="row-match-visual" aria-label="Funding round 1003 and one matching participation produce one participation-level result row">
+          <div class="example-row article-row"><strong>funding_round row</strong><span><code>round_type</code><b>series b</b></span><span class="match-value"><code>funding_round_id</code><b>1003</b></span></div>
+          <span class="row-operator">+</span>
+          <div class="example-row source-row"><strong>matching round_investment row</strong><span class="match-value"><code>funding_round_id</code><b>1003</b></span><span><code>investor_id</code><b>14</b></span></div>
+          <span class="row-operator">→</span>
+          <div class="example-row result-row"><strong>result row</strong><span><code>round_type</code><b>series b</b></span><span><code>investor_id</code><b>14</b></span></div>
+        </div>
+      </section>
+    ` : beat === 2 ? `
+      <section class="teaching-beat active-beat">
+        <div class="teaching-beat-heading"><span>2</span><div><strong>Use the relationship in ON</strong><p>The relationship you already established becomes the match condition.</p></div></div>
+        <div class="relationship-on-map"><span>Relationship already established</span><code>round_investment.funding_round_id = funding_round.funding_round_id</code><span class="on-arrow">becomes</span><code>ON funding_round.funding_round_id = round_investment.funding_round_id</code></div>
+      </section>
+    ` : `
+      <section class="teaching-beat active-beat">
+        <div class="teaching-beat-heading"><span>3</span><div><strong>Map the review to SQL</strong><p>The query expresses the same business request and relational reasoning.</p></div></div>
+        <dl class="query-map">
+          <div><dt>requested information</dt><dd><code>SELECT round context + participation fields</code></dd></div>
+          <div><dt>starting round rows</dt><dd><code>FROM funding_round</code></dd></div>
+          <div><dt>add matching participations</dt><dd><code>JOIN round_investment</code></dd></div>
+          <div><dt>how the rows match</dt><dd><code>ON funding_round.funding_round_id = round_investment.funding_round_id</code></dd></div>
+        </dl>
+        <div class="output-requirements"><strong>Earlier prediction</strong><span>one funding round can appear across several participation rows</span></div>
+      </section>
+    `;
 
-  function solutionForSql() {
-    return `<strong>Solution SQL:</strong><pre>SELECT
-  funding_round.funding_round_id,
-  funding_round.round_type,
-  funding_round.announced_date,
-  round_investment.round_investment_id,
-  round_investment.investor_id,
-  round_investment.is_lead
-FROM funding_round
-JOIN round_investment
-  ON funding_round.funding_round_id = round_investment.funding_round_id;</pre><p>This is assistance only. It has not been inserted or run.</p>`;
-  }
+    interactionLifecycle.renderCurrent(stepShell('Reconnect the relationship to the JOIN you already know.', `
+      <div class="join-progress" aria-label="JOIN explanation progress"><span>Teaching step ${beat} of 3</span><div><i class="${beat >= 1 ? 'done' : ''}"></i><i class="${beat >= 2 ? 'done' : ''}"></i><i class="${beat >= 3 ? 'done' : ''}"></i></div></div>
+      <div class="join-teaching">${beatMarkup}</div>
+      <div class="teaching-navigation">
+        <button id="join-teaching-next" class="primary">${beat < 3 ? (beat === 1 ? 'Next: express the match in SQL' : 'Next: map the whole query') : 'Continue to SQL implementation'}</button>
+      </div>
+    `));
 
-  function showSolution() {
-    if (state.current !== 'sql' || !learningEl.classList.contains('cycle1-sql-active')) return;
-    raiseAssistance('sqlAssistance', 'solution-assisted');
-    solutionPanel.innerHTML = `<div class="solution-panel-heading"><span>Solution assistance</span><button id="close-solution" type="button" aria-label="Close solution">Close</button></div><div class="solution-panel-body">${solutionForSql()}</div>`;
-    solutionPanel.hidden = false;
-    document.getElementById('close-solution').addEventListener('click', hideSolution);
-  }
-
-  function hideSolution() {
-    if (!solutionPanel) return;
-    solutionPanel.hidden = true;
-    solutionPanel.innerHTML = '';
+    document.getElementById('join-teaching-next').addEventListener('click', () => {
+      if (state.joinTeachingBeat < 3) {
+        state.joinTeachingBeat += 1;
+        render();
+        return;
+      }
+      setCurrent('sql');
+    });
   }
 
   function render() {
@@ -819,33 +464,145 @@ JOIN round_investment
       return;
     }
 
-    if (state.current === 'relations') renderRelationsStep();
-    else if (state.current === 'connection') renderConnectionStep();
-    else if (state.current === 'grain') renderGrain();
-    else if (state.current === 'cardinality') renderCardinality();
-    else if (state.current === 'prediction') renderPrediction();
-    else if (state.current === 'concept') renderConcept();
-    else if (state.current === 'application') renderApplication();
-    else if (state.current === 'sql') renderSql();
-    else if (state.current === 'result') renderResult();
-    else if (state.current === 'verification') renderVerification();
-    else if (state.current === 'complete') renderComplete();
+    if (state.current === 'relations') {
+      interactionLifecycle.renderCurrent(stepShell('Which relations contain the information we need?', '<p class="step-copy">Add the relevant relations from the Live Schema to the Working Schema.</p><button id="continue-relations" class="primary" disabled>Check selection</button>' + feedbackMarkup()));
+      const relationButton = document.getElementById('continue-relations');
+      relationButton.disabled = !state.selectedRelations.length;
+      relationButton.addEventListener('click', () => {
+        if (!hasExactRequiredRelations()) return wrong('The selection does not yet provide both funding-round context and recorded investor-participation information. Reinspect the Live Schema and revise it.');
+        record({
+          evidence: 'relations',
+          prompt: 'Which relations contain the information we need?',
+          answer: 'funding_round and round_investment',
+          feedback: '<div class="success-feedback">Correct. <code>funding_round</code> gives us the round context, and <code>round_investment</code> contains the recorded investor participations.</div>',
+          next: 'connection',
+        });
+      });
+    } else if (state.current === 'connection') {
+      interactionLifecycle.renderCurrent(stepShell('Which column in <code>round_investment</code> tells us which funding round a participation belongs to?', `<p class="step-copy">Select the column directly in the Working Schema.</p><button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`));
+      document.getElementById('check-column').addEventListener('click', () => {
+        if (state.selectedColumn !== 'funding_round_id') return wrong('Look at one participation row and ask which column identifies the funding round that participation belongs to. The relationship stays hidden until you establish that connection.');
+        record({
+          evidence: 'connection',
+          prompt: 'Which column in round_investment tells us which funding round a participation belongs to?',
+          answer: 'round_investment.funding_round_id',
+          feedback: '<div class="success-feedback">Correct. <code>funding_round_id</code> identifies the funding round for this participation.</div><div class="concept-callout"><strong>REUSED RELATIONSHIP PATTERN</strong><b>Primary Key / Foreign Key</b><span><code>round_investment.funding_round_id</code> is the Foreign Key (FK). It points to <code>funding_round.funding_round_id</code>, the Primary Key (PK), so the participation can be matched with its round context.</span></div>',
+          next: 'cardinality',
+        });
+      });
+    } else if (state.current === 'cardinality') {
+      choiceQuestion({
+        intro: teacherVoice('We know how a participation points to its funding round. Now read that relationship in both directions.'),
+        prompt: 'Which statement best describes what can happen across the two relations?',
+        options: [
+          ['correct', 'One funding round can have many participation records; each participation belongs to one funding round.'],
+          ['participation-many', 'One participation can belong to many funding rounds.'],
+          ['round-one', 'Each funding round can have only one participation record.'],
+          ['many', 'A participation can belong to many rounds, and a round can belong to many participations.'],
+        ],
+        correct: 'correct', evidence: 'cardinality', next: 'output',
+        feedback: '<div class="success-feedback">Correct. One funding round can have many participation records, while each participation belongs to one funding round.</div><div class="concept-callout"><strong>REUSED CONCEPT</strong><b>Cardinality</b><span>This is a one-to-many relationship: one <code>funding_round</code> → many <code>round_investment</code> rows.</span></div>',
+        wrongFeedback: 'Use the relationship you just found: each participation stores one funding_round_id, while the same funding_round_id can appear in multiple participation rows.',
+      });
+    } else if (state.current === 'output') {
+      choiceQuestion({
+        intro: teacherVoice('We now know how funding rounds and participation records are related. Before we combine them, be clear about the result the review is asking for.'),
+        prompt: 'If the result should show who took part in each funding round, what should one result row represent?',
+        options: [['participation', 'one recorded round-investor participation'], ['round', 'one funding round'], ['investor', 'one investor across all rounds'], ['company', 'one company']],
+        correct: 'participation', evidence: 'output', next: 'baselineRun',
+        feedback: '<div class="success-feedback">Correct. Each row is about one recorded participation. Funding-round information can be carried alongside it without changing that row meaning.</div><div class="concept-callout"><strong>REUSED CONCEPT</strong><b>Grain</b><span>The requested result Grain is one recorded round-investor participation per row.</span></div>',
+        wrongFeedback: 'The review needs each recorded participation to remain individually visible. What must one result row represent to preserve that?',
+      });
+    } else if (state.current === 'baselineRun') {
+      if (!state.baselineExecuted) {
+        interactionLifecycle.renderCurrent(stepShell('How many funding-round rows are on the one-side before the JOIN?', `${teacherVoice('You established a participation-level result Grain. Now measure the one-side starting reference before participation rows are matched to it.')}<div class="measurement-note"><code>COUNT(*)</code> counts the rows in <code>funding_round</code>. Run the prepared measurement beside this step; you do not need to write SQL yet.</div>${feedbackMarkup()}`));
+      } else {
+        renderBaselineInterpretation();
+      }
+    } else if (state.current === 'prediction') {
+      renderPrediction();
+    } else if (state.current === 'operation') {
+      choiceQuestion({
+        intro: teacherVoice('We now know the result should keep one participation per row while carrying the matching round context.'),
+        prompt: 'What should we do with the funding-round rows and their matching participation rows?',
+        options: [['combine', 'Combine each funding round with its matching participation rows.'], ['filter', 'Filter funding rounds down to one participation each.'], ['aggregate', 'Aggregate all participations for a round into one row.']],
+        correct: 'combine', evidence: 'operation', next: 'joinTeaching',
+        feedback: '<div class="success-feedback">Correct. We need to combine each funding round with its matching participation rows. This reuses the JOIN operation you already learned.</div>',
+        wrongFeedback: 'The review must keep every participation row visible while adding the matching round context. Do not filter or collapse the participation records.',
+      });
+    } else if (state.current === 'joinTeaching') {
+      renderJoinTeaching();
+    } else if (state.current === 'sql') {
+      interactionLifecycle.renderCurrent(stepShell('Now translate the relationship into SQL.', `<p class="step-copy">Write the participation query from the business request and the established relationship.</p>
+        <details class="optional-scaffold desired-output"><summary>Show desired output</summary><div class="optional-scaffold-body"><div class="desired-output-grid"><code>funding_round_id</code><code>round_type</code><code>announced_date</code><code>round_investment_id</code><code>investor_id</code><code>is_lead</code></div><p>Return these six fields in this order.</p></div></details>
+        <details class="optional-scaffold sql-structure"><summary>Show SQL structure</summary><div class="optional-scaffold-body"><pre>SELECT ...
+FROM funding_round
+JOIN round_investment
+  ON ...</pre><p>Use <code>JOIN</code> to add the participation relation and <code>ON</code> to express the relationship you already established.</p></div></details>
+        <p class="implementation-check"><strong>Earlier prediction:</strong> one funding round can appear across several participation rows.</p>${feedbackMarkup()}`));
+    } else if (state.current === 'finalGrain') {
+      renderFinalVerification();
+    } else if (state.current === 'complete') {
+      const requiredEvidence = ['relations', 'connection', 'cardinality', 'output', 'baseline', 'prediction', 'operation', 'sql', 'finalGrain'];
+      const complete = requiredEvidence.every((item) => state.evidence.has(item));
+      interactionLifecycle.renderCurrent(stepShell('Stage complete', `<div class="completion-state"><div class="completion-icon">✓</div><p>${complete ? 'You predicted JOIN row multiplication from the relationship and result Grain, then verified it in the 72-row participation result.' : 'The required learning evidence is incomplete.'}</p></div>`));
+    }
   }
 
-  function refresh() {
-    render();
+  function normalizedRows(values) { return values.map((row) => JSON.stringify(row)).sort(); }
+
+  function validateParticipationResult(statement, resultSets) {
+    if (!resultSets.length || !/\b(?:inner\s+)?join\b/i.test(statement) || !/\bon\b/i.test(statement)) return false;
+    if (/\b(?:distinct|group\s+by|having|left\s+join|union)\b/i.test(statement)) return false;
+    const result = resultSets.at(-1);
+    if (result.columns.length !== 6 || result.values.length !== 72) return false;
+    const expectedColumns = ['funding_round_id', 'round_type', 'announced_date', 'round_investment_id', 'investor_id', 'is_lead'];
+    const columns = result.columns.map((column) => column.toLowerCase());
+    if (!columns.every((column, index) => column === expectedColumns[index])) return false;
+    const expected = getDatabase().exec(`SELECT
+      funding_round.funding_round_id,
+      funding_round.round_type,
+      funding_round.announced_date,
+      round_investment.round_investment_id,
+      round_investment.investor_id,
+      round_investment.is_lead
+    FROM funding_round
+    INNER JOIN round_investment
+      ON funding_round.funding_round_id = round_investment.funding_round_id;`)[0]?.values ?? [];
+    const actualRows = normalizedRows(result.values);
+    const expectedRows = normalizedRows(expected);
+    return actualRows.every((row, index) => row === expectedRows[index]);
   }
 
-  solutionButton?.addEventListener('click', showSolution);
+  function handleSqlSuccess(statement, resultSets) {
+    if (state.current === 'baselineRun' && !state.baselineExecuted) {
+      const result = resultSets.at(-1);
+      if (statement.trim() !== BASELINE_SQL || result?.values?.[0]?.[0] !== 26) return wrong('Run the prepared measurement to establish the funding-round starting count. Reset the database and try again if it does not return 26.');
+      state.baselineExecuted = true;
+      state.localFeedback = '';
+      render();
+      return;
+    }
+    if (state.current !== 'sql' || state.pendingAdvance) return;
+    if (!validateParticipationResult(statement, resultSets)) return wrong('The SQL ran, but the result does not yet match the requested six-column participation output. Open Desired output if you need the exact column contract, then inspect the selected fields and the relationship in ON.');
+    record({
+      evidence: 'sql',
+      prompt: 'Return the participation review with funding-round context.',
+      answer: 'Query ran successfully',
+      answerLabel: 'Result',
+      feedback: '<div class="success-feedback">The query ran successfully. Inspect the result.</div>',
+      next: 'finalGrain',
+    });
+  }
+
   render();
-
   return {
-    addRelation,
-    canAddRelations,
-    canRunSql,
     handleSqlSuccess,
-    isRelationSelected,
+    current: () => state.current,
+    addRelation,
+    isRelationSelected: (name) => state.selectedRelations.includes(name),
     relationshipLevel,
-    refresh,
+    canAddRelations: () => state.current === 'relations' && !state.pendingAdvance,
+    refresh: render,
   };
 }
