@@ -100,6 +100,16 @@ Primary current sources include:
 - `course-design/course-controls.md`
 - `src/interaction-lifecycle.js`
 
+**Current initiative — Existing Course Experience Improvement**
+
+The current A3 improvement initiative is managed in:
+
+`course-experience-improvement-work-management.md`
+
+It improves the learner experience of the already implemented course. Its first active category is **Teacher voice / Walkthrough**. Additional experience-improvement categories are identified there as a queue and will be planned separately when they become current work.
+
+That initiative record is management state, not course authority. Any required pedagogical, visual, control, or encounter-local authority change remains owned by the appropriate current source of truth.
+
 Encounter-specific implementation remains under A2 even when it uses shared A3 infrastructure.
 
 ### A4 — Course-Level Validation & Release Readiness
@@ -229,6 +239,7 @@ RouteCraft
 │   │   └── Data & SQL Environment
 │   ├── A2 — Learner Encounter Development
 │   ├── A3 — Learning Experience & Runtime
+│   │   └── Current initiative: Existing Course Experience Improvement
 │   └── A4 — Course-Level Validation & Release Readiness
 │       └── PLANNED / DORMANT for now
 │
