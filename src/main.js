@@ -213,7 +213,23 @@ function runCurrentQuery() {
     const resultSets = db.exec(statement);
     resultTable(resultSets);
     activeEncounter?.handleSqlSuccess?.(statement, resultSets);
+    const learningPanel = document.querySelector('.learning-panel');
+    if (!learningPanel.matches('.sql-implementation-active, .cycle1-sql-active')) hideSqlSolutionSurface();
   } catch (error) { showError('SQL error', error, statement); }
+}
+
+function showStage1Solution() {
+  const learningPanel = document.querySelector('.learning-panel');
+  if (activeEncounterName !== 'stage1' || !learningPanel.classList.contains('sql-implementation-active')) return;
+  const panel = el('solution-panel');
+  panel.innerHTML = `<div class="solution-panel-heading"><span>Solution assistance</span><button id="close-solution" type="button" aria-label="Close solution">Close</button></div><div class="solution-panel-body"><strong>Solution SQL:</strong><pre>SELECT
+  news_article.title,
+  news_source.name AS source_name
+FROM news_article
+JOIN news_source
+  ON news_article.news_source_id = news_source.news_source_id;</pre><p>This is assistance only. It has not been inserted or run.</p></div>`;
+  panel.hidden = false;
+  el('close-solution').addEventListener('click', hideSqlSolutionSurface);
 }
 
 function ensureSqlSolutionControls() {
@@ -224,6 +240,7 @@ function ensureSqlSolutionControls() {
     button.type = 'button';
     button.className = 'sql-solution-button';
     button.textContent = 'Show solution';
+    button.addEventListener('click', showStage1Solution);
     editorActions.insertBefore(button, runButton);
   }
   if (!el('solution-panel')) {
@@ -252,8 +269,8 @@ function ensureChapterNavigation() {
   nav.innerHTML = `
     <span class="course-chapter-nav-label">Chapters</span>
     <div class="course-chapter-list">
-      <button type="button" class="course-chapter-button" data-chapter="stage1">Stage 1</button>
-      <button type="button" class="course-chapter-button" data-chapter="row-multiplication">Row multiplication</button>
+      <button type="button" class="course-chapter-button" data-chapter="stage1">Media coverage</button>
+      <button type="button" class="course-chapter-button" data-chapter="row-multiplication">Funding participation</button>
     </div>`;
   document.querySelector('.topbar').insertAdjacentElement('afterend', nav);
   nav.querySelectorAll('[data-chapter]').forEach((button) => button.addEventListener('click', () => activateEncounter(button.dataset.chapter)));
@@ -281,21 +298,20 @@ function resetEncounterDom() {
 }
 
 function applyStage1Shell() {
-  document.title = 'SQL Lab';
+  document.title = 'SQL Lab · Media coverage';
   const stageLabel = document.querySelector('.stage-label');
-  stageLabel.hidden = false;
-  stageLabel.textContent = 'Stage 1';
-  el('business-request-title').textContent = 'The research team is reviewing media coverage and wants every article to include the source that published it.';
+  stageLabel.hidden = true;
+  el('business-request-title').textContent = 'The research team is reviewing media coverage and needs article details together with information about the sources that published them.';
   document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
   document.querySelector('.learning-panel').classList.remove('cycle1-sql-active', 'cycle1-results-active', 'cycle1-verification-active');
 }
 
 function applyRowMultiplicationShell() {
-  document.title = 'SQL Lab · Participation audit';
+  document.title = 'SQL Lab · Funding participation';
   document.querySelector('.stage-label').hidden = true;
-  el('business-request-title').textContent = 'Build a participation audit for the recorded investments attached to funding rounds. For every recorded round-investor participation, show the round context together with the participation record, investor identifier, and whether that participation is marked as lead.';
-  document.querySelector('.working-schema-header .eyebrow').textContent = 'Structural reference';
-  el('working-schema-status').textContent = 'Known relations supplied for the participation audit';
+  el('business-request-title').textContent = 'The investment team is reviewing participation in funding rounds and needs funding-round context together with recorded investor-participation details.';
+  document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
+  el('working-schema-status').textContent = 'Build it from the Live Schema';
 }
 
 function activateStage1() {
@@ -353,6 +369,7 @@ el('schema-search').addEventListener('input', renderSchema);
 configureEditor();
 ensureSqlSolutionControls();
 ensureChapterNavigation();
+applyStage1Shell();
 const interactionLifecycle = createInteractionLifecycle({ currentElement: el('current-step'), completedElement: el('completed-steps') });
 stage1 = createStage1({ editor, getDatabase: () => db, getSchema: () => schema, onSelectionChange: renderSchema, interactionLifecycle });
 activeEncounter = stage1;
