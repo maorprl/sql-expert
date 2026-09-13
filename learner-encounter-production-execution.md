@@ -65,80 +65,79 @@ If the verbatim handoff cannot be established, dependent work remains blocked un
 
 ## 5. Cycle 1 coarse execution status
 
-The following canonical work has been completed and durably recorded:
-
-1. Capability & Case Brief.
-2. Lightweight Independent Pedagogy Gate.
-3. Encounter Design.
-4. Independent Pedagogy Design Review.
-5. Independent UX Design Review.
-6. Architect Reconciliation and required clarifications.
-7. Auditor Pre-Build Control.
-8. Frozen Implementation Authority.
-9. Cycle 1 Implementation.
-10. Independent Post-Build Runtime / Conformance Review.
-11. Independent Post-Build Pedagogy Review.
-12. Independent Post-Build Learning Experience / UX Review.
-
-Rule-Based Acceptance is currently paused because Case Validation was reopened after the production process was strengthened.
-
-Corrective Case Validation work has already produced historical durable delta artifacts. Those artifacts remain preserved as process history, but their substantive candidate sets, weighting, and conclusions are **not execution state** and must not be copied into this file.
-
-## 6. Durable Cycle 1 record locations
-
-Completed and historical Cycle 1 handoffs are stored under:
+Cycle 1 has accumulated completed and historical artifacts through design, implementation, post-build review, and corrective case/design work under:
 
 `course-design/production/cycle-1/`
 
-Current records include:
+Rule-Based Acceptance remains **paused**.
 
-- `capability-and-case-brief.md`
-- `lightweight-pedagogy-gate-review.md`
-- `encounter-design-packet.md`
-- `independent-pedagogy-design-review.md`
-- `independent-ux-design-review.md`
-- `architect-reconciliation.md`
-- `reconciled-encounter-design-packet.md`
-- `authority-clarification-show-solution-assistance.md`
-- `current-scope-necessity-clarification.md`
-- `auditor-pre-build-control.md`
-- `implementation-record.md`
-- `post-build-runtime-conformance-review.md`
-- `post-build-pedagogy-review.md`
-- `post-build-ux-review.md`
-- `case-selection-delta-review.md`
-- `case-validation-operationalized-rerun.md`
-- `provenance.md`
+A learner-experience defect exposed a process weakness: the Pedagogy Review could evaluate evidence independence and scaffold strength without being forced to test the instructional function and removal cost of every material step. `learner-encounter-production-process.md` has now been strengthened so that full Pedagogy Review must examine the whole material sequence, including teaching and continuity steps that are not themselves core evidence.
 
-The existence of a record in this list does not make its substantive decision current authority for a newly reopened decision. Current authority and authorized inputs are determined by the canonical process and the current action below.
+Existing runtime and prior Pedagogy Review verdicts remain historical evidence. They do **not** waive the newly required re-review of the current design under the strengthened process.
 
-## 7. Current execution override
+## 6. Current durable input set
 
-After the most recent Case Validation rerun, `learner-encounter-production-process.md` was strengthened again to require that analytical authenticity extend to the **additional information need and relational move themselves**, not only to a plausible starting task or report.
+The current targeted re-review must consume the current authority needed to understand the learner state, first-exposure JOIN teaching, and the current Cycle 1 design. At minimum this includes:
 
-Because the most recent Case Validation rerun predates that strengthened requirement, its Case Validation conclusion has not been evaluated under the current standard.
+- `learner-encounter-production-process.md`
+- `course-work-management.md`
+- `course-exit-criteria.md`
+- `course-knowledge-map.md`
+- `pedagogical-foundations.md`
+- `course-design/course-visual-language.md`
+- `course-design/course-controls.md`
+- `course-design/stage-1/stage-1-learner-route.md`
+- `course-design/stage-1/stage-1-interaction-decisions.md`
+- the current Cycle 1 Case Validation and Lightweight Pedagogy Gate artifacts that authorize the accepted current case/capability
+- `course-design/production/cycle-1/encounter-design-row-multiplication-2026-09-13.md`
+- `course-design/production/cycle-1/owner-directed-targeted-revision-and-waiver-2026-09-13.md`
+- `course-design/production/cycle-1/owner-directed-targeted-revision-structural-reuse-2026-09-13.md`
+- current Show-solution / SQL-workspace authority clarifications that affect the learner path
 
-### Current next authorized action
+Historical Pedagogy Review conclusions must not be used as substitutes for the new review judgment.
 
-**Encounter Architect — targeted Cycle 1 Case Validation delta rerun under the current strengthened analytical-authenticity standard**
+## 7. Current next authorized action
 
-The Architect must:
+**Independent Pedagogy Reviewer — targeted full design re-review of the current Cycle 1 learner encounter under the strengthened instructional-function / continuity / removal-impact standard.**
 
-- read the current `learner-encounter-production-process.md` and this execution file first;
-- verify that this targeted rerun is authorized;
-- treat the existing target capability as presumptively unchanged unless current permitted evidence gives a material reason to reopen it;
-- perform Case Validation afresh under the current process requirements;
-- independently identify materially plausible current-schema candidates from the current schema/data and permitted current course authority;
-- apply the current comparative, consequence-grounding, analytical-authenticity, and trade-off requirements;
-- preserve existing Cycle 1 work wherever the resulting Case Validation decision does not materially affect it;
-- produce a new durable delta artifact and minimal provenance/execution updates.
+This is not a new Capability Gate and not a new Case Validation unless the review discovers a defect that genuinely requires reopening those phases.
 
-### Independence / contamination rule for this rerun
+The reviewer must examine the current encounter **step by step**, including material steps that are guidance, teaching, continuity, measurement, tool transition, or assistance rather than core evidence.
 
-Before independent candidate discovery and initial comparative judgment are complete, the Architect must **not** read historical case-selection delta artifacts or provenance entries that disclose their candidate sets, selected cases, or comparative conclusions.
+For each material learner-facing step or transition, the reviewer must establish:
 
-Historical case-selection artifacts may be inspected only afterward for traceability and change-impact comparison.
+1. its instructional function;
+2. the learner action it requires;
+3. its placement and dependency in the reasoning sequence;
+4. the scaffold/support supplied;
+5. the concrete consequence of removing or materially compressing it.
 
-The mandatory pre-discovery input set must therefore remain limited to current process/execution authority plus the current course/schema/data sources needed to discover and evaluate candidates independently.
+The review must explicitly test continuity from the persistent business request through the reused relational-reading work, target Grain and Cardinality, qualitative prediction, concept consolidation, the transition from established relational reasoning into `JOIN ... ON ...` and learner-authored SQL, SQL scaffolding, editor/result interpretation, and optional assistance / Show solution behavior where those are present in the current design.
 
-Rule-Based Acceptance remains paused until this rerun and the downstream review required by `learner-encounter-production-process.md` are resolved.
+The reviewer must compare the current reuse treatment with the relevant first-exposure JOIN teaching and the Course-Assumed Learner State. “Already introduced,” “reused,” “reduced scaffolding,” and “not core evidence” are not sufficient reasons by themselves to remove a teaching or translation function.
+
+### Required outcome
+
+The reviewer must produce a durable targeted review artifact with one of the normal Pedagogy Design Review outcomes/findings under the current process.
+
+If the review finds a material continuity or teaching defect, the next action is **Encounter Architect targeted design reconciliation/revision**. Runtime implementation is not authorized until the resulting pedagogical finding is resolved through the applicable downstream review/control path.
+
+If the review finds no material defect, the next action is the applicable downstream control needed to establish implementation authority under the current process.
+
+## 8. Independence requirement for this re-review
+
+The formal re-review must be formed from the current source set and the strengthened process, not from prior reviewer conclusions or a previously accepted narrative.
+
+Use a fresh independent review context where practical. The reviewer may read prior artifacts that are part of current design authority, but must not treat earlier Pedagogy Review verdicts as evidence that the current design passes the strengthened standard.
+
+## 9. Acceptance boundary
+
+Rule-Based Acceptance remains paused until:
+
+1. the strengthened Pedagogy Design re-review is durably completed;
+2. every material finding receives the required disposition;
+3. any resulting design change is reviewed and controlled according to `learner-encounter-production-process.md`;
+4. implementation/runtime is brought into conformance with the resulting current authority;
+5. required post-build validation is complete.
+
+No existing runtime state should be treated as accepted merely because it predates the strengthened review standard.
