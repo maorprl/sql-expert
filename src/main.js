@@ -303,6 +303,8 @@ function resetEncounterDom() {
 function resetLearningPanelState() {
   const learningPanel = document.querySelector('.learning-panel');
   delete learningPanel.dataset.stage1State;
+  delete learningPanel.dataset.stage2State;
+  delete learningPanel.dataset.stage3State;
   learningPanel.classList.remove(
     'sql-active',
     'baseline-workspace-active',

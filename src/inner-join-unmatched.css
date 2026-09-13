@@ -1,5 +1,48 @@
 /* Stage 3 reuses the existing learner and SQL surfaces. Keep overrides local to this relation pair. */
 
+/* Move visual emphasis with the learner's Stage 3 action at Stage 1 intensity. */
+.learning-panel[data-stage3-state="relations"] .working-schema-panel,
+.learning-panel[data-stage3-state="connection"] .working-schema-panel,
+.learning-panel[data-stage3-state="cardinality"] .working-schema-panel {
+  border-color: #8fb4ec;
+  background: #f8fbff;
+  box-shadow: 0 9px 24px rgba(47, 111, 237, .11), inset 0 3px 0 var(--blue);
+}
+
+.learning-panel[data-stage3-state="relations"] .current-step,
+.learning-panel[data-stage3-state="connection"] .current-step,
+.learning-panel[data-stage3-state="cardinality"] .current-step {
+  box-shadow: 0 4px 14px rgba(27, 55, 92, .07), inset 4px 0 0 var(--blue);
+}
+
+.learning-panel[data-stage3-state="sql"] .lab-workspace {
+  border-color: #6f9ddd;
+  outline: 2px solid rgba(47, 111, 237, .2);
+  outline-offset: 2px;
+  box-shadow: 0 16px 38px rgba(27, 55, 92, .2), inset 0 4px 0 var(--blue);
+}
+
+.learning-panel[data-stage3-state="sql"] .current-step {
+  border-color: #d8e1ec;
+  background: #fbfcfe;
+  box-shadow: inset 3px 0 0 #9db8dc;
+}
+
+.learning-panel[data-stage3-state="sql"] .working-schema-panel,
+.learning-panel[data-stage3-state="results"] .working-schema-panel {
+  border-color: #dce4ed;
+  background: #fafbfd;
+  box-shadow: none;
+  opacity: .86;
+}
+
+.learning-panel[data-stage3-state="results"] .results-panel {
+  background: #f8fbff;
+  box-shadow: inset 0 4px 0 var(--blue), 0 8px 22px rgba(47, 111, 237, .1);
+}
+
+.learning-panel[data-stage3-state="results"] .working-schema-panel { opacity: .72; }
+
 /* Funding Stage 2 globally offsets funding_round. Reset it here and align company.company_id with funding_round.company_id. */
 .learning-panel:has(.data-card[data-relation="company"]) .relation-preview.relationship-visible .data-card[data-relation="funding_round"] {
   transform: none;
