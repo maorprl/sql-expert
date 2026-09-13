@@ -123,6 +123,12 @@
   line-height: 1.45;
 }
 
+.cycle1-prediction-review em {
+  color: #6a788b;
+  font-size: 10px;
+  font-style: normal;
+}
+
 /* Prediction premises are one established-reasoning strip, not a stack of competing cards. */
 .cycle1-premises {
   display: grid;
