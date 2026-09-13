@@ -66,6 +66,10 @@ Focus includes:
 - whether the learner actually performs the intended reasoning;
 - whether the proposed evidence corresponds to the target capability;
 - justified reuse versus unnecessary re-teaching;
+- the instructional function of each material learner-facing step, including teacher-led explanation, continuity bridges, measurement/baseline work, tool use, result interpretation, and assistance;
+- continuity between prior first-exposure teaching and later reuse;
+- whether compressing or removing earlier teaching is justified by the Course-Assumed Learner State;
+- the learner consequence of removing or compressing a step, not only whether that step is classified as core evidence;
 - appropriateness of the learner situation.
 
 The reviewer distinguishes between:
@@ -417,6 +421,37 @@ For each core evidence-bearing action, the design must make clear what support i
 
 This does not create a general rule that less scaffolding is always better. The required support depends on learner state and encounter purpose; the requirement is that the claimed evidence strength match the reasoning the learner actually has to perform.
 
+### Instructional Function and Continuity Trace
+
+Evidence design alone is not sufficient to establish a sound encounter. The Encounter Design must also preserve the instructional functions needed to move the learner through the accepted reasoning journey.
+
+For every **material learner-facing step or transition**, the design must identify its primary function or functions. Relevant functions include, where applicable:
+
+- business / analytical orientation;
+- reused learner action or reuse checkpoint;
+- first-exposure teaching;
+- continuity or translation scaffold;
+- measurement / baseline work;
+- core evidence;
+- supporting practice or supporting evidence;
+- concept naming / consolidation;
+- tool or SQL authoring;
+- result inspection / interpretation;
+- assistance, hint, or solution support.
+
+A step may serve more than one function. Classification as **not core evidence** does not make a step dispensable.
+
+When an encounter reuses a capability that was previously introduced with explicit teaching or guided translation, the design must state:
+
+1. what the Course-Assumed Learner State permits the course to assume now;
+2. which earlier instructional mapping or explanation is still needed for continuity and which part may legitimately be compressed or removed;
+3. what learner-facing support replaces any removed first-exposure teaching function, if that function is still necessary;
+4. what concrete learner consequence would result from removing the step entirely.
+
+The removal consequence must be expressed in terms of what the learner would then have to infer, recall, translate, or do without support. Examples of material consequences include forcing the learner to recall syntax without reconnecting it to the established relational meaning, jumping from reasoning directly into a tool without the needed translation, losing the business or schema anchor for the next action, or making the next correct action depend on an unstated inference.
+
+A later encounter may be more concise than first exposure. It may not, however, use “already introduced,” “not core evidence,” or “reduced scaffolding” as a sufficient reason by itself to remove instructional continuity that the current assumed learner state does not support removing.
+
 ### Durable artifact — Encounter Design Packet
 
 This may map onto existing learner-route / interaction-decision documents rather than requiring a new repository file type.
@@ -432,13 +467,34 @@ The same frozen Design Packet is reviewed independently by:
 
 Neither reviewer should depend on the other's judgment when forming the initial review.
 
-For the full Pedagogy Design Review, the Pedagogy Reviewer must specifically verify:
+The full Pedagogy Design Review must review the **whole material encounter sequence**, not only the interactions labelled as core evidence.
+
+For each material learner-facing step or transition, the Pedagogy Reviewer must identify and test:
+
+1. **Instructional function** — what pedagogical job the step performs now: orientation, reused action, first-exposure teaching, continuity/translation scaffold, measurement/baseline, evidence, practice, concept consolidation, tool work, result interpretation, or assistance.
+2. **Learner action** — what the learner actually has to notice, decide, predict, author, inspect, or interpret.
+3. **Placement and dependency** — what must already be established before the step and what later step depends on it.
+4. **Scaffold level** — what support is supplied, whether it is appropriate to the Course-Assumed Learner State, and whether it performs reasoning that the learner is meant to perform.
+5. **Removal / compression consequence** — what the learner would be forced to infer, recall, translate, or do unsupported if the step were removed or materially compressed.
+
+The reviewer must then test continuity across the encounter's actual transitions. Where present, this includes the chain from business request and schema reasoning through baseline/measurement, prediction, semantic operation or concept introduction, translation into `JOIN ... ON ...` or other SQL structure, learner-authored SQL/tool work, actual results, and final interpretation. The reviewer must also inspect optional scaffolds such as hints, Desired Output, and Show solution separately from the unassisted path.
+
+When a capability is being **reused rather than introduced**, the reviewer must compare the proposed treatment with the Course-Assumed Learner State and the relevant prior first-exposure teaching. The reviewer must not treat either of the following as sufficient justification for removal:
+
+- “the learner has seen this before”;
+- “this step is not part of the new core evidence.”
+
+If prior first-exposure teaching is removed or compressed, the reviewer must verify that the learner state supports that compression and that any still-necessary conceptual or procedural translation remains available. The question is not whether the later encounter should replay first exposure. The question is whether the function performed by the removed teaching is still needed for the learner to understand and execute the current task.
+
+For the full Pedagogy Design Review, the Pedagogy Reviewer must also specifically verify:
 
 - whether each claimed core evidence-bearing action actually requires the learner to perform the target reasoning, rather than allowing the correct response to be produced from quantities, wording, conclusions, answer structure, or scaffolds already supplied;
 - whether the level of scaffolding matches the encounter's stated evidence purpose and the Course-Assumed Learner State, especially where the encounter claims reduced-scaffolding, transfer, integration, or stronger validation evidence;
-- whether an interaction classified as core evidence is in fact evidence of the target capability rather than guided practice whose support performs material parts of the reasoning.
+- whether an interaction classified as core evidence is in fact evidence of the target capability rather than guided practice whose support performs material parts of the reasoning;
+- whether removing or compressing a teaching/continuity step leaves a later action as disconnected recall, syntax reproduction, guesswork, or an unsupported translation from established reasoning into the learner's tool action;
+- whether assistance and solution paths change the interpretation of the resulting evidence without silently changing the required teaching sequence.
 
-A defect in these checks is material when it weakens the capability claim the encounter is intended to support. The reviewer should classify the finding according to the existing finding rules below rather than create a separate review category.
+A defect in these checks is material when it weakens the capability claim the encounter is intended to support **or** removes instructional continuity required for the learner to meaningfully perform the accepted current-scope work. The reviewer should classify the finding according to the existing finding rules below rather than create a separate review category.
 
 Each finding is classified as:
 
@@ -594,7 +650,12 @@ Checks:
 - whether scaffolding behaves appropriately in practice;
 - whether concept timing is preserved;
 - whether the collected evidence can support the intended capability claim;
-- whether runtime exposed a design defect invisible during static review.
+- whether runtime exposed a design defect invisible during static review;
+- whether every material runtime step still performs its approved instructional function rather than being reduced to UI state or omitted;
+- whether transitions that carry conceptual or procedural translation remain understandable in practice, especially transitions from established relational reasoning into SQL/tool action and from execution evidence into interpretation;
+- whether optional assistance or Show solution changes what the learner must reason about or merely reveals support, and whether evidence provenance reflects that difference.
+
+The post-build Pedagogy Reviewer must re-run the **instructional-function / removal-impact check** against the actual runtime path. A design may have named a continuity or teaching function correctly while the implementation makes it too weak, too remote, too late, visually ignorable, or absent to perform that function. Conversely, runtime must not add a scaffold that performs reasoning reserved for the learner.
 
 ### 10.3 UX / Learning Experience Verdict
 
