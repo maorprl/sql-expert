@@ -41,7 +41,7 @@ For learner-encounter production:
 
 The documents are complementary, not competing sources.
 
-Where `learner-encounter-production-process.md` requires a specific independent review, gate, or role separation, that requirement remains mandatory regardless of the temporary execution mechanism.
+Where `learner-encounter-production-process.md` requires a specific independent review, gate, or role separation, that requirement remains mandatory unless the Course Authority Owner explicitly authorizes a bounded exception or waiver under the Owner authority already defined by that process.
 
 ## 3. Temporary Cycle 1 execution topology
 
@@ -49,7 +49,7 @@ Cycle 1 continues manually through the canonical learner-encounter production pr
 
 Separate chats or isolated model executions may be used to instantiate functional roles and preserve required independence. This is execution scaffolding only; it does not establish a permanent one-role-per-agent architecture.
 
-Mandatory independence boundaries in `learner-encounter-production-process.md` remain controlling.
+Mandatory independence boundaries in `learner-encounter-production-process.md` remain controlling outside any explicit bounded Owner waiver.
 
 The permanent agent topology remains deferred until after Cycle 1.
 
@@ -71,90 +71,60 @@ Cycle 1 has accumulated completed and historical artifacts through design, imple
 
 Rule-Based Acceptance remains **paused**.
 
-The strengthened Pedagogy Design re-review has now been durably completed at:
+The strengthened Pedagogy Design re-review is durably recorded at:
 
 `course-design/production/cycle-1/independent-pedagogy-strengthened-full-design-rereview-2026-09-13.md`
 
-Its formal verdict requires targeted design revision before implementation may proceed. The substantive finding and rationale remain in that review artifact and are not restated here.
+A later Owner decision has now authorized a one-time bounded corrective action for the current Funding participation encounter. The substantive corrective scope is recorded only in the Owner authorization artifact identified below.
 
 ## 6. Current durable input set
 
-The currently authorized Encounter Architect action must consume the current process/execution authority, current Cycle 1 design authority, and the durable strengthened Pedagogy Review finding it is required to reconcile.
+The current corrective action must consume:
 
-At minimum this includes:
+- `learner-encounter-production-process.md` as the unchanged canonical process;
+- this execution mapping;
+- current Cycle 1 design/runtime authority needed to preserve unaffected behavior;
+- `course-design/production/cycle-1/independent-pedagogy-strengthened-full-design-rereview-2026-09-13.md` for the current strengthened-review finding;
+- `course-design/production/cycle-1/owner-ad-hoc-funding-corrective-authorization-2026-09-13.md` as the controlling one-time corrective authorization.
 
-- `learner-encounter-production-process.md`
-- `learner-encounter-production-execution.md`
-- `course-work-management.md`
-- `course-exit-criteria.md`
-- `course-knowledge-map.md`
-- `pedagogical-foundations.md`
-- `course-design/course-visual-language.md`
-- `course-design/course-controls.md`
-- `course-design/stage-1/stage-1-learner-route.md`
-- `course-design/stage-1/stage-1-interaction-decisions.md`
-- the current Cycle 1 Case Validation and Lightweight Pedagogy Gate artifacts that authorize the accepted current case/capability
-- `course-design/production/cycle-1/encounter-design-row-multiplication-2026-09-13.md`
-- `course-design/production/cycle-1/owner-directed-targeted-revision-and-waiver-2026-09-13.md`
-- `course-design/production/cycle-1/owner-directed-targeted-revision-structural-reuse-2026-09-13.md`
-- current Show-solution / SQL-workspace authority clarifications that affect the learner path
-- `course-design/production/cycle-1/independent-pedagogy-strengthened-full-design-rereview-2026-09-13.md`
+Historical experimental corrective-review/reconciliation artifacts are not current authority for this action.
 
-Historical reviewer conclusions may be consulted only when needed for traceability. They do not replace the current strengthened review finding or current authority.
+## 7. Current one-time Owner override
 
-## 7. Current next authorized action
+The Course Authority Owner has explicitly authorized:
 
-**Encounter Architect — targeted design reconciliation/revision of the current Cycle 1 learner encounter to resolve the material finding in the strengthened full Pedagogy Design re-review.**
+**One-time ad hoc corrective implementation and targeted verification of the fixed Funding participation correction set.**
 
-This action is narrowly scoped to resolving the current review finding.
+Controlling artifact:
 
-It does **not** reopen:
+`course-design/production/cycle-1/owner-ad-hoc-funding-corrective-authorization-2026-09-13.md`
 
-- the accepted target capability;
-- the accepted case;
-- Case Validation;
-- the Lightweight Pedagogy Gate;
-- unaffected parts of the current learner encounter.
+This is an execution-state override only. It does **not** amend `learner-encounter-production-process.md`, create a new canonical phase, or establish precedent for later encounters or cycles.
 
-The Architect must:
+The action may modify only learner-facing implementation and the minimum execution/record material needed to apply and verify the fixed corrective scope in the Owner authorization.
 
-1. read the durable strengthened Pedagogy Review finding directly;
-2. reconcile it under the current `learner-encounter-production-process.md`;
-3. preserve unaffected current authority and learner evidence;
-4. revise only the material design scope required to resolve the finding;
-5. explicitly trace how the revision addresses the review's instructional-function / continuity / removal-impact concern;
-6. preserve the distinction between reduced reuse support and first-exposure re-teaching;
-7. avoid changing capability, case, or evidence semantics unless the finding cannot be resolved without doing so;
-8. produce a durable targeted design-reconciliation/revision artifact under `course-design/production/cycle-1/`;
-9. state the exact downstream review/control required by the process change-impact rules.
+The action must stop if resolving the fixed list would require changing the accepted capability, accepted case, core evidence semantics, or another matter outside the explicit Owner scope.
 
-The Architect must not implement learner-facing code during this action.
+## 8. Validation and downstream boundary
 
-### Required result
+For this one-time override, the required downstream control is the targeted verification defined by the Owner authorization itself:
 
-The revision must either:
+- verify all seven authorized corrections in the actual implementation;
+- map each implementation change to the fixed correction list;
+- confirm the accepted capability, case, and core row-multiplication evidence semantics remain unchanged;
+- record any failure or out-of-scope dependency rather than expanding the correction silently.
 
-- resolve the material Pedagogy finding within current authority and route the resulting design through the applicable downstream reviews/control; or
-- report that resolving the finding would require authority, evidence, capability, or case changes outside the authorized scope.
+No full-cycle re-review is opened by this override.
 
-Implementation is not authorized merely because the Architect produces a revision.
-
-## 8. Downstream boundary
-
-Because the current action is a pedagogical / learner-flow design revision, the applicable downstream path must be determined from the current change-impact rules in `learner-encounter-production-process.md`.
-
-At minimum, the resulting design cannot become implementation authority until the required independent Pedagogy review has confirmed resolution. If the revision materially affects learning experience / UX, the required UX review also applies. Auditor control remains required before implementation authority is frozen unless a current explicit owner waiver says otherwise.
-
-No earlier owner-directed waiver should be assumed to cover this new strengthened-review finding unless a current authority artifact explicitly states that it does.
+After targeted verification, the branch returns to the Course Authority Owner for disposition. The canonical process remains unchanged.
 
 ## 9. Acceptance boundary
 
-Rule-Based Acceptance remains paused until:
+Rule-Based Acceptance remains paused while this one-time corrective action is open.
 
-1. the current targeted design finding is reconciled and revised;
-2. every required downstream specialist review/control is completed;
-3. the resulting design is frozen as current implementation authority;
-4. implementation/runtime is brought into conformance with that authority;
-5. required post-build validation is complete.
+This execution override closes when either:
 
-No existing runtime state should be treated as accepted merely because it predates the strengthened review standard.
+1. all seven authorized corrections pass targeted verification and the branch is returned for Owner disposition; or
+2. an out-of-scope dependency is discovered and the corrective action stops.
+
+No other Cycle 1 authority is reopened by this execution-state override.
