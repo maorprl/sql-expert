@@ -229,7 +229,7 @@ JOIN funding_round
     if (item.id === 'sql' && next === 'verification') {
       interactionLifecycle.renderCurrent(stepShell('Inspect the result.', `
         ${item.feedback}
-        ${teacherVoice('Keep the returned rows visible. Check company_id 1, company_id 5, and company_id 20 against the prediction you made before writing SQL.')}
+        ${teacherVoice('Your activity has moved from authoring to evidence. Keep Results visible and check company_id 1, company_id 5, and company_id 20 against the prediction you made before writing SQL.')}
         <button id="continue-to-verification" class="primary continue-after-feedback">Continue to verification</button>
       `));
       continueFromPending('continue-to-verification');
@@ -282,11 +282,14 @@ JOIN funding_round
     learningEl.classList.remove('baseline-workspace-active', 'baseline-evidence-active', 'prediction-evidence-active', 'join-teaching-active');
     learningEl.classList.toggle('sql-implementation-active', sqlImplementation);
     learningEl.classList.toggle('results-evidence-active', resultEvidence);
+    learningEl.dataset.stage3State = resultEvidence ? 'results' : state.current;
 
     document.querySelector('.editor-header h2').textContent = 'INNER JOIN implementation';
     document.querySelectorAll('.lab-action').forEach((element) => {
       element.hidden = !visible || resultEvidence;
     });
+    const runButton = document.getElementById('run-query');
+    runButton.disabled = runButton.hidden;
   }
 
   function renderPrediction() {
@@ -338,7 +341,7 @@ JOIN funding_round
         <button class="primary" type="submit">Check answer</button>
       </form>
       ${feedbackMarkup()}`,
-      teacherVoice('Use the visible result as evidence. Search the company_id column rather than relying on the prediction alone.'),
+      teacherVoice('Use Results as the evidence surface. Search the company_id column for 1, 5, and 20 rather than relying on the prediction alone.'),
     ));
     document.getElementById('verification-answer-form').addEventListener('submit', (event) => {
       event.preventDefault();
@@ -371,7 +374,7 @@ JOIN funding_round
     if (state.current === 'relations') {
       interactionLifecycle.renderCurrent(stepShell(
         'Which relations contain the information we need?',
-        `<p class="step-copy">Add the relevant relations from the Live Schema to the Working Schema.</p><button id="continue-relations" class="primary" disabled>Check selection</button>${feedbackMarkup()}`,
+        `<p class="step-copy">In the Live Schema on the left, find the relevant relations and add them to the Working Schema beside this task.</p><button id="continue-relations" class="primary" disabled>Check selection</button>${feedbackMarkup()}`,
       ));
       const relationButton = document.getElementById('continue-relations');
       relationButton.disabled = !state.selectedRelations.length;
@@ -388,7 +391,7 @@ JOIN funding_round
     } else if (state.current === 'connection') {
       interactionLifecycle.renderCurrent(stepShell(
         'Which column in <code>funding_round</code> identifies the company that the round belongs to?',
-        `<p class="step-copy">Select the column directly in the Working Schema.</p><button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`,
+        `<p class="step-copy">In the Working Schema, select the column that connects each funding round to its company.</p><button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`,
       ));
       document.getElementById('check-column').addEventListener('click', () => {
         if (state.selectedColumn !== 'company_id') return wrong('Look at one funding-round row and ask which column identifies the company that round belongs to.');
@@ -402,7 +405,7 @@ JOIN funding_round
       });
     } else if (state.current === 'cardinality') {
       choiceQuestion({
-        intro: teacherVoice('Read the established relationship in both directions before predicting what the JOIN can do.'),
+        intro: teacherVoice('In the Working Schema, the key connection you found is now visible. Use it to read the established relationship in both directions before predicting what the JOIN can do.'),
         prompt: 'Which statement best describes the relationship?',
         options: [
           ['correct', 'A company can have no recorded funding round, one round, or many rounds; each funding round belongs to one company.'],
@@ -437,7 +440,7 @@ JOIN funding_round
     } else if (state.current === 'sql') {
       interactionLifecycle.renderCurrent(stepShell(
         'Implement the INNER JOIN you already know.',
-        `<p class="step-copy">Return the requested company context and funding-round details using the relationship you established.</p>
+        `<p class="step-copy">Move to the SQL Workspace and return the requested company context and funding-round details using the relationship you established.</p>
         <details class="optional-scaffold desired-output"><summary>Show desired output</summary><div class="optional-scaffold-body"><div class="desired-output-grid"><code>company_id</code><code>status</code><code>funding_round_id</code><code>round_type</code><code>announced_date</code></div><p>Return these five fields in this order.</p></div></details>
         <details class="optional-scaffold sql-structure"><summary>Show SQL structure</summary><div class="optional-scaffold-body"><pre>SELECT ...
 FROM company

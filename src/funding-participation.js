@@ -241,7 +241,7 @@ JOIN round_investment
     }
 
     if (item.id === 'sql' && next === 'finalGrain') {
-      interactionLifecycle.renderCurrent(stepShell('Inspect the result.', teacherVoice('Use the returned rows and columns as evidence before deciding whether the earlier prediction held.')));
+      interactionLifecycle.renderCurrent(stepShell('Inspect the result.', teacherVoice('Your activity has moved from authoring to evidence. Inspect Results: use the returned columns, row count, and participation rows before deciding whether the earlier prediction held.')));
       renderWorkspaceAction(`
         ${item.feedback}
         ${teacherVoice('Compare what you see with the earlier prediction: one funding round can appear across several participation rows.')}
@@ -364,7 +364,7 @@ JOIN round_investment
       ['duplicates', 'Repeated funding-round values mean those rows are accidental duplicates that should collapse.'],
     ];
     const draft = state.drafts.finalGrain || '';
-    interactionLifecycle.renderCurrent(stepShell('Verify the result.', teacherVoice('Keep the actual result in view. Compare its row meaning and repeated funding-round values with the prediction you made before writing SQL.')));
+    interactionLifecycle.renderCurrent(stepShell('Verify the result.', teacherVoice('Keep Results in view. Compare its 72 participation rows and repeated funding-round values with the prediction you made before writing SQL.')));
     const action = renderWorkspaceAction(`
       <div class="verification-prompt"><strong>Compare the result with your prediction</strong><span>Earlier prediction: one funding round can appear across several participation rows.</span></div>
       <h3>What does the result show?</h3>
@@ -422,11 +422,14 @@ JOIN round_investment
     learningEl.classList.toggle('join-teaching-active', state.current === 'joinTeaching');
     learningEl.classList.toggle('sql-implementation-active', sqlImplementation);
     learningEl.classList.toggle('results-evidence-active', resultsEvidence);
+    learningEl.dataset.stage2State = resultsEvidence ? 'results' : state.current;
 
     document.querySelector('.editor-header h2').textContent = baselineWorkspace ? 'Baseline measurement' : 'JOIN implementation';
     document.querySelectorAll('.lab-action').forEach((element) => {
       element.hidden = !visible || baselineEvidence || resultsEvidence;
     });
+    const runButton = document.getElementById('run-query');
+    runButton.disabled = runButton.hidden;
   }
 
   function renderJoinTeaching() {
@@ -466,7 +469,7 @@ JOIN round_investment
       <div class="teaching-navigation">
         <button id="join-teaching-next" class="primary">${beat < 3 ? (beat === 1 ? 'Next: express the match in SQL' : 'Next: map the whole query') : 'Continue to SQL implementation'}</button>
       </div>
-    `));
+    `, teacherVoice('Your participation-level Grain, relationship, and row-multiplication prediction are established. Stay with the Working Schema as we reconnect that reasoning to the JOIN you already know.')));
 
     document.getElementById('join-teaching-next').addEventListener('click', () => {
       if (state.joinTeachingBeat < 3) {
@@ -491,7 +494,7 @@ JOIN round_investment
     }
 
     if (state.current === 'relations') {
-      interactionLifecycle.renderCurrent(stepShell('Which relations contain the information we need?', '<p class="step-copy">Add the relevant relations from the Live Schema to the Working Schema.</p><button id="continue-relations" class="primary" disabled>Check selection</button>' + feedbackMarkup()));
+      interactionLifecycle.renderCurrent(stepShell('Which relations contain the information we need?', '<p class="step-copy">In the Live Schema on the left, find the relevant relations and add them to the Working Schema beside this task.</p><button id="continue-relations" class="primary" disabled>Check selection</button>' + feedbackMarkup()));
       const relationButton = document.getElementById('continue-relations');
       relationButton.disabled = !state.selectedRelations.length;
       relationButton.addEventListener('click', () => {
@@ -505,7 +508,7 @@ JOIN round_investment
         });
       });
     } else if (state.current === 'connection') {
-      interactionLifecycle.renderCurrent(stepShell('Which column in <code>round_investment</code> tells us which funding round a participation belongs to?', `<p class="step-copy">Select the column directly in the Working Schema.</p><button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`));
+      interactionLifecycle.renderCurrent(stepShell('Which column in <code>round_investment</code> tells us which funding round a participation belongs to?', `<p class="step-copy">In the Working Schema, select the column that connects each participation to its funding round.</p><button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`));
       document.getElementById('check-column').addEventListener('click', () => {
         if (state.selectedColumn !== 'funding_round_id') return wrong('Look at one participation row and ask which column identifies the funding round that participation belongs to. The relationship stays hidden until you establish that connection.');
         record({
@@ -518,7 +521,7 @@ JOIN round_investment
       });
     } else if (state.current === 'cardinality') {
       choiceQuestion({
-        intro: teacherVoice('We know how a participation points to its funding round. Now read that relationship in both directions.'),
+        intro: teacherVoice('In the Working Schema, the key connection you found is now visible. Use it to read the relationship in both directions.'),
         prompt: 'Which statement best describes what can happen across the two relations?',
         options: [
           ['correct', 'One funding round can have many participation records; each participation belongs to one funding round.'],
@@ -541,7 +544,7 @@ JOIN round_investment
       });
     } else if (state.current === 'baselineRun') {
       if (!state.baselineExecuted) {
-        interactionLifecycle.renderCurrent(stepShell('How many funding-round rows are on the one-side before the JOIN?', `${teacherVoice('You established a participation-level result Grain. Now measure the one-side starting reference before participation rows are matched to it.')}<div class="measurement-note"><code>COUNT(*)</code> counts the rows in <code>funding_round</code>. Run the prepared measurement beside this step; you do not need to write SQL yet.</div>${feedbackMarkup()}`));
+        interactionLifecycle.renderCurrent(stepShell('How many funding-round rows are on the one-side before the JOIN?', `${teacherVoice('You established a participation-level result Grain. Now move to the SQL Workspace beside this task and measure the one-side starting reference before participation rows are matched to it.')}<div class="measurement-note"><code>COUNT(*)</code> counts the rows in <code>funding_round</code>. Run the prepared measurement in the SQL Workspace; you do not need to write SQL yet. Then inspect Results directly below it.</div>${feedbackMarkup()}`));
       } else {
         renderBaselineInterpretation();
       }
@@ -559,7 +562,7 @@ JOIN round_investment
     } else if (state.current === 'joinTeaching') {
       renderJoinTeaching();
     } else if (state.current === 'sql') {
-      interactionLifecycle.renderCurrent(stepShell('Now translate the relationship into SQL.', `<p class="step-copy">Write the participation query from the business request and the established relationship.</p>
+      interactionLifecycle.renderCurrent(stepShell('Now translate the relationship into SQL.', `<p class="step-copy">Move to the SQL Workspace and write the participation query from the business request and the established relationship.</p>
         <details class="optional-scaffold desired-output"><summary>Show desired output</summary><div class="optional-scaffold-body"><div class="desired-output-grid"><code>funding_round_id</code><code>round_type</code><code>announced_date</code><code>round_investment_id</code><code>investor_id</code><code>is_lead</code></div><p>Return these six fields in this order.</p></div></details>
         <details class="optional-scaffold sql-structure"><summary>Show SQL structure</summary><div class="optional-scaffold-body"><pre>SELECT ...
 FROM funding_round
