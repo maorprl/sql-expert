@@ -8,6 +8,7 @@ const INTERACTION_LABELS = {
   connection: 'Understand the relationship',
   cardinality: 'Reason about possible matches',
   output: 'Determine row meaning',
+  matchEvidence: 'Inspect actual matches',
   prediction: 'Predict INNER JOIN behavior',
   sql: 'Implement the INNER JOIN',
   verification: 'Verify which rows survived',
@@ -226,6 +227,16 @@ JOIN funding_round
   function renderAcknowledgement() {
     const { next, item } = state.pendingAdvance;
 
+    if (item.id === 'matchEvidence' && next === 'prediction') {
+      interactionLifecycle.renderCurrent(stepShell('Match evidence established.', `
+        ${item.feedback}
+        ${teacherVoice('You have now inspected actual rows and established many, one, and zero matches. Use those counts next to predict what INNER JOIN will output for each company.')}
+        <button id="continue-to-prediction" class="primary continue-after-feedback">Continue to prediction</button>
+      `));
+      continueFromPending('continue-to-prediction');
+      return;
+    }
+
     if (item.id === 'sql' && next === 'verification') {
       interactionLifecycle.renderCurrent(stepShell('Inspect the result.', `
         ${item.feedback}
@@ -292,6 +303,69 @@ JOIN funding_round
     runButton.disabled = runButton.hidden;
   }
 
+  function getMatchEvidenceCases() {
+    const companyIds = [1, 5, 20];
+    const companyRows = getDatabase().exec(`SELECT company_id, status
+      FROM company
+      WHERE company_id IN (1, 5, 20)
+      ORDER BY company_id;`)[0]?.values ?? [];
+    const fundingRows = getDatabase().exec(`SELECT company_id, funding_round_id, round_type
+      FROM funding_round
+      WHERE company_id IN (1, 5, 20)
+      ORDER BY company_id, funding_round_id;`)[0]?.values ?? [];
+    const statusByCompany = new Map(companyRows.map(([companyId, status]) => [Number(companyId), status]));
+    return companyIds.map((companyId) => ({
+      companyId,
+      status: statusByCompany.get(companyId) ?? 'unknown',
+      rounds: fundingRows
+        .filter(([rowCompanyId]) => Number(rowCompanyId) === companyId)
+        .map(([, fundingRoundId, roundType]) => ({ fundingRoundId, roundType })),
+    }));
+  }
+
+  function renderMatchEvidence() {
+    const cases = getMatchEvidenceCases();
+    const options = [
+      ['4-1-0', 'company 1 → 4 matches; company 5 → 1 match; company 20 → 0 matches.'],
+      ['4-1-1', 'company 1 → 4 matches; company 5 → 1 match; company 20 → 1 match.'],
+      ['1-1-0', 'company 1 → 1 match; company 5 → 1 match; company 20 → 0 matches.'],
+    ];
+    const draft = state.drafts.matchEvidence || '';
+    const evidenceMarkup = cases.map(({ companyId, status, rounds }) => {
+      const roundText = rounds.length
+        ? rounds.map(({ fundingRoundId, roundType }) => `<code>${escapeHtml(fundingRoundId)}</code> ${escapeHtml(roundType)}`).join(' · ')
+        : 'no funding_round rows';
+      return `<span><code>company ${companyId}</code> · status ${escapeHtml(status)} → ${roundText}</span>`;
+    }).join('');
+
+    interactionLifecycle.renderCurrent(stepShell(
+      'How many matching funding-round rows does each company have?',
+      `<div class="verification-prompt"><strong>Actual rows from the current data</strong>${evidenceMarkup}</div>
+      <form id="match-evidence-form" class="answer-form">
+        <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${value}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>
+        <button class="primary" type="submit">Check answer</button>
+      </form>
+      ${feedbackMarkup()}`,
+      teacherVoice('You established the requested result Grain: one matched funding round per row. Before predicting INNER JOIN behavior, inspect actual company and funding_round rows and establish how many rows each company can match.'),
+    ));
+
+    document.getElementById('match-evidence-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const answer = new FormData(event.currentTarget).get('answer');
+      state.drafts.matchEvidence = answer || '';
+      if (answer !== '4-1-0') return wrong('Count only the funding_round rows shown for each company. A company row can exist even when no funding_round row points to it.');
+      record({
+        evidence: 'matchEvidence',
+        prompt: 'How many matching funding-round rows does each company have?',
+        answer: stripMarkup(options.find(([value]) => value === answer)[1]),
+        value: answer,
+        options,
+        feedback: '<div class="success-feedback">Correct. From the actual rows, you established three match cases: company 1 has four matching funding rounds, company 5 has one, and company 20 has none.</div>',
+        next: 'prediction',
+      });
+    });
+  }
+
   function renderPrediction() {
     const options = [
       ['zero-one-many', 'company 1 → 4 rows; company 5 → 1 row; company 20 → 0 rows.'],
@@ -301,19 +375,18 @@ JOIN funding_round
     const draft = state.drafts.prediction || '';
     interactionLifecycle.renderCurrent(stepShell(
       'How many result rows will each company contribute to the INNER JOIN?',
-      `<div class="verification-prompt"><strong>Observed matches before the JOIN</strong><span>company 1 → 4 funding rounds · company 5 → 1 funding round · company 20 → 0 funding rounds</span></div>
+      `<div class="verification-prompt"><strong>Established match counts from the rows you inspected</strong><span>company 1 → 4 funding rounds · company 5 → 1 funding round · company 20 → 0 funding rounds</span></div>
       <form id="prediction-answer-form" class="answer-form">
-        <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${value}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>
-        <button class="primary" type="submit">Check answer</button>
+        <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${value}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset><button class="primary" type="submit">Check answer</button>
       </form>
       ${feedbackMarkup()}`,
-      teacherVoice('You established one result row per matched funding round, while a company can have zero, one, or many matching rounds. Use the observed match counts to extend the matching logic to all three cases.'),
+      teacherVoice('You established one result row per matched funding round and then observed many, one, and zero matching rows in the actual data. Use those established counts to predict what INNER JOIN will output for each company.'),
     ));
     document.getElementById('prediction-answer-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const answer = new FormData(event.currentTarget).get('answer');
       state.drafts.prediction = answer || '';
-      if (answer !== 'zero-one-many') return wrong('An INNER JOIN produces rows only from matches. Use the observed match counts for each company and predict how many matched row pairs can be produced.');
+      if (answer !== 'zero-one-many') return wrong('Use the match counts you established from the actual rows. For each company, how many matched row pairs can INNER JOIN produce?');
       record({
         evidence: 'prediction',
         prompt: 'How many result rows will each company contribute to the INNER JOIN?',
@@ -432,10 +505,12 @@ JOIN funding_round
         ],
         correct: 'round',
         evidence: 'output',
-        next: 'prediction',
+        next: 'matchEvidence',
         feedback: '<div class="success-feedback">Correct. The result Grain is one recorded funding round per row. Company fields can repeat when a company has several rounds.</div><div class="concept-callout"><strong>REUSED CONCEPT</strong><b>Grain</b><span>The JOIN should preserve each matched funding-round row as one result row.</span></div>',
         wrongFeedback: 'The request needs every recorded funding round to stay individually visible. What must one row represent for that to remain true?',
       });
+    } else if (state.current === 'matchEvidence') {
+      renderMatchEvidence();
     } else if (state.current === 'prediction') {
       renderPrediction();
     } else if (state.current === 'sql') {
@@ -468,7 +543,7 @@ JOIN funding_round
         wrongFeedback: 'Use company_id 20 as evidence. It has no matching funding_round row and is absent from the INNER JOIN result.',
       });
     } else if (state.current === 'complete') {
-      const requiredEvidence = ['relations', 'connection', 'cardinality', 'output', 'prediction', 'sql', 'verification', 'transfer'];
+      const requiredEvidence = ['relations', 'connection', 'cardinality', 'output', 'matchEvidence', 'prediction', 'sql', 'verification', 'transfer'];
       const complete = requiredEvidence.every((item) => state.evidence.has(item));
       interactionLifecycle.renderCurrent(stepShell('Stage complete', `<div class="completion-state"><div class="completion-icon">✓</div><p>${complete ? 'You completed the basic INNER JOIN match model: 0 matches → 0 rows, 1 match → 1 row, and many matches → many rows, then verified the zero-match case in the actual result.' : 'The required learning evidence is incomplete.'}</p></div>`));
     }
@@ -515,7 +590,7 @@ JOIN funding_round
       prompt: 'Return companies with their recorded funding rounds.',
       answer: 'Query ran successfully',
       answerLabel: 'Result',
-      feedback: '<div class="success-feedback">The query returned the expected 26 matched funding-round rows. Now inspect which company rows did and did not survive.</div>',
+      feedback: '<div class="success-feedback">The query ran successfully. Inspect Results before deciding whether the earlier prediction held.</div>',
       next: 'verification',
     });
   }
