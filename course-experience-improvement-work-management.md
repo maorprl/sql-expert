@@ -78,13 +78,13 @@ The management classification itself is not authority.
 ### Teacher voice / Walkthrough
 
 **Status:** ACTIVE  
-**Current wave:** Wave 2 — COMPLETE across Stage 1, Stage 2, and Stage 3; Wave 3 remains queued and not started
+**Current wave:** Wave 3 — COMPLETE across Stage 1, Stage 2, and Stage 3; Wave 4 remains queued
 
 This is the first active category in the broader existing-course improvement initiative.
 
 The goal is to make the course feel like a continuous teacher-led walkthrough while preserving the learner's own reasoning and the established interaction sequence.
 
-Wave 1 was calibrated on Stage 1, accepted, propagated to Stage 2 and Stage 3, and merged. Wave 2 was then calibrated on Stage 1, reviewed and merged in PR #4, selectively propagated to Stage 2 and Stage 3, reviewed and merged in PR #5, and validated through full Stage 1–3 runtime journeys and chapter-state isolation.
+Wave 1 was calibrated on Stage 1, accepted, propagated to Stage 2 and Stage 3, and merged. Wave 2 was then calibrated on Stage 1, reviewed and merged in PR #4, selectively propagated to Stage 2 and Stage 3, reviewed and merged in PR #5, and validated through full Stage 1–3 runtime journeys and chapter-state isolation. Wave 3 then consolidated genuinely shared visual-role treatments, corrected the Stage 3 post-SQL evidence-role drift, and completed reduced-motion handling for the existing non-essential transitions without changing learner flow or adding new motion.
 
 A pattern is not promoted across the course merely because it was implemented once.
 
@@ -184,15 +184,23 @@ Canon impact:
 
 ### Wave 3 — Visual support and motion polish
 
-**Status:** QUEUED WITHIN CURRENT CATEGORY
+**Status:** COMPLETE
 
-Candidate scope:
+Completion record:
 
-- refine active-focus treatment after Wave 1 calibration;
-- consolidate shared visual roles where practical;
-- use restrained transitions for meaningful state changes;
-- support `prefers-reduced-motion`;
-- keep layout movement subordinate to learner orientation.
+- genuinely shared learner-facing visual-role treatments were consolidated into the shared stylesheet while encounter-specific geometry and local overrides were retained;
+- Stage 3 post-SQL Results/evidence received the established evidence-action treatment for the equivalent learner role without changing flow, copy, evidence generation, or attention choreography;
+- `prefers-reduced-motion` handling was added for the existing Business Request and Working Schema data-card transitions, with no new motion introduced;
+- targeted Stage 1–3 runtime validation, production build, and `git diff --check` were reported PASS for the implementation branch before closure;
+- final code review found no merge-blocking scope or authority violation.
+
+Implemented scope:
+
+- consolidate shared visual roles where the learner-facing role and phase are genuinely equivalent;
+- retain encounter-specific layout and geometry locally where equivalence is not established;
+- correct the Stage 3 post-SQL evidence-role visual drift;
+- support `prefers-reduced-motion` for existing non-essential transitions;
+- keep layout movement subordinate to learner orientation and introduce no new motion without a separate justified decision.
 
 Canon impact:
 
@@ -255,11 +263,11 @@ Hebrew / RTL localization is currently **DEFERRED**. It should be planned as its
 
 ## 9. Current next action
 
-Wave 1 and Wave 2 are complete across Stage 1, Stage 2, and Stage 3.
+Wave 1, Wave 2, and Wave 3 are complete across Stage 1, Stage 2, and Stage 3.
 
-The next decision gate is whether to activate **Wave 3 — Visual support and motion polish** from the queued scope. Do not begin Wave 3 implementation automatically. First review the candidate scope against the current Stage 1–3 runtime experience and decide which, if any, visual or motion changes are justified.
+The next decision gate is whether to activate **Wave 4 — Diagnostic feedback** from the queued scope. Do not begin Wave 4 implementation automatically. First review the candidate scope against the current Stage 1–3 learner experience and decide which, if any, diagnostic-feedback changes are justified and whether any require an encounter-level canon decision.
 
-Do not treat completion of Wave 1 or Wave 2 as blanket approval for new visual behavior, motion, progress semantics, hints, adaptive behavior, or encounter redesign.
+Do not treat completion of Waves 1–3 as blanket approval for new feedback branching, progress semantics, hints, adaptive behavior, visual behavior, motion, or encounter redesign.
 
 ## 10. Authority boundary
 
