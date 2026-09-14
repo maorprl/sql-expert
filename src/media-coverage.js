@@ -408,6 +408,11 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
 
   function renderJoinTeaching() {
     const beat = state.joinTeachingBeat;
+    const guidance = beat === 1
+      ? 'You chose to combine each article with its matching source. Now see how JOIN carries out that choice for one pair of rows.'
+      : beat === 2
+        ? 'You have seen what that combination produces. Now reuse the key relationship you found to tell SQL which rows match.'
+        : 'The relationship now has an SQL form inside ON. Next, connect that match back to the business request and map the whole query.';
     const beatMarkup = beat === 1 ? `
       <section class="teaching-beat active-beat">
         <div class="teaching-beat-heading"><span>1</span><div><strong>First, match the rows</strong><p>JOIN combines an article row with the source row that has the same <code>news_source_id</code>.</p></div></div>
@@ -443,7 +448,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       <div class="teaching-navigation">
         <button id="join-teaching-next" class="primary">${beat < 3 ? (beat === 1 ? 'Next: express the match in SQL' : 'Next: map the whole query') : 'Continue to SQL implementation'}</button>
       </div>
-    `, teacherVoice('Your relational reasoning is established. Stay with the Working Schema as we turn that same relationship into SQL, one layer at a time.')));
+    `, teacherVoice(guidance)));
 
     document.getElementById('join-teaching-next').addEventListener('click', () => {
       if (state.joinTeachingBeat < 3) {
@@ -481,7 +486,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
         });
       });
     } else if (state.current === 'connection') {
-      interactionLifecycle.renderCurrent(stepShell('Which column in <code>news_article</code> tells us which source published the article?', `<p class="step-copy">Select the column directly in the Working Schema.</p><button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`));
+      interactionLifecycle.renderCurrent(stepShell('Which column in <code>news_article</code> tells us which source published the article?', `<p class="step-copy">Select the column directly in the Working Schema.</p><button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`, teacherVoice('You found the two relations that supply the requested information. Now trace from an article row to its source so we can establish how those relations connect.')));
       document.getElementById('check-column').addEventListener('click', () => {
         if (state.selectedColumn !== 'news_source_id') return wrong('Look at the article row and ask which column could tell us which source published it. The relationship stays hidden until you establish that connection.');
         record({
@@ -494,7 +499,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       });
     } else if (state.current === 'cardinality') {
       choiceQuestion({
-        intro: teacherVoice('In the Working Schema, the key connection you found is now visible. Use it to look at the relationship from both directions.'),
+        intro: teacherVoice('The key connection you found is now visible in the Working Schema. Use that same connection to reason about how many rows can relate in each direction.'),
         prompt: 'Which statement best describes what can happen across the two relations?',
         options: [
           ['correct', 'One source can publish many articles; each article has one publishing source.'],
@@ -508,7 +513,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       });
     } else if (state.current === 'output') {
       choiceQuestion({
-        intro: teacherVoice('We now know how articles and sources are related. Before we combine them, be clear about the result the business request is asking for.'),
+        intro: teacherVoice('You established how articles and sources can relate. Now return to the business request: its organizing subject—not the relationship alone—will tell us what each requested result row should represent.'),
         prompt: 'If the result should show every article with its source, what should one result row represent?',
         options: [['article', 'a news article'], ['source', 'a news source'], ['country', 'a country'], ['pair', 'a combination of article and source']],
         correct: 'article', evidence: 'output', next: 'baselineRun',
@@ -541,7 +546,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
 FROM news_article
 JOIN news_source
   ON ...</pre><p>Use <code>JOIN</code> to add the source relation and <code>ON</code> to express the relationship you already established.</p></div></details>
-        <p class="implementation-check"><strong>Earlier prediction:</strong> 18 rows · one article per row.</p>${feedbackMarkup()}`));
+        <p class="implementation-check"><strong>Earlier prediction:</strong> 18 rows · one article per row.</p>${feedbackMarkup()}`, teacherVoice('You mapped the requested fields, starting article rows, matching source, and ON relationship. Implement that same map now; the earlier prediction gives you a result to check afterward.')));
     } else if (state.current === 'finalGrain') {
       renderFinalVerification();
     } else if (state.current === 'complete') {
