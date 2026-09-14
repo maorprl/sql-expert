@@ -78,7 +78,7 @@ The management classification itself is not authority.
 ### Teacher voice / Walkthrough
 
 **Status:** ACTIVE  
-**Current wave:** Wave 3 — COMPLETE across Stage 1, Stage 2, and Stage 3; Wave 4 remains queued
+**Current wave:** Wave 4 — DIAGNOSTIC FEEDBACK DECISION GATE COMPLETE; narrow SQL semantic-diagnostic scope selected, implementation not yet performed
 
 This is the first active category in the broader existing-course improvement initiative.
 
@@ -210,19 +210,26 @@ Canon impact:
 
 ### Wave 4 — Diagnostic feedback
 
-**Status:** QUEUED WITHIN CURRENT CATEGORY
+**Status:** DECISION GATE COMPLETE — NARROW IMPLEMENTATION SCOPE SELECTED
 
-Candidate scope:
+Decision record:
 
-- provide misconception-specific feedback for selected wrong answers where pedagogically useful;
-- distinguish common SQL failure classes more precisely than one generic semantic-error message;
-- use already-established evidence to explain the correction rather than simply report failure.
+`course-design/audits/wave-4-diagnostic-feedback-decision-gate-2026-09-15.md`
 
-Canon impact:
+Gate conclusion:
 
-- clearer explanatory feedback can be `CONFORMANCE` or `IMPLEMENTATION CHOICE`;
-- new branching feedback logic that changes the instructional response to a learner action may require encounter-level `CANON DECISION REQUIRED`;
-- SQL diagnosis must not become a brittle syntax parser that rejects semantically correct work merely to produce more detailed messages.
+- current closed reasoning feedback, prepared-measurement feedback, prediction feedback, and result-verification feedback are sufficiently diagnostic for the current Stage 1–3 interactions and remain unchanged;
+- raw SQLite execution errors remain outside Wave 4 rather than being wrapped in a brittle syntax classifier;
+- the justified Wave 4 target is successful SQL execution that fails an encounter's semantic result contract;
+- Stage 1, Stage 2, and Stage 3 may distinguish already-established failure dimensions such as required relational implementation, output-contract mismatch, row-count / Grain-behavior mismatch, and relationship / row-association mismatch;
+- diagnosis must reuse existing validator/result evidence, must not narrow semantic correctness, and must not create a new instructional path;
+- new assistance escalation, adaptive behavior, new learner-path branching, or new acceptance semantics remain outside this gate and require their own authority treatment.
+
+Canon impact for the selected scope:
+
+- evidence-based clarification of an already-established semantic requirement — `CONFORMANCE` plus local `IMPLEMENTATION CHOICE`;
+- materially different instructional branching or assistance escalation — `CANON DECISION REQUIRED`;
+- parser-like diagnosis that risks rejecting semantically correct SQL — `POTENTIAL CONFLICT`.
 
 ### Wave 5 — Graduated / adaptive assistance
 
@@ -265,9 +272,17 @@ Hebrew / RTL localization is currently **DEFERRED**. It should be planned as its
 
 Wave 1, Wave 2, and Wave 3 are complete across Stage 1, Stage 2, and Stage 3.
 
-The next decision gate is whether to activate **Wave 4 — Diagnostic feedback** from the queued scope. Do not begin Wave 4 implementation automatically. First review the candidate scope against the current Stage 1–3 learner experience and decide which, if any, diagnostic-feedback changes are justified and whether any require an encounter-level canon decision.
+The Wave 4 mapping / decision gate is also complete. Its durable decision record is:
 
-Do not treat completion of Waves 1–3 as blanket approval for new feedback branching, progress semantics, hints, adaptive behavior, visual behavior, motion, or encounter redesign.
+`course-design/audits/wave-4-diagnostic-feedback-decision-gate-2026-09-15.md`
+
+The next action is a **narrow Wave 4 implementation pass for SQL semantic-result diagnostic feedback across Stage 1–3**, constrained to the failure dimensions selected by that gate.
+
+Before changing learner-facing code, the implementer must consume the gate record and the relevant current encounter authority. The implementation must preserve existing learner paths, evidence, validators' semantic acceptance boundaries, SQL equivalence, hints, progress semantics, and completion behavior.
+
+If the proposed implementation requires new instructional branching, new assistance escalation, new acceptance semantics, or parser-like SQL diagnosis, stop and classify that portion as `CANON DECISION REQUIRED` or `POTENTIAL CONFLICT` rather than implementing it.
+
+Do not treat completion of Waves 1–3 or the Wave 4 decision gate as blanket approval for progress semantics, hints, adaptive behavior, visual behavior, motion, encounter redesign, or Wave 5 work.
 
 ## 10. Authority boundary
 
