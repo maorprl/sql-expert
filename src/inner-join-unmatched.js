@@ -1,6 +1,6 @@
 import './inner-join-unmatched.css';
 
-const BUSINESS_REQUEST = 'The investment team wants a table of companies that have recorded funding rounds, with each company\'s status alongside the round type and announced date.';
+const BUSINESS_REQUEST = 'The investment team is validating a funding-round report. It should show every recorded funding round with the company\'s status, and they also need to know whether every company is represented in the report.';
 const REQUIRED_RELATIONS = ['funding_round', 'company'];
 const COMPANY_EVIDENCE_SQL = `SELECT company_id, name
 FROM company;`;
@@ -16,7 +16,7 @@ const INTERACTION_LABELS = {
   prediction: 'Predict INNER JOIN behavior',
   sql: 'Implement the INNER JOIN',
   verification: 'Verify which rows survived',
-  transfer: 'Check the changed requirement',
+  transfer: 'Assess report coverage',
   complete: 'Stage complete',
 };
 
@@ -257,7 +257,7 @@ JOIN funding_round
     const unmatched = companyReference(state.unmatchedCompanyName, state.unmatchedCompanyId);
 
     if (item.id === 'matchEvidence' && next === 'prediction') {
-      interactionLifecycle.renderCurrent(stepShell('Zero-match case established.', teacherVoice(`You found a real zero-match case: ${escapeHtml(unmatched)} exists on the company side, but there is no funding-round row to pair with it. That matters because matched rows alone cannot show what INNER JOIN does when no pair exists. Before writing SQL, predict whether this starting row disappears or survives in some form.`)));
+      interactionLifecycle.renderCurrent(stepShell('Zero-match case established.', teacherVoice(`You found a real zero-match case: ${escapeHtml(unmatched)} exists on the company side, but there is no funding-round row to pair with it. The team also needs to know whether every company is represented in the funding-round report, so this company is the case that can test that coverage. Before writing SQL, predict what INNER JOIN will do with this starting row.`)));
       renderWorkspaceAction(`
         ${item.feedback}
         <button id="continue-to-prediction" class="primary continue-after-feedback">Continue to prediction</button>
@@ -380,7 +380,7 @@ JOIN funding_round
     if (state.matchEvidencePhase === 'companies') {
       interactionLifecycle.renderCurrent(stepShell(
         'Establish which companies exist in the current data.',
-        `${teacherVoice('You established that one requested result row represents one recorded funding round. Before predicting INNER JOIN behavior, inspect the actual data and establish whether every company has a matching funding-round row.')}<div class="measurement-note">Run the prepared query in the SQL Workspace; you do not need to write SQL yet. This first measurement gives you each company name together with the key you will compare in the next measurement.</div>${feedbackMarkup()}`,
+        `${teacherVoice('You established that one requested result row represents one recorded funding round. The business question also asks whether every company is represented in that report. Inspect the actual data and establish whether every company has a matching funding-round row.')}<div class="measurement-note">Run the prepared query in the SQL Workspace; you do not need to write SQL yet. This first measurement gives you each company name together with the key you will compare in the next measurement.</div>${feedbackMarkup()}`,
       ));
       return;
     }
@@ -407,7 +407,7 @@ JOIN funding_round
       const companies = state.companyEvidenceRows.map(([companyId, name]) => ({ companyId: String(companyId), name: String(name) }));
       interactionLifecycle.renderCurrent(stepShell(
         'Which funding-round rows point to those companies?',
-        `${teacherVoice('Now inspect the funding-round rows. Compare their company IDs with the named company rows you already established.')}<div class="measurement-note">Run the prepared query in the SQL Workspace; you do not need to write SQL yet. Then use the two measurements together.</div>${feedbackMarkup()}`,
+        `${teacherVoice('Now inspect the funding-round rows. Compare their company IDs with the named company rows you already established. This comparison will tell you whether the report has a matching funding-round row available for every company.')}<div class="measurement-note">Run the prepared query in the SQL Workspace; you do not need to write SQL yet. Then use the two measurements together.</div>${feedbackMarkup()}`,
       ));
       renderWorkspaceAction(`
         <div class="evidence-kicker">Established from your first measurement</div>
@@ -450,7 +450,7 @@ JOIN funding_round
         answer: `${unmatched} has no matching funding_round row`,
         value: answer,
         options,
-        feedback: `<div class="success-feedback">Correct. From the two query results, you established that ${escapeHtml(unmatched)} exists in <code>company</code> but has no matching row in <code>funding_round</code>. This gives you a real zero-match case to test.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>NULL versus no result row</b><span><code>NULL</code> means a value is missing or unknown inside a row that exists. That is different from the row not appearing in the result at all.</span></div>`,
+        feedback: `<div class="success-feedback">Correct. From the two query results, you established that ${escapeHtml(unmatched)} exists in <code>company</code> but has no matching row in <code>funding_round</code>. This gives you a real zero-match case for the report-coverage question.</div>`,
         next: 'prediction',
       });
     });
@@ -462,13 +462,13 @@ JOIN funding_round
     const unmatched = companyReference(companyName, companyId);
     const options = [
       ['zero', `${companyName} contributes 0 result rows because there is no matching funding_round row.`],
-      ['null-row', `${companyName} appears once: company_id and status remain, while funding_round_id, round_type, and announced_date are NULL.`],
-      ['preserved', `${companyName} appears once because every company contributes at least one result row.`],
+      ['preserved', `${companyName} appears once because it exists in company, even without a matching funding_round row.`],
+      ['error', `The INNER JOIN cannot return a result because one company has no matching funding_round row.`],
     ];
     const draft = state.drafts.prediction || '';
     interactionLifecycle.renderCurrent(stepShell(
       'Predict from the evidence.',
-      teacherVoice(`You now have a real zero-match case and the distinction between no result row and a row containing NULL. Use the INNER JOIN matching behavior you already know to predict which outcome applies to ${escapeHtml(unmatched)} before writing SQL.`),
+      teacherVoice(`You now have a real zero-match case. Use the INNER JOIN matching behavior you already know to predict what happens to ${escapeHtml(unmatched)} before writing SQL.`),
     ));
     const action = renderWorkspaceAction(`
       <div class="verification-prompt"><strong>Established evidence</strong><span>${escapeHtml(unmatched)} exists in <code>company</code> and has no matching row in <code>funding_round</code>.</span></div>
@@ -501,8 +501,8 @@ JOIN funding_round
     const companyName = state.unmatchedCompanyName;
     const options = [
       ['absent', `${companyName} is absent from the result, matching the zero-row prediction.`],
-      ['null-row', `${companyName} appears once: company_id and status remain, while funding_round_id, round_type, and announced_date are NULL.`],
-      ['one-row', `${companyName} appears once because INNER JOIN preserves every company row.`],
+      ['present', `${companyName} appears once because the company row exists, even though no funding_round row matches it.`],
+      ['count-proves-coverage', `All 12 companies are represented because the result contains 26 rows.`],
     ];
     const draft = state.drafts.verification || '';
     interactionLifecycle.renderCurrent(stepShell(
@@ -513,7 +513,7 @@ JOIN funding_round
         <button class="primary" type="submit">Check answer</button>
       </form>
       ${feedbackMarkup()}`,
-      teacherVoice(`Use Results as the evidence surface. Search the company_id column for ${escapeHtml(companyId)} rather than relying on the prediction alone.`),
+      teacherVoice(`Use Results as the evidence surface. Search the company_id column for ${escapeHtml(companyId)} rather than using the total row count as a substitute for checking which companies are represented.`),
     ));
     document.getElementById('verification-answer-form').addEventListener('submit', (event) => {
       event.preventDefault();
@@ -526,7 +526,7 @@ JOIN funding_round
         answer: stripMarkup(options.find(([value]) => value === answer)[1]),
         value: answer,
         options,
-        feedback: `<div class="success-feedback">Correct. The result verifies the zero-match case: ${escapeHtml(companyName)} is absent because no funding-round row matched it.</div>`,
+        feedback: `<div class="success-feedback">Correct. The result contains 26 funding-round rows, but ${escapeHtml(companyName)} is absent because no funding-round row matched it.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>Row count is not entity coverage</b><span>Other companies can contribute several matched rows while a zero-match company contributes none. A result can therefore contain many rows without representing every company.</span></div>`,
         next: 'transfer',
       });
     });
@@ -595,7 +595,7 @@ JOIN funding_round
       });
     } else if (state.current === 'output') {
       choiceQuestion({
-        intro: teacherVoice('You established that a company can have zero, one, or many recorded rounds. Now return to the business request so its organizing subject—not cardinality alone—determines what one result row should represent.'),
+        intro: teacherVoice('You established that a company can have zero, one, or many recorded rounds. Now return to the funding-round report itself: its organizing subject—not cardinality alone—determines what one result row should represent.'),
         prompt: 'What should one result row represent?',
         options: [
           ['round', 'one recorded funding round, with its company status alongside it'],
@@ -607,7 +607,7 @@ JOIN funding_round
         evidence: 'output',
         next: 'matchEvidence',
         feedback: '<div class="success-feedback">Correct. The result Grain is one recorded funding round per row. Company fields can repeat when a company has several rounds.</div><div class="concept-callout"><strong>REUSED CONCEPT</strong><b>Grain</b><span>The JOIN should preserve each matched funding-round row as one result row.</span></div>',
-        wrongFeedback: 'The request needs every recorded funding round to stay individually visible. What must one row represent for that to remain true?',
+        wrongFeedback: 'The report needs every recorded funding round to stay individually visible. What must one row represent for that to remain true?',
       });
     } else if (state.current === 'matchEvidence') {
       renderMatchEvidence();
@@ -629,23 +629,23 @@ JOIN funding_round
       renderVerification();
     } else if (state.current === 'transfer') {
       choiceQuestion({
-        intro: teacherVoice(`You verified from Results that ${escapeHtml(state.unmatchedCompanyName)} (company_id ${escapeHtml(state.unmatchedCompanyId)}) disappears when it has no matching funding round. Keep that evidence in view while you change only the business requirement; do not change the SQL yet.`),
-        prompt: 'Suppose the request changes to: “include every company, even when it has no recorded funding round.” Would this INNER JOIN still satisfy the request?',
+        intro: teacherVoice(`You verified that ${escapeHtml(state.unmatchedCompanyName)} (company_id ${escapeHtml(state.unmatchedCompanyId)}) is absent even though Results contain 26 funding-round rows. Now answer the company-coverage question from the original business request.`),
+        prompt: 'Can this 26-row INNER JOIN report be used as evidence that every company is represented?',
         options: [
-          ['no', 'No. Companies with zero matching funding rounds would still disappear.'],
-          ['yes', 'Yes. INNER JOIN always keeps every row from company.'],
-          ['null', 'Yes. INNER JOIN would keep the company and return NULL for funding_round_id, round_type, and announced_date.'],
+          ['no', `No. ${state.unmatchedCompanyName} is missing even though the report contains 26 rows.`],
+          ['yes-count', 'Yes. Because 26 rows is more than 12 companies, every company must be represented.'],
+          ['yes-grain', 'Yes. One row per funding round guarantees one row for every company.'],
         ],
         correct: 'no',
         evidence: 'transfer',
         next: 'complete',
-        feedback: '<div class="success-feedback">Correct. The changed requirement needs unmatched company rows to survive, while this INNER JOIN removes them. That is a different join requirement.</div>',
-        wrongFeedback: `Use ${state.unmatchedCompanyName} (company_id ${state.unmatchedCompanyId}) as evidence. It has no matching funding_round row and is absent from the INNER JOIN result.`,
+        feedback: '<div class="success-feedback">Correct. The report can be correct at funding-round grain and still omit a company with zero matching rounds. Multiple matches for other companies can increase the result-row count without restoring missing company coverage.</div>',
+        wrongFeedback: `Use ${state.unmatchedCompanyName} (company_id ${state.unmatchedCompanyId}) as evidence. It exists in company, has zero funding-round matches, and is absent from the INNER JOIN result.`,
       });
     } else if (state.current === 'complete') {
       const requiredEvidence = ['relations', 'connection', 'cardinality', 'output', 'matchEvidence', 'prediction', 'sql', 'verification', 'transfer'];
       const complete = requiredEvidence.every((item) => state.evidence.has(item));
-      interactionLifecycle.renderCurrent(stepShell('Stage complete', `<div class="completion-state"><div class="completion-icon">✓</div><p>${complete ? 'You discovered a company with no matching funding round, predicted that INNER JOIN would omit it, and verified that zero-match behavior in the actual result.' : 'The required learning evidence is incomplete.'}</p></div>`));
+      interactionLifecycle.renderCurrent(stepShell('Stage complete', `<div class="completion-state"><div class="completion-icon">✓</div><p>${complete ? 'You used a real zero-match company to show that an INNER JOIN funding-round report can contain many rows while still leaving a company unrepresented.' : 'The required learning evidence is incomplete.'}</p></div>`));
     }
   }
 
@@ -709,7 +709,7 @@ JOIN funding_round
     }
     record({
       evidence: 'sql',
-      prompt: 'Return companies with their recorded funding rounds.',
+      prompt: 'Build the funding-round report with company context.',
       answer: 'Query ran successfully',
       answerLabel: 'Result',
       feedback: '<div class="success-feedback">The query ran successfully. Inspect Results before deciding whether the earlier prediction held.</div>',
