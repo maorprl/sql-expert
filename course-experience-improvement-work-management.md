@@ -78,13 +78,15 @@ The management classification itself is not authority.
 ### Teacher voice / Walkthrough
 
 **Status:** ACTIVE  
-**Current wave:** Wave 1 — existing-authority conformance calibration
+**Current wave:** Wave 2 — consistent teacher voice and continuity
 
 This is the first active category in the broader existing-course improvement initiative.
 
 The goal is to make the course feel like a continuous teacher-led walkthrough while preserving the learner's own reasoning and the established interaction sequence.
 
-The active category is being calibrated on Stage 1 first. A pattern is not promoted across the course merely because it was implemented once.
+Wave 1 has been calibrated on Stage 1, accepted, propagated to Stage 2 and Stage 3, and merged. Wave 2 is now being calibrated on Stage 1 before any cross-stage propagation.
+
+A pattern is not promoted across the course merely because it was implemented once.
 
 ## 6. Delivery rule for the current category
 
@@ -125,7 +127,13 @@ Any code already produced before this checkpoint for the current Wave 1 should b
 
 ### Wave 1 — Existing-authority conformance calibration
 
-**Status:** ACTIVE
+**Status:** COMPLETE
+
+Completion record:
+
+- Stage 1 calibration was reviewed, accepted, and merged in PR #2;
+- the accepted pattern was propagated to Stage 2 and Stage 3 and merged in PR #3;
+- runtime validation covered all three stages and chapter-state isolation.
 
 Scope:
 
@@ -147,7 +155,7 @@ Do not use this wave to introduce new progress semantics, new hint systems, new 
 
 ### Wave 2 — Consistent teacher voice and continuity
 
-**Status:** QUEUED WITHIN CURRENT CATEGORY
+**Status:** ACTIVE — Stage 1 calibration reviewed PASS; Draft PR #4 pending merge
 
 Candidate scope:
 
@@ -156,6 +164,8 @@ Candidate scope:
 - chapter openings / closings that strengthen continuity without pre-resolving the learner's reasoning;
 - clearer transition wording where `Continue` or equivalent actions change the learner's mode of work;
 - concise end-of-chapter synthesis using actual evidence from the completed encounter.
+
+Current Stage 1 calibration strengthens continuity at the identified gaps without mechanically adding teacher text to every state. It carries established reasoning into the next meaningful action across relation selection, relationship reasoning, result Grain, JOIN teaching, SQL implementation, and result verification while preserving learner-owned reasoning.
 
 Canon impact:
 
@@ -237,14 +247,16 @@ Hebrew / RTL localization is currently **DEFERRED**. It should be planned as its
 
 ## 9. Current next action
 
-Before further substantial walkthrough / visual changes are promoted:
+Wave 1 is complete across Stage 1, Stage 2, and Stage 3.
 
-- pause expansion of the provisional Wave 1 treatment;
-- produce the Stage 1 visual calibration for the three representative states;
-- review the proposed primary / secondary hierarchy and teacher-guidance treatment;
-- then continue Wave 1 implementation from the accepted calibration.
+For Wave 2:
 
-Do not propagate the provisional pattern to Stage 2 or Stage 3 before this checkpoint.
+- merge the accepted Stage 1 calibration in PR #4 into `stage3-inner-join-unmatched-rebuild-2026-09-13`;
+- then propagate the accepted continuity pattern to Stage 2 and Stage 3 only where the learner role is equivalent;
+- validate the Stage 2 and Stage 3 journeys, run a Stage 1 regression journey, and perform a full-course runtime walkthrough after propagation;
+- do not begin Wave 3 until Wave 2 propagation and acceptance are complete.
+
+Do not turn Wave 2 propagation into an encounter redesign or use it to introduce new learner requirements, sequence changes, hints, progress semantics, or adaptive behavior.
 
 ## 10. Authority boundary
 
