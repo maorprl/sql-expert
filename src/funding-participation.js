@@ -434,6 +434,11 @@ JOIN round_investment
 
   function renderJoinTeaching() {
     const beat = state.joinTeachingBeat;
+    const guidance = beat === 1
+      ? 'You chose to combine each funding round with its matching participations. Now see how the familiar JOIN carries out that choice for one matching pair.'
+      : beat === 2
+        ? 'You have seen how one match produces a participation-level row. Now reuse the key relationship you found to tell SQL which rows match.'
+        : 'The relationship now has an SQL form inside ON. Next, connect that match back to the review request and the row-multiplication prediction as you map the whole query.';
     const beatMarkup = beat === 1 ? `
       <section class="teaching-beat active-beat">
         <div class="teaching-beat-heading"><span>1</span><div><strong>Match the rows</strong><p>Reuse the JOIN pattern: a funding-round row matches each participation row with the same <code>funding_round_id</code>.</p></div></div>
@@ -469,7 +474,7 @@ JOIN round_investment
       <div class="teaching-navigation">
         <button id="join-teaching-next" class="primary">${beat < 3 ? (beat === 1 ? 'Next: express the match in SQL' : 'Next: map the whole query') : 'Continue to SQL implementation'}</button>
       </div>
-    `, teacherVoice('Your participation-level Grain, relationship, and row-multiplication prediction are established. Stay with the Working Schema as we reconnect that reasoning to the JOIN you already know.')));
+    `, teacherVoice(guidance)));
 
     document.getElementById('join-teaching-next').addEventListener('click', () => {
       if (state.joinTeachingBeat < 3) {
@@ -508,7 +513,7 @@ JOIN round_investment
         });
       });
     } else if (state.current === 'connection') {
-      interactionLifecycle.renderCurrent(stepShell('Which column in <code>round_investment</code> tells us which funding round a participation belongs to?', `<p class="step-copy">In the Working Schema, select the column that connects each participation to its funding round.</p><button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`));
+      interactionLifecycle.renderCurrent(stepShell('Which column in <code>round_investment</code> tells us which funding round a participation belongs to?', `<p class="step-copy">In the Working Schema, select the column that connects each participation to its funding round.</p><button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`, teacherVoice('You found the relations that supply the round context and participation records. Now trace from a participation to its funding round so we can establish how those relations connect.')));
       document.getElementById('check-column').addEventListener('click', () => {
         if (state.selectedColumn !== 'funding_round_id') return wrong('Look at one participation row and ask which column identifies the funding round that participation belongs to. The relationship stays hidden until you establish that connection.');
         record({
@@ -535,7 +540,7 @@ JOIN round_investment
       });
     } else if (state.current === 'output') {
       choiceQuestion({
-        intro: teacherVoice('We now know how funding rounds and participation records are related. Before we combine them, be clear about the result the review is asking for.'),
+        intro: teacherVoice('You established the one-to-many relationship. Now return to the review request: it—not the relationship alone—will tell us what each requested result row should represent.'),
         prompt: 'If the result should show who took part in each funding round, what should one result row represent?',
         options: [['participation', 'one recorded round-investor participation'], ['round', 'one funding round'], ['investor', 'one investor across all rounds'], ['company', 'one company']],
         correct: 'participation', evidence: 'output', next: 'baselineRun',
@@ -568,7 +573,7 @@ JOIN round_investment
 FROM funding_round
 JOIN round_investment
   ON ...</pre><p>Use <code>JOIN</code> to add the participation relation and <code>ON</code> to express the relationship you already established.</p></div></details>
-        <p class="implementation-check"><strong>Earlier prediction:</strong> one funding round can appear across several participation rows.</p>${feedbackMarkup()}`));
+        <p class="implementation-check"><strong>Earlier prediction:</strong> one funding round can appear across several participation rows.</p>${feedbackMarkup()}`, teacherVoice('You mapped the round rows, matching participations, and ON relationship while keeping one participation per result row. Implement that same map now; the earlier multiplication prediction gives you a result pattern to check afterward.')));
     } else if (state.current === 'finalGrain') {
       renderFinalVerification();
     } else if (state.current === 'complete') {
