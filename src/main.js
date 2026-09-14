@@ -17,6 +17,33 @@ const SOURCE_FILES = [
 ];
 const STORAGE_KEY = 'sql-lab-editor-text-v1';
 const KEYWORDS = ['SELECT','FROM','WHERE','JOIN','INNER JOIN','LEFT JOIN','ON','GROUP BY','HAVING','ORDER BY','LIMIT','AS','WITH','RECURSIVE','INSERT','UPDATE','DELETE','CREATE','DROP','ALTER','UNION','ALL','DISTINCT','EXISTS','NOT EXISTS','CASE','WHEN','THEN','ELSE','END','NULL','AND','OR','IN','LIKE','COUNT','SUM','AVG','MIN','MAX','OVER','PARTITION BY','ROWS'];
+const ENCOUNTER_SOLUTIONS = {
+  'media-coverage': `SELECT
+  news_article.title,
+  news_source.name AS source_name
+FROM news_article
+JOIN news_source
+  ON news_article.news_source_id = news_source.news_source_id;`,
+  'funding-participation': `SELECT
+  funding_round.funding_round_id,
+  funding_round.round_type,
+  funding_round.announced_date,
+  round_investment.round_investment_id,
+  round_investment.investor_id,
+  round_investment.is_lead
+FROM funding_round
+JOIN round_investment
+  ON funding_round.funding_round_id = round_investment.funding_round_id;`,
+  'inner-join-unmatched': `SELECT
+  company.company_id,
+  company.status,
+  funding_round.funding_round_id,
+  funding_round.round_type,
+  funding_round.announced_date
+FROM company
+JOIN funding_round
+  ON company.company_id = funding_round.company_id;`,
+};
 
 let SQL;
 let db;
@@ -215,23 +242,17 @@ function runCurrentQuery() {
     const resultSets = db.exec(statement);
     resultTable(resultSets);
     activeEncounter?.handleSqlSuccess?.(statement, resultSets);
-    const learningPanel = document.querySelector('.learning-panel');
-    if (!learningPanel.matches('.sql-implementation-active, .cycle1-sql-active')) hideSqlSolutionSurface();
   } catch (error) { showError('SQL error', error, statement); }
 }
 
-function showMediaCoverageSolution() {
+function showActiveSolution(event) {
+  event?.stopImmediatePropagation();
   const learningPanel = document.querySelector('.learning-panel');
-  if (activeEncounterName !== 'media-coverage' || !learningPanel.classList.contains('sql-implementation-active')) return;
-  const panel = el('solution-panel');
-  panel.innerHTML = `<div class="solution-panel-heading"><span>Solution assistance</span><button id="close-solution" type="button" aria-label="Close solution">Close</button></div><div class="solution-panel-body"><strong>Solution SQL:</strong><pre>SELECT
-  news_article.title,
-  news_source.name AS source_name
-FROM news_article
-JOIN news_source
-  ON news_article.news_source_id = news_source.news_source_id;</pre><p>This is assistance only. It has not been inserted or run.</p></div>`;
-  panel.hidden = false;
-  el('close-solution').addEventListener('click', hideSqlSolutionSurface);
+  if (!learningPanel.matches('.sql-implementation-active, .cycle1-sql-active')) return;
+  const solution = ENCOUNTER_SOLUTIONS[activeEncounterName];
+  if (!solution) return;
+  editor.setValue(solution, -1);
+  editor.focus();
 }
 
 function ensureSqlSolutionControls() {
@@ -242,24 +263,9 @@ function ensureSqlSolutionControls() {
     button.type = 'button';
     button.className = 'sql-solution-button';
     button.textContent = 'Show solution';
-    button.addEventListener('click', showMediaCoverageSolution);
+    button.addEventListener('click', showActiveSolution);
     editorActions.insertBefore(button, runButton);
   }
-  if (!el('solution-panel')) {
-    const panel = document.createElement('section');
-    panel.id = 'solution-panel';
-    panel.className = 'solution-panel sql-solution-panel';
-    panel.hidden = true;
-    panel.setAttribute('aria-live', 'polite');
-    el('lab-workspace').append(panel);
-  }
-}
-
-function hideSqlSolutionSurface() {
-  const panel = el('solution-panel');
-  if (!panel) return;
-  panel.hidden = true;
-  panel.innerHTML = '';
 }
 
 function ensureChapterNavigation() {
@@ -297,7 +303,6 @@ function resetEncounterDom() {
   el('completed-steps').innerHTML = '';
   el('current-step').innerHTML = '';
   el('relation-preview').innerHTML = '';
-  hideSqlSolutionSurface();
 }
 
 function resetLearningPanelState() {

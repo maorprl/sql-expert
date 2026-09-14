@@ -98,25 +98,30 @@ Pedagogically, revealing the solution is part of the same assistance continuum a
 - correctness feedback;
 - answer checking.
 
-Revealing a solution must not by itself:
+When the learner activates `Show solution`:
 
-- populate the learner's SQL editor;
+- the complete solution SQL replaces the current contents of the active SQL editor, as if the learner had typed or pasted that SQL there;
+- the populated SQL remains editable by the learner;
+- no separate revealed-solution panel or overlay is required.
+
+Activating `Show solution` must not by itself:
+
 - run SQL;
 - mark required learner evidence complete;
-- bypass later verification required by the Stage or encounter.
+- bypass result inspection or later verification required by the Stage or encounter.
 
 Where an encounter tracks assistance provenance, use of `Show solution` may be recorded as a stronger assistance level in the same way that hint use can distinguish supported from unassisted work. This does not create a separate owner gate for solution use.
 
-### OPEN — solution behavior
+### Remaining implementation / policy questions
 
-The following are not yet determined:
+The exact visual treatment of the `Show solution` control inside the SQL Workspace remains an implementation decision.
 
-- the exact visual treatment inside the SQL Workspace;
-- whether the revealed solution remains open while the learner continues working;
+The following remain OPEN:
+
 - how solution availability is represented when a SQL task has no meaningful single solution;
 - broader course-level analytics or progress semantics beyond encounter-local assistance provenance.
 
-These questions must not be silently resolved in implementation.
+These open questions must not override the established editor-population behavior above.
 
 ## 4. Desired Output — local SQL-authoring scaffold
 
