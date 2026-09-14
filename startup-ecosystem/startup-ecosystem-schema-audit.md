@@ -1,154 +1,165 @@
-# Startup Ecosystem Schema — Knowledge, SQL Readiness & Learner-Facing Fitness Audit
+# Startup Ecosystem Schema — Coursewide Learner-Fitness Revision Review
 
-**Status:** PASS AFTER CORRECTION  
-**Audited against:** `course-knowledge-map.md`, `pedagogical-foundations.md`, and the current company → funding_round learner case  
-**Schema size:** 24 relations
+**Status:** REVISED + MECHANICALLY VALIDATED  
+**Date:** 2026-09-14  
+**Scope:** Every schema area outside the protected Stage 1–3 learner contracts  
+**Basis:** `course-exit-criteria.md`, `course-knowledge-map.md`, `pedagogical-foundations.md`, current Stage 1–3 relation contracts, and executable SQLite validation
 
----
+## 1. Why the previous review was insufficient
 
-## 1. Audit conclusion
+The earlier schema audit answered a narrower question: whether the schema could support the knowledge map and advanced SQL.
 
-The 24-relation schema still supports the full current knowledge map and later advanced SQL, but the earlier audit was incomplete in one important respect: it checked capability coverage and SQL readiness, not whether a central learner-facing entity could be understood without an unrelated identity-only join.
+That was not enough.
 
-The company-centered case exposed that defect. In the previous model, `company` contained `company_id`, `status`, and `description`, while the company name lived only in `organization`. A learner working directly with `company → funding_round` therefore faced an artificial choice:
+The Stage 3 company case exposed a separate requirement: the data model itself must not force the learner through unrelated identity plumbing simply to understand the entity being analyzed.
 
-- reason from opaque company IDs; or
-- introduce `organization` and an additional 1:1 join that was not part of the intended learning objective.
+A schema can be normalized, executable, and capability-rich while still being a poor teaching substrate.
 
-That structure conflicted with the schema's own goal of avoiding cognitive noise and with the pedagogical rule that infrastructure should not dictate or contaminate the reasoning sequence.
+This revision therefore applied a second criterion across the non-protected schema:
 
-The correction makes `company` a concrete party relation with its own `name`, `website_url`, and `founded_date`, while retaining `organization` for non-company organizational parties and retaining `party` as the shared relationship anchor. No duplicate company identity fields are stored across `company` and `organization`.
+> Does each relation or relationship add business/analytical meaning that justifies the cognitive structure it introduces?
 
----
+## 2. Protected boundary
 
-## 2. Learner-facing fitness criterion
+The following learner-facing contracts were not redesigned:
 
-For a concrete entity relation that learners are expected to reason about directly, the relation should expose enough descriptive identity to make its rows intelligible without requiring a join whose only purpose is to discover what entity an ID represents.
+| Relation | Existing stage dependency preserved |
+|---|---|
+| `news_source` | Stage 1 source relation |
+| `news_article` | Stage 1 base relation and 18-row instance |
+| `funding_round` | Stage 2/3 funding-round relation and 26-row instance |
+| `round_investment` | Stage 2 participation relation and 72-row instance |
+| `company` | Stage 3 company fields, IDs, names, status and 12-row instance |
 
-This does not mean every relation must be self-contained. Role and bridge relations such as `investor`, `company_sector`, or `article_party` may legitimately be key-heavy because the relationship itself is their business meaning.
+The only surrounding cleanup affecting a protected relation definition is removal of the old `company.company_id → party.party_id` supertype FK. That relationship was not used by Stage 3. The Stage 3 relationship `funding_round.company_id → company.company_id` is unchanged.
 
-Applied to the current schema:
+## 3. Relation-by-relation disposition
 
-- `company` — concrete entity, now directly human-readable: PASS;
-- `organization` — concrete entity, directly human-readable: PASS;
-- `person` — concrete entity, directly human-readable: PASS;
-- `investor` — role relation over `party`, intentionally not a duplicate identity store: PASS;
-- bridge relations — relationship records, not expected to carry duplicated entity labels: PASS.
-
----
-
-## 3. Knowledge-map coverage
-
-| Knowledge area | Schema evidence | Status |
+| Previous relation | Disposition | Reason |
 |---|---|---|
-| Relation / row / attribute | 24 explicit relations with distinct grains | SUPPORTED |
-| Grain | company, funding round, investment participation, bridge-table grains | SUPPORTED |
-| Keys / uniqueness | PKs, shared PK/FKs, composite bridge keys, unique constraints | SUPPORTED |
-| 1:1 / 1:0..1 | `party → company/organization/person/investor` | SUPPORTED |
-| 1:M | company → funding rounds; source → articles; hierarchy parent → child | SUPPORTED |
-| M:N | company-sector, round-investor, company-founder, article-party, tags | STRONGLY SUPPORTED |
-| Selection / filtering | status, dates, amounts, round types, sectors, geography | SUPPORTED |
-| Projection | concrete entity relations expose identifying and descriptive attributes | SUPPORTED |
-| Cartesian-product reasoning | independent child branches remain | SUPPORTED |
-| INNER JOIN | pervasive explicit FK relationships | SUPPORTED |
-| LEFT JOIN | optional rounds, addresses, article links, parent sectors, disclosed amounts | SUPPORTED |
-| Join fanout | company → rounds plus sectors/founders/news | STRONGLY SUPPORTED |
-| Aggregation | amounts, counts, dates, sectors, investor participation | SUPPORTED |
-| GROUP BY / HAVING | company, investor, sector, source, year, round groups | SUPPORTED |
-| Pre-aggregation | investments → round → company | STRONGLY SUPPORTED |
-| NULL semantics | optional check amounts, valuations, geography, dates | SUPPORTED |
-| EXISTS / NOT EXISTS | missing rounds/news/tags/sector focus/lead investments | SUPPORTED |
-| Bridge-table reasoning | multiple meaningful bridges remain | STRONGLY SUPPORTED |
-| Subqueries | threshold, membership, comparison and aggregate-to-detail questions | SUPPORTED |
-| Self join | sector and geographic hierarchies | SUPPORTED |
-| Set reasoning | compatible ecosystem result sets can be combined | SUPPORTED |
-| Window functions | repeated dated funding rounds and news | STRONGLY SUPPORTED |
+| `party` | REMOVE | Identity-only supertype added cognitive indirection without required course value. |
+| `organization` | REMOVE | Company identity already belongs directly in `company`; standalone investors now carry their own identity. |
+| `person` | KEEP | Concrete, directly understandable entity used by founder relationships. |
+| `company` | PROTECTED | Existing Stage 3 contract. |
+| `company_founder` | KEEP | Real M:N relationship with meaningful relationship attributes. |
+| `investor` | REDESIGN | Changed from key-only role to directly readable entity with name/type. |
+| `investor_category` | REMOVE | Lookup/taxonomy overhead not needed for required capabilities. |
+| `investor_category_membership` | REMOVE | Removed with category taxonomy; other meaningful M:N bridges already cover the capability. |
+| `sector` | KEEP | Directly readable recursive hierarchy; useful for hierarchy/self-join/recursive CTE. |
+| `company_sector` | KEEP | Meaningful company–sector bridge and fanout branch. |
+| `investor_sector_focus` | KEEP | Meaningful investor–sector bridge. |
+| `funding_round` | PROTECTED | Existing Stage 2/3 contract. |
+| `round_investment` | PROTECTED | Existing Stage 2 contract. |
+| `tag` | REMOVE | Generic tag subsystem duplicated relationship-learning opportunities without distinct required value. |
+| `party_tag` | REMOVE | Depended on removed generic party/tag abstractions. |
+| `geo_unit` | REMOVE | Second recursive hierarchy was not required; added location indirection. |
+| `address` | REMOVE | Address identity was not itself a target analytical entity. |
+| `party_address` | REPLACE | Replaced by direct, meaningful `company_office` grain. |
+| `news_source` | PROTECTED | Existing Stage 1 contract. |
+| `news_article` | PROTECTED | Existing Stage 1 contract. |
+| `article_tag` | REMOVE | Generic tags not needed. |
+| `article_party` | REPLACE | Replaced by explicit `article_company`. |
+| `article_funding_round` | KEEP | Direct and meaningful article–round relationship. |
+| `article_sector` | KEEP | Direct and meaningful article–sector relationship. |
 
----
+New relations:
 
-## 4. Advanced SQL readiness
+| New relation | Purpose |
+|---|---|
+| `company_office` | One row per company office period; direct location and temporal reasoning without address plumbing. |
+| `company_acquisition` | Natural 1:0..1 optional relationship for preservation/missing-row reasoning. |
+| `article_company` | Explicit article–company bridge replacing generic party indirection. |
 
-### Non-recursive CTEs
+Final relation count: **16**.
 
-Still naturally supported:
+## 4. Learner-facing fitness checks
 
-```text
-CTE 1: one row per funding round
-CTE 2: one row per company
-CTE 3: company-sector analytical relation
-```
+### Concrete entity readability
 
-### Recursive CTEs
+Direct human-readable identity is available in:
 
-Still supported by:
+- `company.name`
+- `investor.name`
+- `person.first_name` + `person.last_name`
+- `sector.name`
+- `news_source.name`
+- `news_article.title`
 
-```text
-sector.parent_sector_id
-geo_unit.parent_geo_unit_id
-```
+No concrete entity requires a join whose sole purpose is to discover what its ID represents.
 
-### Window functions
+### Bridge legitimacy
 
-Still supported by repeated dated funding rounds for:
+Every retained bridge has a row meaning that can be stated directly:
 
-- `ROW_NUMBER`
-- `RANK`
-- `LAG`
-- `LEAD`
-- running totals
-- partition-level aggregates
+- `company_founder`: one company–founder relationship;
+- `company_sector`: one company–sector assignment;
+- `investor_sector_focus`: one investor–sector focus;
+- `article_company`: one article–company relationship;
+- `article_funding_round`: one article–funding-round relationship;
+- `article_sector`: one article–sector relationship.
 
-The company-identity correction removes an unnecessary subtype join without removing any advanced-SQL opportunity.
+### Optional relationship legitimacy
 
----
+`company_acquisition` gives a natural optional 1:0..1 case. It is not a generic “profile” relation created only to satisfy a cardinality checklist.
 
-## 5. Bridge and role review
+### Hierarchy legitimacy
 
-The remaining small relations are intentional where each row represents a real role or relationship rather than normalization overhead.
+Only `sector` remains recursive. A second geography hierarchy was removed because it was not needed to cover a distinct required capability.
 
-Examples:
+## 5. Executable validation performed
 
-```text
-investor(investor_id)
-company_sector(company_id, sector_id, ...)
-investor_sector_focus(investor_id, sector_id)
-party_tag(party_id, tag_id)
-article_tag(news_article_id, tag_id)
-article_party(news_article_id, party_id)
-article_funding_round(news_article_id, funding_round_id)
-article_sector(news_article_id, sector_id)
-investor_category_membership(investor_id, investor_category_id)
-```
+The revised schema and seed were executed together in SQLite with foreign keys enabled.
 
-These remain useful for role overlap, cardinality, bridge-table grain, join multiplicity, fanout, existence reasoning, and aggregation.
+Observed checks:
 
----
+| Check | Result |
+|---|---:|
+| Relations created | 16 |
+| `PRAGMA foreign_key_check` | 0 violations |
+| `company` rows | 12 |
+| `funding_round` rows | 26 |
+| `round_investment` rows | 72 |
+| `news_article` rows | 18 |
+| `news_source` rows | 4 |
+| Stage 1 article/source INNER JOIN | 18 rows |
+| Stage 2 round/participation INNER JOIN | 72 rows |
+| Stage 3 company/round INNER JOIN | 26 rows |
+| Stage 3 unmatched company | `Lumina Bio` (`company_id 20`) |
+| company 1 founder × sector fanout example | 6 rows |
+| recursive sector hierarchy max depth from Technology | 3 |
+| companies with no office | `Lumina Bio` |
+| companies without acquisition row | 11 of 12 |
 
-## 6. Dataset requirements
+A funding-round window-function smoke test also produced the expected ordered sequence for company 1: four rows numbered 1–4 by `announced_date`.
 
-The seed data continues to provide:
+## 6. Knowledge-map coverage after revision
 
-- 0 / 1 / M funding-round cases;
-- a named company with zero funding rounds (`Lumina Bio`);
-- multiple independent fanout branches;
-- NULL investor check amounts;
-- missing addresses/news/tags;
-- investors without sector focus;
-- repeated round amounts and ranking ties;
-- several companies with 3+ funding rounds;
-- sector and geographic hierarchies with depth 4;
-- a company that also acts as an investor;
-- people who also act as investors.
+| Knowledge area | Revised schema support |
+|---|---|
+| Grain | Distinct company, round, participation, founder-relationship, office, article and bridge grains |
+| Keys / uniqueness | PKs, composite bridge keys, unique primary-sector rule |
+| 1:M | company → funding rounds; company → offices; source → articles |
+| 1:0..1 | company → acquisition |
+| M:N | company–founder, company–sector, investor–sector, article bridges |
+| INNER JOIN | Multiple direct FK relationships |
+| LEFT JOIN | acquisition, office, article links, sector parent |
+| Row multiplication / fanout | company → founders + sectors + rounds |
+| Aggregation / pre-aggregation | round investments → round → company |
+| NULL semantics | investor checks, valuations, optional joined rows |
+| EXISTS / NOT EXISTS | companies without rounds/offices/acquisition; investors without sector focus |
+| Self join / recursive CTE | `sector.parent_sector_id` |
+| Window functions | repeated dated funding rounds by company |
+| Subqueries / set reasoning | naturally supported by entity and bridge relations |
 
----
+## 7. What this review does not claim
 
-## 7. Final verdict
+This is not a runtime acceptance of every future learner encounter.
 
-**PASS AFTER CORRECTION.**
+It establishes only that:
 
-The corrected model is a better fit for the course because it now satisfies both dimensions that matter:
+- the non-protected schema received a relation-by-relation structural revision;
+- the resulting schema/seed execute successfully;
+- the protected Stage 1–3 data contracts still produce their required result counts and zero-match case;
+- the revised relations provide identifiable, meaningful grains without the previously identified identity-only detours.
 
-- it preserves the relational structures required by the knowledge map and later SQL work;
-- it does not force an unrelated identity-only join merely to understand a central company row.
-
-The earlier PASS should not be interpreted as evidence that learner-facing schema fitness had already been checked; that dimension was missing from the earlier audit and was exposed by the current learner case.
+Future encounter designs still require their own case validation and learner-experience review.
