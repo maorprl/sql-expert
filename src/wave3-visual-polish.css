@@ -1,0 +1,79 @@
+/*
+ * Wave 3 — Visual support and motion polish.
+ *
+ * This layer is intentionally role-based and cross-encounter. It refines visual
+ * focus and state handoffs without changing layout order, learner flow, answer
+ * logic, SQL behavior, or Stage-local pedagogy.
+ */
+
+/* Let focus changes read as a handoff rather than an abrupt repaint. */
+.learning-panel .business-request,
+.learning-panel .current-step,
+.learning-panel .working-schema-panel,
+.learning-panel .lab-workspace,
+.learning-panel .results-panel,
+.learning-panel .workspace-evidence-action {
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease,
+    opacity 160ms ease;
+}
+
+/* SQL authoring: the workspace is primary; task copy and schema remain available as support. */
+.learning-panel.sql-implementation-active .lab-workspace {
+  border-color: #6f9ddd;
+  outline: 2px solid rgba(47, 111, 237, .2);
+  outline-offset: 2px;
+  box-shadow: 0 16px 38px rgba(27, 55, 92, .2), inset 0 4px 0 var(--blue);
+}
+
+.learning-panel.sql-implementation-active .current-step {
+  border-color: #d8e1ec;
+  background: #fbfcfe;
+  box-shadow: inset 3px 0 0 #9db8dc;
+}
+
+.learning-panel.sql-implementation-active .working-schema-panel {
+  border-color: #dce4ed;
+  background: #fafbfd;
+  box-shadow: none;
+  opacity: .86;
+}
+
+/* Result inspection: evidence leads; instructions and schema step back without disappearing. */
+.learning-panel.results-evidence-active .results-panel {
+  background: #f8fbff;
+  box-shadow: inset 0 4px 0 var(--blue), 0 8px 22px rgba(47, 111, 237, .1);
+}
+
+.learning-panel.results-evidence-active .workspace-evidence-action {
+  border-color: #9bbbe5;
+  box-shadow: 0 8px 22px rgba(47, 111, 237, .1);
+}
+
+.learning-panel.results-evidence-active .current-step {
+  border-color: #d8e1ec;
+  background: #fbfcfe;
+  box-shadow: none;
+}
+
+.learning-panel.results-evidence-active .working-schema-panel {
+  border-color: #e1e7ee;
+  background: #fafbfd;
+  box-shadow: none;
+  opacity: .72;
+}
+
+/* Respect learners who request reduced motion. The interface remains fully legible without animation. */
+@media (prefers-reduced-motion: reduce) {
+  .learning-panel .business-request,
+  .learning-panel .current-step,
+  .learning-panel .working-schema-panel,
+  .learning-panel .lab-workspace,
+  .learning-panel .results-panel,
+  .learning-panel .workspace-evidence-action,
+  .data-card {
+    transition: none !important;
+  }
+}
