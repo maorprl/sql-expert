@@ -78,13 +78,13 @@ The management classification itself is not authority.
 ### Teacher voice / Walkthrough
 
 **Status:** ACTIVE  
-**Current wave:** Wave 2 — consistent teacher voice and continuity
+**Current wave:** Wave 2 — COMPLETE across Stage 1, Stage 2, and Stage 3; Wave 3 remains queued and not started
 
 This is the first active category in the broader existing-course improvement initiative.
 
 The goal is to make the course feel like a continuous teacher-led walkthrough while preserving the learner's own reasoning and the established interaction sequence.
 
-Wave 1 has been calibrated on Stage 1, accepted, propagated to Stage 2 and Stage 3, and merged. Wave 2 is now being calibrated on Stage 1 before any cross-stage propagation.
+Wave 1 was calibrated on Stage 1, accepted, propagated to Stage 2 and Stage 3, and merged. Wave 2 was then calibrated on Stage 1, reviewed and merged in PR #4, selectively propagated to Stage 2 and Stage 3, reviewed and merged in PR #5, and validated through full Stage 1–3 runtime journeys and chapter-state isolation.
 
 A pattern is not promoted across the course merely because it was implemented once.
 
@@ -121,7 +121,7 @@ For each state, establish:
 - the concept-takeaway role;
 - the smallest visual treatment needed to make those roles legible.
 
-Any code already produced before this checkpoint for the current Wave 1 should be treated as **provisional prototype work** until the calibration is reviewed.
+Wave 1 satisfied this checkpoint before cross-stage propagation. Future substantial visual work should use the same evidence rule where applicable rather than treating earlier visual acceptance as blanket approval for later changes.
 
 ## 7. Teacher voice / Walkthrough waves
 
@@ -155,9 +155,17 @@ Do not use this wave to introduce new progress semantics, new hint systems, new 
 
 ### Wave 2 — Consistent teacher voice and continuity
 
-**Status:** ACTIVE — Stage 1 calibration reviewed PASS; Draft PR #4 pending merge
+**Status:** COMPLETE
 
-Candidate scope:
+Completion record:
+
+- Stage 1 continuity calibration was reviewed PASS and merged in PR #4;
+- the accepted continuity pattern was selectively translated to Stage 2 and Stage 3 and merged in PR #5;
+- Stage 2, Stage 3, and unchanged Stage 1 full runtime journeys passed;
+- chapter-state isolation was verified;
+- propagation remained limited to teacher-guidance continuity and did not change learner questions, validators, SQL behavior, sequence, completion behavior, hints, progress semantics, adaptive behavior, or visual-focus behavior.
+
+Scope:
 
 - more consistent bridge language across reasoning moves;
 - explicit connection between what was established, what matters now, and what follows;
@@ -165,7 +173,7 @@ Candidate scope:
 - clearer transition wording where `Continue` or equivalent actions change the learner's mode of work;
 - concise end-of-chapter synthesis using actual evidence from the completed encounter.
 
-Current Stage 1 calibration strengthens continuity at the identified gaps without mechanically adding teacher text to every state. It carries established reasoning into the next meaningful action across relation selection, relationship reasoning, result Grain, JOIN teaching, SQL implementation, and result verification while preserving learner-owned reasoning.
+The completed implementation strengthens continuity only where the actual learner journey needed it. Established reasoning is carried into the next meaningful action without mechanically adding teacher text to every state or pre-solving the learner's next reasoning move.
 
 Canon impact:
 
@@ -247,16 +255,11 @@ Hebrew / RTL localization is currently **DEFERRED**. It should be planned as its
 
 ## 9. Current next action
 
-Wave 1 is complete across Stage 1, Stage 2, and Stage 3.
+Wave 1 and Wave 2 are complete across Stage 1, Stage 2, and Stage 3.
 
-For Wave 2:
+The next decision gate is whether to activate **Wave 3 — Visual support and motion polish** from the queued scope. Do not begin Wave 3 implementation automatically. First review the candidate scope against the current Stage 1–3 runtime experience and decide which, if any, visual or motion changes are justified.
 
-- merge the accepted Stage 1 calibration in PR #4 into `stage3-inner-join-unmatched-rebuild-2026-09-13`;
-- then propagate the accepted continuity pattern to Stage 2 and Stage 3 only where the learner role is equivalent;
-- validate the Stage 2 and Stage 3 journeys, run a Stage 1 regression journey, and perform a full-course runtime walkthrough after propagation;
-- do not begin Wave 3 until Wave 2 propagation and acceptance are complete.
-
-Do not turn Wave 2 propagation into an encounter redesign or use it to introduce new learner requirements, sequence changes, hints, progress semantics, or adaptive behavior.
+Do not treat completion of Wave 1 or Wave 2 as blanket approval for new visual behavior, motion, progress semantics, hints, adaptive behavior, or encounter redesign.
 
 ## 10. Authority boundary
 
