@@ -307,7 +307,7 @@ JOIN funding_round
         <button class="primary" type="submit">Check answer</button>
       </form>
       ${feedbackMarkup()}`,
-      teacherVoice('Stages 1 and 2 covered one match and many matches. Use the same matching logic for a company that has no matching funding-round row.'),
+      teacherVoice('You established one result row per matched funding round, while a company can have zero, one, or many matching rounds. Use the observed match counts to extend the matching logic to all three cases.'),
     ));
     document.getElementById('prediction-answer-form').addEventListener('submit', (event) => {
       event.preventDefault();
@@ -392,6 +392,7 @@ JOIN funding_round
       interactionLifecycle.renderCurrent(stepShell(
         'Which column in <code>funding_round</code> identifies the company that the round belongs to?',
         `<p class="step-copy">In the Working Schema, select the column that connects each funding round to its company.</p><button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`,
+        teacherVoice('You found the relations that supply company context and recorded round details. Now trace from a funding round to its company so we can establish how those relations connect.'),
       ));
       document.getElementById('check-column').addEventListener('click', () => {
         if (state.selectedColumn !== 'company_id') return wrong('Look at one funding-round row and ask which column identifies the company that round belongs to.');
@@ -421,7 +422,7 @@ JOIN funding_round
       });
     } else if (state.current === 'output') {
       choiceQuestion({
-        intro: teacherVoice('The request is for companies that have recorded funding rounds, with company context attached to each round.'),
+        intro: teacherVoice('You established that a company can have zero, one, or many recorded rounds. Now return to the business request so its organizing subject—not cardinality alone—determines what one result row should represent.'),
         prompt: 'What should one result row represent?',
         options: [
           ['round', 'one recorded funding round, with its company status alongside it'],
@@ -447,12 +448,13 @@ FROM company
 JOIN funding_round
   ON ...</pre><p>Reuse the same INNER JOIN pattern. No new JOIN syntax is needed in this stage.</p></div></details>
         <p class="implementation-check"><strong>Prediction to verify:</strong> a company with zero matching funding rounds contributes zero rows.</p>${feedbackMarkup()}`,
+        teacherVoice('Your prediction now covers many matches, one match, and no match. Implement the established company-to-round relationship with the INNER JOIN you already know, then use Results to test that prediction.'),
       ));
     } else if (state.current === 'verification') {
       renderVerification();
     } else if (state.current === 'transfer') {
       choiceQuestion({
-        intro: teacherVoice('Now change only the business requirement. Do not change the SQL yet.'),
+        intro: teacherVoice('You verified from Results that company 20 disappears when it has no matching funding round. Keep that evidence in view while you change only the business requirement; do not change the SQL yet.'),
         prompt: 'Suppose the request changes to: “include every company, even when it has no recorded funding round.” Would this INNER JOIN still satisfy the request?',
         options: [
           ['no', 'No. Companies with zero matching funding rounds would still disappear.'],
