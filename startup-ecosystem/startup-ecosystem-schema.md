@@ -1,123 +1,70 @@
-# Startup Ecosystem — Course Relational Schema
+# Startup Ecosystem — Course-Focused Relational Schema
 
-**Status:** Simplified relational model  
+**Status:** COURSEWIDE REVISION — 2026-09-14  
 **Target database:** SQLite  
-**Domain:** startups, funding rounds, investors, sectors, tags, news, and addresses  
-**Design goal:** Keep the model relationally explicit where the relationships matter, while avoiding normalization choices that add learner-facing joins or opaque identifiers without adding analytical value.
+**Domain:** startups, funding rounds, investors, sectors, company locations, acquisitions, and news  
+**Current size:** 16 relations
 
----
+## 1. Revision boundary
 
-## 1. Design principles
+This revision treats the schema as course infrastructure rather than as a normalization exercise.
 
-This schema favors:
+The learner-facing contracts already used by Stages 1–3 are protected:
 
-- explicit relations over JSON arrays;
-- explicit bridge tables for many-to-many relationships;
-- shared supertypes when they create meaningful reusable relationships;
-- concrete entity relations that expose a human-readable identity when learners are expected to reason about those entities directly;
-- recursive relations for real hierarchies;
-- separate relations when their business meaning differs;
-- preserving business meaning even when values are unknown.
+- `news_source` and `news_article` — Stage 1;
+- `funding_round` and `round_investment` — Stage 2;
+- `company` and `funding_round` — Stage 3.
 
-It intentionally avoids:
+For those relations, the relation names, learner-used columns, stage-required row meanings, and stage-dependent data are preserved.
 
-- generic `entity_type + entity_id` polymorphic foreign keys;
-- comma-separated tags, sectors, or investors;
-- normalization that forces an identity-only join before a central entity can be understood;
-- wide denormalized company records unrelated to the course's analytical needs;
-- lookup tables for simple stable textual attributes such as company status, round type, currency code, geographic unit type, and address role;
-- treating reported funding-round totals as necessarily equal to the sum of disclosed investor checks.
+The surrounding schema was reconsidered from first principles. An unrelated supertype or supporting structure is not retained merely because it is normalized or realistic.
 
-A relation used only as a role or bridge may legitimately contain mostly keys. A concrete entity relation such as `company`, `organization`, or `person` should not require an unrelated join merely to tell the learner which real-world entity a row represents.
+## 2. Design rules
 
----
+The revised schema follows these rules:
 
-## 2. Core party model
+1. **Concrete entities should be directly intelligible.**  
+   A learner should not need an identity-only join merely to discover what a row represents. `company`, `investor`, `person`, and `news_source` therefore expose human-readable identity directly.
 
-A **party** is an entity that can participate in ecosystem relationships.
+2. **Relations should exist because their rows have useful business meaning.**  
+   Bridge relations remain when one row represents a real relationship such as company–sector, founder–company, investor–sector, article–company, or article–funding-round.
 
-For this course dataset, a party can have one concrete identity form:
+3. **Do not create lookup joins for simple stable categories.**  
+   Values such as company status, investor type, round type, currency code, office role, and country code remain direct attributes.
 
-- `company`
-- `organization`
-- `person`
+4. **Do not retain generic identity infrastructure when it contaminates ordinary analytical tasks.**  
+   The previous `party → organization/person/company/investor` supertype structure made simple company and investor work depend on identity plumbing. It has been removed from the active course schema.
 
-Any party may additionally have the role:
-
-- `investor`
-
-```text
-party
-├── company
-├── organization
-└── person
-
-party
-└── investor
-```
-
-`company` is modeled as a concrete party relation rather than as a child of `organization`. This is a deliberate course-schema simplification: company-centered analysis is central to the course, so company rows carry their own human-readable identity and basic company attributes. `organization` remains available for non-company organizational parties such as venture funds and other institutional investors.
-
-This still supports organizational investors, angel investors, startup companies, and companies that also invest. For example, a company party can also have an `investor` row, while a person party can also have an `investor` row.
-
----
+5. **A learning opportunity is useful only if the surrounding data model stays interpretable.**  
+   The schema still contains one-to-many, optional, many-to-many, hierarchy, temporal, NULL, fanout, aggregation, existence, and window-function opportunities without requiring unrelated detours.
 
 ## 3. High-level relationship map
 
 ```text
-party 1 ── 0..1 company
-party 1 ── 0..1 organization
-party 1 ── 0..1 person
-party 1 ── 0..1 investor
-
-company >──< person
-   via company_founder
-
-company >──< sector
-   via company_sector
+company ──< funding_round ──< round_investment >── investor
+   │
+   ├──< company_founder >── person
+   ├──< company_sector >── sector ──< sector
+   ├──< company_office
+   └── 0..1 company_acquisition
 
 investor >──< sector
    via investor_sector_focus
 
-company ──< funding_round ──< round_investment >── investor
-
-party >──< address
-   via party_address
-
-party >──< tag
-   via party_tag
-
 news_source ──< news_article
-
-news_article >──< party
-   via article_party
-
-news_article >──< funding_round
-   via article_funding_round
-
-news_article >──< sector
-   via article_sector
-
-news_article >──< tag
-   via article_tag
-
-geo_unit ──< geo_unit
-sector ──< sector
+                    ├──< article_company >── company
+                    ├──< article_funding_round >── funding_round
+                    └──< article_sector >── sector
 ```
-
----
 
 ## 4. Relations and grains
 
-### `party`
-
-One row per ecosystem party identity.
-
 ### `company`
 
+**Protected Stage 3 contract.**  
 One row per company.
 
-Important columns include:
+Important columns:
 
 - `company_id`
 - `name`
@@ -126,20 +73,7 @@ Important columns include:
 - `status`
 - `description`
 
-`company` is intentionally self-describing enough for company-centered learner encounters. Retrieving a company name does not require an extra identity-only join.
-
-`status` is stored directly as text rather than through a separate two-column lookup table.
-
-### `organization`
-
-One row per non-company organizational party represented in the course dataset.
-
-Columns include:
-
-- `organization_id`
-- `name`
-- `website_url`
-- `founded_date`
+The company name is directly available in the relation. No identity-only join is needed to understand which company a row represents.
 
 ### `person`
 
@@ -147,7 +81,7 @@ One row per person.
 
 ### `company_founder`
 
-One row per company-founder relationship.
+One row per company–founder relationship.
 
 Primary key:
 
@@ -155,33 +89,27 @@ Primary key:
 (company_id, person_id)
 ```
 
+The relationship may carry role and date attributes because those belong to the founder relationship rather than to either entity alone.
+
 ### `investor`
 
-One row per party that has the investor role.
+One row per investor.
 
-`investor` is intentionally a role relation rather than a duplicate identity table. The same party may be a company, organization, or person and also act as an investor.
+Important columns:
 
-### `investor_category`
+- `investor_id`
+- `name`
+- `investor_type`
+- `website_url`
+- `country_code`
 
-One row per meaningful investor category.
-
-Examples:
-
-- angel
-- venture capital
-- corporate venture capital
-- private equity
-- accelerator
-
-### `investor_category_membership`
-
-One row per investor-category relationship.
-
-This remains a bridge because one investor can belong to multiple categories.
+The earlier key-only investor role has been replaced by a directly readable investor entity so future investor analysis does not require polymorphic identity resolution.
 
 ### `sector`
 
 One row per sector in a recursive hierarchy.
+
+Example:
 
 ```text
 Technology
@@ -190,279 +118,161 @@ Technology
         └── Cloud Security
 ```
 
+This single hierarchy is sufficient for self-join and recursive-CTE work; a second geography hierarchy is not required merely for feature coverage.
+
 ### `company_sector`
 
-One row per company-sector assignment.
+One row per company–sector assignment.
 
 `is_primary` marks at most one primary sector per company.
 
 ### `investor_sector_focus`
 
-One row per investor-sector focus relationship.
-
-This remains distinct from `company_sector` because “operates in” and “invests in” are different business relationships.
+One row per investor–sector focus relationship.
 
 ### `funding_round`
 
+**Protected Stage 2/3 contract.**  
 One row per funding round.
-
-Important columns include:
-
-- `company_id`
-- `round_type`
-- `announced_date`
-- `reported_total_amount`
-- `currency_code`
-- valuations
-
-`round_type` and `currency_code` are stored directly rather than through separate lookup tables.
 
 ### `round_investment`
 
+**Protected Stage 2 contract.**  
 One row per investor participation in a funding round.
 
-The intended grain is:
+Intended grain:
 
 ```text
 one investor × one funding round
 ```
 
-A disclosed investor check may be `NULL` even when the round total is known.
+### `company_office`
 
-### `tag`
-
-One row per reusable tag.
-
-### `party_tag`
-
-One row per party-tag relationship.
-
-### `article_tag`
-
-One row per article-tag relationship.
-
-### `geo_unit`
-
-One row per geographic unit in a recursive hierarchy.
+One row per company office period.
 
 Important columns:
 
-- `unit_type`
-- `name`
-- `parent_geo_unit_id`
-- `code`
-
-`unit_type` is stored directly as text.
-
-### `address`
-
-One row per address.
-
-### `party_address`
-
-One row per party-address relationship over time.
-
-Important columns:
-
-- `party_id`
-- `address_id`
-- `address_role`
-- `valid_from`
-- `valid_to`
+- `company_id`
+- `city`
+- `country_code`
+- `office_role`
+- `opened_date`
+- `closed_date`
 - `is_primary`
 
-`address_role` is stored directly as text.
+This replaces the earlier `geo_unit → address → party_address` chain for ordinary company-location analysis. The learner can reason about a company office directly without traversing identity and address plumbing.
+
+### `company_acquisition`
+
+Zero or one row per company acquisition in the simplified course model.
+
+This provides a natural optional relationship for 1:0..1 reasoning, LEFT JOIN behavior, existence checks, and NULL interpretation without adding an artificial profile table.
 
 ### `news_source`
 
+**Protected Stage 1 contract.**  
 One row per news publisher.
 
 ### `news_article`
 
-One row per article.
+**Protected Stage 1 contract.**  
+One row per news article.
 
-Includes a simple `byline` text field instead of separate author relations because article-author modeling is not needed for the current course capabilities.
+### `article_company`
 
-### `article_party`
+One row per article–company relationship.
 
-One row per article-party relationship.
+This replaces the generic `article_party` bridge. The relation now states the business relationship directly.
 
 ### `article_funding_round`
 
-One row per article-funding-round relationship.
+One row per article–funding-round relationship.
 
 ### `article_sector`
 
-One row per article-sector relationship.
+One row per article–sector relationship.
 
----
+## 5. What was removed or replaced
 
-## 5. Why the two-column bridges remain
-
-Relations such as:
-
-```text
-company_sector
-investor_sector_focus
-party_tag
-article_tag
-article_party
-article_funding_round
-article_sector
-investor_category_membership
-```
-
-are intentionally retained.
-
-They are not lookup-table overhead.
-
-Each row represents a real business relationship between two entities, and these relations provide natural material for:
-
-- many-to-many cardinality;
-- bridge-table grain;
-- join multiplicity;
-- fanout;
-- `EXISTS` / `NOT EXISTS`;
-- aggregation across relationships.
-
----
-
-## 6. Advanced SQL readiness
-
-No special tables are required for advanced SQL.
-
-### CTEs
-
-Natural intermediate grains include:
-
-```text
-round investments
-→ one row per funding round
-→ one row per company
-→ company-sector analytical result
-```
-
-### Recursive CTEs
-
-Two genuine recursive structures exist:
-
-```text
-sector.parent_sector_id
-geo_unit.parent_geo_unit_id
-```
-
-### Window functions
-
-Funding rounds provide natural ordered partitions for:
-
-- `ROW_NUMBER`
-- `RANK`
-- `LAG`
-- `LEAD`
-- running totals
-- partition-level averages
-
-The schema therefore supports advanced SQL without artificial exercise tables.
-
----
-
-## 7. Fanout opportunities
-
-A company can simultaneously have:
-
-- several funding rounds;
-- several sectors;
-- several founders;
-- several addresses;
-- several news articles.
-
-For example:
-
-```text
-company
-├── funding_round
-├── company_sector
-├── company_founder
-└── article_party
-```
-
-Joining several independent branches can multiply rows while remaining syntactically valid.
-
----
-
-## 8. Relations
+The following previous structures are no longer part of the active course schema:
 
 ```text
 party
-company
 organization
-person
-company_founder
-
-investor
 investor_category
 investor_category_membership
-
-sector
-company_sector
-investor_sector_focus
-
-funding_round
-round_investment
-
 tag
 party_tag
 article_tag
-
 geo_unit
 address
 party_address
-
-news_source
-news_article
 article_party
-article_funding_round
-article_sector
-```
-
-Total: **24 relations**
-
----
-
-## 9. Simplification decisions
-
-The following relations were intentionally removed during the earlier simplification:
-
-```text
-company_status
-currency
-funding_round_type
-geo_unit_type
-address_role
-funding_round_tag
-news_author
-news_article_author
 ```
 
 Reasons:
 
-- the first five were lookup-table over-normalization for simple stable text values;
-- `funding_round_tag` added little analytical capability beyond the other tag bridges;
-- separate article-author modeling added schema noise without serving the current knowledge map.
+- `party` / `organization`: identity infrastructure made ordinary entity work depend on unrelated joins;
+- investor-category bridge: unnecessary M:N taxonomy for the current capability space; `investor_type` is sufficient;
+- generic tag subsystem: redundant with more meaningful company/sector/news relationships;
+- `geo_unit` / `address` / `party_address`: too much indirection for the analytical value supplied; replaced by `company_office`;
+- `article_party`: generic polymorphic relationship obscured what kind of entity an article was linked to; replaced by `article_company`.
 
-A later learner-facing review exposed a different kind of normalization cost: company identity lived only in `organization`, so even a basic company-centered encounter either showed opaque IDs or required an unrelated `company → organization` join. The current model corrects that by making `company` a concrete self-describing party relation while preserving the shared `party` role model.
+New relations introduced by the revision:
 
----
+```text
+company_office
+company_acquisition
+article_company
+```
 
-## 10. Boundary
+## 6. Capability coverage retained
 
-This schema does not define:
+The 16-relation model still provides natural material for:
 
-- stages;
-- lesson order;
-- pedagogical scaffolding;
+- relation / row / attribute reasoning;
+- Grain;
+- keys and uniqueness;
+- 1:M relationships;
+- 1:0..1 optional relationships;
+- M:N bridges;
+- selection and projection;
+- INNER JOIN and LEFT JOIN;
+- row preservation and row loss;
+- one-to-many multiplication and multi-branch fanout;
+- aggregation and pre-aggregation;
+- NULL interpretation;
+- EXISTS / NOT EXISTS;
+- self joins and recursive CTEs through `sector`;
+- subqueries;
+- window functions over repeated dated funding rounds;
+- set-oriented reasoning using compatible analytical result sets.
+
+The schema does not add relations merely to create one exercise per feature.
+
+## 7. Stage protection
+
+The schema revision must not silently change the already implemented Stage 1–3 learner contracts.
+
+Validated protected runtime facts in the revised seed are:
+
+- Stage 1 `news_article → news_source`: 18 joined article rows;
+- Stage 2 `funding_round → round_investment`: 72 participation rows;
+- Stage 3 `company → funding_round`: 26 matched funding-round rows;
+- `Lumina Bio` remains present in `company` and absent from `funding_round`, preserving the zero-match Stage 3 case.
+
+The removal of the old `company → party` supertype foreign key is outside the Stage 3 reasoning contract; Stage 3 still uses `funding_round.company_id → company.company_id`.
+
+## 8. Boundary
+
+This schema defines data infrastructure, not:
+
+- stage order;
+- learner prompts;
+- instructional scaffolding;
 - hints;
-- expected answers;
-- learner progress.
+- answer choices;
+- teacher voice;
+- mastery criteria.
 
-It is infrastructure for course design, but it is not pedagogically indifferent: its structure should support the intended reasoning without introducing unrelated complexity solely to retrieve basic entity identity.
+Future encounter design should use the schema only when the selected business case and capability justify the relevant relations.
