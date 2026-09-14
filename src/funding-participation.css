@@ -1,7 +1,6 @@
 /*
- * Funding participation intentionally reuses the proven Stage 1 visual and interaction
- * system from media-coverage.css. Keep this file limited to data-specific alignment
- * and the Funding-only runtime corrections discovered during clone validation.
+ * Funding participation reuses shared learner-facing visual roles from styles.css
+ * while keeping encounter-specific alignment and Funding-only runtime corrections here.
  */
 
 .learning-panel[data-stage2-state="baselineRun"] .lab-workspace {
