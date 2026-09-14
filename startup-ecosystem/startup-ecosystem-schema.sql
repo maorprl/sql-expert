@@ -2,7 +2,7 @@ PRAGMA foreign_keys = ON;
 
 -- ============================================================
 -- Startup Ecosystem SQL Lab
--- Normalized relational schema for SQLite
+-- Relational schema for SQLite
 -- 24 relations
 -- ============================================================
 
@@ -28,9 +28,12 @@ CREATE TABLE person (
 
 CREATE TABLE company (
     company_id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    website_url TEXT,
+    founded_date TEXT,
     status TEXT,
     description TEXT,
-    FOREIGN KEY (company_id) REFERENCES organization(organization_id)
+    FOREIGN KEY (company_id) REFERENCES party(party_id)
 );
 
 CREATE TABLE company_founder (
@@ -218,7 +221,6 @@ CREATE TABLE news_article (
         REFERENCES news_source(news_source_id)
 );
 
-
 CREATE TABLE article_tag (
     news_article_id INTEGER NOT NULL,
     tag_id INTEGER NOT NULL,
@@ -254,8 +256,7 @@ CREATE TABLE article_sector (
     PRIMARY KEY (news_article_id, sector_id),
     FOREIGN KEY (news_article_id)
         REFERENCES news_article(news_article_id),
-    FOREIGN KEY (sector_id)
-        REFERENCES sector(sector_id)
+    FOREIGN KEY (sector_id) REFERENCES sector(sector_id)
 );
 
 -- ============================================================
