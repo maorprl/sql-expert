@@ -1,19 +1,80 @@
-# Preserved Calibrated Source — Future Stage 3 Interaction Decisions
+# Stage 3 interaction decisions — INNER JOIN unmatched company coverage
 
-## Preservation Status
+## Encounter purpose
 
-This document preserves the calibrated `funding_round → company` encounter because this business case is intended to become Stage 3. It is not yet final Stage 3 interaction design. Its current scaffolding reflects a first-exposure JOIN encounter and must not be assumed appropriate for Stage 3; later Stage 3 design must reconsider scaffolding based on the learner state at that point. Preservation does not reinterpret or improve any current Stage 1 decision.
+Stage 3 reinforces the already-learned INNER JOIN through one new relational case: a starting row with zero matches contributes zero result rows. The encounter must also distinguish total result-row count from entity coverage.
 
-## Preserved Current Stage 1 Content
+The business request has two linked parts: produce a funding-round-grain report with company status, and determine whether every company is represented in that report. The coverage question does not change the report grain.
 
-The Working Schema begins empty. The live schema viewer supplies all relations through `+` actions; no hardcoded second schema exists. It prevents duplicates, preserves insertion order, limits selection to four, and removal never clears SQL, progress, or hints. Working cards show metadata, not instances.
+## Reused interaction architecture
 
-All reasoning questions use closed choices. Concepts appear only after the learner's prerequisite answer: Grain after output-row reasoning, PK/FK after identifying `funding_round.company_id`, Cardinality after one closed relationship question, and JOIN after choosing the semantic action. There is no separate information-source step. The PK/FK explanation includes the operational meaning: **Its value tells us which company row this funding round belongs to.** Cardinality uses PK/FK and the non-unique foreign key, not seed examples.
+The Working Schema begins empty. The learner identifies `company` and `funding_round` from the live schema and adds them to the Working Schema. Relation selection, reviewable completed work, schema focus, SQL Workspace behavior, and result-based validation reuse the established course interaction system.
 
-The current step has the strongest visual hierarchy; completed steps stay compact and reviewable without accumulating excessive visual weight. The most recently completed step remains expanded so its answer, feedback, concept moment, and any opened hints are immediately reviewable; earlier steps remain available through their summaries. Concept moments use a dedicated learning accent rather than the green reserved for correctness and completion. Redundant isolated **Correct.** feedback is avoided when correctness is already visually clear. The cardinality concept includes a local relational diagram that emphasizes `company 1 → M funding_round`; the FK relationship below it is written separately as `funding_round.company_id` (FK) **references** `company.company_id` (PK), without a second directional arrow. The unrelated `company.company_id` → `organization.organization_id` metadata remains truthful and visible but visually secondary in the Working Schema. The diagram is a locked pedagogical requirement and must not be a Venn diagram.
+PK/FK, Cardinality, Grain, and INNER JOIN are reused concepts. They must not be reintroduced as first-exposure teaching. The learner still produces evidence for the specific relationship and row meaning needed in this encounter.
 
-Hints are unavailable until an incorrect attempt. SQL hints progress after attempts; a later **Show solution** reveals SQL without overwriting learner code. Viewing it does not prevent completion.
+The connecting-key interaction asks for `funding_round.company_id`. After the learner establishes it, the Working Schema may expose the reused PK/FK relationship to `company.company_id`.
 
-The baseline uses the persistent editor and results in compact mode with a visible Run Query button. Running and interpreting 26 are internal phases of one Step 5 and produce one completed Step 5 card, with no duplicated step number. Step 6 presents the prediction before JOIN vocabulary and visually chunks the explanation around **26 funding rounds × 1 matching company each = 26 result rows** and the preserved funding-round grain; it does not introduce `fan-out`. Step 7 asks for the semantic action before naming JOIN. The SQL task expands the same editor, visually separates SQL instruction from the workspace, teaches the INNER JOIN pattern, matching semantics, and `ON` before asking for SQL, and keeps output requirements hidden by default behind a non-hint control. SQL help escalates after attempts, the solution never overwrites learner code, and validation checks result semantics rather than exact SQL text.
+The Cardinality interaction remains the current closed reasoning question: one company can have zero, one, or many recorded funding rounds; each funding round belongs to one company. The zero possibility is established structurally before the learner inspects the seed data. The data inspection later establishes whether that possibility is realized in the current relation instance.
 
-Completion requires the selected relations, grain, connecting key, cardinality, baseline interpretation, prediction, semantic action, correct query result, and final grain. It is not a numbered learner step.
+The result-Grain interaction remains one recorded funding round per row, with company status carried alongside it. Company coverage is a separate validation question and must not be allowed to silently redefine the result as one company per row.
+
+## Learner-generated zero-match evidence
+
+The zero-match premise must be generated by the learner from visible data rather than injected by the implementation.
+
+Use the two prepared measurements already present in the encounter:
+
+1. `SELECT company_id, name FROM company;`
+2. `SELECT company_id, funding_round_id FROM funding_round;`
+
+The learner runs both measurements and compares them. The first result remains visible as named company evidence while the learner inspects the funding-round rows. The learner identifies the company that appears in `company` but nowhere in the `funding_round` measurement. The current seed yields Lumina Bio (`company_id 20`).
+
+The instructional purpose of this evidence must be stated without supplying the next inference: the original business request asks whether every company is represented in the funding-round report, and this zero-match company is the case needed to test that coverage under INNER JOIN.
+
+Do not introduce `NULL` in this evidence sequence. Neither prepared measurement produces a row containing `NULL`, and outer-join behavior is not the capability being taught here.
+
+## Prediction and implementation
+
+Before SQL authoring, the learner predicts what INNER JOIN will do with the learner-established zero-match company.
+
+The correct reasoning target is:
+
+- zero matching row pairs;
+- therefore the starting company row contributes zero INNER JOIN result rows;
+- therefore that company will not be represented in the joined result.
+
+Prediction distractors should test mistaken row-preservation or execution assumptions, not introduce `NULL` as an unexplained alternative.
+
+The SQL implementation remains the existing five-column company-to-funding-round INNER JOIN. The desired output disclosure and SQL-structure disclosure remain optional scaffolding. The validator continues to check result semantics rather than an exact SQL string.
+
+## Verification and business conclusion
+
+After successful SQL execution, Results remain the evidence surface. The learner explicitly checks whether the zero-match company appears in the returned `company_id` values.
+
+The verification feedback must connect the actual result to both pieces of earlier evidence:
+
+- the company relation contains 12 company rows;
+- the INNER JOIN result contains 26 funding-round rows;
+- the zero-match company is still absent.
+
+The learner must not infer entity coverage from total result-row count. Multiple matches can make other companies contribute several result rows while a zero-match company contributes none.
+
+The final reasoning interaction answers the original coverage question rather than inventing a new business requirement: can this 26-row INNER JOIN funding-round report be used as evidence that every company is represented? The correct answer is no.
+
+This conclusion should make clear that the report can still be correct at funding-round grain while being incomplete as a representation of all companies. Do not teach LEFT JOIN or `NULL` here; those can be introduced when a later encounter actually preserves unmatched rows.
+
+## Completion evidence
+
+Completion requires:
+
+- correct relation selection;
+- correct connecting key;
+- correct `0..M` company-to-funding-round cardinality reasoning;
+- correct funding-round result Grain;
+- learner-generated identification of a zero-match company;
+- correct INNER JOIN survival prediction;
+- semantically correct INNER JOIN result;
+- verification that the zero-match company is absent;
+- correct conclusion that total result-row count does not prove every company is represented.
+
+Stage completion is a state, not a numbered learner step. No Wave 3 visual or motion work is introduced by these decisions.
