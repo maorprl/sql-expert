@@ -2,29 +2,13 @@ PRAGMA foreign_keys = ON;
 
 -- ============================================================
 -- Startup Ecosystem SQL Lab
--- Relational schema for SQLite
--- 24 relations
+-- Course-focused relational schema for SQLite
+-- 16 relations
 -- ============================================================
 
-CREATE TABLE party (
-    party_id INTEGER PRIMARY KEY
-);
-
-CREATE TABLE organization (
-    organization_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    website_url TEXT,
-    founded_date TEXT,
-    FOREIGN KEY (organization_id) REFERENCES party(party_id)
-);
-
-CREATE TABLE person (
-    person_id INTEGER PRIMARY KEY,
-    first_name TEXT NOT NULL,
-    last_name TEXT NOT NULL,
-    linkedin_url TEXT,
-    FOREIGN KEY (person_id) REFERENCES party(party_id)
-);
+-- ============================================================
+-- Companies and people
+-- ============================================================
 
 CREATE TABLE company (
     company_id INTEGER PRIMARY KEY,
@@ -32,8 +16,14 @@ CREATE TABLE company (
     website_url TEXT,
     founded_date TEXT,
     status TEXT,
-    description TEXT,
-    FOREIGN KEY (company_id) REFERENCES party(party_id)
+    description TEXT
+);
+
+CREATE TABLE person (
+    person_id INTEGER PRIMARY KEY,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    linkedin_url TEXT
 );
 
 CREATE TABLE company_founder (
@@ -54,21 +44,10 @@ CREATE TABLE company_founder (
 
 CREATE TABLE investor (
     investor_id INTEGER PRIMARY KEY,
-    FOREIGN KEY (investor_id) REFERENCES party(party_id)
-);
-
-CREATE TABLE investor_category (
-    investor_category_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE
-);
-
-CREATE TABLE investor_category_membership (
-    investor_id INTEGER NOT NULL,
-    investor_category_id INTEGER NOT NULL,
-    PRIMARY KEY (investor_id, investor_category_id),
-    FOREIGN KEY (investor_id) REFERENCES investor(investor_id),
-    FOREIGN KEY (investor_category_id)
-        REFERENCES investor_category(investor_category_id)
+    name TEXT NOT NULL,
+    investor_type TEXT NOT NULL,
+    website_url TEXT,
+    country_code TEXT
 );
 
 -- ============================================================
@@ -104,6 +83,7 @@ CREATE TABLE investor_sector_focus (
 
 -- ============================================================
 -- Funding
+-- Protected Stage 2/3 contract
 -- ============================================================
 
 CREATE TABLE funding_round (
@@ -137,69 +117,37 @@ CREATE TABLE round_investment (
 );
 
 -- ============================================================
--- Tags
+-- Company state and location
 -- ============================================================
 
-CREATE TABLE tag (
-    tag_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE
-);
-
-CREATE TABLE party_tag (
-    party_id INTEGER NOT NULL,
-    tag_id INTEGER NOT NULL,
-    PRIMARY KEY (party_id, tag_id),
-    FOREIGN KEY (party_id) REFERENCES party(party_id),
-    FOREIGN KEY (tag_id) REFERENCES tag(tag_id)
-);
-
--- ============================================================
--- Geography / addresses
--- ============================================================
-
-CREATE TABLE geo_unit (
-    geo_unit_id INTEGER PRIMARY KEY,
-    unit_type TEXT NOT NULL,
-    name TEXT NOT NULL,
-    parent_geo_unit_id INTEGER,
-    code TEXT,
-    FOREIGN KEY (parent_geo_unit_id)
-        REFERENCES geo_unit(geo_unit_id),
-    UNIQUE (parent_geo_unit_id, name),
-    CHECK (parent_geo_unit_id IS NULL OR parent_geo_unit_id <> geo_unit_id)
-);
-
-CREATE TABLE address (
-    address_id INTEGER PRIMARY KEY,
-    geo_unit_id INTEGER,
-    street_line_1 TEXT,
-    street_line_2 TEXT,
-    postal_code TEXT,
-    latitude REAL CHECK (
-        latitude IS NULL OR (latitude >= -90 AND latitude <= 90)
-    ),
-    longitude REAL CHECK (
-        longitude IS NULL OR (longitude >= -180 AND longitude <= 180)
-    ),
-    FOREIGN KEY (geo_unit_id) REFERENCES geo_unit(geo_unit_id)
-);
-
-CREATE TABLE party_address (
-    party_address_id INTEGER PRIMARY KEY,
-    party_id INTEGER NOT NULL,
-    address_id INTEGER NOT NULL,
-    address_role TEXT NOT NULL,
-    valid_from TEXT,
-    valid_to TEXT,
+CREATE TABLE company_office (
+    office_id INTEGER PRIMARY KEY,
+    company_id INTEGER NOT NULL,
+    city TEXT NOT NULL,
+    country_code TEXT NOT NULL,
+    office_role TEXT NOT NULL,
+    opened_date TEXT,
+    closed_date TEXT,
     is_primary INTEGER NOT NULL DEFAULT 0
         CHECK (is_primary IN (0, 1)),
-    FOREIGN KEY (party_id) REFERENCES party(party_id),
-    FOREIGN KEY (address_id) REFERENCES address(address_id),
-    CHECK (valid_to IS NULL OR valid_from IS NULL OR valid_to >= valid_from)
+    FOREIGN KEY (company_id) REFERENCES company(company_id),
+    CHECK (closed_date IS NULL OR opened_date IS NULL OR closed_date >= opened_date)
+);
+
+CREATE TABLE company_acquisition (
+    company_id INTEGER PRIMARY KEY,
+    acquired_date TEXT NOT NULL,
+    acquirer_name TEXT NOT NULL,
+    reported_price NUMERIC
+        CHECK (reported_price IS NULL OR reported_price >= 0),
+    currency_code TEXT,
+    notes TEXT,
+    FOREIGN KEY (company_id) REFERENCES company(company_id)
 );
 
 -- ============================================================
 -- News
+-- Protected Stage 1 contract
 -- ============================================================
 
 CREATE TABLE news_source (
@@ -221,23 +169,14 @@ CREATE TABLE news_article (
         REFERENCES news_source(news_source_id)
 );
 
-CREATE TABLE article_tag (
+CREATE TABLE article_company (
     news_article_id INTEGER NOT NULL,
-    tag_id INTEGER NOT NULL,
-    PRIMARY KEY (news_article_id, tag_id),
+    company_id INTEGER NOT NULL,
+    PRIMARY KEY (news_article_id, company_id),
     FOREIGN KEY (news_article_id)
         REFERENCES news_article(news_article_id),
-    FOREIGN KEY (tag_id) REFERENCES tag(tag_id)
-);
-
-CREATE TABLE article_party (
-    news_article_id INTEGER NOT NULL,
-    party_id INTEGER NOT NULL,
-    PRIMARY KEY (news_article_id, party_id),
-    FOREIGN KEY (news_article_id)
-        REFERENCES news_article(news_article_id),
-    FOREIGN KEY (party_id)
-        REFERENCES party(party_id)
+    FOREIGN KEY (company_id)
+        REFERENCES company(company_id)
 );
 
 CREATE TABLE article_funding_round (
@@ -282,17 +221,18 @@ CREATE UNIQUE INDEX uq_company_primary_sector
 CREATE INDEX idx_investor_sector_focus_sector
     ON investor_sector_focus(sector_id);
 
-CREATE INDEX idx_party_address_party
-    ON party_address(party_id);
+CREATE INDEX idx_company_office_company
+    ON company_office(company_id);
 
-CREATE INDEX idx_party_address_address
-    ON party_address(address_id);
+CREATE UNIQUE INDEX uq_company_primary_open_office
+    ON company_office(company_id)
+    WHERE is_primary = 1 AND closed_date IS NULL;
 
 CREATE INDEX idx_news_article_source
     ON news_article(news_source_id);
 
-CREATE INDEX idx_article_party_party
-    ON article_party(party_id);
+CREATE INDEX idx_article_company_company
+    ON article_company(company_id);
 
 CREATE INDEX idx_article_funding_round_round
     ON article_funding_round(funding_round_id);
@@ -306,14 +246,3 @@ CREATE INDEX idx_sector_parent
 CREATE UNIQUE INDEX uq_sector_root_name
     ON sector(name)
     WHERE parent_sector_id IS NULL;
-
-CREATE INDEX idx_geo_unit_parent
-    ON geo_unit(parent_geo_unit_id);
-
-CREATE UNIQUE INDEX uq_geo_unit_root_name
-    ON geo_unit(name)
-    WHERE parent_geo_unit_id IS NULL;
-
-CREATE UNIQUE INDEX uq_party_primary_current_address
-    ON party_address(party_id, address_role)
-    WHERE is_primary = 1 AND valid_to IS NULL;
