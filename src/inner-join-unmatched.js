@@ -257,7 +257,7 @@ JOIN funding_round
     const unmatched = companyReference(state.unmatchedCompanyName, state.unmatchedCompanyId);
 
     if (item.id === 'matchEvidence' && next === 'prediction') {
-      interactionLifecycle.renderCurrent(stepShell('Match evidence established.', teacherVoice(`You established from the measurements that ${escapeHtml(unmatched)} exists but has no matching funding-round row. Now use the INNER JOIN matching behavior you already know to predict what happens to that company.`)));
+      interactionLifecycle.renderCurrent(stepShell('Zero-match case established.', teacherVoice(`You found a real zero-match case: ${escapeHtml(unmatched)} exists on the company side, but there is no funding-round row to pair with it. That matters because matched rows alone cannot show what INNER JOIN does when no pair exists. Before writing SQL, predict whether this starting row disappears or survives in some form.`)));
       renderWorkspaceAction(`
         ${item.feedback}
         <button id="continue-to-prediction" class="primary continue-after-feedback">Continue to prediction</button>
@@ -450,7 +450,7 @@ JOIN funding_round
         answer: `${unmatched} has no matching funding_round row`,
         value: answer,
         options,
-        feedback: `<div class="success-feedback">Correct. From the two query results, you established that ${escapeHtml(unmatched)} exists in <code>company</code> but has no matching row in <code>funding_round</code>.</div>`,
+        feedback: `<div class="success-feedback">Correct. From the two query results, you established that ${escapeHtml(unmatched)} exists in <code>company</code> but has no matching row in <code>funding_round</code>. This gives you a real zero-match case to test.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>NULL versus no result row</b><span><code>NULL</code> means a value is missing or unknown inside a row that exists. That is different from the row not appearing in the result at all.</span></div>`,
         next: 'prediction',
       });
     });
@@ -462,13 +462,13 @@ JOIN funding_round
     const unmatched = companyReference(companyName, companyId);
     const options = [
       ['zero', `${companyName} contributes 0 result rows because there is no matching funding_round row.`],
-      ['null-row', `${companyName} appears once with NULL funding-round fields.`],
+      ['null-row', `${companyName} appears once: company_id and status remain, while funding_round_id, round_type, and announced_date are NULL.`],
       ['preserved', `${companyName} appears once because every company contributes at least one result row.`],
     ];
     const draft = state.drafts.prediction || '';
     interactionLifecycle.renderCurrent(stepShell(
       'Predict from the evidence.',
-      teacherVoice(`You established one result row per matched funding round, and you found that ${escapeHtml(unmatched)} has no matching funding-round row. Use those two established facts before writing SQL.`),
+      teacherVoice(`You now have a real zero-match case and the distinction between no result row and a row containing NULL. Use the INNER JOIN matching behavior you already know to predict which outcome applies to ${escapeHtml(unmatched)} before writing SQL.`),
     ));
     const action = renderWorkspaceAction(`
       <div class="verification-prompt"><strong>Established evidence</strong><span>${escapeHtml(unmatched)} exists in <code>company</code> and has no matching row in <code>funding_round</code>.</span></div>
@@ -501,7 +501,7 @@ JOIN funding_round
     const companyName = state.unmatchedCompanyName;
     const options = [
       ['absent', `${companyName} is absent from the result, matching the zero-row prediction.`],
-      ['null-row', `${companyName} appears once with NULL funding-round fields.`],
+      ['null-row', `${companyName} appears once: company_id and status remain, while funding_round_id, round_type, and announced_date are NULL.`],
       ['one-row', `${companyName} appears once because INNER JOIN preserves every company row.`],
     ];
     const draft = state.drafts.verification || '';
@@ -634,7 +634,7 @@ JOIN funding_round
         options: [
           ['no', 'No. Companies with zero matching funding rounds would still disappear.'],
           ['yes', 'Yes. INNER JOIN always keeps every row from company.'],
-          ['null', 'Yes. INNER JOIN would automatically keep the company and fill the funding-round fields with NULL.'],
+          ['null', 'Yes. INNER JOIN would keep the company and return NULL for funding_round_id, round_type, and announced_date.'],
         ],
         correct: 'no',
         evidence: 'transfer',
