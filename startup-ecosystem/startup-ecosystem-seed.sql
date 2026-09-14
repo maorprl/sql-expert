@@ -18,7 +18,8 @@ INSERT INTO investor_category (investor_category_id, name) VALUES
 
 -- ============================================================
 -- PARTIES
--- Organizations: 1-20
+-- Companies: 1-10, 19-20
+-- Other organizations: 11-18
 -- People: 101-122
 -- ============================================================
 
@@ -30,16 +31,6 @@ INSERT INTO party (party_id) VALUES
 (121),(122);
 
 INSERT INTO organization (organization_id, name, website_url, founded_date) VALUES
-(1,  'CloudFence Labs',          'https://cloudfence.example',       '2018-03-15'),
-(2,  'MedOrbit',                 'https://medorbit.example',         '2019-07-01'),
-(3,  'GreenRoute AI',            'https://greenroute.example',       '2021-02-10'),
-(4,  'FinEdge Systems',          'https://finedge.example',          '2017-11-20'),
-(5,  'QuantumShelf',             'https://quantumshelf.example',     '2023-05-03'),
-(6,  'DeepSignal',               'https://deepsignal.example',       '2021-09-12'),
-(7,  'TerraVision Robotics',     'https://terravision.example',      '2020-01-28'),
-(8,  'RetailPulse',              'https://retailpulse.example',      '2020-08-14'),
-(9,  'CivicGrid',                'https://civicgrid.example',        '2022-04-22'),
-(10, 'NovaMaterials',            'https://novamaterials.example',    '2019-10-06'),
 (11, 'Horizon Ventures',         'https://horizonvc.example',        '2011-01-01'),
 (12, 'Cedar Capital',            'https://cedarcapital.example',     '2014-01-01'),
 (13, 'Atlas Growth Partners',    'https://atlasgrowth.example',      '2009-01-01'),
@@ -47,9 +38,7 @@ INSERT INTO organization (organization_id, name, website_url, founded_date) VALU
 (15, 'Foundry Accelerator',      'https://foundryaccel.example',     '2013-01-01'),
 (16, 'NorthStar Family Office',  'https://northstarfo.example',      '2005-01-01'),
 (17, 'National Innovation Fund', 'https://innovationfund.example',   '2010-01-01'),
-(18, 'Harbor Institutional',     'https://harborinst.example',       '2001-01-01'),
-(19, 'Orbian Technologies',      'https://orbian.example',           '2012-06-18'),
-(20, 'Lumina Bio',               'https://luminabio.example',        '2025-01-05');
+(18, 'Harbor Institutional',     'https://harborinst.example',       '2001-01-01');
 
 INSERT INTO person (person_id, first_name, last_name, linkedin_url) VALUES
 (101, 'Noa',    'Levy',      NULL),
@@ -79,19 +68,20 @@ INSERT INTO person (person_id, first_name, last_name, linkedin_url) VALUES
 -- COMPANIES
 -- ============================================================
 
-INSERT INTO company (company_id, status, description) VALUES
-(1, 'active', 'Cloud security platform for enterprise workloads.'),
-(2, 'active', 'Digital health monitoring and clinical workflow software.'),
-(3, 'active', 'AI routing and optimization for commercial fleets.'),
-(4, 'acquired', 'Payments infrastructure and fraud analytics.'),
-(5, 'stealth', 'Quantum-inspired inventory optimization.'),
-(6, 'active', 'AI infrastructure for real-time signal analysis.'),
-(7, 'active', 'Robotics for precision agriculture and field inspection.'),
-(8, 'active', 'Retail analytics and demand intelligence.'),
-(9, 'active', 'Municipal infrastructure and public-service software.'),
-(10,'active', 'Advanced materials for energy storage applications.'),
-(19,'active', 'Industrial software and embedded systems.'),
-(20,'active', 'Early-stage biotech diagnostics company.');
+INSERT INTO company
+(company_id, name, website_url, founded_date, status, description) VALUES
+(1,  'CloudFence Labs',      'https://cloudfence.example',    '2018-03-15', 'active',   'Cloud security platform for enterprise workloads.'),
+(2,  'MedOrbit',             'https://medorbit.example',      '2019-07-01', 'active',   'Digital health monitoring and clinical workflow software.'),
+(3,  'GreenRoute AI',        'https://greenroute.example',    '2021-02-10', 'active',   'AI routing and optimization for commercial fleets.'),
+(4,  'FinEdge Systems',      'https://finedge.example',       '2017-11-20', 'acquired', 'Payments infrastructure and fraud analytics.'),
+(5,  'QuantumShelf',         'https://quantumshelf.example',  '2023-05-03', 'stealth',  'Quantum-inspired inventory optimization.'),
+(6,  'DeepSignal',           'https://deepsignal.example',    '2021-09-12', 'active',   'AI infrastructure for real-time signal analysis.'),
+(7,  'TerraVision Robotics', 'https://terravision.example',   '2020-01-28', 'active',   'Robotics for precision agriculture and field inspection.'),
+(8,  'RetailPulse',          'https://retailpulse.example',   '2020-08-14', 'active',   'Retail analytics and demand intelligence.'),
+(9,  'CivicGrid',            'https://civicgrid.example',     '2022-04-22', 'active',   'Municipal infrastructure and public-service software.'),
+(10, 'NovaMaterials',        'https://novamaterials.example', '2019-10-06', 'active',   'Advanced materials for energy storage applications.'),
+(19, 'Orbian Technologies',  'https://orbian.example',        '2012-06-18', 'active',   'Industrial software and embedded systems.'),
+(20, 'Lumina Bio',           'https://luminabio.example',     '2025-01-05', 'active',   'Early-stage biotech diagnostics company.');
 
 INSERT INTO company_founder
 (company_id, person_id, founder_title, start_date, end_date) VALUES
@@ -239,6 +229,7 @@ VALUES
 
 (2001,19,'debt','2019-08-01',10000000,'USD', NULL,NULL),
 (2002,19,'growth','2022-05-16',30000000,'USD', NULL,NULL);
+
 -- ============================================================
 -- ROUND INVESTMENTS
 -- Amount may be NULL even when round total is known.
@@ -390,22 +381,23 @@ INSERT INTO party_tag (party_id, tag_id) VALUES
 INSERT INTO geo_unit (geo_unit_id, unit_type, name, parent_geo_unit_id, code) VALUES
 (1, 'country', 'Israel',                 NULL, 'IL'),
 (2, 'district', 'Tel Aviv District',      1,    NULL),
-(3, 'city', 'Tel Aviv-Yafo',          2,    NULL),
-(4, 'city', 'Herzliya',               2,    NULL),
-(5, 'district', 'Central District',       1,    NULL),
-(6, 'city', 'Petah Tikva',            5,    NULL),
-(7, 'city', 'Rehovot',                5,    NULL),
-(8, 'district', 'Haifa District',         1,    NULL),
-(9, 'city', 'Haifa',                  8,    NULL),
-(10,'district', 'Jerusalem District',     1,    NULL),
-(11,'city', 'Jerusalem',              10,   NULL),
-(20,'country', 'United States',          NULL, 'US'),
-(21,'state', 'California',             20,   'CA'),
-(22,'county', 'San Mateo County',       21,   NULL),
-(23,'city', 'Redwood City',           22,   NULL),
-(24,'city', 'San Francisco',          21,   NULL),
-(25,'state', 'New York',               20,   'NY'),
-(26,'city', 'New York City',          25,   NULL);
+(3, 'city', 'Tel Aviv-Yafo',              2,    NULL),
+(4, 'city', 'Herzliya',                   2,    NULL),
+(5, 'district', 'Central District',        1,    NULL),
+(6, 'city', 'Petah Tikva',                5,    NULL),
+(7, 'city', 'Rehovot',                    5,    NULL),
+(8, 'district', 'Haifa District',          1,    NULL),
+(9, 'city', 'Haifa',                      8,    NULL),
+(10,'district', 'Jerusalem District',      1,    NULL),
+(11,'city', 'Jerusalem',                  10,   NULL),
+(20,'country', 'United States',            NULL, 'US'),
+(21,'state', 'California',                 20,   'CA'),
+(22,'county', 'San Mateo County',          21,   NULL),
+(23,'city', 'Redwood City',                22,   NULL),
+(24,'city', 'San Francisco',               21,   NULL),
+(25,'state', 'New York',                   20,   'NY'),
+(26,'city', 'New York City',               25,   NULL);
+
 INSERT INTO address
 (address_id, geo_unit_id, street_line_1, street_line_2, postal_code, latitude, longitude)
 VALUES
@@ -454,7 +446,8 @@ VALUES
 (21,16,10,'headquarters','2005-01-01',NULL,1),
 (22,17,11,'headquarters','2010-01-01',NULL,1),
 (23,18,8,'headquarters','2001-01-01',NULL,1),
-(24,121,3,'registered','2020-01-01',NULL,1);-- Company 20 intentionally has no address.
+(24,121,3,'registered','2020-01-01',NULL,1);
+-- Company 20 intentionally has no address.
 
 -- ============================================================
 -- NEWS
@@ -487,6 +480,7 @@ VALUES
 (16,1,'https://techledger.example/a16','Cybersecurity funding remains resilient','2025-12-01 06:30:00','en','Maya Stern, Ruth Klein','Sector overview of cybersecurity funding.'),
 (17,4,'https://healthtechreview.example/a17','Digital health investment rebounds','2025-04-12 08:40:00','en','Daniel Moss','Sector overview of digital-health investment.'),
 (18,3,'https://marketwire.example/a18','Climate technology rounds grow larger','2025-09-30 12:10:00','en','Leah Grant','Climate-tech funding analysis.');
+
 INSERT INTO article_party (news_article_id, party_id) VALUES
 (1,1),(1,14),(1,11),
 (2,1),
