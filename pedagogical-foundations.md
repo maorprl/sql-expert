@@ -109,7 +109,9 @@ New pedagogical rules should be added only when they are actually established in
 
 When the course guides a learner through a multi-step reasoning process, the learner should remain oriented within that process: what problem is being worked on, what has already been established, and why the next reasoning move is relevant.
 
-Guidance should preserve this continuity without performing the reasoning for the learner.
+When a learner action produces evidence or a conclusion that will be used later, the experience should make the instructional purpose of that result intelligible: connect what was established to why it matters for the current problem and what question, decision, or reasoning move it enables next. Evidence should not be left as an isolated fact when its significance is necessary for the learner to understand why the next move exists.
+
+Guidance should preserve this continuity without performing the reasoning for the learner. Explaining why established evidence matters must not supply the learner's next inference or answer.
 
 This does not prescribe a fixed interaction pattern, require an explanation between every step, or determine a universal amount of scaffolding.
 
