@@ -228,6 +228,77 @@ td.null { color: #7d8795; font-style: italic; }
 .learning-panel:is(.sql-implementation-active, .cycle1-sql-active, .results-evidence-active, .cycle1-results-active, .cycle1-verification-active) .business-request { border-left-color: #b8c7d9; background: #f7f9fc; box-shadow: none; }
 .learning-panel:is(.sql-implementation-active, .cycle1-sql-active, .results-evidence-active, .cycle1-results-active, .cycle1-verification-active) .business-request h2 { color: #586b80; }
 
+/* Shared focus treatment follows the learner-facing role, not the encounter. */
+.learning-panel:is(
+  [data-stage1-state="relations"],
+  [data-stage1-state="connection"],
+  [data-stage1-state="cardinality"],
+  [data-stage2-state="relations"],
+  [data-stage2-state="connection"],
+  [data-stage2-state="cardinality"],
+  [data-stage3-state="relations"],
+  [data-stage3-state="connection"],
+  [data-stage3-state="cardinality"]
+) .working-schema-panel {
+  border-color: #8fb4ec;
+  background: #f8fbff;
+  box-shadow: 0 9px 24px rgba(47, 111, 237, .11), inset 0 3px 0 var(--blue);
+}
+
+.learning-panel:is(
+  [data-stage1-state="relations"],
+  [data-stage1-state="connection"],
+  [data-stage1-state="cardinality"],
+  [data-stage2-state="relations"],
+  [data-stage2-state="connection"],
+  [data-stage2-state="cardinality"],
+  [data-stage3-state="relations"],
+  [data-stage3-state="connection"],
+  [data-stage3-state="cardinality"]
+) .current-step {
+  box-shadow: 0 4px 14px rgba(27, 55, 92, .07), inset 4px 0 0 var(--blue);
+}
+
+.learning-panel.sql-implementation-active .lab-workspace {
+  border-color: #6f9ddd;
+  outline: 2px solid rgba(47, 111, 237, .2);
+  outline-offset: 2px;
+  box-shadow: 0 16px 38px rgba(27, 55, 92, .2), inset 0 4px 0 var(--blue);
+}
+
+.learning-panel.sql-implementation-active .current-step {
+  border-color: #d8e1ec;
+  background: #fbfcfe;
+  box-shadow: inset 3px 0 0 #9db8dc;
+}
+
+.learning-panel.sql-implementation-active .working-schema-panel {
+  border-color: #dce4ed;
+  background: #fafbfd;
+  box-shadow: none;
+  opacity: .86;
+}
+
+.learning-panel.results-evidence-active .results-panel {
+  background: #f8fbff;
+  box-shadow: inset 0 4px 0 var(--blue), 0 8px 22px rgba(47, 111, 237, .1);
+}
+
+.learning-panel.results-evidence-active .workspace-evidence-action {
+  border-color: #9bbbe5;
+  box-shadow: 0 8px 22px rgba(47, 111, 237, .1);
+}
+
+.learning-panel.join-teaching-active .working-schema-panel {
+  background: #f8fafc;
+  box-shadow: none;
+}
+
+.learning-panel.join-teaching-active .current-step {
+  border-color: #c3b7ee;
+  box-shadow: 0 10px 28px rgba(73, 53, 142, .12), inset 4px 0 0 var(--concept);
+}
+
 @media (min-width: 1280px) {
   .learning-panel:is(.sql-implementation-active, .cycle1-sql-active) .lesson-surface,
   .learning-panel:is(.results-evidence-active, .cycle1-results-active, .cycle1-verification-active) .lesson-surface { grid-template-columns: minmax(400px, .92fr) minmax(480px, 1.08fr); }
@@ -268,4 +339,9 @@ td.null { color: #7d8795; font-style: italic; }
 
 @media (max-width: 480px) {
   .actions { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .business-request,
+  .data-card { transition: none; }
 }

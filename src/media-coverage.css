@@ -11,54 +11,9 @@
   line-height: 1.5;
 }
 
-/* Move visual emphasis with the learner's Stage 1 action without changing layout. */
-.learning-panel[data-stage1-state="relations"] .working-schema-panel,
-.learning-panel[data-stage1-state="connection"] .working-schema-panel,
-.learning-panel[data-stage1-state="cardinality"] .working-schema-panel {
-  border-color: #8fb4ec;
-  background: #f8fbff;
-  box-shadow: 0 9px 24px rgba(47, 111, 237, .11), inset 0 3px 0 var(--blue);
-}
-
-.learning-panel[data-stage1-state="relations"] .current-step,
-.learning-panel[data-stage1-state="connection"] .current-step,
-.learning-panel[data-stage1-state="cardinality"] .current-step {
-  box-shadow: 0 4px 14px rgba(27, 55, 92, .07), inset 4px 0 0 var(--blue);
-}
-
-.learning-panel[data-stage1-state="baselineRun"] .lab-workspace,
-.learning-panel[data-stage1-state="sql"] .lab-workspace {
+.learning-panel[data-stage1-state="baselineRun"] .lab-workspace {
   border-color: #6f9ddd;
   box-shadow: 0 12px 30px rgba(27, 55, 92, .15), inset 0 3px 0 var(--blue);
-}
-
-.learning-panel[data-stage1-state="sql"] .lab-workspace {
-  outline: 2px solid rgba(47, 111, 237, .2);
-  outline-offset: 2px;
-  box-shadow: 0 16px 38px rgba(27, 55, 92, .2), inset 0 4px 0 var(--blue);
-}
-
-.learning-panel[data-stage1-state="sql"] .current-step {
-  border-color: #d8e1ec;
-  background: #fbfcfe;
-  box-shadow: inset 3px 0 0 #9db8dc;
-}
-
-.learning-panel[data-stage1-state="sql"] .working-schema-panel {
-  border-color: #dce4ed;
-  background: #fafbfd;
-  box-shadow: none;
-  opacity: .86;
-}
-
-.learning-panel[data-stage1-state="results"] .results-panel {
-  background: #f8fbff;
-  box-shadow: inset 0 4px 0 var(--blue), 0 8px 22px rgba(47, 111, 237, .1);
-}
-
-.learning-panel[data-stage1-state="results"] .workspace-evidence-action {
-  border-color: #9bbbe5;
-  box-shadow: 0 8px 22px rgba(47, 111, 237, .1);
 }
 
 .learning-panel[data-stage1-state="results"] .working-schema-panel {
@@ -66,16 +21,6 @@
   background: #fafbfd;
   box-shadow: none;
   opacity: .72;
-}
-
-.learning-panel[data-stage1-state="joinTeaching"] .working-schema-panel {
-  background: #f8fafc;
-  box-shadow: none;
-}
-
-.learning-panel[data-stage1-state="joinTeaching"] .current-step {
-  border-color: #c3b7ee;
-  box-shadow: 0 10px 28px rgba(73, 53, 142, .12), inset 4px 0 0 var(--concept);
 }
 
 /* Align news_source.news_source_id with news_article.news_source_id on the shared relationship connector. */
