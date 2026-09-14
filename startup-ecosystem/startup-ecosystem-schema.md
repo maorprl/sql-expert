@@ -1,9 +1,9 @@
-# Startup Ecosystem — Normalized Relational Schema
+# Startup Ecosystem — Course Relational Schema
 
-**Status:** Simplified normalized model
+**Status:** Simplified relational model  
 **Target database:** SQLite  
 **Domain:** startups, funding rounds, investors, sectors, tags, news, and addresses  
-**Design goal:** Keep the model relationally explicit and normalized where the relationships matter, while avoiding lookup-table over-normalization that adds cognitive noise without adding analytical value.
+**Design goal:** Keep the model relationally explicit where the relationships matter, while avoiding normalization choices that add learner-facing joins or opaque identifiers without adding analytical value.
 
 ---
 
@@ -13,7 +13,8 @@ This schema favors:
 
 - explicit relations over JSON arrays;
 - explicit bridge tables for many-to-many relationships;
-- subtype modeling where the domain genuinely has a shared supertype;
+- shared supertypes when they create meaningful reusable relationships;
+- concrete entity relations that expose a human-readable identity when learners are expected to reason about those entities directly;
 - recursive relations for real hierarchies;
 - separate relations when their business meaning differs;
 - preserving business meaning even when values are unknown.
@@ -22,24 +23,24 @@ It intentionally avoids:
 
 - generic `entity_type + entity_id` polymorphic foreign keys;
 - comma-separated tags, sectors, or investors;
-- wide denormalized company records;
+- normalization that forces an identity-only join before a central entity can be understood;
+- wide denormalized company records unrelated to the course's analytical needs;
 - lookup tables for simple stable textual attributes such as company status, round type, currency code, geographic unit type, and address role;
 - treating reported funding-round totals as necessarily equal to the sum of disclosed investor checks.
 
+A relation used only as a role or bridge may legitimately contain mostly keys. A concrete entity relation such as `company`, `organization`, or `person` should not require an unrelated join merely to tell the learner which real-world entity a row represents.
+
 ---
 
-## 2. Core supertype model
+## 2. Core party model
 
 A **party** is an entity that can participate in ecosystem relationships.
 
-A party can have one of the concrete identity forms:
-
-- `organization`
-- `person`
-
-An organization may additionally be a:
+For this course dataset, a party can have one concrete identity form:
 
 - `company`
+- `organization`
+- `person`
 
 Any party may additionally have the role:
 
@@ -47,24 +48,26 @@ Any party may additionally have the role:
 
 ```text
 party
+├── company
 ├── organization
-│   └── company
 └── person
 
 party
 └── investor
 ```
 
-This supports organizational investors, angel investors, startup companies, and companies that also invest.
+`company` is modeled as a concrete party relation rather than as a child of `organization`. This is a deliberate course-schema simplification: company-centered analysis is central to the course, so company rows carry their own human-readable identity and basic company attributes. `organization` remains available for non-company organizational parties such as venture funds and other institutional investors.
+
+This still supports organizational investors, angel investors, startup companies, and companies that also invest. For example, a company party can also have an `investor` row, while a person party can also have an `investor` row.
 
 ---
 
 ## 3. High-level relationship map
 
 ```text
+party 1 ── 0..1 company
 party 1 ── 0..1 organization
 party 1 ── 0..1 person
-organization 1 ── 0..1 company
 party 1 ── 0..1 investor
 
 company >──< person
@@ -110,9 +113,26 @@ sector ──< sector
 
 One row per ecosystem party identity.
 
+### `company`
+
+One row per company.
+
+Important columns include:
+
+- `company_id`
+- `name`
+- `website_url`
+- `founded_date`
+- `status`
+- `description`
+
+`company` is intentionally self-describing enough for company-centered learner encounters. Retrieving a company name does not require an extra identity-only join.
+
+`status` is stored directly as text rather than through a separate two-column lookup table.
+
 ### `organization`
 
-One row per organization.
+One row per non-company organizational party represented in the course dataset.
 
 Columns include:
 
@@ -124,18 +144,6 @@ Columns include:
 ### `person`
 
 One row per person.
-
-### `company`
-
-One row per company.
-
-Important columns:
-
-- `company_id`
-- `status`
-- `description`
-
-`status` is stored directly as text rather than through a separate two-column lookup table.
 
 ### `company_founder`
 
@@ -150,6 +158,8 @@ Primary key:
 ### `investor`
 
 One row per party that has the investor role.
+
+`investor` is intentionally a role relation rather than a duplicate identity table. The same party may be a company, organization, or person and also act as an investor.
 
 ### `investor_category`
 
@@ -384,9 +394,9 @@ Joining several independent branches can multiply rows while remaining syntactic
 
 ```text
 party
+company
 organization
 person
-company
 company_founder
 
 investor
@@ -419,9 +429,9 @@ Total: **24 relations**
 
 ---
 
-## 9. Removed during simplification
+## 9. Simplification decisions
 
-The following relations were intentionally removed:
+The following relations were intentionally removed during the earlier simplification:
 
 ```text
 company_status
@@ -440,7 +450,7 @@ Reasons:
 - `funding_round_tag` added little analytical capability beyond the other tag bridges;
 - separate article-author modeling added schema noise without serving the current knowledge map.
 
-Their removal reduces cognitive load without removing any required relational-algebra or advanced-SQL capability.
+A later learner-facing review exposed a different kind of normalization cost: company identity lived only in `organization`, so even a basic company-centered encounter either showed opaque IDs or required an unrelated `company → organization` join. The current model corrects that by making `company` a concrete self-describing party relation while preserving the shared `party` role model.
 
 ---
 
@@ -455,4 +465,4 @@ This schema does not define:
 - expected answers;
 - learner progress.
 
-It is neutral infrastructure for future course design.
+It is infrastructure for course design, but it is not pedagogically indifferent: its structure should support the intended reasoning without introducing unrelated complexity solely to retrieve basic entity identity.
