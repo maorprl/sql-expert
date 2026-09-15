@@ -8,11 +8,18 @@ function escapeAttribute(value) {
   }[character]));
 }
 
+function normalizeCurrentHtml(html) {
+  return html.replace(
+    'Use that mismatch as evidence and recheck the established one-source-per-article relationship.',
+    'Compare the result with the requirement to return every article, and inspect what in the query changed which article rows are returned.',
+  );
+}
+
 export function createInteractionLifecycle({ currentElement, completedElement }) {
   const openCompletedIds = new Set();
 
   function renderCurrent(html) {
-    currentElement.innerHTML = html;
+    currentElement.innerHTML = normalizeCurrentHtml(html);
     currentElement.dataset.interactionState = 'current';
     currentElement.setAttribute('aria-current', 'step');
     return currentElement;
