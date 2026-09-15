@@ -18,10 +18,11 @@ The learner must be able to move directly between currently available course cha
 
 Chapter navigation belongs to the **course shell**, not inside a reasoning card, task card, SQL task, feedback block, or completion state.
 
-For the currently implemented course surface, the navigation exposes:
+For the currently implemented course surface, the navigation exposes three encounters:
 
-- the existing validated `news_article → news_source` encounter;
-- the current `funding_round → round_investment` row-multiplication encounter.
+- **Media coverage / first JOIN** — `news_article → news_source`;
+- **Funding participation / row multiplication** — `funding_round → round_investment`;
+- **INNER JOIN unmatched / zero-match coverage** — `company → funding_round`.
 
 The navigation must:
 
@@ -39,9 +40,9 @@ The exact visual treatment may vary, but it should read as a compact, stable cou
 
 Learner-facing chapter labels should use one naming scheme across the selector.
 
-A stage/order identifier such as `Stage 1` should not be mixed beside a descriptive encounter title such as `Row multiplication` as though they were equivalent kinds of labels. Because the broader Stage structure beyond the established current Stage 1 remains OPEN, navigation must not infer or invent a `Stage 2` label merely to create symmetry.
+The current repository has an established Stage 1–3 sequence, but a stage/order identifier and a descriptive encounter title are still different kinds of labels. Navigation should not present one encounter only by a Stage number while presenting another only by a descriptive title as though those labels served the same role.
 
-For the current course surface, descriptive encounter titles should be used consistently for learner-facing chapter selection. If an established Stage number or sequence identifier is also shown, it should appear as separate metadata rather than replace the descriptive title for only some encounters.
+For the current course surface, descriptive encounter titles should be used consistently for learner-facing chapter selection. If an established Stage number or sequence identifier is also shown, it should appear as separate metadata or be applied consistently rather than replace the descriptive title for only some encounters.
 
 The exact descriptive titles remain an implementation/content decision, but the naming role must be consistent.
 
