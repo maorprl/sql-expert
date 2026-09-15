@@ -57,9 +57,10 @@ Implementation should avoid inventing broader persistence semantics beyond what 
 
 Other controls that manage navigation or learner actions across the course should be presented as a stable course-level layer rather than re-created as local content inside individual tasks.
 
-At the current point in the design, this layer includes the chapter navigation established above and the previously established needs for:
+At the current point in the design, this layer includes the chapter navigation established above and the established needs for:
 
 - **Back**
+- **Forward**
 - **Retry / Redo**
 
 These controls are distinct from local task actions such as `Check answer`, `Run query`, `Continue`, `Desired Output`, `SQL Structure`, or `Show solution`.
@@ -139,31 +140,63 @@ It should not silently become a full worked query, specify the entire relational
 
 `SQL Structure`, where used, remains a separate scaffold: it can support query shape or syntax structure without supplying the complete answer.
 
-## 5. Back — established need, semantics still OPEN
+## 5. Back / Forward — journey-history navigation
 
-The course requires a clear **Back** control owned by the course experience. The learner should not have to rely on browser history or on opening Completed Steps merely to revisit the previous point in the learning journey.
+The course requires clear **Back** and **Forward** controls owned by the course experience. The learner should not have to rely on browser history or on opening Completed Steps merely to revisit an earlier point and then return to where they were.
 
-Back is navigation inside a learner journey. It is distinct from the chapter selector established above.
+Back / Forward are navigation inside the **currently active encounter**. They are distinct from the chapter selector and from pedagogical progression controls such as `Continue`.
 
-The exact semantics of returning to an earlier state are not yet established. In particular, implementation must not silently decide whether Back:
+### 5.1 Back
 
-- restores the exact previous interaction state;
-- preserves or rolls back completed evidence;
-- preserves opened hints or revealed solutions;
-- preserves editor contents or produced results;
-- can cross Concept Moments, execution states, episode boundaries, or Stage boundaries.
+Back moves to the nearest previously visited learner state in the current encounter.
 
-Those behaviors remain OPEN until explicitly resolved.
+Using Back must not by itself:
+
+- erase or roll back completed evidence;
+- change a previously recorded answer;
+- clear assistance provenance;
+- clear editor contents or produced results;
+- change completion/progress state;
+- turn review of an earlier state into a new attempt.
+
+An earlier state reached through Back is therefore a **review state**. The learner may inspect the prompt, their recorded response, relevant feedback, concepts, established evidence, and other reviewable material associated with that point in the journey.
+
+### 5.2 Forward
+
+Forward is available only after the learner has moved backward through already visited history.
+
+Forward moves through that already visited history toward the learner's current progression frontier. It must not:
+
+- enter a learner state that has never been reached;
+- bypass an unanswered question, required learner action, evidence gate, SQL execution, or verification requirement;
+- mark new evidence complete;
+- act as a substitute for `Continue`, `Check answer`, `Run query`, or another required local progression action.
+
+At the progression frontier, Forward is unavailable. New progress is made only through the encounter's normal pedagogical actions.
+
+### 5.3 Review versus retry
+
+Back / Forward do not create an editable branch of the learner journey. Historical review is not Retry / Redo.
+
+Controls that would change a historical answer, rerun an earlier evidence-bearing activity as a new attempt, reveal new assistance, or otherwise mutate the recorded journey should not be active merely because the learner navigated backward. A separate Retry / Redo action is required when the course supports reattempting earlier work.
+
+This separation prevents navigation from silently changing evidence or invalidating later work.
+
+### 5.4 History scope
+
+Back / Forward operate within the active encounter. They do not replace chapter navigation and do not automatically traverse into another chapter.
+
+The exact persistence of navigation history across page reloads or browser sessions remains OPEN under the broader persistence question. Within the active runtime session, the learner should be able to move backward and forward through the encounter history already created.
 
 ## 6. Retry / Redo — established need, reset semantics still OPEN
 
-The course requires a clear learner action for trying an activity again. Review of a completed step is not a substitute for Retry / Redo.
+The course requires a clear learner action for trying an activity again. Review of a completed step and Back / Forward navigation are not substitutes for Retry / Redo.
 
 Retry / Redo is also distinct from:
 
 - browser refresh;
 - database reset;
-- Back navigation;
+- Back / Forward navigation;
 - chapter selection;
 - ordinary wrong-answer correction inside an active attempt.
 
@@ -186,13 +219,15 @@ Course-shell controls should support movement through the course without replaci
 
 A Stage may still define its own local controls where those controls are part of the learner encounter — for example `Check answer`, `Run query`, `Continue`, `Desired Output`, `SQL Structure`, or the SQL-workspace `Show solution` action established above. Those actions remain governed by the Stage interaction authority together with this course-level boundary.
 
-Chapter navigation, Back, and Retry / Redo should not be independently redesigned inside each Stage.
+Chapter navigation, Back, Forward, and Retry / Redo should not be independently redesigned inside each Stage.
 
 ## 8. Visual role
 
 Course-shell navigation should be easy to find without becoming the primary visual focus of the lesson.
 
 Its visual identity should make clear that it is persistent navigation rather than content belonging to the current reasoning card or SQL task.
+
+Back and Forward should read as a stable paired journey-history control. Their position should not move with the current Stage state, and disabled/unavailable states should clearly communicate when there is no earlier or later visited history to traverse.
 
 `Show solution` is deliberately excluded from that global layer. When available, it should read visually as secondary assistance attached to the SQL Workspace rather than as a primary course-level action.
 
@@ -206,9 +241,8 @@ This document does **not** currently establish:
 - automatic completion-based chapter locking or unlocking;
 - exact keyboard shortcuts;
 - exact mobile behavior;
-- exact undo / branching semantics;
-- whether retrying earlier work invalidates later work;
-- how progress is stored across sessions;
+- Retry / Redo reset and downstream invalidation semantics;
+- how progress and journey-history navigation are stored across sessions;
 - how these controls behave across future Stage types that have not yet been designed.
 
 Those decisions remain OPEN until explicitly established.
