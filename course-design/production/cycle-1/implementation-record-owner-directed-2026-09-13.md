@@ -146,3 +146,66 @@ Available self-validation included:
 A full browser/runtime test could not be completed in the available execution environment. Headless browser execution was not usable there, and repository package/network installation was unavailable. Browser learner test drive therefore remains the next empirical runtime check after integration.
 
 No formal Pedagogy, UX, Architect Reconciliation, or Auditor Pre-Build rerun was performed for this owner-directed runtime reconstruction, and none is claimed here.
+
+---
+
+## 2026-09-15 conformance-restoration addendum
+
+During the reopened Wave 4 diagnostic-feedback mapping, the current default-branch `src/funding-participation.js` was found to have drifted from the owner-directed learner path documented above. The drift was treated as an encounter-conformance defect, not as a Wave 4 feedback-design decision.
+
+### Drift found
+
+The runtime had reintroduced or substituted states that were not part of the controlling owner-directed path, including:
+
+- a prepared `COUNT(*) FROM funding_round` Baseline;
+- Cardinality before the required target-Grain checkpoint;
+- one combined multiplication prediction that named the Concept Moment immediately;
+- a separate semantic-operation question;
+- a three-beat JOIN teaching sequence;
+- no distinct repeated-context / non-duplicate prediction before the Concept Moment;
+- no supporting concrete `3 participations → 3 rows` application after the Concept Moment;
+- final verification that referred to `funding_round_id = 1003` without rendering a local slice derived from the learner's accepted result.
+
+### Runtime correction applied
+
+The current `src/funding-participation.js` / `src/funding-participation.css` path now restores the controlling sequence:
+
+1. relation identification;
+2. connecting-field identification with `round_investment` as the active Working Schema relation and the confirmation action kept with that surface;
+3. target Grain;
+4. Cardinality;
+5. qualitative row-multiplication prediction with no supplied numeric child count;
+6. repeated round-context / non-duplicate prediction;
+7. **JOIN row multiplication** Concept Moment;
+8. supporting `3 participations → 3 participation-grain rows` application;
+9. learner-authored six-field JOIN;
+10. accepted 72-row result;
+11. a `funding_round_id = 1003` slice derived from the learner's accepted result;
+12. final verification against those actual rows;
+13. completion synthesis.
+
+The previously reintroduced Baseline, semantic-operation checkpoint, and separate JOIN-teaching sequence are no longer part of the Stage 2 runtime.
+
+The SQL semantic acceptance contract is unchanged. Existing internal guards remain acceptance guards and are not promoted into learner-facing teaching categories by this correction.
+
+### Show solution clarification in the current runtime
+
+The historical paragraph above stating that `Show solution` "does not insert SQL" is superseded by `authority-clarification-show-solution-sql-workspace-2026-09-13.md`.
+
+The shared runtime already populates the active editor with the complete solution while SQL authoring is active. The Stage 2-local obsolete solution-panel handler is no longer used. Stage 2 now records that `Show solution` assistance was used and preserves that provenance in the completed SQL evidence after a successful run. Activating the control still does not execute SQL, complete the SQL evidence by itself, or bypass final verification.
+
+### Current runtime file names
+
+The current default-branch encounter module is `src/funding-participation.js` with local styling in `src/funding-participation.css`. References earlier in this historical record to `src/cycle1.js` / `src/cycle1.css` describe the earlier reconstruction state and are superseded for the current runtime by this addendum.
+
+### Validation for this conformance restoration
+
+Validation available in the current execution environment:
+
+- `node --check` passed for the rewritten Stage 2 module before commit;
+- static assertions confirmed that `baselineRun`, `operation`, `joinTeaching`, `BASELINE_SQL`, and the obsolete local solution-panel handler are absent from the corrected module;
+- static assertions confirmed the required Grain → Cardinality → qualitative prediction → repeated-context prediction → Concept Moment → concrete application → SQL → 1003 verification states are present;
+- the 1003 verification slice is derived from the accepted learner result stored after semantic validation;
+- the committed GitHub source was fetched again after update to verify the rewritten module is present on the current default branch.
+
+A full production build / browser learner journey is **not claimed** for this correction. The available container could not resolve `github.com`, so repository cloning / package-backed runtime validation could not be performed there.
