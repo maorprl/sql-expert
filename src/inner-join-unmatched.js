@@ -338,7 +338,7 @@ export function createInnerJoinUnmatched({ editor, getDatabase, getSchema, onSel
       event.preventDefault();
       const answer = new FormData(event.currentTarget).get('answer');
       state.drafts[state.current] = answer || '';
-      if (answer !== correct) return wrong(typeof wrongFeedback === 'string' ? wrongFeedback : wrongFeedback[answer]);
+      if (answer !== correct) return wrong(typeof wrongFeedback === 'string' ? wrongFeedback : (wrongFeedback[answer] || wrongFeedback.default));
       record({
         evidence,
         prompt,
@@ -524,7 +524,7 @@ export function createInnerJoinUnmatched({ editor, getDatabase, getSchema, onSel
       if (answer !== 'zero') return wrong({
         preserved: 'An INNER JOIN result row needs a matched row pair. How many such pairs can this company form from the evidence you found?',
         error: 'Does one unmatched company prevent the matched companies from forming valid row pairs?',
-      }[answer]);
+      }[answer] || 'Use the evidence you established: INNER JOIN can produce a result row only from a matched row pair. How many matched pairs can this company produce?');
       record({
         evidence: 'prediction',
         prompt: `What will the INNER JOIN do with ${companyName}?`,
@@ -565,7 +565,7 @@ export function createInnerJoinUnmatched({ editor, getDatabase, getSchema, onSel
       if (answer !== 'absent') return wrong({
         present: 'Inspect the returned `company_id` values specifically. Do you actually find this company in Results?',
         'count-proves-coverage': 'What does 26 count here: companies, or funding-round-grain result rows? Can that number alone tell you which company IDs are represented?',
-      }[answer]);
+      }[answer] || `Inspect the result rows and look specifically for company_id ${companyId}. Decide from the visible result whether that company survived the INNER JOIN.`);
       record({
         evidence: 'verification',
         prompt: `What does the actual result show about ${companyName}?`,
@@ -678,6 +678,7 @@ JOIN funding_round
         next: 'complete',
         feedback: '<div class="success-feedback">Correct. The report can be correct at funding-round grain and still omit a company with zero matching rounds. Multiple matches for other companies can increase the result-row count without restoring missing company coverage.</div>',
         wrongFeedback: {
+          default: `Use ${state.unmatchedCompanyName} (company_id ${state.unmatchedCompanyId}) as evidence. It exists in company, has zero funding-round matches, and is absent from the INNER JOIN result.`,
           'yes-count': 'The 26 rows are funding-round rows. What would you need to inspect to establish coverage of companies rather than merely the number of result rows?',
           'yes-grain': 'One result row represents a funding round. What guarantee, if any, does that give about companies that have no funding round?',
         },

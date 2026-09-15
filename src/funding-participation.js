@@ -280,7 +280,7 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
       event.preventDefault();
       const answer = new FormData(event.currentTarget).get('answer');
       state.drafts[state.current] = answer || '';
-      if (answer !== correct) return wrong(typeof wrongFeedback === 'string' ? wrongFeedback : wrongFeedback[answer]);
+      if (answer !== correct) return wrong(typeof wrongFeedback === 'string' ? wrongFeedback : (wrongFeedback[answer] || wrongFeedback.default));
       record({ evidence, prompt, answer: stripMarkup(options.find(([value]) => value === answer)[1]), value: answer, options, feedback, next });
     });
   }
@@ -301,6 +301,7 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
       next: 'repetition',
       feedback: '<div class="success-feedback">Correct. At participation Grain, one funding round can occupy several result rows when several participation records must remain represented.</div>',
       wrongFeedback: {
+        default: 'Keep the target Grain fixed at one participation per result row. If several participation records belong to the same funding round, each still has to remain represented.',
         'one-row': 'If the result stayed at one row for this funding round, what would happen to the additional participation records that also need to remain represented?',
         collapse: 'Would collapsing the participation records into one row still preserve each recorded participation as its own result row?',
         'round-grain': 'Did the business request change what one result row should represent, or did it only ask you to add funding-round context to that row?',
@@ -321,6 +322,7 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
       correct: 'repeat', evidence: 'repetition', next: 'concept',
       feedback: '<div class="success-feedback">Correct. Round-level context can repeat across distinct participation rows because each row represents a different recorded participation.</div>',
       wrongFeedback: {
+        default: 'Keep the row meaning fixed: each row represents a different participation. Repeated round context does not by itself tell you that two participation rows are the same record.',
         duplicates: 'Repeated values do not by themselves establish duplicate rows. Which fields in the result identify whether these are the same participation or different participations?',
         'first-only': 'For a later participation row, does the business request still require the funding-round context to be present?',
         'different-rounds': 'Use `funding_round_id` as identity evidence. Could two different funding rounds legitimately have the same `funding_round_id`?',
@@ -378,7 +380,7 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
         duplicates: 'Compare the participation identifiers in the visible 1003 rows. Are the rows identical at the result Grain?',
         'different-rounds': 'Check the `funding_round_id` values in these rows. What does that identifier tell you about whether they belong to one round or several?',
         'one-participation': 'Compare `round_investment_id` and `investor_id` across the rows. What evidence would show whether this is one participation repeated or several distinct participations?',
-      }[answer]);
+      }[answer] || 'Use the visible 1003 rows as evidence. Compare the repeated round-level fields with round_investment_id and investor_id to decide whether these are duplicate rows or distinct participation records.');
       record({ evidence: 'finalGrain', prompt: `What do these ${rows.length} rows show about funding round 1003?`, answer: stripMarkup(options.find(([value]) => value === answer)[1]), value: answer, options, feedback: '<div class="success-feedback">Correct. Your prediction matches the result: one funding round can contribute several participation-grain rows, and its round-level context repeats because each row represents a different participation.</div>', next: 'complete' });
     });
   }
