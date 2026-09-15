@@ -352,7 +352,15 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       event.preventDefault();
       const answer = new FormData(event.currentTarget).get('answer');
       state.drafts.finalGrain = answer || '';
-      if (answer !== 'yes') return wrong('Use the visible result as evidence: compare its row count with the 18-row prediction, then inspect what each returned row represents.');
+      if (answer !== 'yes') {
+        if (answer === 'source-grain') {
+          return wrong('The visible result has 18 rows. Focus on what one returned row represents: is the article still the organizing record, with source_name added alongside it?');
+        }
+        if (answer === 'multiplied') {
+          return wrong('Check the visible row count against the earlier prediction. The result shows 18 rows, and each article was predicted to match one source row.');
+        }
+        return wrong('Use the visible result as evidence: compare its row count with the 18-row prediction, then inspect what each returned row represents.');
+      }
       record({
         evidence: 'finalGrain',
         prompt: 'What does the result show?',
@@ -367,6 +375,22 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
 
   function hasExactRequiredRelations() {
     return state.selectedRelations.length === REQUIRED_RELATIONS.length && REQUIRED_RELATIONS.every((relation) => state.selectedRelations.includes(relation));
+  }
+
+  function relationSelectionFeedback() {
+    const hasArticles = state.selectedRelations.includes('news_article');
+    const hasSources = state.selectedRelations.includes('news_source');
+
+    if (hasArticles && hasSources) {
+      return 'The article and publishing-source information are already covered. Check whether every selected relation is actually needed for this request.';
+    }
+    if (hasArticles) {
+      return 'You already have the article records. Reinspect the Live Schema for the relation that provides the publishing-source information requested.';
+    }
+    if (hasSources) {
+      return 'You already have the publishing-source information. Reinspect the Live Schema for the relation that contains the article records requested.';
+    }
+    return 'Break the request into the two information roles it needs: article records and publishing-source information. Reinspect the Live Schema and revise the selection.';
   }
 
   function updateWorkspaceVisibility() {
@@ -476,7 +500,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       const relationButton = document.getElementById('continue-relations');
       relationButton.disabled = !state.selectedRelations.length;
       relationButton.addEventListener('click', () => {
-        if (!hasExactRequiredRelations()) return wrong('The selection does not yet provide exactly the article and publishing-source information requested. Reinspect the Live Schema and revise it.');
+        if (!hasExactRequiredRelations()) return wrong(relationSelectionFeedback());
         record({
           evidence: 'relations',
           prompt: 'Which relations contain the information we need?',
@@ -559,15 +583,42 @@ JOIN news_source
   function normalizedRows(values) { return values.map((row) => JSON.stringify(row)).sort(); }
 
   function validateArticleSourceResult(statement, resultSets) {
-    if (!resultSets.length || !/\b(?:inner\s+)?join\b/i.test(statement) || !/\bon\b/i.test(statement)) return false;
+    if (!resultSets.length) return { valid: false, reason: 'no_result' };
+    if (!/\b(?:inner\s+)?join\b/i.test(statement) || !/\bon\b/i.test(statement)) {
+      return { valid: false, reason: 'missing_relationship_implementation' };
+    }
+
     const result = resultSets.at(-1);
-    if (result.columns.length !== 2 || result.values.length !== 18) return false;
     const columns = result.columns.map((column) => column.toLowerCase());
-    if (columns[0] !== 'title' || columns[1] !== 'source_name') return false;
+    if (result.columns.length !== 2 || columns[0] !== 'title' || columns[1] !== 'source_name') {
+      return { valid: false, reason: 'output_contract_mismatch' };
+    }
+    if (result.values.length !== 18) {
+      return { valid: false, reason: 'row_count_mismatch', actualRowCount: result.values.length };
+    }
+
     const expected = getDatabase().exec('SELECT news_article.title, news_source.name FROM news_article INNER JOIN news_source ON news_article.news_source_id = news_source.news_source_id;')[0]?.values ?? [];
     const actualRows = normalizedRows(result.values);
     const expectedRows = normalizedRows(expected);
-    return actualRows.every((row, index) => row === expectedRows[index]);
+    const rowsMatch = actualRows.every((row, index) => row === expectedRows[index]);
+    if (!rowsMatch) return { valid: false, reason: 'row_association_mismatch' };
+    return { valid: true };
+  }
+
+  function articleSourceDiagnosticFeedback(validation) {
+    if (validation.reason === 'missing_relationship_implementation') {
+      return 'This task implements the relationship you established with JOIN and ON. Recheck that the query includes that taught match between article and source rows.';
+    }
+    if (validation.reason === 'output_contract_mismatch') {
+      return 'The returned fields do not yet match the requested output. Open Desired output and compare the two field names and their order with the result.';
+    }
+    if (validation.reason === 'row_count_mismatch') {
+      return `The query returned ${validation.actualRowCount} rows, while your established prediction was 18 rows at one article per row. Use that mismatch as evidence and recheck the established one-source-per-article relationship.`;
+    }
+    if (validation.reason === 'row_association_mismatch') {
+      return 'The output fields and 18-row count match, but the article/source pairings do not match the relationship you established. Recheck ON against the news_article.news_source_id → news_source.news_source_id relationship.';
+    }
+    return 'The SQL ran, but it did not produce the article/source result this task asks you to inspect. Recheck the requested output and the JOIN relationship you already established.';
   }
 
   function handleSqlSuccess(statement, resultSets) {
@@ -580,7 +631,8 @@ JOIN news_source
       return;
     }
     if (state.current !== 'sql' || state.pendingAdvance) return;
-    if (!validateArticleSourceResult(statement, resultSets)) return wrong('The SQL ran, but the result does not yet match the requested output. Open Desired output if you want the exact column contract, then inspect the selected fields and the relationship in ON.');
+    const validation = validateArticleSourceResult(statement, resultSets);
+    if (!validation.valid) return wrong(articleSourceDiagnosticFeedback(validation));
     record({
       evidence: 'sql',
       prompt: 'Return every article title with its publishing source as source_name.',
