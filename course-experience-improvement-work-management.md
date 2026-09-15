@@ -74,12 +74,14 @@ The management classification itself is not authority.
 
 ### Teacher voice / Walkthrough
 
-**Status:** ACTIVE  
-**Current wave:** Wave 5A — COMPLETE; Wave 5B not authorized
+**Status:** COMPLETE  
+**Current wave:** Wave 5B decision gate COMPLETE — implementation not authorized
 
 Wave 1, Wave 2, Wave 3, Wave 4, and the narrow Wave 5A response-aware feedback treatment are complete.
 
-A broader graduated / adaptive assistance system is not authorized merely because it was previously queued as a candidate direction.
+The Wave 5B decision gate found insufficient evidence to justify graduated / adaptive assistance implementation at this time.
+
+A broader graduated / adaptive assistance system is therefore not authorized.
 
 A pattern is not promoted across the course merely because it was implemented once.
 
@@ -237,18 +239,25 @@ Wave 5A did not reopen Stage 1–3 topology, learner evidence, SQL acceptance, c
 
 ### Wave 5B — Graduated / adaptive assistance
 
-**Status:** NOT AUTHORIZED — SEPARATE DECISION REQUIRED
+**Status:** DECISION GATE COMPLETE — IMPLEMENTATION NOT AUTHORIZED
 
-Previously queued candidate ideas included:
+Decision record:
 
-- graduated hints rather than immediate full-solution exposure;
-- assistance escalation based on attempts or prior help use;
-- verification after strong assistance;
-- possible support reduction / expansion based on learner performance.
+`course-design/wave-5b-adaptive-assistance-decision-gate-2026-09-15.md`
 
-The Wave 5A review did **not** establish that this machinery is necessary.
+The gate asked whether current learner evidence establishes a remaining problem that is specifically an assistance-escalation problem after Wave 5A.
 
-A broader hint or adaptive system therefore remains `CANON DECISION REQUIRED`. No attempt tracking, assistance-history tracking, learner-state accumulation, adaptive routing, graduated hint ladder, or performance-based support change may be implemented without a separate decision gate and explicit authority.
+Verdict:
+
+- current authority does not establish a global hint/adaptive system;
+- the current runtime already provides ordinary correction, Wave 4 state/result-aware diagnostics, Wave 5A response-aware correction, optional SQL scaffolds, and `Show solution`;
+- there is no current evidence of repeated learner failure after Wave 5A correction;
+- there is no course-level attempt/assistance-history model from which a justified escalation rule can be derived;
+- introducing attempt tracking or adaptive machinery in order to create the evidence for its own necessity would reverse the required decision order.
+
+Wave 5B is therefore deferred, not implemented.
+
+Reopening requires new evidence of a repeatable failure mode that persists after the current first-line support and can be addressed by a clearly specified escalation rule without performing the target reasoning for the learner.
 
 ## 8. Later improvement-category queue
 
@@ -266,17 +275,15 @@ Hebrew / RTL localization remains **DEFERRED** as a separate later category.
 
 ## 9. Current next action
 
-Wave 5A is complete.
+The Teacher voice / Walkthrough category is complete through Wave 5B decision gating.
 
-There is no currently authorized Wave 5B implementation.
+Do not implement Wave 5B.
 
-The next management decision is whether current learner evidence justifies opening a **separate Wave 5B decision gate** for graduated / adaptive assistance. That decision must not assume that broader assistance is necessary merely because it was previously queued.
+The next action is a **separate evidence-based category-selection / mapping decision** across the later improvement-category queue.
 
-If no sufficient evidence supports Wave 5B, leave it unapproved and select the next improvement category from the later queue instead.
+That selection must not be made merely by queue order. It should inspect the current Stage 1–3 learner experience and current authority, identify the strongest remaining learner-experience problem, classify whether it is a conformance issue, implementation choice, canon decision, or potential conflict, and define the smallest next mapping scope before any runtime change.
 
-Any Wave 5B gate must first determine whether the remaining learner problem is actually an assistance-escalation problem rather than an upstream issue in wording, inference distance, evidence visibility, interaction design, or instructional sequencing.
-
-No runtime change is authorized by this section.
+No runtime change is authorized until that category-selection / mapping decision is complete.
 
 ## 10. Authority boundary
 
