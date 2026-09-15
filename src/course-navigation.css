@@ -58,6 +58,75 @@
   background: #f3f6fa;
 }
 
+/* Completed work remains available, but no longer grows as the permanent scan path. */
+.completed-history {
+  border: 1px solid #dce5ef;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, .62);
+}
+
+.completed-history > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  color: #6b7d92;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 800;
+  list-style: none;
+}
+
+.completed-history > summary::-webkit-details-marker { display: none; }
+.completed-history > summary::before { content: '›'; font-size: 15px; line-height: 1; }
+.completed-history[open] > summary::before { transform: rotate(90deg); }
+.completed-history-count {
+  min-width: 22px;
+  margin-left: auto;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: #eaf0f7;
+  color: #5b6f86;
+  text-align: center;
+  font-size: 10px;
+}
+
+.completed-history-body {
+  padding: 0 8px 7px;
+  border-top: 1px solid #e6edf4;
+}
+
+.journey-review-panel {
+  border-color: #d7e0ea;
+  background: #fbfcfe;
+  box-shadow: inset 4px 0 0 #9bb0c9;
+}
+
+.journey-review-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.journey-review-position {
+  color: #7a899b;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.journey-review-content {
+  color: #44566c;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.learning-panel.journey-review-active .business-request,
+.learning-panel.journey-review-active .implementation-column {
+  opacity: .64;
+}
+
 @media (max-width: 760px) {
   .course-chapter-nav {
     align-items: flex-start;
