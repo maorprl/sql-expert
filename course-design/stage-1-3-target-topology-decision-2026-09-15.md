@@ -1,10 +1,12 @@
 # Stage 1–3 target interaction topology decision
 
 **Date:** 2026-09-15  
-**Status:** TARGET TOPOLOGY DECIDED — UNREVIEWED — NO RUNTIME CHANGE  
+**Status:** REVIEWED + IMPLEMENTED CURRENT TOPOLOGY AUTHORITY  
 **Decision baseline:** `main@9ad56b59473cd20bfc75f6f731a6008f9bae955b`  
 **Input gate:** `course-design/audits/stage-1-3-transition-mapping-review-2026-09-15.md` — **PASS — SPATIAL-MAPPING GATE CLOSED**  
-**Scope:** choose the corrected course-wide spatial topology for the Stage 1–3 interaction roles exposed by the reviewed mapping. This document translates current visual authority into an implementable target topology. It does not change pedagogy, learner sequence, evidence requirements, SQL semantics, or runtime.
+**Design review:** `course-design/audits/stage-1-3-target-topology-review-2026-09-15.md` — **PASS — TOPOLOGY-DESIGN GATE CLOSED**  
+**Post-build review:** `course-design/audits/stage-1-3-topology-post-build-review-2026-09-15.md` — **PASS — IMPLEMENTATION CONFORMS / GATE CLOSED**  
+**Scope:** current course-wide spatial topology for the Stage 1–3 interaction roles. This authority does not change pedagogy, learner sequence, evidence requirements, SQL semantics, or runtime content beyond the reviewed topology scope.
 
 ## 1. Governing authority
 
@@ -37,7 +39,7 @@ The corrected course uses one simple ownership rule:
 
 A learner-response role moves from L to R only when the learner role genuinely changes from ordinary reasoning into one of those R-owned roles. It returns to L only when that role ends. A runtime state boundary, success acknowledgement, or container change is never sufficient reason by itself.
 
-This is a role rule, not a blanket content rule. Guidance may remain visible in L while R owns the active interaction, but the **actual actionable prompt, response/check controls, response-specific feedback, and local Continue** must stay with the owning role.
+This is a role rule, not a blanket content rule. Guidance may remain visible in L while R owns the active interaction, but the **actual actionable prompt, response/check controls, response-specific corrective feedback, and local Continue** must stay with the owning role.
 
 ## 3. Course-wide target patterns
 
@@ -63,7 +65,7 @@ When the learner must select a specific field directly in Working Schema:
 - the relationship reveal occurs in the same R object context after correctness;
 - Continue from this completed object interaction explicitly names the next reasoning role, after which the next ordinary reasoning state returns to L.
 
-This adopts the strongest part of the current Stage 2 connection pattern and removes its success-state jump back to L.
+This adopts the strongest part of the Stage 2 connection pattern and removes its former success-state jump back to L.
 
 **Cross-stage target:** Stage 1 = Stage 2 = Stage 3.
 
@@ -107,7 +109,7 @@ Therefore:
 
 - Stage 1 prediction after the Baseline remains R;
 - Stage 3 zero-match survival prediction remains R;
-- Stage 2 multiplication prediction and repeated-context prediction move/stay L because they reason from established Grain/Cardinality rather than a just-produced measurement result.
+- Stage 2 multiplication prediction and repeated-context prediction remain L because they reason from established Grain/Cardinality rather than a just-produced measurement result.
 
 This is a pedagogically justified divergence, not cross-stage drift.
 
@@ -156,7 +158,7 @@ After accepted SQL execution:
 
 Verification is immediate interpretation of visible result evidence. Therefore the actual verification prompt, response controls, Check, wrong feedback, correct feedback / verification Concept Moment, and Continue remain with Results in R.
 
-Stage 3 must use the same evidence-local verification pattern as Stage 1 and Stage 2. There is no current Stage 3 pedagogical authority requiring the verification response to return to L while the evidence stays R.
+Stage 3 uses the same evidence-local verification pattern as Stage 1 and Stage 2. There is no Stage 3 pedagogical authority requiring the verification response to return to L while the evidence stays R.
 
 **Cross-stage target:** Stage 1 = Stage 2 = Stage 3.
 
@@ -181,7 +183,7 @@ This is a genuine, explicit R→L phase handoff.
 
 Completion is a genuine phase end. The final `Complete stage` control remains with the completed action/evidence that leads to it; after activation, the completion state appears in L.
 
-Working Schema must not perform a column restoration because it no longer moved columns during SQL/result work. If it remains visible at completion, it stays in its established R location with reduced prominence.
+Working Schema does not perform a column restoration because it no longer moves columns during SQL/result work. If it remains visible at completion, it stays in its established R location with reduced prominence.
 
 **Cross-stage target:** Stage 1 = Stage 2 = Stage 3.
 
@@ -200,7 +202,7 @@ Target course-wide behavior:
 - no R→L relocation at SQL authoring;
 - no L→R restoration on completion.
 
-Only prominence/order within R may change by role. A later implementation must not solve general placement with competing Stage-specific transforms or DOM relocation.
+Only prominence/order within R may change by role. General placement must not be implemented through competing Stage-specific transforms or DOM relocation.
 
 ### Completed Steps
 
@@ -208,7 +210,7 @@ Completed Steps stay in L/history throughout the encounter, including authoring,
 
 ### Business Request / Live Schema
 
-Their current persistent roles are unchanged. This decision does not introduce new movement rules for them.
+Their persistent roles are unchanged. This decision does not introduce new movement rules for them.
 
 ## 5. Target paths by stage
 
@@ -232,17 +234,17 @@ Required explicit handoffs:
 
 `L Relations → R Connection → L Grain → L Cardinality → L Multiplication Prediction → L Repeated-context Prediction → L Concept → L Application → Split(L task / R SQL workspace) → R Result Inspection → R Verification → L Complete`
 
-The current acknowledgement-driven `L→R→L→R` oscillation is eliminated. Success feedback remains where the learner answered. SQL is the first post-connection reason for R to become an active tool owner.
+The acknowledgement-driven `L→R→L→R` oscillation is eliminated. Success feedback remains where the learner answered. SQL is the first post-connection reason for R to become an active tool owner.
 
 ### Stage 3
 
 `L Relations → R Connection → L Cardinality → L Grain → R Company Measurement → R Company Evidence → R Funding Measurement → R Compare → R Survival Prediction → Split(L task / R SQL workspace) → R Result Inspection → R Verification → L Coverage Conclusion → L Complete`
 
-The evidence-gathering episode becomes one coherent R-side cycle. The current unsupported Result→L Verification reversal is removed. The later R→L move occurs only when the learner role genuinely changes from result verification to the business coverage conclusion.
+The evidence-gathering episode is one coherent R-side cycle. The unsupported Result→L Verification reversal is removed. The later R→L move occurs only when the learner role genuinely changes from result verification to the business coverage conclusion.
 
 ## 6. Transition-control rule
 
-For implementation, each local progression control belongs to the role that just completed:
+Each local progression control belongs to the role that just completed:
 
 - L reasoning answer → feedback + Continue in L;
 - R direct-object answer → feedback + Continue in R;
@@ -250,8 +252,6 @@ For implementation, each local progression control belongs to the role that just
 - R SQL/result/verification → feedback + Continue in R.
 
 The destination of the next state does not move the current state's feedback or Continue. The handoff happens **after** activation of the local Continue, when the next role becomes visually primary.
-
-This rule directly removes the Stage 2 success-state drift.
 
 ## 7. Handoff signaling requirement
 
@@ -284,32 +284,41 @@ Encounter-specific JS/CSS may supply content and real encounter-specific visuals
 
 This decision does not prescribe the exact refactor, DOM structure, CSS selectors, or state API. Those are implementation decisions, subject to the shared-ownership requirement and post-build transition validation.
 
-## 9. What this decision changes versus current runtime
+## 9. Corrections established by this decision
 
-The intended corrections are:
+The reviewed corrections are:
 
-1. Stage 1/3 connecting-field Check/feedback/Continue become R-local; Stage 2 correct acknowledgement also stays R.
-2. Stage 1/3 prepared-measurement validation moves from L to R.
+1. Stage 1/3 connecting-field Check/feedback/Continue are R-local; Stage 2 correct acknowledgement also stays R.
+2. Stage 1/3 prepared-measurement validation is R-local.
 3. Stage 2 Cardinality, Repetition, and Application success feedback/Continue stay in L instead of jumping to R.
 4. Stage 2 multiplication prediction and repeated-context prediction use one stable L reasoning anchor.
-5. SQL diagnostics move to R in all three stages.
-6. SQL-local assistance/scaffolding is R-owned consistently; Stage 3 must not use a separate revealed-solution panel.
-7. Working Schema stops relocating R→L for SQL/result states.
-8. Stage 3 result verification moves to R with Results, matching Stage 1/2.
-9. Legitimate evidence→ordinary-reasoning returns (Stage 1 prediction→semantic action; Stage 3 verification→coverage) receive explicit phase-handoff signaling rather than appearing as unexplained column jumps.
-10. Completion remains L but no longer triggers a Working-Schema column restoration.
+5. SQL diagnostics are R-local in all three stages.
+6. SQL-local assistance/scaffolding is R-owned consistently; Stage 3 does not use a separate revealed-solution panel.
+7. Working Schema does not relocate R→L for SQL/result states.
+8. Stage 3 result verification remains in R with Results, matching Stage 1/2.
+9. Legitimate evidence→ordinary-reasoning returns (Stage 1 prediction→semantic action; Stage 3 verification→coverage) use explicit phase-handoff signaling rather than unexplained column jumps.
+10. Completion remains L without a Working-Schema column restoration.
 
 No learner question, answer option, concept timing, evidence requirement, SQL contract, result validator, or completion requirement is changed by these topology decisions.
 
-## 10. Review and implementation boundary
+## 10. Review and implementation status
 
-This document completes the **target-topology decision pass** but is not yet reviewed implementation authority.
+The earlier draft status in this document said the decision was unreviewed and runtime remained held. That status is superseded.
 
-Before runtime changes:
+The decision was subsequently reviewed in:
 
-1. review this decision against the reviewed mapping and current `course-visual-language.md` / `course-controls.md`;
-2. verify that every mapped defect has an explicit target disposition and that no target rule changes locked pedagogy;
-3. verify that equivalent roles now have one course-wide pattern or a documented pedagogical reason for divergence;
-4. only then authorize implementation.
+`course-design/audits/stage-1-3-target-topology-review-2026-09-15.md`
 
-**Runtime remains held.**
+with verdict:
+
+**PASS — TARGET TOPOLOGY CONFORMS — TOPOLOGY-DESIGN GATE CLOSED**
+
+It was then implemented and independently reviewed in:
+
+`course-design/audits/stage-1-3-topology-post-build-review-2026-09-15.md`
+
+with verdict:
+
+**PASS — IMPLEMENTATION CONFORMS — STAGE 1–3 TOPOLOGY POST-BUILD GATE CLOSED**
+
+Therefore this document now serves as the current reviewed topology authority for Stage 1–3. Later unrelated experience-improvement work does not reopen this topology unless a new decision explicitly does so.
