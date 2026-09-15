@@ -1,0 +1,138 @@
+/*
+ * Cross-stage interaction-locality conformance.
+ *
+ * Ordinary reasoning stays in the Current Step lane. Tool/evidence-led work keeps
+ * the current task, tool/evidence, immediate question, feedback, and transition
+ * controls in one visual lane. This file changes composition only; it does not
+ * change learner sequence, evidence requirements, or validator semantics.
+ */
+
+/* Stage 2's connecting-field check is created beside the Working Schema because
+ * the selection happens there. interaction-lifecycle moves the check/feedback
+ * into Current Step so its question, check action, and correction stay together,
+ * matching the equivalent Stage 1 / Stage 3 interaction role. */
+.current-step > .stage2-working-schema-action {
+  margin-top: 14px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  border-color: #d5dfeb;
+  background: #f8fafc;
+}
+
+.current-step > .stage2-working-schema-action .local-feedback {
+  grid-column: 1 / -1;
+}
+
+/* Stage 1 baseline/prediction and Stage 3 measurement/prediction are genuinely
+ * evidence-led. Keep Current Step, the evidence surface, its interpretation,
+ * and feedback in the same (right-hand) working lane on wide screens. */
+@media (min-width: 1101px) {
+  .learning-panel:is(.baseline-workspace-active, .prediction-evidence-active) .lesson-surface {
+    grid-template-columns: minmax(330px, .74fr) minmax(520px, 1.26fr);
+    grid-template-areas:
+      "schema current"
+      "schema lab"
+      "completed action";
+    align-items: start;
+  }
+
+  .learning-panel:is(.baseline-workspace-active, .prediction-evidence-active) .reasoning-column,
+  .learning-panel:is(.baseline-workspace-active, .prediction-evidence-active) .implementation-column {
+    display: contents;
+  }
+
+  .learning-panel:is(.baseline-workspace-active, .prediction-evidence-active) .current-step {
+    grid-area: current;
+  }
+
+  .learning-panel:is(.baseline-workspace-active, .prediction-evidence-active) .working-schema-panel {
+    grid-area: schema;
+    margin-top: 0;
+  }
+
+  .learning-panel:is(.baseline-workspace-active, .prediction-evidence-active) .lab-workspace {
+    grid-area: lab;
+  }
+
+  .learning-panel:is(.baseline-workspace-active, .prediction-evidence-active) .workspace-evidence-action {
+    grid-area: action;
+    margin-top: 0;
+  }
+
+  .learning-panel:is(.baseline-workspace-active, .prediction-evidence-active) .completed-steps {
+    grid-area: completed;
+    margin: 0;
+  }
+
+  /* Stage 2 prediction is reasoning from already-established facts, not a tool
+   * handoff. Keep its guidance and the actual question in the normal reasoning
+   * lane instead of making the question appear to jump into the workspace. */
+  .learning-panel[data-stage2-state="prediction"] .lesson-surface {
+    grid-template-columns: minmax(390px, .9fr) minmax(430px, 1.1fr);
+    grid-template-areas:
+      "current schema"
+      "action schema"
+      "completed schema";
+    align-items: start;
+  }
+
+  .learning-panel[data-stage2-state="prediction"] .reasoning-column,
+  .learning-panel[data-stage2-state="prediction"] .implementation-column {
+    display: contents;
+  }
+
+  .learning-panel[data-stage2-state="prediction"] .current-step { grid-area: current; }
+  .learning-panel[data-stage2-state="prediction"] .workspace-evidence-action {
+    grid-area: action;
+    margin-top: 0;
+  }
+  .learning-panel[data-stage2-state="prediction"] .completed-steps {
+    grid-area: completed;
+    margin: 0;
+  }
+  .learning-panel[data-stage2-state="prediction"] .working-schema-panel {
+    grid-area: schema;
+    margin-top: 0;
+  }
+}
+
+/* Shared SQL/result choreography on wide screens: the Current Step now sits in
+ * the same lane as the editor or Results instead of across the page from the
+ * action that can produce its feedback. Supporting schema/history stay left. */
+@media (min-width: 1280px) {
+  .learning-panel.sql-implementation-active .lesson-surface {
+    grid-template-columns: minmax(350px, .76fr) minmax(540px, 1.24fr);
+    grid-template-areas:
+      "schema current"
+      "schema lab"
+      "completed lab";
+  }
+
+  .learning-panel.results-evidence-active .lesson-surface {
+    grid-template-columns: minmax(350px, .76fr) minmax(540px, 1.24fr);
+    grid-template-areas:
+      "schema current"
+      "schema result"
+      "completed action";
+  }
+
+  .learning-panel:is(.sql-implementation-active, .results-evidence-active) .current-step {
+    grid-area: current;
+  }
+
+  .learning-panel:is(.sql-implementation-active, .results-evidence-active) .working-schema-panel {
+    grid-area: schema;
+  }
+
+  .learning-panel.sql-implementation-active .lab-workspace { grid-area: lab; }
+  .learning-panel.results-evidence-active .lab-workspace { grid-area: result; }
+
+  .learning-panel.results-evidence-active .workspace-evidence-action {
+    grid-area: action;
+    margin-top: 0;
+  }
+
+  .learning-panel:is(.sql-implementation-active, .results-evidence-active) .completed-steps {
+    grid-area: completed;
+    margin: 0;
+  }
+}
