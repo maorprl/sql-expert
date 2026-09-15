@@ -149,36 +149,9 @@ Status reporting must distinguish explicitly between:
 
 Do not use the unqualified word “synced” unless both states have actually been established.
 
-### Git command safety gate for user-facing commands
+### ChatGPT Git safety instructions
 
-The primary assistant must not give the user a Git command that changes local repository state unless the relevant checkout identity and current state have first been established from actual evidence.
-
-Before giving a user-facing command involving checkout, branch movement, merge, pull, reset, rebase, cherry-pick, stash, worktree changes, or other state-changing Git behavior, establish or reuse still-current evidence for:
-
-```text
-git rev-parse --show-toplevel
-git rev-parse HEAD
-git status -sb
-```
-
-The assistant must also state the intended target state internally before selecting the command: which repository / checkout should be affected, which exact commit or remote ref is the target, and whether the purpose is implementation, synchronization, validation, or promotion.
-
-Rules:
-
-- A branch created or verified on GitHub does **not** imply that the user's checkout has a local branch, tracking branch, or remote-tracking ref for it.
-- Do not infer local branch topology from remote repository state.
-- Do not ask the user to repair branch tracking, refspecs, divergence, or checkout topology merely because the assistant chose a remote workflow that does not match the user's verified checkout.
-- When the purpose is only to validate an exact remote implementation commit, prefer a bounded detached validation flow such as fetching the exact branch/ref and switching to `FETCH_HEAD`, rather than creating or modifying the user's local branch topology.
-- Do not update or move the user's local `main` merely to validate another commit or task branch.
-- Do not use `rebase`, `cherry-pick`, `reset`, `merge`, `stash`, or force operations as a default recovery mechanism. Use them only when a verified repository state and an explicit reconciliation need justify that exact operation.
-- Prefer one copy-pasteable command tailored to the verified checkout state when the user only needs to perform a bounded validation action.
-- After moving to or fetching a target commit for validation, verify the resulting `HEAD` against the exact expected SHA before proceeding to build, tests, browser validation, or promotion.
-- If the assistant created the remote branch or commit, responsibility for producing the correct checkout-specific validation command remains with the assistant. The user must not be treated as the Git operator responsible for reconstructing the assistant's workflow.
-- If the checkout identity / HEAD / status were already verified and nothing relevant has changed, reuse that evidence rather than making the user repeat diagnostics unnecessarily.
-
-Core rule:
-
-> **No user-facing Git state-change command without verified checkout identity, current HEAD, current status, and a defined target state. Prefer detached validation of exact remote implementation commits over modifying the user's local branch topology.**
+ChatGPT-specific Git command safety rules live only in `chatgpt-git-safety.md`. That file is the single source of truth for how the primary assistant must verify checkout identity, HEAD, status, target state, and validation flow before giving the user Git commands.
 
 ## 6. Branch ownership and active-work lock
 
