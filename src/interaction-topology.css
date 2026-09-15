@@ -1,0 +1,158 @@
+/*
+ * Shared spatial contract for learner interaction roles.
+ * Questions stay in the learner-response lane; tools/evidence may become prominent
+ * without dragging the response surface across columns.
+ */
+
+.working-schema-local-action {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 11px 12px;
+  border: 1px solid #cbd8e7;
+  border-radius: 10px;
+  background: #f8fbff;
+}
+
+.working-schema-local-action > div:first-child {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.working-schema-local-action strong {
+  overflow-wrap: anywhere;
+  color: #294b70;
+  font-size: 12px;
+}
+
+.working-schema-local-action .local-feedback {
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
+
+/* Once a prepared baseline has produced evidence, keep the tiny result compact. */
+.learning-panel.baseline-evidence-active .lab-workspace {
+  height: clamp(165px, 22vh, 205px);
+  min-height: 165px;
+  grid-template-rows: 42px minmax(0, 1fr);
+}
+
+.learning-panel.baseline-evidence-active #editor { display: none; }
+
+@media (min-width: 1101px) {
+  /*
+   * A response form rendered beside a tool is still a learner-response object.
+   * Keep Current Step + response on the left; keep tool/evidence/reference on the right.
+   */
+  .learning-panel:is(
+    :has(.workspace-evidence-action .answer-form),
+    :has(.workspace-evidence-action.prediction-followup),
+    :has(.workspace-evidence-action.verification-followup),
+    :has(.workspace-evidence-action #continue-after-baseline),
+    :has(.workspace-evidence-action #continue-to-prediction)
+  ) .reasoning-column,
+  .learning-panel:is(
+    :has(.workspace-evidence-action .answer-form),
+    :has(.workspace-evidence-action.prediction-followup),
+    :has(.workspace-evidence-action.verification-followup),
+    :has(.workspace-evidence-action #continue-after-baseline),
+    :has(.workspace-evidence-action #continue-to-prediction)
+  ) .implementation-column {
+    display: contents;
+  }
+
+  .learning-panel:is(
+    :has(.workspace-evidence-action .answer-form),
+    :has(.workspace-evidence-action.prediction-followup),
+    :has(.workspace-evidence-action.verification-followup),
+    :has(.workspace-evidence-action #continue-after-baseline),
+    :has(.workspace-evidence-action #continue-to-prediction)
+  ) .lesson-surface {
+    grid-template-columns: minmax(340px, .88fr) minmax(430px, 1.12fr);
+    align-items: start;
+  }
+
+  .learning-panel:is(
+    :has(.workspace-evidence-action .answer-form),
+    :has(.workspace-evidence-action.prediction-followup),
+    :has(.workspace-evidence-action.verification-followup),
+    :has(.workspace-evidence-action #continue-after-baseline),
+    :has(.workspace-evidence-action #continue-to-prediction)
+  ):has(.lab-workspace:not([hidden])) .lesson-surface {
+    grid-template-areas:
+      "current lab"
+      "action lab"
+      "completed schema";
+  }
+
+  .learning-panel:is(
+    :has(.workspace-evidence-action .answer-form),
+    :has(.workspace-evidence-action.prediction-followup),
+    :has(.workspace-evidence-action.verification-followup),
+    :has(.workspace-evidence-action #continue-after-baseline),
+    :has(.workspace-evidence-action #continue-to-prediction)
+  ):has(.lab-workspace[hidden]) .lesson-surface {
+    grid-template-areas:
+      "current schema"
+      "action schema"
+      "completed schema";
+  }
+
+  .learning-panel:is(
+    :has(.workspace-evidence-action .answer-form),
+    :has(.workspace-evidence-action.prediction-followup),
+    :has(.workspace-evidence-action.verification-followup),
+    :has(.workspace-evidence-action #continue-after-baseline),
+    :has(.workspace-evidence-action #continue-to-prediction)
+  ) .current-step { grid-area: current; }
+
+  .learning-panel:is(
+    :has(.workspace-evidence-action .answer-form),
+    :has(.workspace-evidence-action.prediction-followup),
+    :has(.workspace-evidence-action.verification-followup),
+    :has(.workspace-evidence-action #continue-after-baseline),
+    :has(.workspace-evidence-action #continue-to-prediction)
+  ) .workspace-evidence-action {
+    grid-area: action;
+    margin-top: 0;
+  }
+
+  .learning-panel:is(
+    :has(.workspace-evidence-action .answer-form),
+    :has(.workspace-evidence-action.prediction-followup),
+    :has(.workspace-evidence-action.verification-followup),
+    :has(.workspace-evidence-action #continue-after-baseline),
+    :has(.workspace-evidence-action #continue-to-prediction)
+  ) .lab-workspace { grid-area: lab; }
+
+  .learning-panel:is(
+    :has(.workspace-evidence-action .answer-form),
+    :has(.workspace-evidence-action.prediction-followup),
+    :has(.workspace-evidence-action.verification-followup),
+    :has(.workspace-evidence-action #continue-after-baseline),
+    :has(.workspace-evidence-action #continue-to-prediction)
+  ) .working-schema-panel {
+    grid-area: schema;
+    min-height: 0;
+    margin-top: 0;
+  }
+
+  .learning-panel:is(
+    :has(.workspace-evidence-action .answer-form),
+    :has(.workspace-evidence-action.prediction-followup),
+    :has(.workspace-evidence-action.verification-followup),
+    :has(.workspace-evidence-action #continue-after-baseline),
+    :has(.workspace-evidence-action #continue-to-prediction)
+  ) .completed-steps {
+    grid-area: completed;
+    margin: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .working-schema-local-action { grid-template-columns: 1fr; }
+  .working-schema-local-action .primary { justify-self: start; }
+}
