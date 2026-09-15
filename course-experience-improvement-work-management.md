@@ -78,7 +78,7 @@ The management classification itself is not authority.
 ### Teacher voice / Walkthrough
 
 **Status:** ACTIVE  
-**Current wave:** Wave 4 — DIAGNOSTIC FEEDBACK GATE REOPENED; Stage 1 calibration complete, Stage 2 / Stage 3 mapping pending, implementation not yet authorized
+**Current wave:** Wave 4 — DIAGNOSTIC FEEDBACK GATE REOPENED; Stage 1 + Stage 3 calibration complete, Stage 2 blocked by encounter-conformance drift, implementation not yet authorized
 
 This is the first active category in the broader existing-course improvement initiative.
 
@@ -212,7 +212,7 @@ Canon impact:
 
 ### Wave 4 — Diagnostic feedback
 
-**Status:** GATE REOPENED — STAGE 1 CALIBRATION COMPLETE; CROSS-STAGE DECISION PENDING
+**Status:** GATE REOPENED — STAGE 1 + STAGE 3 CALIBRATION COMPLETE; STAGE 2 BLOCKED BY CONFORMANCE DRIFT
 
 Decision record:
 
@@ -242,28 +242,44 @@ Stage 1 calibration result:
 - **IMPROVE:** learner-authored SQL semantic failure — result-aware diagnostics may distinguish already-established result dimensions without changing semantic acceptance;
 - **IMPROVE:** final verification — response-aware correction may distinguish a Grain/row-meaning mistake from a row-count/multiplication mistake while keeping the learner in the same verification interaction.
 
-Machine-side calibration patterns exposed by Stage 1:
+Stage 3 calibration result:
+
+- **IMPROVE:** relation selection — the same state-aware gap exists for the company-context / funding-round-information roles;
+- **IMPROVE:** learner-authored SQL semantic failure — the same result-aware gap exists for the established five-column / 26-row INNER JOIN contract;
+- **KEEP:** connecting-column reasoning, Cardinality, Grain, both prepared measurements, zero-match evidence comparison, INNER JOIN survival prediction, result verification, and final coverage conclusion.
+
+Stage 3 therefore confirms that Stage 1 response-aware feedback is **not** a pattern to propagate mechanically: its current verification and coverage corrections already use the relevant evidence well enough without per-option branching.
+
+Machine-side diagnostic shapes currently established:
 
 - state-aware diagnostic;
-- response-aware diagnostic;
+- response-aware diagnostic where materially justified;
 - result-aware diagnostic.
 
-These are Stage 1 calibration patterns only. They do not authorize a generalized Diagnostic Engine or automatic propagation across the course.
+These shapes do not authorize a generalized Diagnostic Engine or automatic propagation across the course.
 
-Stage 2 propagation hold:
+Stage 2 blocker:
 
-- current design / owner-directed records and current `src/funding-participation.js` contain a material learner-path mismatch around the Baseline and prediction progression;
-- Wave 4 does not resolve that mismatch;
-- Wave 4 must not canonize feedback around a disputed Stage 2 state merely because that state exists in the runtime;
-- Stage 2 calibration must first identify which current states are legitimate targets in light of that authority/runtime relationship.
+- the current owner-directed authority requires relations → connection → Grain → Cardinality → qualitative multiplication prediction → repeated-context judgment → Concept Moment → concrete 3→3 application → SQL → actual 1003 evidence slice → verification;
+- current `src/funding-participation.js` instead changes the order, inserts a 26-row Baseline, omits the separate repeated-context judgment and concrete 3→3 application, introduces additional operation / JOIN-teaching states, and does not render the required local 1003 evidence slice;
+- this is an encounter-conformance defect, not a Wave 4 feedback defect;
+- Wave 4 must not canonize or improve feedback around superseded Stage 2 states merely because they exist in runtime.
+
+Stable Stage 2 Wave 4 findings that survive the blocker:
+
+- **IMPROVE:** relation selection;
+- **KEEP:** connecting-column correction;
+- **IMPROVE:** learner-authored SQL semantic feedback against the stable six-field / 72-row result contract.
+
+The remaining Stage 2 feedback calibration must wait until the learner path is restored to current authority.
 
 Current implementation status:
 
 - no Wave 4 learner-facing implementation is authorized yet;
-- the earlier SQL-only implementation next step is withdrawn;
-- Wave 4 closes only after Stage 2 and Stage 3 are mapped and the cross-stage propagation decision is made.
+- the earlier SQL-only implementation next step remains withdrawn;
+- Wave 4 closes only after the Stage 2 conformance correction and a rerun of Stage 2 diagnostic calibration on the restored path.
 
-Canon impact for the currently justified Stage 1 patterns:
+Canon impact for the currently justified patterns:
 
 - evidence-based clarification using already-established business meaning, learner response, or result evidence — primarily `CONFORMANCE` plus local `IMPLEMENTATION CHOICE`;
 - new assistance escalation, new learner requirements, new paths, or new acceptance semantics — `CANON DECISION REQUIRED`;
@@ -310,22 +326,21 @@ Hebrew / RTL localization is currently **DEFERRED**. It should be planned as its
 
 Wave 1, Wave 2, and Wave 3 are complete across Stage 1, Stage 2, and Stage 3.
 
-Wave 4 is active and its decision gate has been reopened. The durable decision record remains:
+Wave 4 is active and its decision gate remains reopened. The durable decision record is:
 
 `course-design/audits/wave-4-diagnostic-feedback-decision-gate-2026-09-15.md`
 
-Stage 1 calibration is complete and establishes three justified improvement targets: state-aware relation-selection feedback, result-aware SQL semantic feedback, and response-aware final-verification feedback. The remaining Stage 1 wrong-answer treatments reviewed in the gate remain `KEEP`.
+Stage 1 and Stage 3 diagnostic calibration are complete. Stage 2 is blocked by a separate encounter-conformance defect between the current owner-directed authority and `src/funding-participation.js`.
 
-The next action is **continued Wave 4 mapping, not implementation**:
+The next action is **not Wave 4 implementation**. It is:
 
-1. establish which current Stage 2 states are valid calibration targets in light of the identified authority/runtime drift;
-2. calibrate Stage 2 diagnostic feedback across the legitimate learner path, separating `KEEP` from justified `IMPROVE` findings and course-side needs from machine-side needs;
-3. calibrate Stage 3 in the same way;
-4. compare the findings with the Stage 1 calibration and propagate only genuinely equivalent diagnostic patterns;
-5. close / update the Wave 4 gate with the final cross-stage implementation scope;
-6. only then begin learner-facing implementation.
+1. perform a targeted Stage 2 encounter-conformance correction against the current owner-directed authority;
+2. preserve the accepted case, target capability, evidence contract, SQL result contract, controls, and existing course authority rather than redesigning the encounter;
+3. after the restored Stage 2 learner path is available, rerun Stage 2 Wave 4 diagnostic calibration and classify the required wrong-feedback states as `KEEP` or `IMPROVE`;
+4. update / close the Wave 4 gate with the final cross-stage implementation scope;
+5. only then begin the smallest authorized learner-facing Wave 4 implementation pass.
 
-Do not treat Stage 1 calibration as blanket approval for per-option feedback, a generalized diagnostic framework, SQL parser behavior, untaught SQL explanations, hint escalation, adaptive assistance, progress semantics, encounter redesign, or Wave 5 work.
+Do not treat the current calibration as blanket approval for per-option feedback, a generalized diagnostic framework, SQL parser behavior, untaught SQL explanations, hint escalation, adaptive assistance, progress semantics, encounter redesign, or Wave 5 work.
 
 ## 10. Authority boundary
 
