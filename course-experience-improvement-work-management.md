@@ -75,9 +75,11 @@ The management classification itself is not authority.
 ### Teacher voice / Walkthrough
 
 **Status:** ACTIVE  
-**Current wave:** Wave 4 — DECISION GATE COMPLETE; Stage 1 implementation calibration authorized, cross-stage propagation not yet authorized
+**Current wave:** Wave 5A — COMPLETE; Wave 5B not authorized
 
-Wave 1, Wave 2, and Wave 3 are complete.
+Wave 1, Wave 2, Wave 3, Wave 4, and the narrow Wave 5A response-aware feedback treatment are complete.
+
+A broader graduated / adaptive assistance system is not authorized merely because it was previously queued as a candidate direction.
 
 A pattern is not promoted across the course merely because it was implemented once.
 
@@ -85,16 +87,18 @@ A pattern is not promoted across the course merely because it was implemented on
 
 Use the same calibration discipline across waves:
 
-1. calibrate Stage 1 as the reference specimen;
+1. calibrate Stage 1 as the reference specimen when the wave is cross-stage and the learner role is equivalent;
 2. inspect the actual learner role and evidence before making a change;
 3. implement the smallest treatment that satisfies the accepted intent;
-4. run the actual Stage 1 journey through the changed states;
-5. only after Stage 1 is accepted, apply the established pattern to Stage 2 / Stage 3 where the learner role is genuinely equivalent;
-6. perform full-course runtime validation after propagation.
+4. run the actual learner journey through the changed states;
+5. only after the calibration is accepted, apply the established pattern elsewhere where the learner role is genuinely equivalent;
+6. perform full-course runtime validation after propagation where the wave changes multiple stages.
 
 For visual waves, representative runtime states must still establish primary, supporting, evidence, feedback, concept, and teacher-guidance roles before substantial styling work.
 
 For diagnostic-feedback work, calibration starts from learner reasoning and evidence, not validator branches.
+
+For response-aware feedback, implementation must use already-observable learner responses and must not silently expand into attempt tracking, adaptive routing, learner modelling, or a generalized hint system.
 
 ## 7. Teacher voice / Walkthrough waves
 
@@ -137,13 +141,13 @@ Wave 3 did not change learner flow or introduce new motion.
 
 ### Wave 4 — Diagnostic feedback
 
-**Status:** DECISION GATE COMPLETE — STAGE 1 IMPLEMENTATION CALIBRATION NEXT
+**Status:** COMPLETE
 
 Decision record:
 
 `course-design/audits/wave-4-diagnostic-feedback-decision-gate-2026-09-15.md`
 
-The earlier SQL-only gate conclusion was superseded. Wave 4 now evaluates diagnostic feedback across the learner encounter and across both course-side correction and machine-side use of known learner state / response / result evidence.
+The earlier SQL-only gate conclusion was superseded. Wave 4 evaluated diagnostic feedback across the learner encounter and across both course-side correction and machine-side use of known learner state / response / result evidence.
 
 #### Final cross-stage scope
 
@@ -172,44 +176,18 @@ Differentiate the existing wrong Grain / row-meaning interpretation from the wro
 
 Machine shape: **response-aware diagnostic**.
 
-Do not propagate this response-aware final-verification treatment automatically to Stage 2 or Stage 3; their current verification corrections remain `KEEP`.
+This Stage 1 final-verification response branch was not automatically propagated to Stage 2 or Stage 3.
 
-#### Stage calibration summary
+#### Completion record
 
-**Stage 1**
-
-- `IMPROVE`: relation selection;
-- `IMPROVE`: learner-authored SQL semantic failure;
-- `IMPROVE`: final verification;
-- other reviewed wrong-answer treatments: `KEEP`.
-
-**Stage 2**
-
-A conformance drift was discovered during Wave 4 and corrected before feedback calibration. The restored path is:
-
-`relations → connection → Grain → Cardinality → qualitative multiplication prediction → repeated-context prediction → Concept Moment → 3→3 application → SQL → accepted result → learner-result-derived 1003 slice → verification`
-
-The correction is recorded in the 2026-09-15 addendum to:
-
-`course-design/production/cycle-1/implementation-record-owner-directed-2026-09-13.md`
-
-After restoration:
-
-- `IMPROVE`: relation selection;
-- `IMPROVE`: learner-authored SQL semantic failure;
-- connection, Grain, Cardinality, qualitative prediction, repeated-context prediction, 3→3 application, and 1003 verification: `KEEP`.
-
-The prior Stage 2 propagation hold is cleared.
-
-**Stage 3**
-
-- `IMPROVE`: relation selection;
-- `IMPROVE`: learner-authored SQL semantic failure;
-- connection, Cardinality, Grain, prepared evidence measurements, zero-match identification, prediction, verification, and coverage conclusion: `KEEP`.
+- Stage 1 calibration was implemented in commit `3351d79dbeb90e6df99d7e4b23b1cb42475bd873`;
+- the Stage 1 row-count diagnostic correction was subsequently preserved in commit `cc8a90b7c892c1d70fd47bb08013036b4026f69e`;
+- the equivalent relation-selection and successful-SQL semantic-result diagnostics were propagated to Stage 2 and Stage 3 in commit `1856d9a68c013bdf455f3339a3c641869529bd1d`;
+- later work proceeded on top of those diagnostics, so the Wave 4 implementation is part of the current runtime baseline rather than an outstanding calibration task.
 
 #### Wave 4 boundaries
 
-Wave 4 does not authorize:
+Wave 4 did not authorize:
 
 - per-option feedback everywhere;
 - a generalized Diagnostic Engine;
@@ -226,20 +204,51 @@ Wave 4 does not authorize:
 - learner-facing explanations of untaught SQL constructs from validator guards;
 - LEFT JOIN / `NULL` teaching where not already taught.
 
-Raw SQLite execution errors remain unchanged in Wave 4.
+Raw SQLite execution errors remained unchanged in Wave 4.
 
-### Wave 5 — Graduated / adaptive assistance
+### Wave 5A — Narrow response-aware corrective feedback
 
-**Status:** QUEUED WITHIN CURRENT CATEGORY
+**Status:** COMPLETE
 
-Candidate scope remains:
+Decision record:
+
+`course-design/wave-5a-response-aware-feedback-decision-2026-09-15.md`
+
+Wave 5 was paused before broader graduated / adaptive assistance was implemented. The review found a narrower justified treatment: use the already-observed wrong option only where distinct distractors reasonably indicate distinct misconceptions and where the feedback can redirect the learner to evidence without performing the reasoning for them.
+
+Approved scope was limited to six existing interactions:
+
+- Stage 2 qualitative row-multiplication prediction;
+- Stage 2 repeated-context prediction;
+- Stage 2 final `funding_round_id = 1003` verification;
+- Stage 3 zero-match INNER JOIN prediction;
+- Stage 3 post-SQL zero-match verification;
+- Stage 3 final company-coverage conclusion.
+
+Completion record:
+
+- decision authority recorded in commit `17a2971bc0a3ad88c551f5279da069e034964af6`;
+- the 15 approved response-aware wrong-option mappings were implemented in commit `59d0a3d10cb4d131de755862cbb3fd7b7624805d`;
+- the no-selection regression was corrected in commit `26c778829c60013023c9e04013371375486199fb`, restoring the six pre-Wave-5A generic fallbacks without changing the approved mappings;
+- post-build review against current `main` returned **PASS**: approved mappings preserved, no-selection fallbacks restored, correct-answer paths unchanged, unlisted generic treatment preserved, no Wave 5B machinery introduced, and the change remained limited to the two authorized runtime files;
+- local validation reported `npm test` PASS (5/5), `npm run build` PASS, and `git diff --check` PASS before publication of the correction.
+
+Wave 5A did not reopen Stage 1–3 topology, learner evidence, SQL acceptance, completion behavior, controls, or later-concept timing.
+
+### Wave 5B — Graduated / adaptive assistance
+
+**Status:** NOT AUTHORIZED — SEPARATE DECISION REQUIRED
+
+Previously queued candidate ideas included:
 
 - graduated hints rather than immediate full-solution exposure;
 - assistance escalation based on attempts or prior help use;
 - verification after strong assistance;
 - possible support reduction / expansion based on learner performance.
 
-A broader hint or adaptive system remains `CANON DECISION REQUIRED` and is not assumed necessary merely because it is queued.
+The Wave 5A review did **not** establish that this machinery is necessary.
+
+A broader hint or adaptive system therefore remains `CANON DECISION REQUIRED`. No attempt tracking, assistance-history tracking, learner-state accumulation, adaptive routing, graduated hint ladder, or performance-based support change may be implemented without a separate decision gate and explicit authority.
 
 ## 8. Later improvement-category queue
 
@@ -257,20 +266,17 @@ Hebrew / RTL localization remains **DEFERRED** as a separate later category.
 
 ## 9. Current next action
 
-Wave 4 mapping / decision work is complete.
+Wave 5A is complete.
 
-The next action is **Stage 1 Wave 4 implementation calibration only**:
+There is no currently authorized Wave 5B implementation.
 
-1. implement state-aware relation-selection feedback in Stage 1;
-2. implement result-aware semantic SQL feedback in Stage 1 without changing accepted semantic correctness;
-3. implement response-aware Stage 1 final-verification correction;
-4. run the actual Stage 1 learner journey through those changed states;
-5. verify unchanged sequence, evidence requirements, validator acceptance boundary, SQL equivalence, progress, and completion behavior;
-6. only after Stage 1 acceptance, propagate the two equivalent patterns — relation selection and SQL semantic feedback — to Stage 2 / Stage 3;
-7. do not propagate the Stage 1 final-verification response branch;
-8. perform full Stage 1–3 runtime validation after propagation.
+The next management decision is whether current learner evidence justifies opening a **separate Wave 5B decision gate** for graduated / adaptive assistance. That decision must not assume that broader assistance is necessary merely because it was previously queued.
 
-If Stage 1 implementation requires new learner paths, new assistance escalation, new acceptance semantics, parser-like diagnosis, or untaught-concept feedback, stop and classify that portion as `CANON DECISION REQUIRED` or `POTENTIAL CONFLICT`.
+If no sufficient evidence supports Wave 5B, leave it unapproved and select the next improvement category from the later queue instead.
+
+Any Wave 5B gate must first determine whether the remaining learner problem is actually an assistance-escalation problem rather than an upstream issue in wording, inference distance, evidence visibility, interaction design, or instructional sequencing.
+
+No runtime change is authorized by this section.
 
 ## 10. Authority boundary
 
