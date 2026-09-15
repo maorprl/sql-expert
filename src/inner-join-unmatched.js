@@ -193,6 +193,22 @@ export function createInnerJoinUnmatched({ editor, getDatabase, getSchema, onSel
       && REQUIRED_RELATIONS.every((name) => state.selectedRelations.includes(name));
   }
 
+  function relationSelectionFeedback() {
+    const hasRounds = state.selectedRelations.includes('funding_round');
+    const hasCompanies = state.selectedRelations.includes('company');
+
+    if (hasRounds && hasCompanies) {
+      return 'The recorded funding rounds and company status are already covered. Check whether every selected relation is needed for this report.';
+    }
+    if (hasRounds) {
+      return 'You already have the recorded funding-round details. Reinspect the Live Schema for the relation that provides the company status requested alongside them.';
+    }
+    if (hasCompanies) {
+      return 'You already have the company status information. Reinspect the Live Schema for the relation that contains the recorded funding rounds the report must preserve.';
+    }
+    return 'Break the report into the two information roles it needs: recorded funding-round details and company status. Reinspect the Live Schema and revise the selection.';
+  }
+
   function renderCompleted() {
     interactionLifecycle.renderCompleted(state.completed.filter((item) => item.id !== state.pendingAdvance?.item.id).map((item) => ({
       id: item.id,
@@ -576,7 +592,7 @@ export function createInnerJoinUnmatched({ editor, getDatabase, getSchema, onSel
       const relationButton = document.getElementById('continue-relations');
       relationButton.disabled = !state.selectedRelations.length;
       relationButton.addEventListener('click', () => {
-        if (!hasExactRequiredRelations()) return wrong('The request needs company status and the funding-round records themselves. Reinspect which relations store those two things and revise the selection.');
+        if (!hasExactRequiredRelations()) return wrong(relationSelectionFeedback());
         record({
           evidence: 'relations',
           prompt: 'Which relations contain the information we need?',
@@ -670,14 +686,22 @@ JOIN funding_round
 
   function validateResult(statement, resultSets) {
     const joinCount = statement.match(/\b(?:inner\s+)?join\b/gi)?.length ?? 0;
-    if (joinCount !== 1 || !/\bon\b/i.test(statement) || !resultSets.length) return false;
-    if (/\b(?:left\s+join|left\s+outer\s+join|distinct|group\s+by|having|union)\b/i.test(statement)) return false;
+    if (!resultSets.length) return { valid: false, reason: 'no_result' };
+    if (joinCount !== 1 || !/\bon\b/i.test(statement)
+      || /\b(?:left\s+join|left\s+outer\s+join|distinct|group\s+by|having|union)\b/i.test(statement)) {
+      return { valid: false, reason: 'missing_relationship_implementation' };
+    }
 
     const result = resultSets.at(-1);
     const expectedColumns = ['company_id', 'status', 'funding_round_id', 'round_type', 'announced_date'];
-    if (result.columns.length !== expectedColumns.length || result.values.length !== 26) return false;
     const columns = result.columns.map((column) => column.toLowerCase());
-    if (!columns.every((column, index) => column === expectedColumns[index])) return false;
+    if (result.columns.length !== expectedColumns.length
+      || !columns.every((column, index) => column === expectedColumns[index])) {
+      return { valid: false, reason: 'output_contract_mismatch' };
+    }
+    if (result.values.length !== 26) {
+      return { valid: false, reason: 'row_count_mismatch', actualRowCount: result.values.length };
+    }
 
     const expected = getDatabase().exec(`SELECT
       company.company_id,
@@ -691,8 +715,26 @@ JOIN funding_round
 
     const actualRows = normalizedRows(result.values);
     const expectedRows = normalizedRows(expected);
-    return actualRows.length === expectedRows.length
+    const rowsMatch = actualRows.length === expectedRows.length
       && actualRows.every((row, index) => row === expectedRows[index]);
+    if (!rowsMatch) return { valid: false, reason: 'row_association_mismatch' };
+    return { valid: true };
+  }
+
+  function fundingRoundDiagnosticFeedback(validation) {
+    if (validation.reason === 'missing_relationship_implementation') {
+      return 'This task implements the established company-to-funding-round relationship with one INNER JOIN and ON. Recheck that the query uses that match without changing the join behavior or collapsing the funding-round rows.';
+    }
+    if (validation.reason === 'output_contract_mismatch') {
+      return 'The returned fields do not match the funding-round report output. Open Desired output and compare all five field names and their order with the result.';
+    }
+    if (validation.reason === 'row_count_mismatch') {
+      return `The query returned ${validation.actualRowCount} rows, but the established funding-round-grain result contains 26 matched rows. Recheck whether the JOIN preserves each recorded funding round that has a company match.`;
+    }
+    if (validation.reason === 'row_association_mismatch') {
+      return 'The five output fields and 26-row count match, but company status is not paired with the correct funding-round rows. Recheck ON against the funding_round.company_id → company.company_id relationship.';
+    }
+    return 'The SQL ran, but it did not produce the funding-round result this report asks you to inspect. Recheck the requested output and the established INNER JOIN relationship.';
   }
 
   function handleSqlSuccess(statement, resultSets) {
@@ -719,9 +761,8 @@ JOIN funding_round
     }
 
     if (state.current !== 'sql' || state.pendingAdvance) return;
-    if (!validateResult(statement, resultSets)) {
-      return wrong('The SQL ran, but the result does not yet match the requested five-column INNER JOIN output. Inspect the selected fields and the relationship in ON; the validator checks the result, not an exact query string.');
-    }
+    const validation = validateResult(statement, resultSets);
+    if (!validation.valid) return wrong(fundingRoundDiagnosticFeedback(validation));
     record({
       evidence: 'sql',
       prompt: 'Build the funding-round report with company context.',

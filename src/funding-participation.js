@@ -375,6 +375,22 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
     return state.selectedRelations.length === REQUIRED_RELATIONS.length && REQUIRED_RELATIONS.every((relation) => state.selectedRelations.includes(relation));
   }
 
+  function relationSelectionFeedback() {
+    const hasParticipations = state.selectedRelations.includes('round_investment');
+    const hasRounds = state.selectedRelations.includes('funding_round');
+
+    if (hasParticipations && hasRounds) {
+      return 'The funding-round context and recorded investor participations are already covered. Check whether every selected relation is needed for this review.';
+    }
+    if (hasParticipations) {
+      return 'You already have the recorded investor participations, including lead status. Reinspect the Live Schema for the relation that provides the funding-round context requested.';
+    }
+    if (hasRounds) {
+      return 'You already have the funding-round context. Reinspect the Live Schema for the relation that records which investors participated and whether they were leads.';
+    }
+    return 'Break the review into the two information roles it needs: funding-round context and recorded investor participations. Reinspect the Live Schema and revise the selection.';
+  }
+
   function updateWorkspaceVisibility() {
     const resultsEvidence = (state.current === 'sql' && state.pendingAdvance?.next === 'finalGrain') || state.current === 'finalGrain';
     const implementationWorkspace = state.current === 'sql' || resultsEvidence;
@@ -412,7 +428,7 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
       const relationButton = document.getElementById('continue-relations');
       relationButton.disabled = !state.selectedRelations.length;
       relationButton.addEventListener('click', () => {
-        if (!hasExactRequiredRelations()) return wrong('The selection does not yet provide both funding-round context and recorded investor-participation information. Reinspect the Live Schema and revise it.');
+        if (!hasExactRequiredRelations()) return wrong(relationSelectionFeedback());
         record({ evidence: 'relations', prompt: 'Which relations contain the information we need?', answer: 'funding_round and round_investment', feedback: '<div class="success-feedback">Correct. <code>funding_round</code> gives us the round context, and <code>round_investment</code> contains the recorded investor participations.</div>', next: 'connection' });
       });
     } else if (state.current === 'connection') {
@@ -442,13 +458,21 @@ JOIN round_investment
   function normalizedRows(values) { return values.map((row) => JSON.stringify(row)).sort(); }
 
   function validateParticipationResult(statement, resultSets) {
-    if (!resultSets.length || !/\b(?:inner\s+)?join\b/i.test(statement) || !/\bon\b/i.test(statement)) return false;
-    if (/\b(?:distinct|group\s+by|having|left\s+join|union)\b/i.test(statement)) return false;
+    if (!resultSets.length) return { valid: false, reason: 'no_result' };
+    if (!/\b(?:inner\s+)?join\b/i.test(statement) || !/\bon\b/i.test(statement)
+      || /\b(?:distinct|group\s+by|having|left\s+join|union)\b/i.test(statement)) {
+      return { valid: false, reason: 'missing_relationship_implementation' };
+    }
     const result = resultSets.at(-1);
-    if (result.columns.length !== 6 || result.values.length !== 72) return false;
     const expectedColumns = ['funding_round_id', 'round_type', 'announced_date', 'round_investment_id', 'investor_id', 'is_lead'];
     const columns = result.columns.map((column) => column.toLowerCase());
-    if (!columns.every((column, index) => column === expectedColumns[index])) return false;
+    if (result.columns.length !== expectedColumns.length
+      || !columns.every((column, index) => column === expectedColumns[index])) {
+      return { valid: false, reason: 'output_contract_mismatch' };
+    }
+    if (result.values.length !== 72) {
+      return { valid: false, reason: 'row_count_mismatch', actualRowCount: result.values.length };
+    }
     const expected = getDatabase().exec(`SELECT
       funding_round.funding_round_id,
       funding_round.round_type,
@@ -461,12 +485,32 @@ JOIN round_investment
       ON funding_round.funding_round_id = round_investment.funding_round_id;`)[0]?.values ?? [];
     const actualRows = normalizedRows(result.values);
     const expectedRows = normalizedRows(expected);
-    return actualRows.length === expectedRows.length && actualRows.every((row, index) => row === expectedRows[index]);
+    const rowsMatch = actualRows.length === expectedRows.length
+      && actualRows.every((row, index) => row === expectedRows[index]);
+    if (!rowsMatch) return { valid: false, reason: 'row_association_mismatch' };
+    return { valid: true };
+  }
+
+  function participationDiagnosticFeedback(validation) {
+    if (validation.reason === 'missing_relationship_implementation') {
+      return 'This task implements the established funding-round-to-participation relationship with one JOIN and ON. Recheck that the query uses that match without replacing participation rows with grouping, deduplication, or a different join behavior.';
+    }
+    if (validation.reason === 'output_contract_mismatch') {
+      return 'The returned fields do not match the participation review output. Open Desired output and compare all six field names and their order with the result.';
+    }
+    if (validation.reason === 'row_count_mismatch') {
+      return `The query returned ${validation.actualRowCount} rows, but the established participation-grain result contains 72 rows. Recheck whether the JOIN preserves every recorded round-investor participation.`;
+    }
+    if (validation.reason === 'row_association_mismatch') {
+      return 'The six output fields and 72-row count match, but the funding-round context is not paired with the correct participation rows. Recheck ON against the funding_round.funding_round_id → round_investment.funding_round_id relationship.';
+    }
+    return 'The SQL ran, but it did not produce the participation result this review asks you to inspect. Recheck the requested output and the established JOIN relationship.';
   }
 
   function handleSqlSuccess(statement, resultSets) {
     if (state.current !== 'sql' || state.pendingAdvance) return;
-    if (!validateParticipationResult(statement, resultSets)) return wrong('The SQL ran, but the result does not yet match the requested six-column participation output. Open Desired output if you need the exact column contract, then inspect the selected fields and the relationship in ON.');
+    const validation = validateParticipationResult(statement, resultSets);
+    if (!validation.valid) return wrong(participationDiagnosticFeedback(validation));
     const result = resultSets.at(-1);
     state.acceptedResult = { columns: [...result.columns], values: result.values.map((row) => [...row]) };
     const assistanceNote = state.solutionUsed ? '<p class="evidence-bridge"><strong>Assistance used:</strong> Show solution.</p>' : '';
