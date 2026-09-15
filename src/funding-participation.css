@@ -3,11 +3,6 @@
  * while keeping encounter-specific alignment and Funding-only runtime corrections here.
  */
 
-.learning-panel[data-stage2-state="baselineRun"] .lab-workspace {
-  border-color: #6f9ddd;
-  box-shadow: 0 12px 30px rgba(27, 55, 92, .15), inset 0 3px 0 var(--blue);
-}
-
 .learning-panel[data-stage2-state="results"] .working-schema-panel {
   border-color: #dce4ed;
   background: #fafbfd;
@@ -15,49 +10,81 @@
   opacity: .72;
 }
 
-/* Align funding_round.funding_round_id with round_investment.funding_round_id. */
+/* Align funding_round.funding_round_id with round_investment.funding_round_id after the learner establishes the relationship. */
 .relation-preview.relationship-visible .data-card[data-relation="funding_round"] {
   transform: translateY(32px);
 }
 
-/*
- * Funding SQL assistance must stay in normal document flow.
- * The shared Stage 1 solution surface is an overlay; clone validation showed that
- * this obscures learner-authored SQL. Reuse the same surface/content, but place it
- * between the toolbar and editor for Funding rather than over the editor.
- */
-.learning-panel.sql-implementation-active:has(.data-card[data-relation="round_investment"]) .lab-workspace {
-  grid-template-rows: 42px auto minmax(150px, .9fr) minmax(155px, 1fr);
+/* During the connecting-field reuse checkpoint, keep round_investment primary and the round relation as a quieter reference. */
+.learning-panel[data-stage2-state="connection"] .data-card[data-relation="round_investment"] {
+  border-color: #8fb4ec;
+  box-shadow: 0 8px 20px rgba(47, 111, 237, .10);
 }
 
-.learning-panel.sql-implementation-active:has(.data-card[data-relation="round_investment"]) .editor-header {
-  grid-row: 1;
+.learning-panel[data-stage2-state="connection"] .data-card[data-relation="funding_round"] {
+  opacity: .68;
 }
 
-.learning-panel.sql-implementation-active:has(.data-card[data-relation="round_investment"]) .lab-workspace > .sql-solution-panel {
-  position: static;
-  z-index: auto;
-  grid-row: 2;
-  width: auto;
-  max-height: 190px;
-  margin: 0;
-  overflow: auto;
-  border-right: 0;
-  border-left: 0;
-  border-radius: 0;
-  box-shadow: none;
+.stage2-working-schema-action {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px 14px;
+  padding: 11px 12px;
+  border: 1px solid #cbd8e7;
+  border-radius: 10px;
+  background: #f8fbff;
 }
 
-.learning-panel.sql-implementation-active:has(.data-card[data-relation="round_investment"]) .lab-workspace > .sql-solution-panel .solution-panel-body pre {
-  max-height: 130px;
-  white-space: pre-wrap;
+.stage2-working-schema-action > div:first-child {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.stage2-working-schema-action strong {
   overflow-wrap: anywhere;
+  color: #294b70;
+  font-size: 12px;
 }
 
-.learning-panel.sql-implementation-active:has(.data-card[data-relation="round_investment"]) #editor {
-  grid-row: 3;
+.stage2-working-schema-action .local-feedback {
+  grid-column: 1 / -1;
+  margin-top: 0;
 }
 
-.learning-panel.sql-implementation-active:has(.data-card[data-relation="round_investment"]) .results-panel {
-  grid-row: 4;
+.stage2-evidence-slice {
+  display: grid;
+  gap: 8px;
+}
+
+.stage2-evidence-slice > strong {
+  color: #294b70;
+  font-size: 12px;
+}
+
+.stage2-slice-scroll {
+  max-width: 100%;
+  overflow: auto;
+  border: 1px solid #d4dae2;
+  border-radius: 9px;
+}
+
+.stage2-slice-scroll table {
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .relation-preview.relationship-visible .data-card[data-relation="funding_round"] {
+    transform: none;
+  }
+
+  .stage2-working-schema-action {
+    grid-template-columns: 1fr;
+  }
+
+  .stage2-working-schema-action .primary {
+    justify-self: start;
+  }
 }
