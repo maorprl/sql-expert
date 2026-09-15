@@ -2,36 +2,42 @@
 
 A browser-only SQLite workspace for the startup ecosystem dataset.
 
-The learner journey currently contains two available encounters in one shared SQL Lab runtime:
+The learner journey currently contains three implemented encounters in one shared SQL Lab runtime:
 
-1. the existing validated **Stage 1** `news_article → news_source` encounter;
-2. the current **Row multiplication** `funding_round → round_investment` encounter.
+1. **Stage 1 — Media coverage / first JOIN** using `news_article → news_source`;
+2. **Stage 2 — Funding participation / row multiplication** using `funding_round → round_investment`;
+3. **Stage 3 — INNER JOIN unmatched / zero-match coverage** using `company → funding_round`.
 
-Stage 1 remains implemented by:
+The current encounter runtime files are:
 
-- `src/stage1.js`
-- `course-design/stage-1/stage-1-learner-route.md`
-- `course-design/stage-1/stage-1-interaction-decisions.md`
+- `src/media-coverage.js` — Stage 1;
+- `src/funding-participation.js` — Stage 2;
+- `src/inner-join-unmatched.js` — Stage 3;
+- `src/interaction-lifecycle.js` — shared interaction lifecycle;
+- `src/main.js` — shared course/runtime orchestration.
 
-The row-multiplication encounter is implemented as a separate encounter that reuses the same SQL Lab runtime, editor, schema viewer, result renderer, interaction lifecycle, and visual infrastructure. It does not replace or rewrite the Stage 1 learning sequence.
+Current encounter authority is stored separately from runtime code:
 
-A course-level chapter selector allows the learner to switch directly between the two currently available encounters without completing the current encounter first. Chapter selection is navigation rather than learner evidence and is visually separated from task actions such as `Check answer`, `Continue`, and `Run query`.
+- Stage 1: `course-design/stage-1/stage-1-learner-route.md` and `course-design/stage-1/stage-1-interaction-decisions.md`;
+- Stage 2: `course-design/stage-2/stage-2-authority.md`;
+- Stage 3: `course-design/stage-3/stage-3-learner-route.md` and `course-design/stage-3/stage-3-interaction-decisions.md`.
+
+A course-level chapter selector allows the learner to switch among the three encounters without completing the current encounter first. Chapter selection is navigation rather than learner evidence and is visually separated from task actions such as `Check answer`, `Continue`, and `Run query`.
 
 Within the current browser run, each encounter keeps its own in-memory reasoning state, editor text, and rendered SQL result when the learner switches away and back. This does not establish a broader persistence contract across reloads or browser sessions.
 
-`Show solution` is not a persistent course-shell control. For the row-multiplication encounter it appears only with the SQL editor while the SQL-authoring state is active, in accordance with `course-design/course-controls.md` and the current Cycle 1 clarification.
+`Show solution` is not a persistent course-shell control. Where available, it is SQL-workspace-local assistance during active SQL authoring and follows `course-design/course-controls.md`.
 
-The row-multiplication encounter now begins with two **reuse checkpoints** rather than a pre-resolved relationship: the learner selects the relevant relations from Live Schema, then identifies the participation field that connects to the funding round. Only after that learner action is the PK/FK relationship revealed. These are reuse actions, not new first-exposure teaching and not the encounter's core row-multiplication evidence.
+Stage 2 begins with reuse checkpoints rather than a pre-resolved relationship: the learner selects the relevant relations from Live Schema and identifies the connecting participation field before the PK/FK relationship is revealed. These are reuse actions, not new first-exposure teaching and not the encounter's core row-multiplication evidence.
 
-This README describes the runnable product and current observable runtime structure. It does **not** define the current Cycle 1 process phase, next authorized action, or complete implementation/design authority set.
+This README describes the runnable product and current observable runtime structure. It does **not** define pedagogical authority or the project's next authorized work item.
 
-For current production state and authority boundaries, use:
+For current work state and authority boundaries, use:
 
-- `learner-encounter-production-execution.md` — current Cycle 1 execution state and next authorized action;
-- `learner-encounter-production-process.md` — production roles, gates, independence, review, and acceptance rules;
-- `course-design/production/cycle-1/` — durable Cycle 1 production artifacts and historical records.
-
-No new Stage number is assigned to the row-multiplication encounter.
+- `course-experience-improvement-work-management.md` — current learner-experience improvement state and next mapping decision;
+- `learner-encounter-production-process.md` — production roles, gates, independence, review, and acceptance rules for learner-encounter production;
+- `learner-encounter-production-execution.md` — historical / superseded Cycle 1 execution snapshot unless explicitly reactivated for a future production cycle;
+- `course-design/production/cycle-1/` — durable Cycle 1 production artifacts and historical provenance.
 
 ## Run
 
@@ -44,6 +50,12 @@ Build a static production bundle with:
 
 ```sh
 npm run build
+```
+
+Run the current focused topology contract tests with:
+
+```sh
+npm test
 ```
 
 ## Database source and runtime
