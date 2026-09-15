@@ -19,12 +19,12 @@ export function createInteractionLifecycle({ currentElement, completedElement })
   const openCompletedIds = new Set();
   let completedHistoryOpen = false;
   let completedItems = [];
-  let frontierHtml = '';
   let reviewIndex = null;
 
   const learningPanel = currentElement.closest('.learning-panel');
   const implementationColumn = document.querySelector('.implementation-column');
   const schemaPanel = document.querySelector('.schema-panel');
+  let reviewPanel = null;
 
   function ensureJourneyNavigation() {
     const courseNav = document.getElementById('course-chapter-nav');
@@ -42,8 +42,21 @@ export function createInteractionLifecycle({ currentElement, completedElement })
     nav.querySelector('#journey-forward').addEventListener('click', goForward);
   }
 
+  function ensureReviewPanel() {
+    if (reviewPanel?.isConnected) return reviewPanel;
+    reviewPanel = document.createElement('section');
+    reviewPanel.id = 'journey-review-panel';
+    reviewPanel.className = 'current-step journey-review-panel';
+    reviewPanel.hidden = true;
+    currentElement.insertAdjacentElement('afterend', reviewPanel);
+    return reviewPanel;
+  }
+
   function setReviewMode(active) {
+    const panel = ensureReviewPanel();
     learningPanel?.classList.toggle('journey-review-active', active);
+    currentElement.hidden = active;
+    panel.hidden = !active;
     if (implementationColumn) implementationColumn.inert = active;
     if (schemaPanel) schemaPanel.inert = active;
   }
@@ -66,25 +79,21 @@ export function createInteractionLifecycle({ currentElement, completedElement })
   function renderFrontier() {
     reviewIndex = null;
     setReviewMode(false);
-    currentElement.innerHTML = frontierHtml;
-    currentElement.dataset.interactionState = 'current';
-    currentElement.setAttribute('aria-current', 'step');
     updateNavigation();
   }
 
   function renderReview() {
     const item = completedItems[reviewIndex];
     if (!item) return renderFrontier();
-    setReviewMode(true);
-    currentElement.innerHTML = `
+    const panel = ensureReviewPanel();
+    panel.innerHTML = `
       <div class="journey-review-heading">
         <span class="step-kicker">Review</span>
         <span class="journey-review-position">Completed step ${reviewIndex + 1} of ${completedItems.length}</span>
       </div>
       <div class="journey-review-content">${item.reviewHtml}</div>
     `;
-    currentElement.dataset.interactionState = 'review';
-    currentElement.removeAttribute('aria-current');
+    setReviewMode(true);
     updateNavigation();
   }
 
@@ -107,10 +116,9 @@ export function createInteractionLifecycle({ currentElement, completedElement })
   }
 
   function renderCurrent(html) {
-    frontierHtml = normalizeCurrentHtml(html);
     reviewIndex = null;
     setReviewMode(false);
-    currentElement.innerHTML = frontierHtml;
+    currentElement.innerHTML = normalizeCurrentHtml(html);
     currentElement.dataset.interactionState = 'current';
     currentElement.setAttribute('aria-current', 'step');
     updateNavigation();
@@ -127,6 +135,7 @@ export function createInteractionLifecycle({ currentElement, completedElement })
     if (!items.length) {
       completedElement.innerHTML = '';
       reviewIndex = null;
+      setReviewMode(false);
       updateNavigation();
       return;
     }
@@ -163,10 +172,12 @@ export function createInteractionLifecycle({ currentElement, completedElement })
     });
 
     if (reviewIndex !== null && reviewIndex >= completedItems.length) reviewIndex = completedItems.length - 1;
-    updateNavigation();
+    if (reviewIndex !== null) renderReview();
+    else updateNavigation();
   }
 
   ensureJourneyNavigation();
+  ensureReviewPanel();
   updateNavigation();
 
   return { renderCurrent, renderCompleted, goBack, goForward };
