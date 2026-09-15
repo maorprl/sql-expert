@@ -78,6 +78,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
   }
 
   function renderRelations() {
+    document.getElementById('working-schema-action')?.remove();
     const selected = orderedSelectedRelations();
     const showRelationship = relationshipLevel() > 0 && REQUIRED_RELATIONS.every((name) => state.selectedRelations.includes(name));
     relationEl.classList.toggle('relationship-visible', showRelationship);
@@ -109,6 +110,35 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       state.localFeedback = '';
       render();
     }));
+    if (state.current === 'connection') renderConnectionAction();
+  }
+
+  function renderConnectionAction() {
+    const success = state.pendingAdvance?.item.id === 'connection';
+    const element = document.createElement('section');
+    element.id = 'working-schema-action';
+    element.className = 'working-schema-action';
+    element.innerHTML = success ? `
+      <div><span class="eyebrow">Connection established</span><strong><code>news_article.news_source_id</code> identifies the publishing source.</strong></div>
+      ${state.pendingAdvance.item.feedback}
+      <button id="continue-after-connection" class="primary connection-continue">Continue to Cardinality</button>
+    ` : `
+      <div><span class="eyebrow">Current action</span><strong>Which column in <code>news_article</code> tells us which source published the article?</strong></div>
+      <button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>
+      ${feedbackMarkup()}
+    `;
+    relationEl.append(element);
+    if (success) return;
+    element.querySelector('#check-column').addEventListener('click', () => {
+      if (state.selectedColumn !== 'news_source_id') return wrong('Look at the article row and ask which column could tell us which source published it. The relationship stays hidden until you establish that connection.');
+      record({
+        evidence: 'connection',
+        prompt: 'Which column in news_article tells us which source published the article?',
+        answer: 'news_article.news_source_id',
+        feedback: '<div class="success-feedback">Correct. <code>news_source_id</code> tells us which source belongs to this article.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>Primary Key / Foreign Key</b><span>You just found the link between the two relations. <code>news_article.news_source_id</code> is a Foreign Key (FK). It points to <code>news_source.news_source_id</code>, the Primary Key (PK). That lets us find the source row, including its <code>name</code>.</span></div>',
+        next: 'cardinality',
+      });
+    });
   }
 
   function addRelation(name) {
@@ -192,6 +222,12 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
 
   function renderAcknowledgement() {
     const { next, item } = state.pendingAdvance;
+
+    if (item.id === 'connection') {
+      interactionLifecycle.renderCurrent(stepShell('Connection established.', teacherVoice('The relationship is now visible in the Working Schema. Continue there when you are ready to return to ordinary Cardinality reasoning.')));
+      continueFromPending('continue-after-connection');
+      return;
+    }
 
     if (item.id === 'baselineRun' && next === 'prediction') {
       interactionLifecycle.renderCurrent(stepShell('Baseline established.', teacherVoice('The measurement gives us the starting evidence for the next prediction.')));
@@ -510,17 +546,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
         });
       });
     } else if (state.current === 'connection') {
-      interactionLifecycle.renderCurrent(stepShell('Which column in <code>news_article</code> tells us which source published the article?', `<p class="step-copy">Select the column directly in the Working Schema.</p><button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`, teacherVoice('You found the two relations that supply the requested information. Now trace from an article row to its source so we can establish how those relations connect.')));
-      document.getElementById('check-column').addEventListener('click', () => {
-        if (state.selectedColumn !== 'news_source_id') return wrong('Look at the article row and ask which column could tell us which source published it. The relationship stays hidden until you establish that connection.');
-        record({
-          evidence: 'connection',
-          prompt: 'Which column in news_article tells us which source published the article?',
-          answer: 'news_article.news_source_id',
-          feedback: '<div class="success-feedback">Correct. <code>news_source_id</code> tells us which source belongs to this article.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>Primary Key / Foreign Key</b><span>You just found the link between the two relations. <code>news_article.news_source_id</code> is a Foreign Key (FK). It points to <code>news_source.news_source_id</code>, the Primary Key (PK). That lets us find the source row, including its <code>name</code>.</span></div>',
-          next: 'cardinality',
-        });
-      });
+      interactionLifecycle.renderCurrent(stepShell('Trace the article-to-source connection in the Working Schema.', '<p class="step-copy">Select the connecting field directly in the Working Schema.</p>', teacherVoice('You found the two relations that supply the requested information. Now trace from an article row to its source so we can establish how those relations connect.')));
     } else if (state.current === 'cardinality') {
       choiceQuestion({
         intro: teacherVoice('The key connection you found is now visible in the Working Schema. Use that same connection to reason about how many rows can relate in each direction.'),
@@ -546,7 +572,8 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       });
     } else if (state.current === 'baselineRun') {
       if (!state.baselineExecuted) {
-        interactionLifecycle.renderCurrent(stepShell('How many article rows do we start with?', `${teacherVoice('You established the Grain: one result row should represent one article. Now move to the SQL Workspace beside this task and measure the starting article rows.')}<div class="measurement-note"><code>COUNT(*)</code> counts the rows in <code>news_article</code>. Run the prepared measurement in the SQL Workspace; you do not need to write SQL yet. Then inspect Results directly below it.</div>${feedbackMarkup()}`));
+        interactionLifecycle.renderCurrent(stepShell('How many article rows do we start with?', `${teacherVoice('You established the Grain: one result row should represent one article. Now move to the SQL Workspace beside this task and measure the starting article rows.')}<div class="measurement-note"><code>COUNT(*)</code> counts the rows in <code>news_article</code>. Run the prepared measurement in the SQL Workspace; you do not need to write SQL yet. Then inspect Results directly below it.</div>`));
+        if (state.localFeedback) renderWorkspaceAction(feedbackMarkup(), 'tool-diagnostic');
       } else {
         renderBaselineInterpretation();
       }
@@ -564,13 +591,14 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
     } else if (state.current === 'joinTeaching') {
       renderJoinTeaching();
     } else if (state.current === 'sql') {
-      interactionLifecycle.renderCurrent(stepShell('Now translate the relationship into SQL.', `<p class="step-copy">Move to the SQL Workspace and write the query you just mapped from the business request and the established relationship in the Working Schema.</p>
+      interactionLifecycle.renderCurrent(stepShell('Now translate the relationship into SQL.', `<p class="step-copy">Move to the SQL Workspace and write the query you just mapped from the business request and the established relationship in the Working Schema.</p><p class="implementation-check"><strong>Earlier prediction:</strong> 18 rows · one article per row.</p>`, teacherVoice('You mapped the requested fields, starting article rows, matching source, and ON relationship. Implement that same map now; the earlier prediction gives you a result to check afterward.')));
+      renderWorkspaceAction(`
         <details class="optional-scaffold desired-output"><summary>Show desired output</summary><div class="optional-scaffold-body"><div class="desired-output-grid"><code>title</code><code>source_name</code></div><p>Use <code>news_source.name AS source_name</code> for the publishing-source column.</p></div></details>
         <details class="optional-scaffold sql-structure"><summary>Show SQL structure</summary><div class="optional-scaffold-body"><pre>SELECT ...
 FROM news_article
 JOIN news_source
-  ON ...</pre><p>Use <code>JOIN</code> to add the source relation and <code>ON</code> to express the relationship you already established.</p></div></details>
-        <p class="implementation-check"><strong>Earlier prediction:</strong> 18 rows · one article per row.</p>${feedbackMarkup()}`, teacherVoice('You mapped the requested fields, starting article rows, matching source, and ON relationship. Implement that same map now; the earlier prediction gives you a result to check afterward.')));
+  ON ...</pre><p>Use <code>JOIN</code> to add the source relation and <code>ON</code> to express the relationship you already established.</p></div></details>${feedbackMarkup()}
+      `, 'sql-authoring-assistance');
     } else if (state.current === 'finalGrain') {
       renderFinalVerification();
     } else if (state.current === 'complete') {

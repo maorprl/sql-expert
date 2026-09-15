@@ -25,35 +25,6 @@
   opacity: .68;
 }
 
-.stage2-working-schema-action {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 10px 14px;
-  padding: 11px 12px;
-  border: 1px solid #cbd8e7;
-  border-radius: 10px;
-  background: #f8fbff;
-}
-
-.stage2-working-schema-action > div:first-child {
-  min-width: 0;
-  display: grid;
-  gap: 3px;
-}
-
-.stage2-working-schema-action strong {
-  overflow-wrap: anywhere;
-  color: #294b70;
-  font-size: 12px;
-}
-
-.stage2-working-schema-action .local-feedback {
-  grid-column: 1 / -1;
-  margin-top: 0;
-}
-
 .stage2-evidence-slice {
   display: grid;
   gap: 8px;
@@ -80,11 +51,4 @@
     transform: none;
   }
 
-  .stage2-working-schema-action {
-    grid-template-columns: 1fr;
-  }
-
-  .stage2-working-schema-action .primary {
-    justify-self: start;
-  }
 }
