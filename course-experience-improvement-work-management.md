@@ -3,268 +3,157 @@
 **Status:** WORKING  
 **Role:** Program A / A3 — Learning Experience & Runtime initiative work-management record
 
-This document manages the current improvement project for the **existing implemented course experience**.
+This document manages improvement work for the **existing implemented course experience**.
 
-It is a work-management record, not pedagogical, visual, Stage, control, schema, data, process, execution, review, or validation authority.
-
-When this initiative encounters a decision that requires authority, the decision must be made in the appropriate current source of truth. This record may identify that dependency, but it must not silently resolve it.
+It is management state, not pedagogical, visual, Stage, control, schema, data, process, execution, review, or validation authority. Authority remains in the appropriate current-source documents.
 
 ## 1. Initiative purpose
 
-Improve the learner experience of the course that is already implemented, without treating the work as a new curriculum build or as automatic redesign of the learner encounters.
+Improve the learner experience of the existing Stage 1–3 course without treating experience work as an automatic curriculum redesign.
 
-The initiative may improve wording, orientation, walkthrough continuity, visual focus, interaction support, feedback, and other learner-experience concerns where justified by evidence from the current course.
+Potential work includes orientation, walkthrough continuity, visual focus, interaction support, feedback, course-shell navigation, and related learner-experience concerns where current evidence justifies them.
 
-It must not use implementation work to silently change established pedagogy, Stage-local reasoning requirements, control semantics, or unresolved course-level decisions.
+Implementation must not silently change established pedagogy, learner evidence, Stage sequence, SQL semantics, or OPEN course-level decisions.
 
-## 2. Launch baseline
+## 2. Current runtime baseline
 
-At initiative launch, the current multi-chapter implementation baseline was the branch:
+The current default branch contains three implemented encounters in one shared SQL Lab runtime:
 
-`stage3-inner-join-unmatched-rebuild-2026-09-13`
+- Media coverage / first JOIN — `news_article → news_source`;
+- Funding participation / row multiplication — `funding_round → round_investment`;
+- INNER JOIN unmatched / zero-match coverage — `company → funding_round`.
 
-at commit:
+Current default-branch authority and runtime are controlling. Earlier initiative-launch branches are historical baselines only.
 
-`eb99d3c4e85556ab291eb652ce3d4c81b62b626b`
-
-That baseline contained the implemented sequence used for experience review:
-
-- media coverage / first JOIN encounter;
-- funding participation / row-multiplication encounter;
-- INNER JOIN unmatched / zero-match encounter.
-
-The baseline identifies the starting implementation state only. Current default-branch authority and current corrected runtime remain controlling for later work.
-
-## 3. Why this initiative is active
-
-Cross-chapter review found that the course is generally understandable but can still behave more like a guided task wizard with feedback than a continuous teacher-led learning journey.
-
-The initiative therefore addresses evidence-backed gaps in areas such as:
-
-- continuity between reasoning moves;
-- explicit orientation when the primary work area changes;
-- active reuse of reasoning already established;
-- consistency of teacher presence;
-- visual clarity about task, evidence, feedback, reference, and concept roles;
-- diagnostic quality of corrective feedback.
-
-This does not invalidate earlier Stage 1 validation or imply that previously accepted pedagogy was wrong.
-
-## 4. Canon-impact classification
+## 3. Canon-impact classification
 
 ### `CONFORMANCE`
-
-Current authority already requires the behavior or principle. Work corrects implementation / content toward that authority.
+Current authority already requires the behavior or principle. Work corrects implementation/content toward that authority.
 
 ### `IMPLEMENTATION CHOICE`
-
-Current authority permits the treatment and leaves the exact implementation open. No authority update is required unless implementation begins to create a new rule.
+Current authority permits the treatment and leaves the exact implementation open.
 
 ### `CANON DECISION REQUIRED`
-
-The proposed change would establish behavior, pedagogy, control semantics, or learner contract that is currently OPEN or not established. Stop implementation until the appropriate authority is updated.
+The proposed change would establish behavior, pedagogy, control semantics, or learner contract that is currently OPEN or not established. Stop implementation until authority is updated.
 
 ### `POTENTIAL CONFLICT`
+The proposed treatment may contradict authority, leak an answer, weaken evidence, narrow accepted correctness, or otherwise alter an established instructional function. Reconcile before implementation.
 
-The proposed treatment may contradict authority, leak a later answer, remove required reasoning or evidence, narrow accepted correctness, or otherwise weaken an instructional function. Reconcile before implementation.
+## 4. Completed category — Teacher voice / Walkthrough
 
-The management classification itself is not authority.
+**Status:** COMPLETE
 
-## 5. Current improvement category
-
-### Teacher voice / Walkthrough
-
-**Status:** COMPLETE  
-**Current wave:** Wave 5B decision gate COMPLETE — implementation not authorized
-
-Wave 1, Wave 2, Wave 3, Wave 4, and the narrow Wave 5A response-aware feedback treatment are complete.
-
-The Wave 5B decision gate found insufficient evidence to justify graduated / adaptive assistance implementation at this time.
-
-A broader graduated / adaptive assistance system is therefore not authorized.
-
-A pattern is not promoted across the course merely because it was implemented once.
-
-## 6. Delivery rule for the current category
-
-Use the same calibration discipline across waves:
-
-1. calibrate Stage 1 as the reference specimen when the wave is cross-stage and the learner role is equivalent;
-2. inspect the actual learner role and evidence before making a change;
-3. implement the smallest treatment that satisfies the accepted intent;
-4. run the actual learner journey through the changed states;
-5. only after the calibration is accepted, apply the established pattern elsewhere where the learner role is genuinely equivalent;
-6. perform full-course runtime validation after propagation where the wave changes multiple stages.
-
-For visual waves, representative runtime states must still establish primary, supporting, evidence, feedback, concept, and teacher-guidance roles before substantial styling work.
-
-For diagnostic-feedback work, calibration starts from learner reasoning and evidence, not validator branches.
-
-For response-aware feedback, implementation must use already-observable learner responses and must not silently expand into attempt tracking, adaptive routing, learner modelling, or a generalized hint system.
-
-## 7. Teacher voice / Walkthrough waves
+The category is closed through Wave 5B decision gating.
 
 ### Wave 1 — Existing-authority conformance calibration
-
 **Status:** COMPLETE
 
-Completion record:
-
-- Stage 1 calibration accepted and merged in PR #2;
-- accepted pattern propagated to Stage 2 / Stage 3 and merged in PR #3;
-- runtime validation covered all three stages and chapter-state isolation.
-
-Scope included spatial guidance, meaningful handoffs, active reuse of prior reasoning, active-area focus, and visual role consistency without changing learner evidence, validators, hints, progress semantics, or stage sequence.
+Stage 1 was calibrated and the accepted pattern propagated to Stage 2/3. Scope included spatial guidance, meaningful handoffs, active reuse of established reasoning, active-area focus, and visual-role consistency without changing learner evidence or Stage sequence.
 
 ### Wave 2 — Consistent teacher voice and continuity
-
 **Status:** COMPLETE
 
-Completion record:
-
-- Stage 1 continuity calibration reviewed PASS and merged in PR #4;
-- selective Stage 2 / Stage 3 propagation merged in PR #5;
-- Stage 1–3 runtime journeys and chapter-state isolation were validated.
-
-Scope remained teacher-guidance continuity only; it did not change learner questions, validators, SQL behavior, sequence, completion behavior, hints, progress semantics, adaptive behavior, or visual-focus semantics.
+Teacher-guidance continuity was calibrated and selectively propagated across Stage 1–3 without changing questions, validators, SQL behavior, sequence, progress semantics, or adaptive behavior.
 
 ### Wave 3 — Visual support and motion polish
-
 **Status:** COMPLETE
 
-Completion record:
-
-- shared learner-facing visual-role treatments were consolidated where roles were genuinely equivalent;
-- Stage 3 post-SQL evidence-role drift was corrected;
-- `prefers-reduced-motion` handling was added for existing non-essential transitions;
-- targeted runtime / build checks were reported PASS before closure.
-
-Wave 3 did not change learner flow or introduce new motion.
+Shared learner-facing visual-role treatments were consolidated where roles were equivalent, Stage 3 post-SQL evidence-role drift was corrected, and `prefers-reduced-motion` support was added for existing non-essential transitions.
 
 ### Wave 4 — Diagnostic feedback
-
 **Status:** COMPLETE
 
 Decision record:
 
 `course-design/audits/wave-4-diagnostic-feedback-decision-gate-2026-09-15.md`
 
-The earlier SQL-only gate conclusion was superseded. Wave 4 evaluated diagnostic feedback across the learner encounter and across both course-side correction and machine-side use of known learner state / response / result evidence.
+Current runtime includes the approved state-aware relation-selection diagnostics, successful-SQL semantic-result diagnostics across Stage 1–3, and the approved Stage 1 final-verification response-aware diagnostic.
 
-#### Final cross-stage scope
-
-**Target A — relation-selection diagnostics, Stage 1–3**
-
-Use selected-relation state to indicate which business-information role remains missing or which selected relation is unnecessary, without naming the required relation or revealing later relationship reasoning.
-
-Machine shape: **state-aware diagnostic**.
-
-**Target B — successful-SQL semantic-result diagnostics, Stage 1–3**
-
-Retain semantic acceptance boundaries while distinguishing robust already-established result dimensions such as:
-
-- required taught JOIN / `ON` implementation absent where robustly determinable;
-- disclosed output-contract mismatch;
-- returned row-count mismatch against established evidence;
-- relationship / row-association mismatch after shape/count are otherwise plausible.
-
-Untaught SQL constructs detected by internal guards remain internal and must not become learner-facing teaching categories.
-
-Machine shape: **result-aware diagnostic**.
-
-**Target C — Stage 1 final verification only**
-
-Differentiate the existing wrong Grain / row-meaning interpretation from the wrong row-count / multiplication interpretation, using the selected response and visible result evidence.
-
-Machine shape: **response-aware diagnostic**.
-
-This Stage 1 final-verification response branch was not automatically propagated to Stage 2 or Stage 3.
-
-#### Completion record
-
-- Stage 1 calibration was implemented in commit `3351d79dbeb90e6df99d7e4b23b1cb42475bd873`;
-- the Stage 1 row-count diagnostic correction was subsequently preserved in commit `cc8a90b7c892c1d70fd47bb08013036b4026f69e`;
-- the equivalent relation-selection and successful-SQL semantic-result diagnostics were propagated to Stage 2 and Stage 3 in commit `1856d9a68c013bdf455f3339a3c641869529bd1d`;
-- later work proceeded on top of those diagnostics, so the Wave 4 implementation is part of the current runtime baseline rather than an outstanding calibration task.
-
-#### Wave 4 boundaries
-
-Wave 4 did not authorize:
-
-- per-option feedback everywhere;
-- a generalized Diagnostic Engine;
-- attempt-count escalation;
-- graduated hints or adaptive assistance;
-- automatic solution reveal;
-- Show solution semantic changes;
-- progress / completion changes;
-- new learner evidence requirements;
-- new encounter sequence or Concept Moments;
-- exact-query matching;
-- stricter SQL acceptance merely to simplify diagnosis;
-- a general SQL parser;
-- learner-facing explanations of untaught SQL constructs from validator guards;
-- LEFT JOIN / `NULL` teaching where not already taught.
-
-Raw SQLite execution errors remained unchanged in Wave 4.
+Wave 4 did not authorize a generalized diagnostic engine, attempt-count escalation, adaptive assistance, new progress semantics, or new learner evidence.
 
 ### Wave 5A — Narrow response-aware corrective feedback
-
 **Status:** COMPLETE
 
 Decision record:
 
 `course-design/wave-5a-response-aware-feedback-decision-2026-09-15.md`
 
-Wave 5 was paused before broader graduated / adaptive assistance was implemented. The review found a narrower justified treatment: use the already-observed wrong option only where distinct distractors reasonably indicate distinct misconceptions and where the feedback can redirect the learner to evidence without performing the reasoning for them.
-
-Approved scope was limited to six existing interactions:
-
-- Stage 2 qualitative row-multiplication prediction;
-- Stage 2 repeated-context prediction;
-- Stage 2 final `funding_round_id = 1003` verification;
-- Stage 3 zero-match INNER JOIN prediction;
-- Stage 3 post-SQL zero-match verification;
-- Stage 3 final company-coverage conclusion.
-
-Completion record:
-
-- decision authority recorded in commit `17a2971bc0a3ad88c551f5279da069e034964af6`;
-- the 15 approved response-aware wrong-option mappings were implemented in commit `59d0a3d10cb4d131de755862cbb3fd7b7624805d`;
-- the no-selection regression was corrected in commit `26c778829c60013023c9e04013371375486199fb`, restoring the six pre-Wave-5A generic fallbacks without changing the approved mappings;
-- post-build review against current `main` returned **PASS**: approved mappings preserved, no-selection fallbacks restored, correct-answer paths unchanged, unlisted generic treatment preserved, no Wave 5B machinery introduced, and the change remained limited to the two authorized runtime files;
-- local validation reported `npm test` PASS (5/5), `npm run build` PASS, and `git diff --check` PASS before publication of the correction.
-
-Wave 5A did not reopen Stage 1–3 topology, learner evidence, SQL acceptance, completion behavior, controls, or later-concept timing.
+The approved narrow response-aware mappings were implemented for six existing Stage 2/3 interactions. The no-selection fallback regression was corrected, and post-build review returned PASS.
 
 ### Wave 5B — Graduated / adaptive assistance
-
 **Status:** DECISION GATE COMPLETE — IMPLEMENTATION NOT AUTHORIZED
 
 Decision record:
 
 `course-design/wave-5b-adaptive-assistance-decision-gate-2026-09-15.md`
 
-The gate asked whether current learner evidence establishes a remaining problem that is specifically an assistance-escalation problem after Wave 5A.
+The gate found insufficient evidence for attempt-based or adaptive escalation after current first-line support. Reopening requires new evidence of a repeatable failure mode that persists after current correction/assistance.
 
-Verdict:
+## 5. Current category — Orientation & progress
 
-- current authority does not establish a global hint/adaptive system;
-- the current runtime already provides ordinary correction, Wave 4 state/result-aware diagnostics, Wave 5A response-aware correction, optional SQL scaffolds, and `Show solution`;
-- there is no current evidence of repeated learner failure after Wave 5A correction;
-- there is no course-level attempt/assistance-history model from which a justified escalation rule can be derived;
-- introducing attempt tracking or adaptive machinery in order to create the evidence for its own necessity would reverse the required decision order.
+**Status:** ACTIVE — FIRST SCOPE MAPPED; IMPLEMENTATION NEXT
 
-Wave 5B is therefore deferred, not implemented.
+Category-selection and mapping record:
 
-Reopening requires new evidence of a repeatable failure mode that persists after the current first-line support and can be addressed by a clearly specified escalation rule without performing the target reasoning for the learner.
+`course-design/orientation-progress-category-selection-2026-09-16.md`
 
-## 8. Later improvement-category queue
+### Why this category is active
 
-Later categories remain intentionally unplanned in detail:
+Current `course-design/course-controls.md` already requires Back / Forward journey-history navigation inside the active encounter, while the current runtime implements chapter navigation but no Back / Forward history controls or visited-state review cursor.
+
+This is therefore a direct **CONFORMANCE** gap, not a request to invent a generic progress system.
+
+### First bounded scope
+
+**Back / Forward journey-history conformance**
+
+Required boundary:
+
+- stable course-shell Back / Forward controls;
+- within the active encounter only;
+- Back reviews already visited states without mutating answers/evidence/progress;
+- Forward traverses only visited history back toward the existing progression frontier;
+- no new progress through Back / Forward;
+- per-encounter history remains isolated across chapter switches;
+- Completed Steps remain review history and do not substitute for Back / Forward;
+- exact shell styling/placement remains an implementation choice within current visual/control authority.
+
+The mapping explicitly separates the progression frontier from the review cursor as an implementation invariant while leaving the technical data structure open.
+
+### Explicitly not part of the first scope
+
+- Retry / Redo implementation or reset semantics;
+- historical-answer editing;
+- undo/branching;
+- progress percentage / progress bar / step counter;
+- chapter completion locking;
+- cross-chapter Back / Forward;
+- cross-session journey-history persistence;
+- browser-history integration;
+- new attempt tracking;
+- new pedagogy or learner evidence.
+
+## 6. Current next action
+
+**Implement the bounded Back / Forward journey-history conformance scope from `course-design/orientation-progress-category-selection-2026-09-16.md`.**
+
+Implementation must use current:
+
+- `course-design/course-controls.md`;
+- `course-design/course-visual-language.md`;
+- Stage 1–3 encounter authority;
+- current runtime as the baseline to preserve.
+
+The implementation should prefer one shared course-shell/history owner with encounter-specific adaptation only where the existing state models require it. It must not become a generalized state-management rewrite.
+
+After implementation, review the actual commit/diff and exercise Back / Forward across ordinary reasoning, Working-Schema interaction, measurement/evidence, SQL, Results/verification, completion, and chapter switching.
+
+## 7. Later improvement-category queue
+
+Remain unselected after the current first scope:
 
 - cross-chapter consistency;
-- orientation & progress;
+- further orientation & progress work beyond Back / Forward;
 - spatial guidance beyond current narrow needs;
 - visual language & focus beyond current narrow needs;
 - motion & transitions beyond current narrow needs;
@@ -273,27 +162,15 @@ Later categories remain intentionally unplanned in detail:
 
 Hebrew / RTL localization remains **DEFERRED** as a separate later category.
 
-## 9. Current next action
+Queue order does not determine priority. Each later selection requires current evidence.
 
-The Teacher voice / Walkthrough category is complete through Wave 5B decision gating.
+## 8. Authority boundary
 
-Do not implement Wave 5B.
-
-The next action is a **separate evidence-based category-selection / mapping decision** across the later improvement-category queue.
-
-That selection must not be made merely by queue order. It should inspect the current Stage 1–3 learner experience and current authority, identify the strongest remaining learner-experience problem, classify whether it is a conformance issue, implementation choice, canon decision, or potential conflict, and define the smallest next mapping scope before any runtime change.
-
-No runtime change is authorized until that category-selection / mapping decision is complete.
-
-## 10. Authority boundary
-
-This initiative may expose a need to change current authority, but it must not make that authority decision inside this management record.
-
-Use the appropriate current source when required, including:
+Use the appropriate current source when a change requires authority, including:
 
 - `pedagogical-foundations.md` for course-level pedagogical foundations;
 - `course-design/course-visual-language.md` for visual-language authority;
-- `course-design/course-controls.md` for control roles / semantics;
-- the relevant learner-route / interaction-decision or current owner-directed source for encounter-local instructional requirements.
+- `course-design/course-controls.md` for course-shell/control semantics;
+- the relevant Stage authority for encounter-local instructional requirements.
 
-If the appropriate authority source is unclear, classify the matter as `CANON DECISION REQUIRED` and stop before implementation rather than inventing a rule here.
+If implementation exposes a material issue not settled by those sources, classify it rather than resolving it silently in code.
