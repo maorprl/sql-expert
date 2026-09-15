@@ -1,7 +1,7 @@
 # Wave 4 — Diagnostic Feedback Decision Gate
 
 **Date:** 2026-09-15  
-**Status:** REOPENED — STAGE 1 CALIBRATION COMPLETE; CROSS-STAGE DECISION PENDING  
+**Status:** REOPENED — STAGE 1 + STAGE 3 CALIBRATION COMPLETE; STAGE 2 BLOCKED BY CONFORMANCE DRIFT  
 **Initiative:** Existing-course experience improvement  
 **Action type:** Mapping / decision gate only — no learner-facing implementation authorized by this artifact
 
@@ -13,7 +13,7 @@ That conclusion is **superseded**.
 
 A follow-up review found that the earlier gate moved too quickly from current implementation checks to an implementation scope. It treated most non-SQL feedback as already sufficient without first calibrating the full learner encounter as a course + machine diagnostic-feedback problem.
 
-Wave 4 is therefore reopened. Stage 1 has now been calibrated as the reference specimen. Stage 2 and Stage 3 still require equivalent mapping before Wave 4 can close or authorize implementation.
+Wave 4 is therefore reopened. Stage 1 has been calibrated as the reference specimen. Stage 3 has now also been calibrated against its current route, interaction authority, and runtime. Stage 2 was inspected far enough to establish that a material encounter-conformance drift prevents a complete Wave 4 calibration of that stage until the drift is resolved.
 
 No new document is created for this correction; this artifact remains the durable Wave 4 decision record.
 
@@ -62,15 +62,26 @@ Stage 1 implementation:
 - `src/media-coverage.js`
 - shared runtime behavior in `src/main.js` where relevant
 
-Cross-stage sources inspected while identifying the need to reopen the gate:
+Stage 2 current authority / implementation records inspected for the propagation decision:
 
 - `course-design/production/cycle-1/encounter-design-row-multiplication-2026-09-13.md`
+- `course-design/production/cycle-1/owner-directed-targeted-revision-and-waiver-2026-09-13.md`
+- `course-design/production/cycle-1/owner-directed-targeted-revision-structural-reuse-2026-09-13.md`
+- `course-design/production/cycle-1/test-drive-finding-connection-focus-2026-09-13.md`
 - `course-design/production/cycle-1/implementation-record-owner-directed-2026-09-13.md`
-- `course-design/stage-3/stage-3-interaction-decisions.md`
 - `src/funding-participation.js`
-- `src/inner-join-unmatched.js`
 
-The Stage 2 / Stage 3 material is not treated here as a completed Wave 4 calibration. It establishes only that cross-stage mapping remains necessary and that a Stage 2 authority/runtime drift must not be silently absorbed into Wave 4.
+Stage 3 authority and route:
+
+- `course-design/stage-3/stage-3-learner-route.md`
+- `course-design/stage-3/stage-3-interaction-decisions.md`
+
+Stage 3 implementation:
+
+- `src/inner-join-unmatched.js`
+- shared runtime behavior in `src/main.js` where relevant
+
+Stage 2 material is not treated as a completed Wave 4 calibration because required learner states and reveal order do not currently conform to the governing owner-directed records. That drift is recorded below as a blocker rather than silently absorbed into Wave 4.
 
 ## 4. Stage 1 calibration verdict
 
@@ -210,38 +221,152 @@ The reason is not that the machine lacks more information. The reason is that th
 
 Raw SQLite execution errors also remain unchanged in Wave 4 at this point. The current runtime surfaces the execution error locally; Wave 4 must not add a brittle general SQL syntax classifier without separate evidence and authority.
 
-## 9. Machine capability shapes established only as Stage 1 calibration patterns
+## 9. Machine capability shapes established by calibration
 
-The Stage 1 calibration reveals three useful machine-side shapes:
+The calibration exposes three useful machine-side shapes:
 
 - **state-aware diagnostic** — use the learner's current interaction state where it materially changes useful feedback;
 - **response-aware diagnostic** — use the selected response when materially different wrong interpretations warrant different correction;
 - **result-aware diagnostic** — use robust result/validator evidence to identify which already-established result requirement is not satisfied.
 
-These are **calibration patterns**, not approval to build a generalized Diagnostic Engine or introduce a new abstraction across the course.
+These are **diagnostic shapes**, not approval to build a generalized Diagnostic Engine or introduce a new abstraction across the course.
 
-Propagation must wait until Stage 2 and Stage 3 are inspected for genuinely equivalent learner roles and needs.
+The cross-stage findings below determine where each shape is actually justified. They must not be propagated merely because they exist in Stage 1.
 
-## 10. Stage 2 authority/runtime drift — propagation hold
+## 10. Stage 2 calibration status — blocked by encounter-conformance drift
 
-During the reopened review, a material Stage 2 mismatch was identified between current design records and the current `src/funding-participation.js` runtime.
+### 10.1 Governing Stage 2 sequence
 
-The current design / owner-directed records describe, among other things, a row-multiplication path without the current 26-row Baseline measurement and with a protected prediction sequence that differs from the current runtime. The current runtime includes a 26-row funding-round Baseline and a different prediction progression.
+The current owner-directed authority supersedes the earlier pre-resolved entry state and establishes the following required learner progression:
 
-Wave 4 does **not** resolve that mismatch.
+1. identify `funding_round` and `round_investment` from the Live Schema;
+2. identify `round_investment.funding_round_id` as the participation-to-round connection field;
+3. establish target Grain = one recorded participation per result row;
+4. interpret the one-round-to-many-participations Cardinality;
+5. make a qualitative multiplication prediction from Grain + Cardinality **without a concrete child count**;
+6. make a separate repeated-round-context / non-duplicate prediction;
+7. only then introduce the **JOIN row multiplication** Concept Moment;
+8. apply the established reasoning to the concrete `3 participations → 3 participation rows` case;
+9. author the six-field direct INNER JOIN;
+10. inspect the actual 72-row result and the actual `funding_round_id = 1003` evidence slice;
+11. verify the prediction from that evidence.
 
-However, Wave 4 must also not improve or canonize feedback around a disputed Stage 2 state until the relevant authority/runtime relationship is clarified.
+The authority explicitly says that the two qualitative predictions are core pre-execution evidence and that the concrete 3→3 case is supporting application evidence.
 
-Therefore:
+### 10.2 Current runtime drift
 
-- do not propagate the Stage 1 diagnostic patterns mechanically into Stage 2;
-- do not use Wave 4 to silently redesign Stage 2;
-- do not treat the current Stage 2 runtime merely as authority because it exists;
-- identify which Stage 2 states are valid current calibration targets before making feedback decisions for them.
+The current `src/funding-participation.js` does not implement that progression.
 
-This is a propagation hold, not a finding that all Stage 2 work is blocked.
+Material differences include:
 
-## 11. Explicit Wave 4 boundaries
+- current order is connection → Cardinality → Grain, while the owner-directed sequence requires connection → Grain → Cardinality;
+- a prepared `COUNT(*) FROM funding_round` 26-row Baseline is inserted even though the governing design does not use that Baseline as part of the required prediction sequence;
+- the current runtime has one multiplication prediction and immediately introduces the JOIN row multiplication Concept Moment;
+- the required separate repeated-context / non-duplicate prediction is absent;
+- the required concrete `3 participations → 3 participation rows` supporting application is absent;
+- the current runtime inserts a separate semantic-operation choice and a three-beat JOIN-teaching sequence not present in the governing owner-directed progression;
+- the final verification refers to `funding_round_id = 1003`, but the required actual 1003 evidence slice is not rendered as the local adjacent verification evidence described by the governing record.
+
+This is not a Wave 4 feedback defect. It is an encounter-conformance defect that predates any Wave 4 implementation.
+
+### 10.3 Stage 2 feedback findings that are stable despite the blocker
+
+Some Stage 2 states are sufficiently established by both authority and runtime to support limited Wave 4 findings:
+
+| Learner state | Wave 4 finding | Status |
+|---|---|---|
+| Relation selection | **IMPROVE** | Same state-aware gap as Stage 1: the runtime knows the selected relation set but gives one broad correction rather than using which business-information role is already covered. |
+| Connecting-column reasoning | **KEEP** | Current correction returns to the participation-row meaning and asks which field identifies the funding round; it does not need per-column branching. |
+| Learner-authored SQL semantic failure | **IMPROVE** | The six-field / 72-row / correct-association result contract is stable, but all semantic failures collapse into one broad message. Result-aware diagnostics are justified once implementation work is authorized. |
+
+The following cannot be treated as finalized Wave 4 calibration targets until the encounter sequence is restored to authority:
+
+- Grain / Cardinality as currently ordered in runtime;
+- the current Baseline interaction;
+- the current combined prediction / Concept Moment state;
+- the current semantic-operation state;
+- the current JOIN-teaching state;
+- the final verification state without the required local 1003 evidence slice.
+
+The missing repeated-context judgment and concrete 3→3 application have no current runtime wrong-feedback treatment to calibrate.
+
+### 10.4 Stage 2 blocker decision
+
+**Stage 2 Wave 4 calibration remains BLOCKED.**
+
+Before Wave 4 can close for Stage 2, the encounter runtime must first be reconciled to the current owner-directed authority through a separate conformance correction. Wave 4 must not redesign that correction, invent replacement evidence, or improve feedback around superseded runtime states.
+
+After the conformance correction, rerun Stage 2 diagnostic calibration on the restored learner path and classify each required wrong-feedback state as `KEEP` or `IMPROVE`.
+
+## 11. Stage 3 calibration verdict
+
+Stage 3 current route, interaction decisions, and runtime are sufficiently aligned for Wave 4 calibration.
+
+The result is:
+
+| Learner state | Wave 4 decision | Reason |
+|---|---|---|
+| Relation selection | **IMPROVE** | The machine knows the current selected relation set; the broad correction names both information roles but does not use which role is already covered or whether an unnecessary relation was added. |
+| Connecting-column reasoning | **KEEP** | Current feedback returns to one funding-round row and asks which field identifies its company. |
+| Cardinality reasoning | **KEEP** | The shared correction uses the FK direction and the company-side zero-match possibility; it resolves all current distractors without unnecessary per-option branching. |
+| Result Grain reasoning | **KEEP** | Current correction returns to the requirement that every recorded funding round remain individually visible. |
+| Prepared company measurement | **KEEP** | This is a prepared evidence query; current correction correctly keeps it as evidence collection rather than learner-authored SQL debugging. |
+| Prepared funding-round measurement | **KEEP** | Same reason; exact prepared-query behavior is appropriate to the evidence-collection state. |
+| Zero-match evidence comparison | **KEEP** | Current feedback tells the learner exactly what evidence operation to repeat: compare the selected `company_id` against the visible funding-round IDs. |
+| INNER JOIN survival prediction | **KEEP** | The shared correction reuses the established zero-match evidence and INNER JOIN matched-pair behavior; it resolves both current distractors. |
+| Learner-authored SQL semantic failure | **IMPROVE** | Multiple failures of the established five-column / 26-row / correct-association INNER JOIN result collapse into one broad message. |
+| Result verification | **KEEP** | The shared correction sends the learner to the specific zero-match `company_id` in Results; that evidence resolves both current wrong interpretations. |
+| Coverage conclusion | **KEEP** | The correction reuses the already-verified missing company as direct counterevidence to both wrong coverage claims. |
+
+### Stage 3 machine implications
+
+Two Stage 1 patterns genuinely propagate to equivalent Stage 3 roles:
+
+- **state-aware relation-selection feedback** is justified;
+- **result-aware SQL semantic feedback** is justified.
+
+The Stage 1 **response-aware final-verification** treatment does **not** automatically propagate. Stage 3 verification and coverage already use one shared evidence-based correction that is sufficient for their current distractors.
+
+This is the required counterexample to mechanical pattern propagation: the machine may support response-aware feedback, but the course should use it only where differentiated correction adds instructional value.
+
+## 12. Cross-stage findings now established
+
+Even with Stage 2 blocked, the current calibration supports several cross-stage conclusions:
+
+### 12.1 Relation selection
+
+State-aware relation-selection feedback is justified in Stage 1 and Stage 3, and the same gap is already visible in the stable Stage 2 entry interaction.
+
+The likely course-level implementation pattern is:
+
+- use the selected relation set to identify which **business-information role** is already covered, still missing, or unnecessarily added;
+- do not reveal the required relation name;
+- do not leak later key / relationship reasoning.
+
+This is a repeated learner role across all three encounters, but Stage 2 implementation must still respect its separate conformance correction.
+
+### 12.2 SQL semantic feedback
+
+Result-aware SQL semantic feedback is justified in Stage 1 and Stage 3 and is also justified for the stable Stage 2 SQL result contract.
+
+The cross-stage rule is not a parser taxonomy. Diagnostic messages may distinguish only robust failures of result requirements already established in that encounter, such as:
+
+- required taught relational implementation where robustly observable;
+- disclosed output-contract mismatch;
+- observable row-count mismatch when row count is established learner evidence;
+- row-association / relationship mismatch.
+
+Untaught SQL operations remain internal guards, not learner-facing diagnostic categories.
+
+### 12.3 Response-aware feedback
+
+Response-aware feedback is **locally justified**, not globally required.
+
+It is currently justified for Stage 1 final verification because the two wrong interpretations require attention to different evidence dimensions.
+
+It is not justified merely because a closed question has multiple distractors. Stage 1 Cardinality and the calibrated Stage 3 reasoning / verification states show that one shared correction can already be sufficiently diagnostic.
+
+## 13. Explicit Wave 4 boundaries
 
 Wave 4 must not silently introduce:
 
@@ -259,35 +384,34 @@ Wave 4 must not silently introduce:
 - a general SQL syntax parser;
 - learner-facing explanations of untaught SQL constructs derived from implementation guards;
 - LEFT JOIN / `NULL` teaching where the current encounter does not teach them;
-- a generalized diagnostic framework merely because Stage 1 uses more than one diagnostic shape.
+- a generalized diagnostic framework merely because more than one diagnostic shape is used.
 
 A differentiated corrective message inside the same existing interaction is not by itself adaptive assistance or a new learner path.
 
 If a proposal changes what the learner must know, do, demonstrate, or complete, or introduces materially different assistance behavior beyond local diagnostic correction, classify it as `CANON DECISION REQUIRED` or `POTENTIAL CONFLICT` before implementation.
 
-## 12. Cross-stage decision status
+## 14. Cross-stage decision status
 
 Wave 4 is **not yet closed**.
 
 Current status:
 
 - Stage 1 diagnostic calibration — **COMPLETE**;
-- Stage 2 diagnostic calibration — **PENDING**, with the authority/runtime drift above requiring explicit handling before affected states are treated as stable targets;
-- Stage 3 diagnostic calibration — **PENDING**;
-- cross-stage propagation decision — **PENDING**;
-- learner-facing implementation — **NOT AUTHORIZED YET**.
+- Stage 2 diagnostic calibration — **BLOCKED BY ENCOUNTER-CONFORMANCE DRIFT**;
+- Stage 3 diagnostic calibration — **COMPLETE**;
+- cross-stage diagnostic patterns — **PARTIALLY ESTABLISHED** as described above;
+- learner-facing Wave 4 implementation — **NOT AUTHORIZED YET**.
 
-The earlier SQL-only Stage 1–3 implementation authorization is withdrawn by this revision.
+The earlier SQL-only Stage 1–3 implementation authorization remains withdrawn.
 
-## 13. Next action
+## 15. Next action
 
-Continue the Wave 4 mapping forward from the learner encounter:
+The next action is **not Wave 4 implementation**.
 
-1. establish which current Stage 2 states are legitimate calibration targets in light of the authority/runtime drift;
-2. calibrate Stage 2 diagnostic feedback across the valid learner path, separating `KEEP` from justified `IMPROVE` findings and identifying course-side vs machine-side needs;
-3. calibrate Stage 3 in the same way;
-4. compare the findings with the Stage 1 reference specimen and propagate only genuinely equivalent diagnostic patterns;
-5. update this gate with the final cross-stage Wave 4 scope;
-6. only then authorize implementation.
+1. perform a targeted Stage 2 encounter-conformance correction against the current owner-directed authority;
+2. do not use that correction to redesign Stage 2 or add new evidence beyond the authority already established;
+3. after the corrected learner path is available, rerun Stage 2 Wave 4 diagnostic calibration across the restored states;
+4. update this gate with the final Stage 2 `KEEP / IMPROVE` findings;
+5. only then close the cross-stage Wave 4 scope and authorize the smallest justified implementation pass.
 
 No learner-facing implementation is performed by this revision.
