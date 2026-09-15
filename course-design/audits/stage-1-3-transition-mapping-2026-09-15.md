@@ -18,6 +18,8 @@ For each material learner state it records:
 - what happens to Working Schema and Completed Steps;
 - whether the transition preserves a stable learner topology or causes an unexplained split / jump.
 
+It also performs a separate **sequence-first audit** after the three Stage maps. That audit writes the actual L/R path for each Stage and inspects every material lane change to decide whether it is a justified phase handoff under the visual-language contract or unexplained layout drift.
+
 ### Desktop lane notation
 
 This map describes the multi-lane desktop composition at the breakpoint where the course renders two learner columns (`@media (min-width: 1280px)` for the shared SQL/result choreography):
@@ -157,7 +159,85 @@ The most concrete defects are:
 
 ---
 
-## 5. Cross-stage equivalence map
+## 5. Sequence-first spatial audit
+
+The state tables above are not sufficient by themselves. This section audits the **journey as a sequence**. For each Stage, the first line is the actual dominant learner-response/action path, including material substates. Every material move between L, R, or a split L/R state is then classified against the phase-handoff requirements in `course-visual-language.md`.
+
+A justified phase handoff must reflect a real learner-role change, visually signal the new primary surface, leave the previous surface understandable, avoid making the learner hunt for the next action, and follow a consistent course-wide pattern. A runtime state boundary by itself is not a justification.
+
+### 5.1 Stage 1 sequence audit
+
+Actual path:
+
+`L Relations → Split Connection → L Cardinality → L Grain → Split Baseline Run → R Baseline Interpretation → R Baseline Success → R Prediction → R Prediction Success → L Semantic Action → L JOIN Teaching → Split SQL Authoring → R Result Inspection → R Final Verification → R Verification Success → L Complete`
+
+| Material lane change | What changed pedagogically? | Handoff judgment |
+|---|---|---|
+| **L → Split** at Relations → Connection | Ordinary reasoning becomes a direct Working-Schema object interaction. | ❌ **Not correctly implemented as a handoff.** Moving the direct action to R can be justified, but the check/correction remain L. The learner-response role is split instead of becoming coherently object-local. |
+| **Split → L** at Connection → Cardinality | Direct-object interaction ends; ordinary closed reasoning resumes. | ✅ **Justified return to the ordinary reasoning anchor**, but only after the Connection locality defect above is fixed/acknowledged. |
+| **L → Split** at Grain → Baseline Run | Reasoning changes to a prepared measurement tool. | ⚠️ **Phase handoff is justified; implementation is not fully coherent.** Tool/Run becoming R is appropriate, but invalid-run feedback returning to L breaks the measurement cycle. |
+| **Split → R** at Baseline Run → Interpretation | The produced measurement becomes evidence that must be interpreted immediately. | ✅ **Justified evidence handoff.** Result, interpretation response, check, and correction are local in R. The L heading should function only as orientation, not a competing response owner. |
+| **R → L** at Prediction Success → Semantic Action | Evidence-grounded prediction ends; learner returns to semantic relational reasoning. | ❌ **Unsupported as currently choreographed.** There is a pedagogical role change, but no strong visual handoff makes the learner's active response visibly return from the R evidence lane to L. It reads as an anchor jump rather than a designed phase transition. |
+| **L → Split** at JOIN Teaching → SQL Authoring | Teacher-led instruction ends; learner begins active authoring. | ⚠️ **Genuine phase handoff, with conformance defects.** L task + R editor is a defensible authoring composition, but SQL diagnostics are wrongly owned by L and Working Schema relocates R→L. |
+| **Split → R** at SQL Authoring → Result Inspection | Authoring changes to evidence inspection. | ✅ **Justified phase handoff.** Results and immediate execution feedback/progression are R-local. |
+| **R → L** at Verification Success → Complete | Evidence cycle closes and the encounter completes. | ✅/⚠️ **Completion is a genuine phase end**, so returning the completion message to L is defensible. The simultaneous Working Schema L→R restoration is a separate persistent-reference movement that still requires review. |
+
+**Stage 1 sequence verdict:** the important unsupported response-anchor reversal is **R Prediction → L Semantic Action**. The Baseline and SQL side changes are real phase handoffs, but both currently contain locality defects that prevent them from being clean handoffs.
+
+### 5.2 Stage 2 sequence audit
+
+Actual path:
+
+`L Relations → R object-local Connection → L Connection Success → L Grain → L Cardinality → R Cardinality Success → R Multiplication Prediction → R Prediction Success → L Repetition Prediction → R Repetition Success → L Concept → L Application → R Application Success → Split SQL Authoring → R Result Inspection → R Final Verification → R Verification Success → L Complete`
+
+| Material lane change | What changed pedagogically? | Handoff judgment |
+|---|---|---|
+| **L → R** at Relations → Connection action | Ordinary reasoning becomes a direct Working-Schema field interaction. | ✅/⚠️ **The move itself is justified and mostly well implemented.** Selection, check, and wrong correction are R-local. The success state then breaks that ownership. |
+| **R → L** at correct Connection → Connection acknowledgement | No new learner role; the same object interaction has merely succeeded. | ❌ **Layout drift.** Correct feedback and Continue should not leave the object solely because the generic acknowledgement renderer lives in L. |
+| **L → R** at Cardinality answer → Cardinality success | No new tool, evidence surface, or learner role. | ❌ **Pure container-driven drift.** The answer was checked in L; its success feedback and Continue move to R without a phase change. |
+| **R → L** at Prediction Success → Repetition Prediction | Both states are adjacent prediction/reasoning moves from already-established premises. | ❌ **Layout drift.** There is no pedagogical phase change that justifies moving the response anchor back to L. |
+| **L → R** at Repetition answer → Repetition success | Same reasoning move, now correct. | ❌ **Pure container-driven drift.** Feedback/progression changes lane without any role change. |
+| **R → L** at Repetition success → Concept | Prediction/reasoning gives way to a concept-naming explanation. | ⚠️ **A teacher/concept phase could justify an L teaching surface**, but the preceding R success state is itself unjustified. The current L→R→L oscillation is therefore not a legitimate two-step handoff pattern. |
+| **L → R** at Application answer → Application success | Same application question, now correct; SQL has not started yet. | ❌ **Layout drift.** Moving success feedback to R anticipates the future SQL lane but violates feedback ownership for the L-side answer. |
+| **R → Split** at Application success → SQL Authoring | Learner moves from completed reasoning into active SQL authoring. | ✅/⚠️ **Genuine phase handoff.** The R editor is the new tool and the L task remains orientation, but the earlier Application feedback should not have moved to R merely to stage this handoff, and SQL diagnostics remain incorrectly in L. |
+| **Split → R** at SQL Authoring → Result Inspection | Authoring changes to evidence inspection. | ✅ **Justified phase handoff.** Result/evidence and progression are R-local. |
+| **R → L** at Verification Success → Complete | Evidence cycle closes and the encounter completes. | ✅/⚠️ **Genuine completion handoff**, with the same shared Working Schema restoration issue as Stage 1. |
+
+**Stage 2 sequence verdict:** this Stage has the clearest **layout-driven oscillation**. The lane sequence is not explained by pedagogy: `L Cardinality → R success/prediction → L repetition → R success → L concept/application → R success`. Most of those side changes are state-container effects, not phase handoffs.
+
+### 5.3 Stage 3 sequence audit
+
+Actual path:
+
+`L Relations → Split Connection → L Cardinality → L Grain → Split Company Measurement → R Company Evidence → Split Funding Measurement → R Compare Evidence → R Zero-match Success → R Prediction → R Prediction Success → Split SQL Authoring → R Result Inspection → L Verification → L Verification Success → L Coverage → L Complete`
+
+| Material lane change | What changed pedagogically? | Handoff judgment |
+|---|---|---|
+| **L → Split** at Relations → Connection | Ordinary reasoning becomes direct Working-Schema object interaction. | ❌ **Not correctly implemented as a handoff.** The action moves to R while check/correction remain L, reproducing the Stage 1 object-locality defect. |
+| **Split → L** at Connection → Cardinality | Direct-object interaction ends; ordinary closed reasoning resumes. | ✅ **Justified return to ordinary reasoning**, subject to the Connection defect above. |
+| **L → Split** at Grain → Company Measurement | Reasoning changes to a prepared evidence-gathering tool. | ⚠️ **Genuine measurement handoff, with locality defect.** Run belongs in R, but invalid prepared-query correction is in L. |
+| **Split → R** at Company Measurement → captured company evidence | The measurement has produced evidence and the immediate next action follows from that evidence. | ✅ **Justified evidence handoff.** Success feedback and Continue remain with the evidence. |
+| **R → Split** at captured company evidence → Funding-round Measurement | Learner remains in the same evidence-gathering episode but activates a second prepared measurement. | ✅/⚠️ **Defensible continuation, not a return to ordinary reasoning.** The actual Run action stays R and the L surface only re-orients the next measurement. Invalid-run feedback is still wrongly L-owned. |
+| **Split → R** at Funding Measurement → Compare | Tool use produces the second evidence set; learner immediately compares both sets. | ✅ **Justified evidence handoff.** The comparison response is R-local to the evidence. |
+| **R → Split** at Prediction Success → SQL Authoring | Evidence-grounded reasoning changes to active SQL implementation. | ✅/⚠️ **Genuine evidence→authoring handoff.** The R editor remains the active tool while L becomes task orientation; SQL diagnostic ownership is still wrong. |
+| **Split → R** at SQL Authoring → Result Inspection | Authoring changes to result evidence. | ✅ **Justified phase handoff.** Result feedback and progression are R-local. |
+| **R → L** at Result Inspection → Verification | The learner is still interpreting the result just produced; no new non-evidence phase begins. | ❌ **Unsupported / inconsistent handoff.** Stage 1 and Stage 2 keep equivalent result verification with the R evidence surface. Stage 3 moves the verification response to L without an established pedagogical reason, splitting evidence from interpretation and creating a competing course-wide pattern. |
+
+**Stage 3 sequence verdict:** the measurement episode mostly forms a coherent R-side evidence phase despite L orientation. The major unsupported late reversal is **R Result → L Verification**. Connection and prepared-measurement diagnostics also remain locality defects.
+
+### 5.4 Sequence-level conclusion
+
+The current runtime does not have one stable course-wide choreography. The sequence audit separates three different phenomena that the state tables alone can blur:
+
+1. **Legitimate phase handoffs with implementation defects** — reasoning→measurement, teaching/reasoning→SQL authoring, and authoring→result evidence are real role changes, but some currently leave feedback in the wrong lane or move references unnecessarily.
+2. **Direct layout drift** — especially Stage 2's repeated L↔R acknowledgement oscillation, where no learner role changes at all.
+3. **Competing course patterns for the same role** — most clearly final result verification: Stage 1/2 keep the response with R-side evidence, while Stage 3 moves it back to L.
+
+Therefore a later topology decision cannot be made by fixing isolated states. It must choose a consistent **journey pattern** for each equivalent learner role and then ensure each L↔R change corresponds to an actual, legible phase handoff rather than to whichever runtime container happens to render that substate.
+
+---
+
+## 6. Cross-stage equivalence map
 
 This section compares equivalent learner roles directly. It is not a design recommendation yet; it identifies where the current runtime does or does not behave like one course.
 
@@ -177,7 +257,7 @@ This section compares equivalent learner roles directly. It is not a design reco
 
 ---
 
-## 6. Working Schema and Completed Steps movement
+## 7. Working Schema and Completed Steps movement
 
 ### Working Schema
 
@@ -200,7 +280,7 @@ Completed Steps remain owned by the L/history lane throughout ordinary, SQL, and
 
 ---
 
-## 7. Findings exposed by the spatial map
+## 8. Findings exposed by the spatial map
 
 These are mapping findings, not an implementation plan.
 
@@ -246,9 +326,13 @@ Both arrangements can be made locally understandable, but they cannot simultaneo
 
 All stages move Working Schema R→L for shared SQL/result choreography and L→R afterward. Because this is shared and phase-linked it is not classified here as an automatic defect, but the move is material and must be explicitly reviewed rather than treated as invisible layout plumbing.
 
+### T-09 — Sequence-level defects cannot be repaired state-by-state
+
+The explicit L/R journey audit shows that some defects exist only in the transition sequence, not in the isolated state. Stage 2 is the strongest case: individually understandable states combine into repeated `L → R → L → R → L` movement with no corresponding learner-role changes. Any later correction must therefore validate the whole encounter path after each topology change, not only representative screenshots.
+
 ---
 
-## 8. Mapping boundary
+## 9. Mapping boundary
 
 This document intentionally does **not**:
 
