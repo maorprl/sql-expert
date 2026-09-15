@@ -1,7 +1,7 @@
 # Course Authority Separation Audit
 
 **Date:** 2026-09-15  
-**Status:** AUDIT COMPLETE — CORRECTED AFTER DOCUMENT-ARCHITECTURE CHECK — NO RUNTIME CHANGE  
+**Status:** AUDIT COMPLETE — AUTHORITY EXTRACTION VALIDATED ON BRANCH — NO RUNTIME CHANGE  
 **Baseline:** `main` at `1856d9a68c013bdf455f3339a3c641869529bd1d`  
 **Scope:** separation between current course/design authority and agent / production-process artifacts
 
@@ -37,7 +37,7 @@ Stage 1 and Stage 3 also have dedicated encounter authority outside the producti
 
 ### Stage 2 / row multiplication
 
-`FAIL — CURRENT PEDAGOGICAL AUTHORITY IS MATERIALLY ENTANGLED WITH PRODUCTION / AGENT-ERA ARTIFACTS`
+`FAIL ON BASELINE — CURRENT PEDAGOGICAL AUTHORITY IS MATERIALLY ENTANGLED WITH PRODUCTION / AGENT-ERA ARTIFACTS`
 
 There is no dedicated `course-design/stage-2/` authority on the baseline main branch. The current `funding_round → round_investment` design must be reconstructed from multiple `course-design/production/cycle-1/` artifacts plus later course-level control/topology decisions.
 
@@ -217,19 +217,27 @@ Do not:
 
 ---
 
-## 11. Source-to-source validation required after extraction
+## 11. Extraction validation performed
 
-The extraction is acceptable only if a narrow check confirms:
+The branch extraction at `course-design/stage-2/stage-2-authority.md` was checked source-to-source against the current accepted Stage 2 decision chain and current course-level control/topology authority.
 
-- every Stage-specific requirement in the new file traces to an already-established current decision;
-- no superseded `news_source → news_article` case content leaks into Stage 2;
-- no superseded Show-solution behavior leaks into Stage 2;
-- no new pedagogy or implementation choice is introduced;
-- no runtime file changes;
-- a future reader can determine current Stage 2 learner design without reconstructing production chronology.
+Validation result:
+
+- **PASS — case integrity:** the extracted case is `funding_round → round_investment`; no superseded `news_source → news_article` learner case leaked into the Stage 2 authority.
+- **PASS — learner-route integrity:** relation selection → connecting field → Grain → Cardinality → qualitative multiplication prediction → repeated-context prediction → Concept Moment → concrete application → SQL → actual-result inspection → `1003` verification → completion matches the later owner-directed corrections and conformance-restored current path.
+- **PASS — evidence independence:** the concrete `3 → 3` application remains supporting evidence after the qualitative prediction rather than replacing it.
+- **PASS — SQL/result contract:** the six logical fields and 72-row participation-grain semantic contract match the accepted design/current implementation contract.
+- **PASS — Show solution:** the extraction follows current `course-design/course-controls.md`: SQL-workspace only, populates the editable editor, does not execute or bypass result inspection/verification. The superseded pre-SQL production-era rule was not imported.
+- **PASS — topology:** the Stage 2 path matches the current reviewed Stage 1–3 topology; no Stage-local alternative topology was introduced.
+- **PASS — no redesign:** no new learner question, concept, answer requirement, SQL operation, or assistance policy was introduced by extraction.
+- **PASS — repository scope:** branch comparison against baseline `main@1856d9a68c013bdf455f3339a3c641869529bd1d` contains documentation only; no runtime file is changed.
+
+The extraction therefore resolves the localized Stage 2 authority-location defect **on this branch** without changing the learner experience. Main remains unchanged until an explicit integration decision is made.
 
 ---
 
 ## 12. Final verdict
 
-`LOCALIZED AUTHORITY ENTANGLEMENT CONFIRMED — STAGE 2 REQUIRES ONE CLEAN CURRENT AUTHORITY SURFACE; CORE COURSE AUTHORITY IS NOT MATERIALLY CONTAMINATED`
+`BASELINE FINDING: LOCALIZED AUTHORITY ENTANGLEMENT CONFIRMED`
+
+`BRANCH REMEDIATION: PASS — ONE CLEAN CURRENT STAGE 2 AUTHORITY SURFACE EXTRACTED AND SOURCE-TO-SOURCE VALIDATED; NO RUNTIME OR PEDAGOGY CHANGE`
