@@ -29,12 +29,18 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
     implementationPrepared: false,
     pendingAdvance: null,
     acceptedResult: null,
+    solutionUsed: false,
   };
 
   const relationEl = document.getElementById('relation-preview');
   const workingStatusEl = document.getElementById('working-schema-status');
   const labEl = document.getElementById('lab-workspace');
   const learningEl = document.querySelector('.learning-panel');
+  const solutionButton = document.getElementById('show-solution');
+
+  solutionButton?.addEventListener('click', () => {
+    if (document.title === 'SQL Lab · Funding participation' && state.current === 'sql' && learningEl.classList.contains('sql-implementation-active')) state.solutionUsed = true;
+  }, { capture: true });
 
   function escapeHtml(value) {
     return String(value).replace(/[&<>'\"]/g, (character) => ({
@@ -489,7 +495,8 @@ JOIN round_investment
     if (!validateParticipationResult(statement, resultSets)) return wrong('The SQL ran, but the result does not yet match the requested six-column participation output. Open Desired output if you need the exact column contract, then inspect the selected fields and the relationship in ON.');
     const result = resultSets.at(-1);
     state.acceptedResult = { columns: [...result.columns], values: result.values.map((row) => [...row]) };
-    record({ evidence: 'sql', prompt: 'Return the participation review with funding-round context.', answer: 'Query ran successfully', answerLabel: 'Result', feedback: '<div class="success-feedback">The query ran successfully. Inspect the actual participation rows before deciding whether the earlier prediction held.</div>', next: 'finalGrain' });
+    const assistanceNote = state.solutionUsed ? '<p class="evidence-bridge"><strong>Assistance used:</strong> Show solution.</p>' : '';
+    record({ evidence: 'sql', prompt: 'Return the participation review with funding-round context.', answer: 'Query ran successfully', answerLabel: 'Result', feedback: `<div class="success-feedback">The query ran successfully. Inspect the actual participation rows before deciding whether the earlier prediction held.</div>${assistanceNote}`, next: 'finalGrain' });
   }
 
   render();
