@@ -1,7 +1,7 @@
 # Stage 1–3 Transition Mapping — Visual Language and Course Controls
 
 **Date:** 2026-09-15  
-**Status:** MAPPING COMPLETE — FROZEN FOR REVIEW — RUNTIME HOLD  
+**Status:** MAPPING COMPLETE — REVISED AFTER REVIEW FINDING — RUNTIME HOLD  
 **Baseline:** `main@bd9ff8a33e32bd07f8ed5601f14457ac5ea28285`  
 **Scope:** Stage 1–3 learner-journey transitions only; documentation / conformance mapping, no runtime change
 
@@ -15,7 +15,7 @@ This document does not redesign the encounters, change learner evidence, alter v
 
 No implementation state older than the stated baseline is used as evidence. Current baseline runtime is inspected only to identify conformance status against current authority; runtime does not become authority by being inspected here.
 
-**Runtime remains blocked until this mapping has been reviewed.**
+**Runtime remains blocked until the revised mapping receives a recorded review verdict.**
 
 ## 2. Current authority used
 
@@ -52,8 +52,11 @@ The implementation record is used to establish which superseding decisions were 
 - `src/interaction-lifecycle.js`
 - `src/styles.css`
 - `src/media-coverage.js`
+- `src/media-coverage.css`
 - `src/funding-participation.js`
+- `src/funding-participation.css`
 - `src/inner-join-unmatched.js`
+- `src/inner-join-unmatched.css`
 
 ## 3. Spatial role vocabulary
 
@@ -95,7 +98,7 @@ These apply to every row below.
 7. **Result choreography is shared.** After accepted execution, the editor no longer owns primary attention. `RESULT` becomes evidence; the immediate interpretation / verification remains adjacent enough to form one cycle.
 8. **Shell controls never replace pedagogy.** Chapter navigation and Back / Forward remain in `SHELL`; Forward cannot cross the progression frontier; Back / Forward never mutate recorded evidence.
 9. **Retry / Redo remains non-operational in this map.** The need exists, but reset / invalidation semantics are still OPEN in `course-controls.md`; this map does not invent them.
-10. **One spatial owner.** Shared course-level layout should own course-wide role placement. Encounter-local CSS / DOM movement is reserved for genuine encounter-specific needs, not for reimplementing general topology.
+10. **One spatial owner.** Shared course-level layout should own course-wide role placement. Encounter-local CSS / DOM movement is reserved for genuine encounter-specific needs, not for reimplementing general topology or leaking placement rules into another encounter.
 
 ## 6. Stage 1 transition map — Media coverage / first JOIN
 
@@ -121,7 +124,7 @@ Authoritative reasoning order: relations → connection → Cardinality → resu
 
 ### Stage 1 mapping consequence
 
-The only material spatial-ownership defect found in the baseline Stage 1 transition path is **S1-02**: the learner selects a Working-Schema field in one region but checks it and receives correction in another. The target mapping requires that check / correction move into the Working-Schema interaction when runtime work is later authorized. No Stage 1 runtime change is authorized by this document.
+The material spatial-ownership defect found in the baseline Stage 1 transition path is **S1-02**: the learner selects a Working-Schema field in one region but checks it and receives correction in another. The target mapping requires that check / correction move into the Working-Schema interaction when runtime work is later authorized. No Stage 1 runtime change is authorized by this document.
 
 ## 7. Stage 2 transition map — Funding participation / JOIN row multiplication
 
@@ -132,7 +135,7 @@ relations → connecting field → target Grain → Cardinality → qualitative 
 | ID | Transition | Class | `RESPONSE` before → after | `TOOL` / evidence before → after | Feedback / local progression | `WORKING` + `HISTORY` role | Handoff judgment | Baseline conformance at `bd9ff8a3` |
 |---|---|---|---|---|---|---|---|---|
 | S2-01 | Entry → relation identification | C | Start → relation question | No tool | Relation correction + check local to current task | `WORKING` empty/evolving; `HISTORY` empty | No phase handoff | **CONFORMS** |
-| S2-02 | Relations accepted → connecting-field reasoning | O | Relation success → connection orientation | Direct field selection in `WORKING` | Check, selected-column status, wrong-selection correction, and success are local to `WORKING` interaction | `WORKING` primary; `HISTORY` gets relation evidence | Legitimate object-local interaction | **CONFORMS — this is the cross-stage reference behavior for direct Working-Schema field selection** |
+| S2-02 | Relations accepted → connecting-field reasoning | O | Relation success → connection orientation | Direct field selection in `WORKING` | Check, selected-column status, wrong-selection correction, and success are local to `WORKING` interaction | `WORKING` primary; `HISTORY` gets relation evidence | Legitimate object-local interaction | **CONFORMS interactionally — this is the cross-stage reference behavior for direct Working-Schema field selection.** Separate cross-encounter CSS ownership drift is recorded in M-05. |
 | S2-03 | Connection established → target Grain | C | Connection consequence → Grain question | No tool | PK/FK reveal follows correct connection only; local Continue then returns to response anchor | `WORKING` established relationship as reference; `HISTORY` quiet | No arbitrary move | **CONFORMS** |
 | S2-04 | Grain established → Cardinality | C | Grain question → Cardinality question | No tool | Correct Grain feedback does not reveal multiplication; progression stays local | `WORKING` relationship reference; `HISTORY` gains Grain | Ordinary reasoning continuity | **CONFORMS** |
 | S2-05 | Cardinality established → qualitative multiplication prediction | P | Cardinality response → prediction orientation | No SQL tool; compact established-premise surface becomes the prediction support artifact | Cardinality feedback + local Continue lead to prediction. Actual prediction prompt / options / correction stay together with its premise artifact | `WORKING` secondary reference; `HISTORY` gains Cardinality | **Valid reasoning-role handoff:** ordinary relation reading → explicit prediction from two established premises. The learner-response unit itself must remain internally local. | **CONFORMS** |
@@ -146,9 +149,11 @@ relations → connecting field → target Grain → Cardinality → qualitative 
 
 ### Stage 2 mapping consequence
 
-Stage 2 provides the cleanest current example of the object-local contract: field selection, selected-field status, checking, and correction are co-located in the Working Schema. That pattern should be reused for equivalent Stage 1 / Stage 3 direct field-selection interactions rather than independently redesigned.
+Stage 2 provides the cleanest current example of the object-local interaction contract: field selection, selected-field status, checking, and correction are co-located in the Working Schema. That pattern should be reused for equivalent Stage 1 / Stage 3 direct field-selection interactions rather than independently redesigned.
 
 The absence of a dedicated current Stage 2 learner-route / interaction-decision pair is an authority-maintainability concern, but this mapping can still be completed because the current targeted revision records establish the controlling sequence. This document does not create a new Stage 2 authority layer.
+
+Stage 2 is **not** a clean reference for cross-encounter CSS ownership: its unscoped relationship-card positioning rule currently leaks into Stage 3. That separate conformance defect is recorded in M-05.
 
 ## 8. Stage 3 transition map — INNER JOIN unmatched company coverage
 
@@ -158,14 +163,14 @@ Authoritative order: relations → connection → Cardinality → funding-round 
 |---|---|---|---|---|---|---|---|---|
 | S3-01 | Entry → relation identification | C | Start → relation question | No tool | Relation check/correction local to task | `WORKING` empty/evolving; `HISTORY` empty | No phase handoff | **CONFORMS** |
 | S3-02 | Relations accepted → connecting-field reasoning | O | Relation success → connection orientation | Direct `funding_round.company_id` selection in `WORKING` | **Required target:** check + field-specific correction stay with the Working-Schema interaction | `WORKING` primary; `HISTORY` gains relation evidence | Legitimate object-local role | **DRIFT:** field is selected in `WORKING`, but check and correction are rendered in the separate `RESPONSE` card. Same ownership defect as S1-02. |
-| S3-03 | Connection established → Cardinality | C | Connection consequence → Cardinality question | No tool | PK/FK relationship reveal only after correct field; feedback / Continue local | `WORKING` reference; `HISTORY` quiet | Ordinary reasoning continuity | **CONFORMS apart from S3-02 ownership defect entering this transition** |
+| S3-03 | Connection established → Cardinality | C | Connection consequence → Cardinality question | No tool | PK/FK relationship reveal only after correct field; feedback / Continue local | `WORKING` reference; `HISTORY` quiet | Ordinary reasoning continuity | **CONFORMS interactionally apart from S3-02.** Current relationship-card geometry also depends on Stage 3 undoing an unscoped Stage 2 transform; see M-05. |
 | S3-04 | Cardinality established → funding-round result Grain | C | Cardinality → Grain question | No tool | Feedback preserves distinction between relationship possibility and requested row meaning | `WORKING` supporting reference; `HISTORY` gets Cardinality | Ordinary reasoning continuity | **CONFORMS** |
 | S3-05 | Grain established → first prepared company measurement | P | Grain response → measurement orientation | No tool → prepared company measurement `TOOL` | Grain feedback leads to measurement; Run stays with prepared query | `WORKING` quieter; `HISTORY` gains Grain | **Valid phase handoff:** reasoning → evidence generation | **CONFORMS** |
 | S3-06 | Company query result → capture / handoff to funding-round measurement | E | Measurement orientation → company-evidence confirmation | First `RESULT` captured; local Continue advances to second prepared measurement | Capture feedback + `Continue to funding-round evidence` stays with captured evidence | `WORKING` reference; `HISTORY` does not falsely mark zero-match conclusion yet | Same evidence-generation episode | **CONFORMS** |
 | S3-07 | Company evidence → second prepared funding-round measurement | E | Company-evidence bridge → funding measurement orientation | First measurement remains available as compact named-company evidence while second prepared query becomes active `TOOL` | Run remains local to second measurement; no zero-match conclusion supplied | `WORKING` reference; `HISTORY` quiet | Continuous two-measurement evidence cycle | **CONFORMS** |
 | S3-08 | Funding-round result → compare and identify unmatched company | E | Measurement orientation → evidence-comparison response | Funding-round `RESULT` remains visible; first-measurement evidence + comparison response stay adjacent | Comparison check/correction explicitly directs learner back to visible IDs | `WORKING` secondary; `HISTORY` not advanced until comparison resolves | Immediate interpretation of produced evidence | **CONFORMS** |
 | S3-09 | Zero-match company established → INNER JOIN survival prediction | E | Evidence-comparison success → prediction orientation | Zero-match case retained as compact established evidence | Success + Continue local; prediction response/correction stays with the established case | `WORKING` reference; `HISTORY` gains zero-match evidence | Evidence → prediction is one reasoning cycle | **CONFORMS** |
-| S3-10 | Prediction established → SQL authoring | P | Prediction response / Concept consequence → implementation orientation | No authoring tool → clean SQL editor primary | Prediction feedback + local Continue; Run / local SQL assistance belongs to editor | `WORKING` secondary; `HISTORY` gains prediction | **Valid phase handoff:** prediction → implementation | **CONFORMS spatially**; see control-ownership defect C-03 below for stale Stage 3 `Show solution` handler. |
+| S3-10 | Prediction established → SQL authoring | P | Prediction response / Concept consequence → implementation orientation | No authoring tool → clean SQL editor primary | Prediction feedback + local Continue; Run / local SQL assistance belongs to editor | `WORKING` secondary; `HISTORY` gains prediction | **Valid phase handoff:** prediction → implementation | **CONFORMS spatially**; see control-ownership defect M-04 below for stale Stage 3 `Show solution` handler. |
 | S3-11 | Valid SQL execution → result inspection | P + E | Authoring → inspection orientation | Editor → actual `RESULT` primary | Execution feedback + `Continue to verification` beside result; `Show solution` ends with authoring | `WORKING` quiet reference; `HISTORY` gains SQL | **Valid phase handoff:** authoring → evidence | **CONFORMS** |
 | S3-12 | Result inspection → verify zero-match company absence | E | Inspection → verification question in response anchor | Same `RESULT` stays visibly adjacent / paired as evidence | Verification correction explicitly points to visible `company_id`; no remote generic feedback | `WORKING` reference; `HISTORY` quiet | Same result-evidence cycle | **CONFORMS** |
 | S3-13 | Verification → original company-coverage conclusion | C + E | Zero-match verification → coverage conclusion question | Same accepted result remains available; verified absence becomes established evidence | Verification feedback bridges to original business question; coverage correction local | `WORKING` reference; `HISTORY` gains verification | This is transfer / business interpretation of the same evidence, not a new result-Grain definition | **CONFORMS** |
@@ -173,7 +178,7 @@ Authoritative order: relations → connection → Cardinality → funding-round 
 
 ### Stage 3 mapping consequence
 
-The Stage 3 field-selection transition must converge on the same object-local pattern already used in Stage 2. Stage 3 also has a separate control-ownership issue around `Show solution`, recorded below; that issue does not change Stage 3 pedagogy.
+The Stage 3 field-selection transition must converge on the same object-local pattern already used in Stage 2. Stage 3 also has separate control-ownership and CSS-ownership issues recorded below; neither changes Stage 3 pedagogy.
 
 ## 9. Back / Forward mapping across the transition model
 
@@ -236,7 +241,7 @@ The course-level rule is unambiguous:
 
 The shared baseline `src/main.js` implements editor-population behavior. Stage 2 records assistance provenance without redefining the action.
 
-Stage 3 still contains an encounter-local legacy solution-panel handler describing a separate panel / non-insertion behavior. The shared main handler currently stops immediate propagation, so the stale handler does not define the observed shared click path, but its continued presence creates competing ownership contrary to the single-ownership rule in the updated visual language.
+Stage 3 still contains an encounter-local legacy solution-panel handler describing a separate panel / non-insertion behavior. The shared main handler currently stops immediate propagation, so the stale handler does not define the observed shared click path, but its continued presence creates competing ownership contrary to the single-ownership rule in the updated visual language. Stage 3 CSS also retains layout rules specifically for that legacy panel.
 
 **Classification: CONFORMANCE DEFECT TO REMOVE / RECONCILE when runtime work is later authorized.**
 
@@ -280,17 +285,23 @@ No Stage 3 Show-solution runtime change is made by this mapping.
 
 ### M-04 — Stage 3 stale Show-solution ownership
 
-**Finding:** shared editor-population behavior coexists with encounter-local legacy panel code.  
+**Finding:** shared editor-population behavior coexists with encounter-local legacy panel code and Stage 3-local panel layout rules.  
 **Target:** one shared owner consistent with `course-controls.md`; preserve encounter-local provenance only where needed.  
 **Classification:** CONFORMANCE.
 
-### M-05 — Back / Forward history representation
+### M-05 — Cross-encounter relationship-card positioning ownership
+
+**Finding:** `src/funding-participation.css` applies the `funding_round` relationship-card vertical transform through an unscoped selector. Because `funding_round` also appears in Stage 3, `src/inner-join-unmatched.css` explicitly resets that Stage 2 effect before applying the Stage 3 company-card alignment. Stage 3 therefore depends on undoing another encounter's placement rule.  
+**Target:** give relationship-card alignment one unambiguous owner. An encounter-specific alignment must be scoped to its encounter, or genuinely shared geometry must be owned by the shared visual layer. Stage 3 must not need a compensating reset for Stage 2 placement.  
+**Classification:** CONFORMANCE / SINGLE-OWNERSHIP DEFECT.
+
+### M-06 — Back / Forward history representation
 
 **Finding:** semantics are established; technical history representation is not. Several learner-visible states contain internal substate (teaching beat, measurement phase, pending result handoff).  
 **Target:** implementation must preserve enough visited-state information to review / traverse actual visited learner states without mutation. It must not assume `state.current` alone is always sufficient.  
 **Classification:** IMPLEMENTATION DESIGN REQUIRED, bounded by current control semantics.
 
-### M-06 — Retry / Redo
+### M-07 — Retry / Redo
 
 **Finding:** need is established but reset / invalidation semantics remain OPEN.  
 **Target:** no Retry / Redo behavior implemented as part of transition work until authority resolves the reset contract.  
@@ -307,8 +318,9 @@ The review must verify, independently from the mapping tables where possible, th
 5. course-shell controls remain separate from local progression;
 6. the mapping does not invent Retry / Redo reset semantics;
 7. the Stage 3 chapter-navigation mismatch is surfaced rather than inferred away;
-8. the Stage 1 / Stage 3 object-locality defects are correctly distinguished from Stage 2’s conforming pattern;
+8. the Stage 1 / Stage 3 object-locality defects are correctly distinguished from Stage 2’s conforming interaction pattern;
 9. the Stage 3 Show-solution ownership issue is treated as runtime conformance, not a pedagogical redesign;
-10. the mapping uses only current baseline implementation at or after `bd9ff8a3`, with no historical runtime used as authority.
+10. cross-encounter CSS placement does not escape review merely because each isolated screen can be made to look correct; compensating Stage-specific resets are treated as a single-ownership defect;
+11. the mapping uses only current baseline implementation at or after `bd9ff8a3`, with no historical runtime used as authority.
 
-Until that review is recorded, **runtime changes remain prohibited by this task boundary**.
+Until the revised mapping receives a recorded review verdict, **runtime changes remain prohibited by this task boundary**.
