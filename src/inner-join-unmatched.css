@@ -16,43 +16,6 @@
   transform: translateY(32px);
 }
 
-/* Keep solution assistance in normal flow so it never covers learner-authored SQL. */
-.learning-panel.sql-implementation-active:has(.data-card[data-relation="company"]) .lab-workspace {
-  grid-template-rows: 42px auto minmax(150px, .9fr) minmax(155px, 1fr);
-}
-
-.learning-panel.sql-implementation-active:has(.data-card[data-relation="company"]) .editor-header {
-  grid-row: 1;
-}
-
-.learning-panel.sql-implementation-active:has(.data-card[data-relation="company"]) .lab-workspace > .sql-solution-panel {
-  position: static;
-  z-index: auto;
-  grid-row: 2;
-  width: auto;
-  max-height: 190px;
-  margin: 0;
-  overflow: auto;
-  border-right: 0;
-  border-left: 0;
-  border-radius: 0;
-  box-shadow: none;
-}
-
-.learning-panel.sql-implementation-active:has(.data-card[data-relation="company"]) .lab-workspace > .sql-solution-panel .solution-panel-body pre {
-  max-height: 130px;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-.learning-panel.sql-implementation-active:has(.data-card[data-relation="company"]) #editor {
-  grid-row: 3;
-}
-
-.learning-panel.sql-implementation-active:has(.data-card[data-relation="company"]) .results-panel {
-  grid-row: 4;
-}
-
 @media (max-width: 760px) {
   .learning-panel:has(.data-card[data-relation="company"]) .relation-preview.relationship-visible .data-card[data-relation="funding_round"],
   .learning-panel:has(.data-card[data-relation="company"]) .relation-preview.relationship-visible .data-card[data-relation="company"] {

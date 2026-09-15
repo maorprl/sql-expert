@@ -72,6 +72,25 @@ function showError(title, error, statement = '') {
   errorPanel.innerHTML = `<strong>${escapeHtml(title)}.</strong> ${escapeHtml(text)}${near ? `<br><small>${escapeHtml(near)}</small>` : ''}${statement ? `<br><small>Statement: ${escapeHtml(compact(statement, 260))}</small>` : ''}`;
 }
 function clearError() { errorPanel.hidden = true; errorPanel.textContent = ''; }
+function showSqlDiagnostic(title, error, statement = '') {
+  const panel = el('sql-diagnostic');
+  const text = error instanceof Error ? error.message : String(error);
+  panel.hidden = false;
+  panel.textContent = '';
+  const heading = document.createElement('strong');
+  heading.textContent = `${title}.`;
+  panel.append(heading, document.createTextNode(` ${text}`));
+  if (statement) {
+    const detail = document.createElement('small');
+    detail.textContent = `Statement: ${compact(statement, 260)}`;
+    panel.append(document.createElement('br'), detail);
+  }
+}
+function clearSqlDiagnostic() {
+  const panel = el('sql-diagnostic');
+  panel.hidden = true;
+  panel.textContent = '';
+}
 function escapeHtml(value) { return String(value).replace(/[&<>'\"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[c])); }
 function compact(value, length) { return value.replace(/\s+/g, ' ').trim().slice(0, length); }
 
@@ -231,18 +250,18 @@ function restoreEncounterResults(name) {
 }
 
 function runCurrentQuery() {
-  clearError(); if (!db) return;
+  clearError(); clearSqlDiagnostic(); if (!db) return;
   if (activeEncounter?.canRunSql && !activeEncounter.canRunSql()) {
-    showError('SQL is not available yet', 'Complete the required reasoning before using SQL for verification.');
+    showSqlDiagnostic('SQL is not available yet', 'Complete the required reasoning before using SQL for verification.');
     return;
   }
   const statement = selectedOrCurrent();
-  if (!statement.trim()) { showError('No SQL to run', 'Select SQL or place the cursor within a statement.'); return; }
+  if (!statement.trim()) { showSqlDiagnostic('No SQL to run', 'Select SQL or place the cursor within a statement.'); return; }
   try {
     const resultSets = db.exec(statement);
     resultTable(resultSets);
     activeEncounter?.handleSqlSuccess?.(statement, resultSets);
-  } catch (error) { showError('SQL error', error, statement); }
+  } catch (error) { showSqlDiagnostic('SQL error', error, statement); }
 }
 
 function showActiveSolution(event) {
@@ -251,6 +270,7 @@ function showActiveSolution(event) {
   if (!learningPanel.matches('.sql-implementation-active, .cycle1-sql-active')) return;
   const solution = ENCOUNTER_SOLUTIONS[activeEncounterName];
   if (!solution) return;
+  clearSqlDiagnostic();
   editor.setValue(solution, -1);
   editor.focus();
 }
@@ -303,6 +323,7 @@ function resetEncounterDom() {
   el('completed-steps').innerHTML = '';
   el('current-step').innerHTML = '';
   el('relation-preview').innerHTML = '';
+  clearSqlDiagnostic();
 }
 
 function resetLearningPanelState() {
@@ -426,7 +447,7 @@ function activateEncounter(name) {
 }
 
 el('run-query').addEventListener('click', runCurrentQuery);
-el('clear-results').addEventListener('click', () => { clearRenderedResults({ forget: true }); clearError(); });
+el('clear-results').addEventListener('click', () => { clearRenderedResults({ forget: true }); clearError(); clearSqlDiagnostic(); });
 el('reset-db').addEventListener('click', loadDatabase);
 el('schema-search').addEventListener('input', renderSchema);
 

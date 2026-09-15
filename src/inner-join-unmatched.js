@@ -43,7 +43,6 @@ export function createInnerJoinUnmatched({ editor, getDatabase, getSchema, onSel
   const workingStatusEl = document.getElementById('working-schema-status');
   const labEl = document.getElementById('lab-workspace');
   const learningEl = document.querySelector('.learning-panel');
-  const solutionButton = document.getElementById('show-solution');
 
   function escapeHtml(value) {
     return String(value).replace(/[&<>'\"]/g, (character) => ({
@@ -64,28 +63,6 @@ export function createInnerJoinUnmatched({ editor, getDatabase, getSchema, onSel
   function companyReference(name, companyId) {
     return `${name} (company_id ${companyId})`;
   }
-
-  function showSolution() {
-    if (document.title !== 'SQL Lab · INNER JOIN unmatched rows' || state.current !== 'sql' || !learningEl.classList.contains('sql-implementation-active')) return;
-    const panel = document.getElementById('solution-panel');
-    if (!panel) return;
-    panel.innerHTML = `<div class="solution-panel-heading"><span>Solution assistance</span><button id="close-solution" type="button" aria-label="Close solution">Close</button></div><div class="solution-panel-body"><strong>Solution SQL:</strong><pre>SELECT
-  company.company_id,
-  company.status,
-  funding_round.funding_round_id,
-  funding_round.round_type,
-  funding_round.announced_date
-FROM company
-JOIN funding_round
-  ON company.company_id = funding_round.company_id;</pre><p>This is assistance only. It has not been inserted or run.</p></div>`;
-    panel.hidden = false;
-    document.getElementById('close-solution').addEventListener('click', () => {
-      panel.hidden = true;
-      panel.innerHTML = '';
-    });
-  }
-
-  solutionButton?.addEventListener('click', showSolution);
 
   function relationshipLevel() {
     if (state.evidence.has('cardinality')) return 2;
@@ -126,6 +103,7 @@ JOIN funding_round
   }
 
   function renderRelations() {
+    document.getElementById('working-schema-action')?.remove();
     const selected = orderedSelectedRelations();
     const showRelationship = relationshipLevel() > 0 && REQUIRED_RELATIONS.every((name) => state.selectedRelations.includes(name));
     relationEl.classList.toggle('relationship-visible', showRelationship);
@@ -158,6 +136,35 @@ JOIN funding_round
       state.localFeedback = '';
       render();
     }));
+    if (state.current === 'connection') renderConnectionAction();
+  }
+
+  function renderConnectionAction() {
+    const success = state.pendingAdvance?.item.id === 'connection';
+    const element = document.createElement('section');
+    element.id = 'working-schema-action';
+    element.className = 'working-schema-action';
+    element.innerHTML = success ? `
+      <div><span class="eyebrow">Connection established</span><strong><code>funding_round.company_id</code> identifies the company.</strong></div>
+      ${state.pendingAdvance.item.feedback}
+      <button id="continue-after-connection" class="primary connection-continue">Continue to Cardinality</button>
+    ` : `
+      <div><span class="eyebrow">Current action</span><strong>Which column in <code>funding_round</code> identifies the company that the round belongs to?</strong></div>
+      <button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>
+      ${feedbackMarkup()}
+    `;
+    relationEl.append(element);
+    if (success) return;
+    element.querySelector('#check-column').addEventListener('click', () => {
+      if (state.selectedColumn !== 'company_id') return wrong('Look at one funding-round row and ask which column identifies the company that round belongs to.');
+      record({
+        evidence: 'connection',
+        prompt: 'Which column in funding_round identifies the company that the round belongs to?',
+        answer: 'funding_round.company_id',
+        feedback: '<div class="success-feedback">Correct. <code>funding_round.company_id</code> identifies the company for that round.</div><div class="concept-callout"><strong>REUSED RELATIONSHIP PATTERN</strong><b>Primary Key / Foreign Key</b><span><code>funding_round.company_id</code> is the Foreign Key (FK). It points to <code>company.company_id</code>, the Primary Key (PK).</span></div>',
+        next: 'cardinality',
+      });
+    });
   }
 
   function addRelation(name) {
@@ -256,6 +263,12 @@ JOIN funding_round
     const { next, item } = state.pendingAdvance;
     const unmatched = companyReference(state.unmatchedCompanyName, state.unmatchedCompanyId);
 
+    if (item.id === 'connection') {
+      interactionLifecycle.renderCurrent(stepShell('Connection established.', teacherVoice('The relationship is now visible in the Working Schema. Continue there when you are ready to return to ordinary Cardinality reasoning.')));
+      continueFromPending('continue-after-connection');
+      return;
+    }
+
     if (item.id === 'matchEvidence' && next === 'prediction') {
       interactionLifecycle.renderCurrent(stepShell('Zero-match case established.', teacherVoice(`You found a real zero-match case: ${escapeHtml(unmatched)} exists on the company side, but there is no funding-round row to pair with it. The team also needs to know whether every company is represented in the funding-round report, so this company is the case that can test that coverage. Before writing SQL, predict what INNER JOIN will do with this starting row.`)));
       renderWorkspaceAction(`
@@ -283,6 +296,13 @@ JOIN funding_round
         <button id="continue-to-verification" class="primary continue-after-feedback">Continue to verification</button>
       `, 'result-followup');
       continueFromPending('continue-to-verification');
+      return;
+    }
+
+    if (item.id === 'verification' && next === 'transfer') {
+      interactionLifecycle.renderCurrent(stepShell('Verification complete.', teacherVoice('You verified the result against the zero-match prediction. Continue with Results still available when you are ready to return to the separate business coverage conclusion.')));
+      renderWorkspaceAction(`<p class="confirmed-answer"><strong>${escapeHtml(item.answerLabel)}:</strong> ${escapeHtml(item.answer)}</p>${item.feedback}<button id="continue-to-coverage" class="primary continue-after-feedback">Continue to coverage conclusion</button>`, 'verification-followup');
+      continueFromPending('continue-to-coverage');
       return;
     }
 
@@ -380,8 +400,9 @@ JOIN funding_round
     if (state.matchEvidencePhase === 'companies') {
       interactionLifecycle.renderCurrent(stepShell(
         'Establish which companies exist in the current data.',
-        `${teacherVoice('You established that one requested result row represents one recorded funding round. The business question also asks whether every company is represented in that report. Inspect the actual data and establish whether every company has a matching funding-round row.')}<div class="measurement-note">Run the prepared query in the SQL Workspace; you do not need to write SQL yet. This first measurement gives you each company name together with the key you will compare in the next measurement.</div>${feedbackMarkup()}`,
+        `${teacherVoice('You established that one requested result row represents one recorded funding round. The business question also asks whether every company is represented in that report. Inspect the actual data and establish whether every company has a matching funding-round row.')}<div class="measurement-note">Run the prepared query in the SQL Workspace; you do not need to write SQL yet. This first measurement gives you each company name together with the key you will compare in the next measurement.</div>`,
       ));
+      if (state.localFeedback) renderWorkspaceAction(feedbackMarkup(), 'tool-diagnostic');
       return;
     }
 
@@ -407,11 +428,12 @@ JOIN funding_round
       const companies = state.companyEvidenceRows.map(([companyId, name]) => ({ companyId: String(companyId), name: String(name) }));
       interactionLifecycle.renderCurrent(stepShell(
         'Which funding-round rows point to those companies?',
-        `${teacherVoice('Now inspect the funding-round rows. Compare their company IDs with the named company rows you already established. This comparison will tell you whether the report has a matching funding-round row available for every company.')}<div class="measurement-note">Run the prepared query in the SQL Workspace; you do not need to write SQL yet. Then use the two measurements together.</div>${feedbackMarkup()}`,
+        `${teacherVoice('Now inspect the funding-round rows. Compare their company IDs with the named company rows you already established. This comparison will tell you whether the report has a matching funding-round row available for every company.')}<div class="measurement-note">Run the prepared query in the SQL Workspace; you do not need to write SQL yet. Then use the two measurements together.</div>`,
       ));
       renderWorkspaceAction(`
         <div class="evidence-kicker">Established from your first measurement</div>
         <div class="verification-prompt"><strong>Companies in company</strong><span>${companies.map(({ companyId, name }) => `${escapeHtml(name)} <code>${escapeHtml(companyId)}</code>`).join(' · ')}</span></div>
+        ${feedbackMarkup()}
       `, 'baseline-followup');
       return;
     }
@@ -506,16 +528,18 @@ JOIN funding_round
     ];
     const draft = state.drafts.verification || '';
     interactionLifecycle.renderCurrent(stepShell(
-      `What does the actual result show about ${escapeHtml(companyName)}?`,
-      `<div class="verification-prompt"><strong>Earlier prediction</strong><span>${escapeHtml(companyName)} (company_id ${escapeHtml(companyId)}) contributes 0 INNER JOIN result rows.</span></div>
+      'Verify the zero-match prediction in Results.',
+      '<p class="step-copy">The verification prompt, response, feedback, and Continue remain with the result evidence.</p>',
+      teacherVoice(`Use Results as the evidence surface. Search the company_id column for ${escapeHtml(companyId)} rather than using the total row count as a substitute for checking which companies are represented.`),
+    ));
+    const action = renderWorkspaceAction(`<div class="verification-prompt"><strong>Earlier prediction</strong><span>${escapeHtml(companyName)} (company_id ${escapeHtml(companyId)}) contributes 0 INNER JOIN result rows.</span></div>
+      <h3>What does the actual result show about ${escapeHtml(companyName)}?</h3>
       <form id="verification-answer-form" class="answer-form">
         <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${value}" ${draft === value ? 'checked' : ''}> <span>${escapeHtml(label)}</span></label>`).join('')}</fieldset>
         <button class="primary" type="submit">Check answer</button>
       </form>
-      ${feedbackMarkup()}`,
-      teacherVoice(`Use Results as the evidence surface. Search the company_id column for ${escapeHtml(companyId)} rather than using the total row count as a substitute for checking which companies are represented.`),
-    ));
-    document.getElementById('verification-answer-form').addEventListener('submit', (event) => {
+      ${feedbackMarkup()}`, 'verification-question');
+    action.querySelector('#verification-answer-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const answer = new FormData(event.currentTarget).get('answer');
       state.drafts.verification = answer || '';
@@ -563,20 +587,10 @@ JOIN funding_round
       });
     } else if (state.current === 'connection') {
       interactionLifecycle.renderCurrent(stepShell(
-        'Which column in <code>funding_round</code> identifies the company that the round belongs to?',
-        `<p class="step-copy">In the Working Schema, select the column that connects each funding round to its company.</p><button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`,
+        'Trace the funding-round-to-company connection in the Working Schema.',
+        '<p class="step-copy">Select the connecting field directly in the Working Schema.</p>',
         teacherVoice('You found the relations that supply company context and recorded round details. Now trace from a funding round to its company so we can establish how those relations connect.'),
       ));
-      document.getElementById('check-column').addEventListener('click', () => {
-        if (state.selectedColumn !== 'company_id') return wrong('Look at one funding-round row and ask which column identifies the company that round belongs to.');
-        record({
-          evidence: 'connection',
-          prompt: 'Which column in funding_round identifies the company that the round belongs to?',
-          answer: 'funding_round.company_id',
-          feedback: '<div class="success-feedback">Correct. <code>funding_round.company_id</code> identifies the company for that round.</div><div class="concept-callout"><strong>REUSED RELATIONSHIP PATTERN</strong><b>Primary Key / Foreign Key</b><span><code>funding_round.company_id</code> is the Foreign Key (FK). It points to <code>company.company_id</code>, the Primary Key (PK).</span></div>',
-          next: 'cardinality',
-        });
-      });
     } else if (state.current === 'cardinality') {
       choiceQuestion({
         intro: teacherVoice('In the Working Schema, the key connection you found is now visible. Use it to read the established relationship in both directions before predicting what the JOIN can do.'),
@@ -616,15 +630,16 @@ JOIN funding_round
     } else if (state.current === 'sql') {
       interactionLifecycle.renderCurrent(stepShell(
         'Implement the INNER JOIN you already know.',
-        `<p class="step-copy">Move to the SQL Workspace and return the requested company context and funding-round details using the relationship you established.</p>
+        `<p class="step-copy">Move to the SQL Workspace and return the requested company context and funding-round details using the relationship you established.</p><p class="implementation-check"><strong>Prediction to verify:</strong> ${escapeHtml(state.unmatchedCompanyName)} (company_id ${escapeHtml(state.unmatchedCompanyId)}) has no matching funding-round row, so you predicted it will contribute zero INNER JOIN rows.</p>`,
+        teacherVoice('You discovered the unmatched company from the data and predicted what INNER JOIN will do with it. Implement the established company-to-round relationship with the INNER JOIN you already know, then use Results to test that prediction.'),
+      ));
+      renderWorkspaceAction(`
         <details class="optional-scaffold desired-output"><summary>Show desired output</summary><div class="optional-scaffold-body"><div class="desired-output-grid"><code>company_id</code><code>status</code><code>funding_round_id</code><code>round_type</code><code>announced_date</code></div><p>Return these five fields in this order.</p></div></details>
         <details class="optional-scaffold sql-structure"><summary>Show SQL structure</summary><div class="optional-scaffold-body"><pre>SELECT ...
 FROM company
 JOIN funding_round
   ON ...</pre><p>Reuse the same INNER JOIN pattern. No new JOIN syntax is needed in this stage.</p></div></details>
-        <p class="implementation-check"><strong>Prediction to verify:</strong> ${escapeHtml(state.unmatchedCompanyName)} (company_id ${escapeHtml(state.unmatchedCompanyId)}) has no matching funding-round row, so you predicted it will contribute zero INNER JOIN rows.</p>${feedbackMarkup()}`,
-        teacherVoice('You discovered the unmatched company from the data and predicted what INNER JOIN will do with it. Implement the established company-to-round relationship with the INNER JOIN you already know, then use Results to test that prediction.'),
-      ));
+        ${feedbackMarkup()}`, 'sql-authoring-assistance');
     } else if (state.current === 'verification') {
       renderVerification();
     } else if (state.current === 'transfer') {

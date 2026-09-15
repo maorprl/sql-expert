@@ -94,7 +94,7 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
   }
 
   function clearWorkingSchemaAction() {
-    document.getElementById('stage2-working-schema-action')?.remove();
+    document.getElementById('working-schema-action')?.remove();
   }
 
   function renderRelations() {
@@ -131,22 +131,29 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
       render();
     }));
 
-    if (state.current === 'connection' && !state.pendingAdvance) renderConnectionAction();
+    if (state.current === 'connection') renderConnectionAction();
   }
 
   function renderConnectionAction() {
+    const success = state.pendingAdvance?.item.id === 'connection';
     const element = document.createElement('section');
-    element.id = 'stage2-working-schema-action';
-    element.className = 'stage2-working-schema-action';
-    element.innerHTML = `
+    element.id = 'working-schema-action';
+    element.className = 'working-schema-action';
+    element.innerHTML = success ? `
+      <div><span class="eyebrow">Connection established</span><strong><code>round_investment.funding_round_id</code> identifies the funding round.</strong></div>
+      ${state.pendingAdvance.item.feedback}
+      <button id="continue-after-connection" class="primary connection-continue">Continue to Grain</button>
+    ` : `
       <div>
         <span class="eyebrow">Current action</span>
-        <strong>${state.selectedColumn ? `Selected: ${escapeHtml(state.selectedColumn)}` : 'Select a column in round_investment'}</strong>
+        <strong>Which column in <code>round_investment</code> tells us which funding round a participation belongs to?</strong>
+        <span>${state.selectedColumn ? `Selected: ${escapeHtml(state.selectedColumn)}` : 'Select a column in round_investment'}</span>
       </div>
       <button id="check-stage2-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>
       ${feedbackMarkup()}
     `;
     relationEl.append(element);
+    if (success) return;
     element.querySelector('#check-stage2-column').addEventListener('click', () => {
       if (state.selectedColumn !== 'funding_round_id') return wrong('Look at one participation row and ask which column identifies the funding round that participation belongs to. The relationship stays hidden until you establish that connection.');
       record({
@@ -241,31 +248,9 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
   function renderAcknowledgement() {
     const { next, item } = state.pendingAdvance;
 
-    if (item.id === 'cardinality' && next === 'prediction') {
-      interactionLifecycle.renderCurrent(stepShell('Relationship established.', teacherVoice('You have established both pieces needed for the next prediction: one result row represents one participation, and one funding round can relate to multiple participation records.')));
-      renderWorkspaceAction(`${item.feedback}<button id="continue-to-prediction" class="primary">Continue to prediction</button>`, 'prediction-followup');
-      continueFromPending('continue-to-prediction');
-      return;
-    }
-
-    if (item.id === 'prediction' && next === 'repetition') {
-      interactionLifecycle.renderCurrent(stepShell('Result shape predicted.', teacherVoice('You predicted that one funding round can occupy several participation-level rows. Before naming the behavior, decide what that means for the round-level context carried on those rows.')));
-      renderWorkspaceAction(`${item.feedback}<button id="continue-to-repetition" class="primary">Continue</button>`, 'prediction-followup');
-      continueFromPending('continue-to-repetition');
-      return;
-    }
-
-    if (item.id === 'repetition' && next === 'concept') {
-      interactionLifecycle.renderCurrent(stepShell('Repeated context predicted.', teacherVoice('You have now predicted both the result shape and why repeated round-level values do not automatically mean duplicate rows.')));
-      renderWorkspaceAction(`${item.feedback}<button id="continue-to-concept" class="primary">Continue</button>`, 'prediction-followup');
-      continueFromPending('continue-to-concept');
-      return;
-    }
-
-    if (item.id === 'application' && next === 'sql') {
-      interactionLifecycle.renderCurrent(stepShell('Prediction applied.', teacherVoice('You applied the structural prediction to a concrete case. Next, implement the already-established funding-round-to-participation relationship in SQL.')));
-      renderWorkspaceAction(`${item.feedback}<button id="continue-to-sql" class="primary">Continue to SQL implementation</button>`, 'prediction-followup');
-      continueFromPending('continue-to-sql');
+    if (item.id === 'connection') {
+      interactionLifecycle.renderCurrent(stepShell('Connection established.', teacherVoice('The relationship is now visible in the Working Schema. Continue there when you are ready to return to ordinary Grain reasoning.')));
+      continueFromPending('continue-after-connection');
       return;
     }
 
@@ -307,27 +292,15 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
       ['collapse', 'The participation records should collapse into one result row for the funding round.'],
       ['round-grain', 'The result should switch to one funding round per row.'],
     ];
-    const draft = state.drafts.prediction || '';
-    interactionLifecycle.renderCurrent(stepShell('Predict from the Grain and relationship.', teacherVoice('Hold together only what you have already established: one result row represents one participation, and one funding round can relate to multiple participation records.')));
-    const action = renderWorkspaceAction(`
-      <div class="prediction-premises" aria-label="Established facts for the prediction">
-        <div><span>Result Grain</span><strong>one participation per row</strong></div>
-        <div><span>Relationship</span><strong>one round can relate to multiple participations</strong></div>
-      </div>
-      <div class="evidence-kicker">Predict behavior</div>
-      <h3>If the same funding round has several recorded participations, what must be possible in the result?</h3>
-      <form id="prediction-answer-form" class="answer-form">
-        <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${value}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>
-        <button class="primary" type="submit">Check answer</button>
-      </form>
-      ${feedbackMarkup()}
-    `, 'prediction-question');
-    action.querySelector('#prediction-answer-form').addEventListener('submit', (event) => {
-      event.preventDefault();
-      const answer = new FormData(event.currentTarget).get('answer');
-      state.drafts.prediction = answer || '';
-      if (answer !== 'multiply') return wrong('Keep the target Grain fixed at one participation per result row. If several participation records belong to the same funding round, each still has to remain represented.');
-      record({ evidence: 'prediction', prompt: 'If the same funding round has several recorded participations, what must be possible in the result?', answer: stripMarkup(options.find(([value]) => value === answer)[1]), value: answer, options, feedback: '<div class="success-feedback">Correct. At participation Grain, one funding round can occupy several result rows when several participation records must remain represented.</div>', next: 'repetition' });
+    choiceQuestion({
+      intro: `${teacherVoice('Hold together only what you have already established: one result row represents one participation, and one funding round can relate to multiple participation records.')}<div class="prediction-premises" aria-label="Established facts for the prediction"><div><span>Result Grain</span><strong>one participation per row</strong></div><div><span>Relationship</span><strong>one round can relate to multiple participations</strong></div></div>`,
+      prompt: 'If the same funding round has several recorded participations, what must be possible in the result?',
+      options,
+      correct: 'multiply',
+      evidence: 'prediction',
+      next: 'repetition',
+      feedback: '<div class="success-feedback">Correct. At participation Grain, one funding round can occupy several result rows when several participation records must remain represented.</div>',
+      wrongFeedback: 'Keep the target Grain fixed at one participation per result row. If several participation records belong to the same funding round, each still has to remain represented.',
     });
   }
 
@@ -443,7 +416,7 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
         record({ evidence: 'relations', prompt: 'Which relations contain the information we need?', answer: 'funding_round and round_investment', feedback: '<div class="success-feedback">Correct. <code>funding_round</code> gives us the round context, and <code>round_investment</code> contains the recorded investor participations.</div>', next: 'connection' });
       });
     } else if (state.current === 'connection') {
-      interactionLifecycle.renderCurrent(stepShell('Which column in <code>round_investment</code> tells us which funding round a participation belongs to?', '<p class="step-copy">Select the candidate column directly in the active <code>round_investment</code> card. Check it beside the Working Schema.</p>', teacherVoice('You found the two relations. Now trace from one participation record to the funding round it belongs to; the funding_round card remains available as a reference.')));
+      interactionLifecycle.renderCurrent(stepShell('Trace the participation-to-round connection in the Working Schema.', '<p class="step-copy">Select the connecting field directly in the Working Schema.</p>', teacherVoice('You found the two relations. Now trace from one participation record to the funding round it belongs to; the funding_round card remains available as a reference.')));
     } else if (state.current === 'output') {
       choiceQuestion({ intro: teacherVoice('You found how a participation points to its funding round. Now return to the review request and establish what one requested output row should represent.'), prompt: 'If the result should show who took part in each funding round, what should one result row represent?', options: [['participation', 'one recorded round-investor participation'], ['round', 'one funding round'], ['investor', 'one investor across all rounds'], ['company', 'one company']], correct: 'participation', evidence: 'output', next: 'cardinality', feedback: '<div class="success-feedback">Correct. Each row is about one recorded participation. Funding-round information can be carried alongside it without changing that row meaning.</div><div class="concept-callout"><strong>REUSED CONCEPT</strong><b>Grain</b><span>The requested result Grain is one recorded round-investor participation per row.</span></div>', wrongFeedback: 'The review needs each recorded participation to remain individually visible. What must one result row represent to preserve that?' });
     } else if (state.current === 'cardinality') {
@@ -453,10 +426,11 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
     else if (state.current === 'concept') renderConceptMoment();
     else if (state.current === 'application') renderApplication();
     else if (state.current === 'sql') {
-      interactionLifecycle.renderCurrent(stepShell('Implement the JOIN you already know.', `<p class="step-copy">Move to the SQL Workspace and write the participation query from the business request and the relationship you established.</p><details class="optional-scaffold desired-output"><summary>Show desired output</summary><div class="optional-scaffold-body"><div class="desired-output-grid"><code>funding_round_id</code><code>round_type</code><code>announced_date</code><code>round_investment_id</code><code>investor_id</code><code>is_lead</code></div><p>Return these six fields in this order.</p></div></details><details class="optional-scaffold sql-structure"><summary>Show SQL structure</summary><div class="optional-scaffold-body"><pre>SELECT ...
+      interactionLifecycle.renderCurrent(stepShell('Implement the JOIN you already know.', '<p class="step-copy">Move to the SQL Workspace and write the participation query from the business request and the relationship you established.</p><p class="implementation-check"><strong>Predictions to preserve:</strong> one funding round can occupy several participation rows, and round-level context can repeat across those distinct rows.</p>', teacherVoice('The relational reasoning is already established. SQL now implements that plan; it does not replace the earlier Grain-and-Cardinality prediction.')));
+      renderWorkspaceAction(`<details class="optional-scaffold desired-output"><summary>Show desired output</summary><div class="optional-scaffold-body"><div class="desired-output-grid"><code>funding_round_id</code><code>round_type</code><code>announced_date</code><code>round_investment_id</code><code>investor_id</code><code>is_lead</code></div><p>Return these six fields in this order.</p></div></details><details class="optional-scaffold sql-structure"><summary>Show SQL structure</summary><div class="optional-scaffold-body"><pre>SELECT ...
 FROM funding_round
 JOIN round_investment
-  ON ...</pre><p>Reuse <code>JOIN</code> and express the established relationship in <code>ON</code>.</p></div></details><p class="implementation-check"><strong>Predictions to preserve:</strong> one funding round can occupy several participation rows, and round-level context can repeat across those distinct rows.</p>${feedbackMarkup()}`, teacherVoice('The relational reasoning is already established. SQL now implements that plan; it does not replace the earlier Grain-and-Cardinality prediction.')));
+  ON ...</pre><p>Reuse <code>JOIN</code> and express the established relationship in <code>ON</code>.</p></div></details>${feedbackMarkup()}`, 'sql-authoring-assistance');
     } else if (state.current === 'finalGrain') renderFinalVerification();
     else if (state.current === 'complete') {
       const requiredEvidence = ['relations', 'connection', 'output', 'cardinality', 'prediction', 'repetition', 'application', 'sql', 'finalGrain'];
