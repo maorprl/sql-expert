@@ -299,6 +299,13 @@ td.null { color: #7d8795; font-style: italic; }
 @media (max-width: 1100px) {
   .workspace { grid-template-columns: 245px minmax(0, 1fr); }
   .lesson-surface { grid-template-columns: 1fr; }
+  .learning-panel:is(.sql-implementation-active, .cycle1-sql-active, .results-evidence-active, .cycle1-results-active, .cycle1-verification-active) .lesson-surface { display: flex; flex-direction: column; }
+  .learning-panel:is(.sql-implementation-active, .cycle1-sql-active, .results-evidence-active, .cycle1-results-active, .cycle1-verification-active) :is(.reasoning-column, .implementation-column) { display: contents; }
+  .learning-panel:is(.sql-implementation-active, .cycle1-sql-active, .results-evidence-active, .cycle1-results-active, .cycle1-verification-active) .current-step { order: 1; }
+  .learning-panel:is(.sql-implementation-active, .cycle1-sql-active, .results-evidence-active, .cycle1-results-active, .cycle1-verification-active) .lab-workspace { order: 2; }
+  .learning-panel:is(.sql-implementation-active, .cycle1-sql-active, .results-evidence-active, .cycle1-results-active, .cycle1-verification-active) :is(.workspace-evidence-action, .sql-diagnostic) { order: 3; }
+  .learning-panel:is(.sql-implementation-active, .cycle1-sql-active, .results-evidence-active, .cycle1-results-active, .cycle1-verification-active) .completed-steps { order: 4; margin-top: 0; }
+  .learning-panel:is(.sql-implementation-active, .cycle1-sql-active, .results-evidence-active, .cycle1-results-active, .cycle1-verification-active) .working-schema-panel { order: 5; }
 }
 
 @media (max-width: 760px) {

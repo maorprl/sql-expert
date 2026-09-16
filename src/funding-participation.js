@@ -153,7 +153,10 @@ export function createFundingParticipation({ editor, getDatabase, getSchema, onS
       ${feedbackMarkup()}
     `;
     relationEl.append(element);
-    if (success) return;
+    if (success) {
+      requestAnimationFrame(() => document.getElementById('continue-after-connection')?.scrollIntoView({ block: 'nearest' }));
+      return;
+    }
     element.querySelector('#check-stage2-column').addEventListener('click', () => {
       if (state.selectedColumn !== 'funding_round_id') return wrong('Look at one participation row and ask which column identifies the funding round that participation belongs to. The relationship stays hidden until you establish that connection.');
       record({

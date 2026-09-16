@@ -154,7 +154,10 @@ export function createInnerJoinUnmatched({ editor, getDatabase, getSchema, onSel
       ${feedbackMarkup()}
     `;
     relationEl.append(element);
-    if (success) return;
+    if (success) {
+      requestAnimationFrame(() => document.getElementById('continue-after-connection')?.scrollIntoView({ block: 'nearest' }));
+      return;
+    }
     element.querySelector('#check-column').addEventListener('click', () => {
       if (state.selectedColumn !== 'company_id') return wrong('Look at one funding-round row and ask which column identifies the company that round belongs to.');
       record({

@@ -121,7 +121,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
     element.innerHTML = success ? `
       <div><span class="eyebrow">Connection established</span><strong><code>news_article.news_source_id</code> identifies the publishing source.</strong></div>
       ${state.pendingAdvance.item.feedback}
-      <button id="continue-after-connection" class="primary connection-continue">Continue to Cardinality</button>
+      <button id="continue-after-connection" class="primary connection-continue">Continue</button>
     ` : `
       <div><span class="eyebrow">Current action</span><strong>Which column in <code>news_article</code> tells us which source published the article?</strong></div>
       <button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>
@@ -224,8 +224,9 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
     const { next, item } = state.pendingAdvance;
 
     if (item.id === 'connection') {
-      interactionLifecycle.renderCurrent(stepShell('Connection established.', teacherVoice('The relationship is now visible in the Working Schema. Continue there when you are ready to return to ordinary Cardinality reasoning.')));
+      interactionLifecycle.renderCurrent(stepShell('Connection established.', teacherVoice('Continue to the next reasoning step.')));
       continueFromPending('continue-after-connection');
+      requestAnimationFrame(() => document.getElementById('continue-after-connection')?.scrollIntoView({ block: 'nearest' }));
       return;
     }
 
