@@ -74,11 +74,11 @@ The active reasoning or action surface should lead; established artifacts should
 
 When a learner action produces evidence that must be interpreted immediately, keep the action, resulting evidence, and immediate interpretation spatially associated enough to read as one continuous reasoning cycle. Avoid unnecessary left-right or top-bottom jumps that make the learner search for the next action after producing evidence.
 
-When the primary learner activity legitimately moves between page regions, the handoff should be visually legible. The learner should not experience the active questionnaire or action surface as simply jumping between columns without a clear change in role or reasoning phase.
+Primary attention may legitimately shift between the learner-response lane and a tool, object, or evidence surface as the learner's role changes. That change in visual prominence does not relocate the learner-response role itself: on the current multi-lane course surface, learner-facing reasoning and verification responses remain anchored to the learner-response lane under Section 15. A handoff should make the new active tool or evidence surface obvious without making the learner hunt for where questions, checking, feedback, or progression controls have moved.
 
 During active authoring, the current task, the authoring tool, and references needed to perform that task should read as one coherent working area. A supporting reference may be visually secondary, but it should remain practically available without requiring the learner to leave the authoring context.
 
-A transition control should normally appear near the evidence or action from which the next step directly follows, unless another placement has a stronger pedagogical reason.
+A transition control should normally appear near the learner-response feedback or completed reasoning move from which the next step follows. Tool-execution controls remain local to the tool they execute. Section 15 defines the stable ownership of these roles.
 
 ## 9. Teacher guidance voice
 
@@ -128,55 +128,76 @@ Back and Retry / Redo should therefore read as course-level actions rather than 
 
 ## 15. Interaction topology and locality contract
 
-The course must preserve recognizable spatial roles across the learner journey. Visual prominence may change, but prominence changes must not be implemented by arbitrarily relocating learner-facing roles between page regions.
+The current course surface uses stable learner-response and workspace/evidence roles. Visual prominence may change as the learner moves from reasoning to object interaction, measurement, authoring, evidence inspection, or verification, but those changes in prominence must not make the learner-response role jump between page regions.
 
-### 15.1 Stable learner-response anchor
+### 15.1 Stable learner-response lane
 
-The current learner prompt, its response controls, answer checking, and response-specific corrective feedback form one learner-response role. On layouts with multiple stable lanes, this role should remain anchored to a predictable learner-response region across ordinary reasoning states.
+On the current multi-lane course surface, the learner-response lane is the stable home for learner-facing reasoning and verification interactions.
 
-A change in pedagogical phase may legitimately change which surface is visually primary, but primary-surface emphasis does not by itself authorize moving the learner-response role to another column. If a learner-response surface changes page region, the change must correspond to a real role change, be supported by the encounter authority, and use a visually legible handoff. A state change alone is not sufficient justification.
+For those interactions, the following elements remain together in that lane:
 
-Equivalent learner-response roles across encounters should follow the same spatial pattern unless an encounter-specific pedagogical requirement explicitly requires otherwise.
+- the actionable learner prompt or question;
+- answer choices or other response controls that are not themselves direct manipulation of a workspace object;
+- `Check` or equivalent answer-submission control;
+- response-specific corrective and success feedback;
+- Concept Moment or reused-concept consequence that follows that reasoning move;
+- `Continue`, `Complete stage`, or another local progression control that follows the completed reasoning move.
 
-### 15.2 Tool and evidence locality
+This ownership does not alternate between lanes because a runtime state changes, because another surface becomes visually primary, or because the evidence being inspected is displayed elsewhere. Equivalent learner-response roles across Stages follow the same spatial pattern.
 
-Tools and evidence remain local to the action they support. A prepared measurement, SQL authoring action, execution control, returned result, or other evidence surface may become visually primary without taking ownership of unrelated learner-response content.
+### 15.2 Workspace, object, tool, and evidence lane
 
-When an action immediately produces evidence that the learner must interpret, the relevant control, evidence, and immediate interpretation must be close enough to read as one cycle. Large empty regions, unrelated panels, or cross-column travel must not separate a small piece of evidence from the question that interprets it.
+The workspace/evidence lane owns the surfaces the learner manipulates or inspects as working material. On the current course surface this includes, as applicable:
 
-If the learner's interaction is directly with an object such as a Working Schema field, the check and corrective feedback for that object should remain local to that interaction unless a stronger learner-experience reason requires otherwise.
+- Working Schema and direct field/relation manipulation inside it;
+- prepared measurement editors;
+- SQL editor and SQL-authoring assistance;
+- tool-execution controls such as `Run query`;
+- Results and other produced evidence;
+- SQL diagnostics and other feedback whose meaning is specifically about tool execution rather than the learner's reasoning answer.
+
+Direct manipulation remains local to the object being manipulated. For example, the learner may click a Working Schema field in the workspace/evidence lane while the question, Check, reasoning feedback, and Continue remain in the learner-response lane. The selected state of the object should remain visible on the object so the two regions read as one coordinated task.
+
+Likewise, Results remain in the workspace/evidence lane while a verification question and its answer controls remain in the learner-response lane. The layout must keep the relevant evidence visible and practically inspectable from that stable response position; evidence locality is achieved through adjacency, alignment, prominence, and focus choreography rather than by relocating the response role beside the evidence.
 
 ### 15.3 Feedback ownership
 
-Corrective feedback belongs to the learner action or response that caused it. Correctness feedback, validation feedback, SQL diagnostics, and evidence-interpretation feedback should appear with the relevant question, control, editor, schema interaction, or result context rather than in a generic distant feedback area.
+Reasoning feedback belongs with the learner-response interaction in the learner-response lane. A wrong answer, correct answer, explanatory consolidation, or Concept Moment that follows a reasoning response must not appear in another lane merely because the response depends on a schema object or evidence surface.
 
-Feedback may consolidate a completed reasoning move and bridge to the next one, but it must not force the learner to search another page region to discover whether the action they just took was accepted or how to correct it.
+Tool feedback belongs with the tool. SQL syntax/execution diagnostics, prepared-measurement execution errors, and comparable tool-state messages remain local to the editor, Run control, Results, or other tool surface that produced them.
+
+Directly manipulated workspace objects may show local selection, hover, focus, validity, or relationship state. Those object states support the interaction but do not take ownership of the learner-facing reasoning feedback.
 
 ### 15.4 Transition controls
 
-A `Continue`, verification transition, or equivalent local progression control should remain near the feedback, evidence, or completed action from which the next step follows. Transition controls must not alternate between page regions merely because different runtime states use different containers.
+Local reasoning progression controls stay with the learner-response role. `Continue`, `Complete stage`, verification progression, and equivalent controls that follow reasoning feedback remain in the learner-response lane and must not alternate between page regions as different states use different runtime containers.
+
+Tool controls remain local to the tool they execute. `Run query`, editor assistance, and comparable tool actions therefore stay in the workspace/evidence lane.
 
 Course-shell navigation such as Back / Forward or chapter navigation is exempt from this rule because it has a persistent navigation role defined separately in `course-design/course-controls.md`.
 
-### 15.5 Persistent references
+### 15.5 Persistent references and responsive ordering
 
-The Business Request, Working Schema, Live Schema, and Completed Steps may change visual prominence as their pedagogical role changes. A change in prominence is not automatically a change in location.
+The Business Request, Working Schema, Live Schema, and Completed Steps may change visual prominence as their pedagogical role changes. A change in prominence is not automatically a change in location or ownership.
 
-Working Schema may be an active interaction surface in one state and a quieter reference in another. Its treatment may change accordingly, but relocation should occur only when it materially improves the current task and does not cause the learner's primary question or action to jump unpredictably.
+Working Schema may be an active object-interaction surface in one state and a quieter reference in another. Its treatment may change accordingly, but this does not move the learner-response role into or out of the Working Schema.
 
-Completed Steps are review history, not the primary navigation mechanism. They must remain reviewable while staying visually quieter than the current task, and their accumulated size must not force the active learner interaction into a different spatial pattern.
+Completed Steps are review history, not the primary navigation mechanism. They must remain reviewable while staying visually quieter than the current task. On stacked or narrow layouts, Completed Steps must not be inserted between the current learner-response task and the active tool or evidence surface needed to perform that task. Their accumulated or expanded size must not force the learner to traverse review history to reach the active editor, Results, Working Schema, or other required workspace surface.
 
-### 15.6 Phase handoffs
+### 15.6 Phase handoffs without response-role relocation
 
-A genuine phase handoff may move the learner's primary attention from reasoning to teaching, authoring, evidence inspection, or verification. A valid handoff requires all of the following:
+A genuine phase handoff may move the learner's primary attention from reasoning to teaching, direct object manipulation, measurement, authoring, evidence inspection, or verification. The active tool or evidence surface may therefore become the strongest visual focus.
+
+Within the current course interaction model, a phase handoff changes attention and prominence; it does not relocate the learner-response role. A valid handoff requires all of the following:
 
 1. the learner role actually changes;
-2. the new primary surface is visually signaled before or as it takes focus;
-3. the previous surface remains understandable as completed work or supporting reference;
-4. the learner is not required to hunt across the page for the next control or question;
-5. equivalent handoffs use a consistent course-wide pattern.
+2. the new primary tool, object, teaching, or evidence surface is visually signaled before or as it takes focus;
+3. the learner-response lane remains recognizable and predictable when a question, checking action, reasoning feedback, or local progression control is present;
+4. the previous surface remains understandable as completed work or supporting reference;
+5. the learner is not required to hunt across the page for the next control, question, tool, or evidence;
+6. equivalent handoffs use a consistent course-wide pattern.
 
-A layout must not treat every state transition as a phase handoff.
+A layout must not treat every state transition as a phase handoff. If a future encounter genuinely requires a different response-location model, that exception must be established explicitly in current course and encounter authority before implementation; it must not be inferred from a state change, tool prominence, or evidence locality.
 
 ### 15.7 Single ownership of spatial behavior
 
@@ -190,12 +211,11 @@ Visual validation must inspect the learner journey transition by transition, not
 
 For every material state transition, validation should record at minimum:
 
-- current learner prompt / response location before and after;
-- active tool or evidence location before and after;
-- feedback location;
-- transition-control location;
+- learner-response-lane prompt, response, feedback, and progression-control state before and after;
+- active tool, object, or evidence location and visual prominence before and after;
+- whether required evidence remains practically inspectable from the stable learner-response position;
 - Working Schema / reference role;
-- Completed Steps treatment;
-- whether any page-region move represents a justified phase handoff or an unexplained jump.
+- Completed Steps treatment and ordering;
+- whether any learner-response element changed page region despite the stable-lane contract.
 
-A state may look internally coherent and still fail this contract if entering or leaving it causes an unjustified spatial jump.
+A state may look internally coherent and still fail this contract if entering or leaving it relocates the learner-response role, separates the current task from a required tool/evidence surface, or makes the learner hunt for the next action.
