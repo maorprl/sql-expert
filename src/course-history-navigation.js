@@ -13,6 +13,17 @@ function activeEncounterName() {
   return document.querySelector('[data-chapter][aria-current="step"]')?.dataset.chapter || 'media-coverage';
 }
 
+function progressionPhase(currentStep) {
+  const acknowledged = Boolean(currentStep?.querySelector('.confirmed-answer'));
+  const currentAdvance = currentStep?.querySelector('button[id^="continue-"], button[id^="complete-"]')?.id || '';
+  const workspaceAdvance = document.querySelector('#workspace-evidence-action button[id^="continue-"], #workspace-evidence-action button[id^="complete-"]')?.id || '';
+  const relationAdvance = document.querySelector('#relation-preview button[id^="continue-"], #relation-preview button[id^="complete-"]')?.id || '';
+  const teachingProgress = currentStep?.querySelector('.join-progress span')?.textContent?.trim() || '';
+  return [acknowledged ? 'acknowledged' : 'active', currentAdvance, workspaceAdvance, relationAdvance, teachingProgress]
+    .filter(Boolean)
+    .join('|');
+}
+
 function activeStateKey() {
   if (!learningPanel) return '';
   const coarseState = learningPanel.dataset.stage1State
@@ -24,7 +35,7 @@ function activeStateKey() {
   const prompt = currentStep?.querySelector('.prompt')?.textContent?.trim()
     || currentStep?.querySelector('h2')?.textContent?.trim()
     || '';
-  return `${coarseState}::${prompt}`;
+  return `${coarseState}::${prompt}::${progressionPhase(currentStep)}`;
 }
 
 function historyFor(name) {
