@@ -11,8 +11,9 @@ For course-wide behavior, this Stage remains constrained by:
 
 - `pedagogical-foundations.md`;
 - `course-design/course-visual-language.md`;
-- `course-design/course-controls.md`;
-- the current Stage 1–3 topology authority and its accepted implementation/conformance outcome.
+- `course-design/course-controls.md`.
+
+There is no separate current Stage 1–3 topology authority. Spatial placement, locality, handoffs, and visual ownership must be derived directly from the course-level visual/control authority together with the Stage-specific requirements below. If those sources leave a material spatial question unresolved, that question remains unresolved until explicitly decided; it must not be silently filled by a derived topology document or implementation convention.
 
 Historical Cycle 1 production artifacts remain provenance and decision history. They are not a flat set of current Stage 2 authority once a decision has been superseded or promoted into current course-level authority.
 
@@ -97,7 +98,10 @@ No Baseline `COUNT(*)` measurement, separate semantic-operation checkpoint, or S
 Before the learner establishes the connecting field:
 
 - do not expose the answer through PK/FK badges or a relationship connector;
-- the actionable field-selection interaction belongs with the active Working Schema object under the current course-wide topology.
+- the learner selects the candidate field directly in the active Working Schema object;
+- corrective feedback for that direct object action should remain local enough to the action to satisfy current `course-design/course-visual-language.md`.
+
+This Stage-specific requirement does **not** independently move the whole learner-facing Current Step, actionable prompt, or learner-response role into another page region. Any broader placement decision must come from current course-level authority, not from this Stage extraction.
 
 After the correct field is established, the relationship may be revealed as reused PK/FK structure.
 
@@ -164,17 +168,19 @@ A broader global hint/adaptive system is not established by this Stage authority
 
 ---
 
-## 8. Interaction/topology boundary
+## 8. Interaction / spatial-authority boundary
 
-Stage 2 does not redefine course-wide spatial rules.
+Stage 2 does not define a course-wide L/R ownership path.
 
-Under the current Stage 1–3 topology:
+The learner route in Section 4 is the pedagogical sequence. It must not be converted into a spatial ownership sequence by inference.
 
-`L Relations → R Connection → L Grain → L Cardinality → L Multiplication Prediction → L Repeated-context Prediction → L Concept → L Application → Split(L task / R SQL workspace) → R Result Inspection → R Verification → L Complete`
+Spatial conformance for Stage 2 must be checked directly against:
 
-The purpose of recording this path here is traceability to current Stage 2 behavior, not to create a Stage-local alternative to the course-wide topology authority.
+- `course-design/course-visual-language.md`, including the stable learner-response anchor, tool/evidence locality, feedback ownership, transition-control locality, persistent-reference behavior, and genuine phase-handoff requirements;
+- `course-design/course-controls.md` for shell controls and SQL-local assistance;
+- the Stage-specific interaction requirements in this document.
 
-Course-wide rules continue to govern locality of action, feedback, evidence, Continue controls, Working Schema persistence, Completed Steps, and SQL/result ownership.
+The superseded 2026-09-15 Stage 1–3 target-topology decision/review/post-build chain is not Stage 2 authority and is no longer present in the active tree.
 
 ---
 
@@ -219,9 +225,9 @@ This authority is an extraction, not a redesign. Its Stage-specific content is t
 - `course-design/production/cycle-1/encounter-design-row-multiplication-2026-09-13.md` — accepted case, capability, output contract, SQL/result role and broad encounter design;
 - `course-design/production/cycle-1/owner-directed-targeted-revision-and-waiver-2026-09-13.md` — qualitative multiplication prediction before numeric application; repeated-context evidence; revised reveal order;
 - `course-design/production/cycle-1/owner-directed-targeted-revision-structural-reuse-2026-09-13.md` — learner-performed relation selection and connecting-field reuse before relationship reveal; current Grain/Cardinality entry sequence;
-- `course-design/production/cycle-1/test-drive-finding-connection-focus-2026-09-13.md` — Stage-specific direct Working-Schema connection interaction/locality correction;
-- `course-design/production/cycle-1/implementation-record-owner-directed-2026-09-13.md`, especially the 2026-09-15 conformance-restoration addendum — evidence that the current runtime was restored to the controlling learner sequence; this record is used as conformance evidence, not as permission to invent new pedagogy;
+- `course-design/production/cycle-1/test-drive-finding-connection-focus-2026-09-13.md` — Stage-specific direct Working-Schema connection interaction/locality finding;
+- `course-design/production/cycle-1/implementation-record-owner-directed-2026-09-13.md`, especially the 2026-09-15 conformance-restoration addendum — evidence that the runtime was restored to the controlling learner sequence; this record is conformance evidence, not permission to invent missing pedagogy or topology;
 - `course-design/course-controls.md` — current Show solution and SQL-assistance semantics, superseding older production-era control statements;
-- `course-design/stage-1-3-target-topology-decision-2026-09-15.md` plus its accepted review / post-build conformance chain — current cross-stage interaction topology.
+- `course-design/course-visual-language.md` — current course-level visual/locality constraints.
 
-If a future change alters Stage 2 pedagogy, evidence, SQL semantics, or course-wide controls/topology, this file should be updated through that substantive decision. Historical production artifacts should remain preserved as provenance rather than rewritten retroactively.
+If a future change alters Stage 2 pedagogy, evidence, SQL semantics, course-wide controls, or course-wide visual/spatial authority, this file should be updated through that substantive decision. Historical production artifacts should remain preserved as provenance rather than rewritten retroactively.

@@ -2,11 +2,13 @@
 
 **Date:** 2026-09-16  
 **Status:** CATEGORY SELECTED — FIRST CONFORMANCE SCOPE MAPPED — RUNTIME CHANGE NOT PART OF THIS DECISION  
-**Baseline:** current `main` after repository truth repair and Wave 5B closure
+**Baseline:** current `main` after authority cleanup and Wave 5B closure
+
+**Authority cleanup note — 2026-09-16:** the original category-comparison rationale referred to the now-superseded Stage 1–3 target-topology decision/review/post-build chain as if it had closed known spatial defects. That claim is withdrawn. This document remains valid only for the bounded Back / Forward behavioral contract below. It is not evidence that spatial/topology conformance is closed.
 
 ## 1. Decision
 
-The next evidence-backed learner-experience category is:
+The next evidence-backed learner-experience category at the time of this decision was:
 
 **Orientation & progress**
 
@@ -20,7 +22,7 @@ This decision does not authorize a generic progress system, progress bar, Retry 
 
 The selection is evidence-based rather than queue-order based.
 
-Current authority already establishes a concrete learner need that is not implemented:
+Current authority already establishes a concrete learner need that is not implemented in the baseline inspected by this record:
 
 - `course-design/course-controls.md` requires clear **Back** and **Forward** controls inside the currently active encounter;
 - Back must move to previously visited learner states for review without erasing evidence, changing answers, clearing assistance provenance, clearing editor/result state, or changing completion/progress state;
@@ -28,43 +30,45 @@ Current authority already establishes a concrete learner need that is not implem
 - Back / Forward are explicitly distinct from chapter navigation, local `Continue`, Completed Steps, and Retry / Redo;
 - `course-design/course-visual-language.md` requires global course controls to live in a stable course-shell layer and explicitly states that Completed Steps are review history, not the primary navigation mechanism.
 
-The current runtime implements chapter navigation for the three encounters in `src/main.js` and styles it in `src/course-navigation.css`, but it does not implement course-shell Back / Forward controls or a journey-history navigation layer.
+The baseline runtime implements chapter navigation for the three encounters in `src/main.js` and styles it in `src/course-navigation.css`, but it does not implement course-shell Back / Forward controls or a journey-history navigation layer.
 
 `src/interaction-lifecycle.js` currently manages only the current interaction and Completed Steps presentation. It does not provide a separate visited-state history cursor or review-navigation contract.
 
-Therefore the gap is a direct **CONFORMANCE** gap between established course-control authority and observable runtime structure.
+Therefore the gap is a direct **CONFORMANCE** gap between established course-control authority and the baseline runtime structure.
 
 ## 3. Comparison with the remaining category queue
 
+The paragraphs in this section record why Back / Forward was selected at that point in time. They do **not** close or waive defects later found in another category.
+
 ### Cross-chapter consistency
 
-Not selected first.
+Not selected first at the time of this decision.
 
-Recent Stage 1–3 topology work, teacher-voice propagation, visual-role consolidation, diagnostic-feedback propagation, and post-build topology review already addressed multiple cross-chapter consistency defects. No comparably clear new cross-chapter inconsistency is currently established as a stronger unresolved defect than the missing Back / Forward control contract.
+Teacher-voice propagation, visual-role consolidation, diagnostic-feedback propagation, and other recent work had addressed several cross-chapter issues. The previous claim that topology work had closed the known spatial-ownership defects is superseded and must not be used as current evidence.
 
 ### Spatial guidance beyond current narrow needs
 
-Not selected first.
+Not selected first at the time of this decision.
 
-The Stage 1–3 topology mapping, target decision, review, implementation, and post-build review already closed the known spatial-ownership defects. Reopening spatial work without new evidence would duplicate recently completed work.
+The previous rationale relied on the Stage 1–3 target-topology chain. That chain is now superseded. Spatial guidance/topology must be revalidated directly against current `course-visual-language.md`, `course-controls.md`, and Stage authority before it can be considered closed.
 
 ### Visual language & focus beyond current narrow needs
 
-Not selected first.
+Not selected first at the time of this decision.
 
-Visual focus, teacher-guidance role, persistent references, SQL/result prominence, and cross-stage topology have already received recent calibration and review. No current source establishes a stronger unresolved visual-focus defect than the missing required journey navigation.
+Visual focus and teacher-guidance work had received prior calibration, but the superseded topology chain can no longer be used to conclude that all visual-focus or spatial-role defects are resolved.
 
 ### Motion & transitions beyond current narrow needs
 
 Not selected first.
 
-Wave 3 already addressed existing transition polish and `prefers-reduced-motion` behavior. No new motion-specific failure is currently established.
+Wave 3 already addressed existing transition polish and `prefers-reduced-motion` behavior. No new motion-specific failure was established by this Back / Forward mapping.
 
 ### Pedagogical structure / interaction depth
 
 Not selected first.
 
-This category may contain future work, but selecting it now would require a new pedagogical diagnosis. The Back / Forward gap is already established by current authority and does not require inventing new pedagogy.
+This category may contain future work, but selecting it here would have required a new pedagogical diagnosis. The Back / Forward gap was already established by current authority and did not require inventing new pedagogy.
 
 ### Localization / Hebrew + RTL
 
@@ -181,9 +185,9 @@ Completed Steps remain review history and may continue to provide compact review
 
 They do not replace Back / Forward and Back / Forward must not be implemented merely as automatic opening/closing of Completed Steps.
 
-## 6. Current runtime implications
+## 6. Baseline runtime implications
 
-The current runtime does not already contain a generic history-navigation layer:
+The baseline runtime inspected by this record did not already contain a generic history-navigation layer:
 
 - `src/main.js` creates chapter navigation and preserves encounter objects/editor/results across chapter switching;
 - encounter modules maintain their own current state, completed evidence, pending transitions, drafts, selected relations, and tool/result state;
@@ -202,7 +206,7 @@ A future implementation must preserve:
 - all Stage 1–3 learner sequences;
 - question intent and accepted answers;
 - evidence timing and evidence provenance;
-- relation-selection and Working Schema behavior;
+- relation-selection and Working Schema behavior as established by current authority;
 - prepared measurements;
 - SQL acceptance and diagnostics;
 - result inspection and verification;
@@ -214,6 +218,8 @@ A future implementation must preserve:
 - completion behavior.
 
 Back / Forward must not become a mechanism for reopening pedagogy, reordering steps, editing historical evidence, or bypassing current local progression controls.
+
+This protection clause does not preserve behavior later shown to conflict with higher-order authority. Current course-level and Stage authority controls that distinction.
 
 ## 8. Required implementation validation
 
@@ -235,7 +241,7 @@ For each case, verify:
 - no evidence or answer mutation from review navigation;
 - editor/results preserved;
 - chapter histories remain isolated;
-- local `Continue`, `Check`, `Run query`, and `Show solution` semantics remain unchanged;
+- local `Continue`, `Check`, `Run query`, and `Show solution` semantics remain unchanged except where separately corrected for authority conformance;
 - current task remains visually primary while shell navigation remains findable and stable.
 
 Build/tests are necessary but not sufficient; the learner journey must be exercised because the core contract is behavioral and stateful.
@@ -266,7 +272,7 @@ This decision does not authorize:
 **Classification:** CONFORMANCE  
 **Additional canon decision required for this first scope:** NO
 
-The mapping is sufficient to hand off a bounded implementation task, provided implementation stays inside the behavioral contract and protected scope above.
+The Back / Forward mapping remains sufficient for that bounded control task. It does not constitute spatial/topology conformance evidence for the Stage encounters.
 
 A future implementation must be reviewed against this mapping plus current `course-design/course-controls.md` and `course-design/course-visual-language.md` before promotion.
 

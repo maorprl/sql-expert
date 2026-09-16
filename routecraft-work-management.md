@@ -26,9 +26,13 @@ The currently active learner-experience initiative is:
 
 `course-experience-improvement-work-management.md`
 
-Its Teacher voice / Walkthrough category is complete through the Wave 5B decision gate. Wave 5B implementation is not authorized. The next project action is an evidence-based category-selection / mapping decision across the remaining improvement queue, with no runtime change before that mapping is complete.
+The derived Stage 1–3 target-topology decision/review/post-build chain was invalidated after learner-visible contradictions were found and has been removed from the active tree. Current authority and management sources have been corrected so that the removed chain is not treated as current authority or conformance evidence.
 
-The old `learner-encounter-production-execution.md` Cycle 1 action sequence is historical / superseded and must not be used as the project-wide current-action source.
+The current project priority is therefore:
+
+**fresh Stage 1–3 conformance execution against current authority.**
+
+The old `learner-encounter-production-execution.md` Cycle 1 action sequence remains historical / superseded and must not be used as the project-wide current-action source.
 
 ## 3. Program A — Learning Product
 
@@ -85,11 +89,14 @@ Includes course-wide learner-experience and shared runtime concerns such as:
 - shared UI/runtime infrastructure;
 - accessibility, responsive, browser, persistence, and release-runtime concerns when they become current work.
 
-Primary current sources include:
+Primary current authority sources include:
 
 - `course-design/course-visual-language.md`
 - `course-design/course-controls.md`
-- `src/interaction-lifecycle.js`
+
+There is currently no separate Stage 1–3 topology authority. Spatial conformance must be derived from these course-level sources together with encounter-local authority. The removed topology chain remains available only through Git history.
+
+Runtime behavior introduced by the superseded topology implementation is not automatically accepted or reverted. It is implementation evidence awaiting fresh conformance classification.
 
 Current initiative:
 
@@ -136,7 +143,7 @@ Includes:
 
 - durable production records;
 - provenance;
-- artifact/version/authority metadata;
+- artifact identity/version/authority metadata;
 - deterministic source loading;
 - future machine-readable state or retrieval support only where evidence justifies it.
 
@@ -155,6 +162,10 @@ Across both Programs, preserve:
 
 Planning classification does not determine authority. Each artifact's authority is determined by its role and the governing current sources.
 
+A derived audit, target-design document, implementation record, or test must not promote itself above the authority it is supposed to check.
+
+When a derived decision chain is invalidated, its downstream implementation and tests must be reclassified against the higher-order authority rather than silently preserved as truth.
+
 ## 6. Repository-organization rule
 
 Do not move or merge files merely to make the tree look symmetrical.
@@ -162,9 +173,10 @@ Do not move or merge files merely to make the tree look symmetrical.
 Prefer:
 
 1. one clear current authority surface per concern;
-2. historical review/production evidence retained in clearly historical locations;
+2. historical review/production evidence retained in clearly historical locations or Git history;
 3. management files that describe only current work state rather than preserving obsolete `Current Position` sections;
-4. Git history for superseded management snapshots instead of leaving contradictory snapshots live in current management files.
+4. Git history for superseded management snapshots instead of leaving contradictory snapshots live in current management files;
+5. when an authority chain is invalidated, update the existing current authority/management surfaces directly and rely on Git history for the superseded chain rather than creating a permanent extra repair-document layer unless one is strictly necessary.
 
 ## 7. Management hierarchy
 

@@ -5,7 +5,7 @@
 
 This file previously recorded the live execution state of learner-encounter production Cycle 1.
 
-It is **no longer the source of truth for the repository's current work state or next action**. The last Cycle 1 authorization recorded here was overtaken by substantial later repository work, including the current Stage 1–3 runtime, Stage 2 authority extraction, Stage 1–3 topology review and implementation, Waves 4 and 5A, and the Wave 5B decision gate.
+It is **not** the source of truth for the repository's current work state or next action. Later repository work overtook the final Cycle 1 execution state, including the current Stage 1–3 runtime, Stage 2 authority extraction, and subsequent learner-experience work.
 
 The historical Cycle 1 durable outputs remain under:
 
@@ -19,18 +19,15 @@ Do not reconstruct current project state from the old Cycle 1 execution sequence
 
 ## 1. Current project-state pointer
 
-The currently active learner-experience improvement initiative is managed in:
+Do not restate a current next action in this historical file.
 
-`course-experience-improvement-work-management.md`
+For current project/work state, use the live management records:
 
-As of the current repository state:
+- `routecraft-work-management.md`;
+- `course-work-management.md`;
+- `course-experience-improvement-work-management.md`.
 
-- Teacher voice / Walkthrough is complete through the Wave 5B decision gate;
-- Wave 5B graduated / adaptive assistance implementation is **not authorized**;
-- the next action is a separate evidence-based **category-selection / mapping decision** across the remaining improvement queue;
-- no runtime change is authorized until that category-selection / mapping decision is complete.
-
-This is a work-state pointer only. Pedagogical, visual, control, Stage, schema, and data authority remain in their dedicated current-source documents.
+This file remains historical even when those current records change.
 
 ## 2. Process authority remains current
 
@@ -71,4 +68,4 @@ The receiving role must consume the required durable artifact directly when it i
 
 Do not treat this file as an active gate merely because it exists.
 
-If the course begins a new learner-encounter production cycle, create or explicitly reactivate a current execution mapping tied to that cycle and its actual repository baseline. Until then, current project work should follow the active management record named above rather than the superseded Cycle 1 action sequence.
+If the course begins a new learner-encounter production cycle, create or explicitly reactivate a current execution mapping tied to that cycle and its actual repository baseline. Until then, current project work must follow the live management records rather than this superseded Cycle 1 snapshot.

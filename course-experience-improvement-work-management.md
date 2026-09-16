@@ -1,6 +1,6 @@
 # Course Experience Improvement Work Management
 
-**Status:** WORKING  
+**Status:** WORKING — AUTHORITY CLEANUP COMPLETE; FRESH CONFORMANCE REQUIRED  
 **Role:** Program A / A3 — Learning Experience & Runtime initiative work-management record
 
 This document manages improvement work for the **existing implemented course experience**.
@@ -23,7 +23,9 @@ The current default branch contains three implemented encounters in one shared S
 - Funding participation / row multiplication — `funding_round → round_investment`;
 - INNER JOIN unmatched / zero-match coverage — `company → funding_round`.
 
-Current default-branch authority and runtime are controlling. Earlier initiative-launch branches are historical baselines only.
+Current default-branch runtime is the implementation baseline, but current authority is **not** whatever the runtime happens to do. Runtime behavior must conform to the dedicated authority sources.
+
+The derived Stage 1–3 target-topology decision/review/post-build chain was invalidated as current authority and removed from the active tree. Current Stage and management sources were corrected so that this chain is not used as authority or conformance evidence.
 
 ## 3. Canon-impact classification
 
@@ -41,27 +43,25 @@ The proposed treatment may contradict authority, leak an answer, weaken evidence
 
 ## 4. Completed category — Teacher voice / Walkthrough
 
-**Status:** COMPLETE
-
-The category is closed through Wave 5B decision gating.
+**Status:** IMPLEMENTED WORK PRESERVED; FRESH CONFORMANCE RECHECK REQUIRED WHERE SPATIAL AUTHORITY INTERSECTS
 
 ### Wave 1 — Existing-authority conformance calibration
-**Status:** COMPLETE
 
 Stage 1 was calibrated and the accepted pattern propagated to Stage 2/3. Scope included spatial guidance, meaningful handoffs, active reuse of established reasoning, active-area focus, and visual-role consistency without changing learner evidence or Stage sequence.
 
+The visual/focus changes that can be traced directly to valid authority remain implementation evidence. A later topology chain must not be used to retroactively certify them.
+
 ### Wave 2 — Consistent teacher voice and continuity
-**Status:** COMPLETE
 
 Teacher-guidance continuity was calibrated and selectively propagated across Stage 1–3 without changing questions, validators, SQL behavior, sequence, progress semantics, or adaptive behavior.
 
 ### Wave 3 — Visual support and motion polish
-**Status:** COMPLETE
 
-Shared learner-facing visual-role treatments were consolidated where roles were equivalent, Stage 3 post-SQL evidence-role drift was corrected, and `prefers-reduced-motion` support was added for existing non-essential transitions.
+Shared learner-facing visual-role treatments were consolidated where roles were equivalent, and `prefers-reduced-motion` support was added for existing non-essential transitions.
+
+Any claim that Wave 3 plus later topology work fully closed spatial ownership is withdrawn. Spatial conformance is now subject to fresh review directly against current authority.
 
 ### Wave 4 — Diagnostic feedback
-**Status:** COMPLETE
 
 Decision record:
 
@@ -72,15 +72,17 @@ Current runtime includes the approved state-aware relation-selection diagnostics
 Wave 4 did not authorize a generalized diagnostic engine, attempt-count escalation, adaptive assistance, new progress semantics, or new learner evidence.
 
 ### Wave 5A — Narrow response-aware corrective feedback
-**Status:** COMPLETE
 
 Decision record:
 
 `course-design/wave-5a-response-aware-feedback-decision-2026-09-15.md`
 
-The approved narrow response-aware mappings were implemented for six existing Stage 2/3 interactions. The no-selection fallback regression was corrected, and post-build review returned PASS.
+The approved narrow response-aware mappings were implemented for six existing Stage 2/3 interactions. The no-selection fallback regression was corrected.
+
+Any prior post-build PASS remains evidence only for the specific Wave 5A behavior it actually checked; it does not certify the superseded spatial topology.
 
 ### Wave 5B — Graduated / adaptive assistance
+
 **Status:** DECISION GATE COMPLETE — IMPLEMENTATION NOT AUTHORIZED
 
 Decision record:
@@ -89,73 +91,59 @@ Decision record:
 
 The gate found insufficient evidence for attempt-based or adaptive escalation after current first-line support. Reopening requires new evidence of a repeatable failure mode that persists after current correction/assistance.
 
-## 5. Current category — Orientation & progress
+## 5. Orientation & progress — Back / Forward
 
-**Status:** ACTIVE — FIRST SCOPE MAPPED; IMPLEMENTATION NEXT
-
-Category-selection and mapping record:
+The bounded Back / Forward behavioral contract remains in:
 
 `course-design/orientation-progress-category-selection-2026-09-16.md`
 
-### Why this category is active
+Its core control semantics remain valid because they derive directly from `course-design/course-controls.md` and `course-design/course-visual-language.md`.
 
-Current `course-design/course-controls.md` already requires Back / Forward journey-history navigation inside the active encounter, while the current runtime implements chapter navigation but no Back / Forward history controls or visited-state review cursor.
+A separate implementation branch exists for Back / Forward journey-history navigation, but Stage 1–3 fresh conformance must be completed before that work is treated as sufficient evidence that the overall learner experience is ready for pedagogical Test Drive.
 
-This is therefore a direct **CONFORMANCE** gap, not a request to invent a generic progress system.
+Back / Forward remains distinct from Retry / Redo, historical-answer editing, progress percentages, chapter locking, cross-session persistence, and new pedagogy.
 
-### First bounded scope
+## 6. Current priority and hold
 
-**Back / Forward journey-history conformance**
+**Topology-authority cleanup: COMPLETE.**
 
-Required boundary:
+The current priority is now:
 
-- stable course-shell Back / Forward controls;
-- within the active encounter only;
-- Back reviews already visited states without mutating answers/evidence/progress;
-- Forward traverses only visited history back toward the existing progression frontier;
-- no new progress through Back / Forward;
-- per-encounter history remains isolated across chapter switches;
-- Completed Steps remain review history and do not substitute for Back / Forward;
-- exact shell styling/placement remains an implementation choice within current visual/control authority.
+**fresh Stage 1–3 conformance execution against current authority.**
 
-The mapping explicitly separates the progression frontier from the review cursor as an implementation invariant while leaving the technical data structure open.
+The cleanup established that:
 
-### Explicitly not part of the first scope
+- the target-topology decision/review/post-build chain is not current authority and is absent from the active tree;
+- its derived topology test is not a valid conformance oracle and is absent from the active validation path;
+- Stage 2 and current management no longer depend on that chain;
+- runtime behavior derived from the old topology implementation remains unverified until fresh conformance checks it directly.
 
-- Retry / Redo implementation or reset semantics;
-- historical-answer editing;
-- undo/branching;
-- progress percentage / progress bar / step counter;
-- chapter completion locking;
-- cross-chapter Back / Forward;
-- cross-session journey-history persistence;
-- browser-history integration;
-- new attempt tracking;
-- new pedagogy or learner evidence.
+Until fresh conformance is complete:
 
-## 6. Current next action
+- do not use the removed target-topology chain as authority;
+- do not use its target review or post-build PASS as proof of current conformance;
+- do not ask the learner to discover basic authority violations through pedagogical Test Drive;
+- do not perform additional spatial redesign merely to match the current runtime.
 
-**Implement the bounded Back / Forward journey-history conformance scope from `course-design/orientation-progress-category-selection-2026-09-16.md`.**
+The fresh conformance execution must use only current:
 
-Implementation must use current:
-
-- `course-design/course-controls.md`;
+- `pedagogical-foundations.md`;
 - `course-design/course-visual-language.md`;
-- Stage 1–3 encounter authority;
-- current runtime as the baseline to preserve.
+- `course-design/course-controls.md`;
+- Stage 1 authority;
+- Stage 2 authority;
+- Stage 3 authority.
 
-The implementation should prefer one shared course-shell/history owner with encounter-specific adaptation only where the existing state models require it. It must not become a generalized state-management rewrite.
-
-After implementation, review the actual commit/diff and exercise Back / Forward across ordinary reasoning, Working-Schema interaction, measurement/evidence, SQL, Results/verification, completion, and chapter switching.
+It must inspect every material learner-visible state/transition and learner-visible copy, including transition labels and concept reveal timing, and classify findings as `PASS WITH EVIDENCE`, `DEFECT`, or `UNVERIFIED / CANON DECISION REQUIRED`.
 
 ## 7. Later improvement-category queue
 
-Remain unselected after the current first scope:
+Remain unselected after conformance repair:
 
-- cross-chapter consistency;
-- further orientation & progress work beyond Back / Forward;
-- spatial guidance beyond current narrow needs;
-- visual language & focus beyond current narrow needs;
+- cross-chapter consistency beyond proven defects;
+- further orientation & progress work beyond the bounded Back / Forward contract;
+- spatial guidance beyond authority-conformance corrections;
+- visual language & focus beyond authority-conformance corrections;
 - motion & transitions beyond current narrow needs;
 - pedagogical structure / interaction depth;
 - localization / Hebrew + RTL.
@@ -169,8 +157,8 @@ Queue order does not determine priority. Each later selection requires current e
 Use the appropriate current source when a change requires authority, including:
 
 - `pedagogical-foundations.md` for course-level pedagogical foundations;
-- `course-design/course-visual-language.md` for visual-language authority;
+- `course-design/course-visual-language.md` for visual-language / interaction-role authority;
 - `course-design/course-controls.md` for course-shell/control semantics;
 - the relevant Stage authority for encounter-local instructional requirements.
 
-If implementation exposes a material issue not settled by those sources, classify it rather than resolving it silently in code.
+There is currently no independent Stage 1–3 topology authority. If implementation exposes a material spatial issue not settled by the sources above, classify it as unresolved rather than resolving it silently in code or a derived audit/design artifact.

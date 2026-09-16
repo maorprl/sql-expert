@@ -22,6 +22,14 @@ Current encounter authority is stored separately from runtime code:
 - Stage 2: `course-design/stage-2/stage-2-authority.md`;
 - Stage 3: `course-design/stage-3/stage-3-learner-route.md` and `course-design/stage-3/stage-3-interaction-decisions.md`.
 
+Course-wide learner-experience authority is currently defined by:
+
+- `pedagogical-foundations.md`;
+- `course-design/course-visual-language.md`;
+- `course-design/course-controls.md`.
+
+There is currently **no separate Stage 1–3 topology authority**. The previous target-topology decision/review/post-build chain was removed from the active tree because it introduced derived UX ownership rules that exceeded the higher-order authority it was meant to translate. Spatial and interaction conformance must be derived directly from the current course-level and Stage authority above.
+
 A course-level chapter selector allows the learner to switch among the three encounters without completing the current encounter first. Chapter selection is navigation rather than learner evidence and is visually separated from task actions such as `Check answer`, `Continue`, and `Run query`.
 
 Within the current browser run, each encounter keeps its own in-memory reasoning state, editor text, and rendered SQL result when the learner switches away and back. This does not establish a broader persistence contract across reloads or browser sessions.
@@ -34,7 +42,9 @@ This README describes the runnable product and current observable runtime struct
 
 For current work state and authority boundaries, use:
 
-- `course-experience-improvement-work-management.md` — current learner-experience improvement state and next mapping decision;
+- `routecraft-work-management.md` — project-level current work state;
+- `course-work-management.md` — Learning Product work state and current authority boundary;
+- `course-experience-improvement-work-management.md` — current learner-experience improvement state;
 - `learner-encounter-production-process.md` — production roles, gates, independence, review, and acceptance rules for learner-encounter production;
 - `learner-encounter-production-execution.md` — historical / superseded Cycle 1 execution snapshot unless explicitly reactivated for a future production cycle;
 - `course-design/production/cycle-1/` — durable Cycle 1 production artifacts and historical provenance.
@@ -52,11 +62,7 @@ Build a static production bundle with:
 npm run build
 ```
 
-Run the current focused topology contract tests with:
-
-```sh
-npm test
-```
+The former `scripts/topology-contract.test.mjs` suite was removed from the active validation path because it encoded parts of the superseded topology decision. A replacement conformance suite must be derived from current authority before automated conformance PASS claims are made.
 
 ## Database source and runtime
 
