@@ -24,9 +24,17 @@ test('Back and Forward use per-encounter visited history with an independent rev
   assert.match(historyModule, /history\.cursor \+= 1/);
 });
 
+test('history distinguishes meaningful progression phases inside the same encounter state', () => {
+  assert.match(historyModule, /function progressionPhase\(currentStep\)/);
+  assert.match(historyModule, /\.confirmed-answer/);
+  assert.match(historyModule, /workspace-evidence-action/);
+  assert.match(historyModule, /relation-preview/);
+  assert.match(historyModule, /\.join-progress span/);
+  assert.match(historyModule, /progressionPhase\(currentStep\)/);
+});
+
 test('review navigation never invokes progression controls or encounter mutation APIs', () => {
   const goBackStart = historyModule.indexOf('function goBack');
-  const goForwardStart = historyModule.indexOf('function goForward');
   const ensureShellStart = historyModule.indexOf('function ensureShell');
   const navigationBody = historyModule.slice(goBackStart, ensureShellStart);
   assert.doesNotMatch(navigationBody, /click\(\)|submit\(|handleSqlSuccess|setCurrent|record\(|addRelation|removeRelation/);
