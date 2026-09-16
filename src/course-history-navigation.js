@@ -166,9 +166,9 @@ function renderReview(snapshot) {
 
 function showFrontier() {
   if (!reviewSurface || !stageScroll) return;
-  reviewSurface.hidden = true;
-  reviewSurface.innerHTML = '';
-  stageScroll.hidden = false;
+  if (!reviewSurface.hidden) reviewSurface.hidden = true;
+  if (reviewSurface.childNodes.length) reviewSurface.replaceChildren();
+  if (stageScroll.hidden) stageScroll.hidden = false;
 }
 
 function updateControls() {
@@ -240,9 +240,13 @@ function ensureReviewSurface() {
 }
 
 function observeLearnerJourney() {
-  observer = new MutationObserver(() => {
+  observer = new MutationObserver((mutations) => {
     const history = historyFor(activeEncounterName());
     if (isReviewing(history)) return;
+    const hasLearnerMutation = mutations.some((mutation) => (
+      mutation.target !== reviewSurface && !reviewSurface?.contains(mutation.target)
+    ));
+    if (!hasLearnerMutation) return;
     queueMicrotask(captureFrontier);
   });
   observer.observe(learningPanel, {
