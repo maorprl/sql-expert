@@ -45,3 +45,10 @@ test('Forward cannot traverse beyond the captured frontier', () => {
   assert.match(historyModule, /history\.cursor === history\.entries\.length - 1/);
   assert.match(historyModule, /Current position/);
 });
+
+test('history rendering does not feed its own mutations back into frontier capture', () => {
+  assert.match(historyModule, /if \(!reviewSurface\.hidden\) reviewSurface\.hidden = true/);
+  assert.match(historyModule, /if \(reviewSurface\.childNodes\.length\) reviewSurface\.replaceChildren\(\)/);
+  assert.match(historyModule, /mutation\.target !== reviewSurface/);
+  assert.match(historyModule, /!reviewSurface\?\.contains\(mutation\.target\)/);
+});
