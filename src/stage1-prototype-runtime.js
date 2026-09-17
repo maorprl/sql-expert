@@ -16,7 +16,7 @@ const RELATION_INFO = {
 
 const html = `
   <div class="stage1-routecraft">
-    <header class="masthead"><div><div class="mh-course">RouteCraft · SQL Lab</div><div class="mh-title">Media coverage — one article, one publisher</div></div><div class="mh-right"><span class="mh-stage">Stage 1 · request → verified JOIN</span><button class="ghost" id="s1-restart">Restart</button></div></header>
+    <header class="masthead"><div><div class="mh-course">RouteCraft · SQL Lab</div><div class="mh-title">Media coverage — one article, one publisher</div></div><div class="mh-right"><span class="mh-stage">Stage 1 · request → verified JOIN</span><nav class="lesson-nav" aria-label="Course lessons"><button class="lesson-nav-button" id="s1-previous" type="button" disabled>Previous</button><button class="lesson-nav-button" id="s1-next" type="button" disabled>Next</button></nav><button class="ghost" id="s1-restart">Restart</button></div></header>
     <main class="app"><div class="zones">
       <section class="conversation" id="s1-conversation" aria-label="Conversation"><aside class="spine" aria-label="Reasoning thread"><div class="spine-label">Thread</div><ol class="spine-list" id="s1-spine"></ol></aside><div class="stream" id="s1-stream" aria-live="polite"></div></section>
       <section class="workbench" aria-label="Workbench">
@@ -98,7 +98,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   };
 
   function reset() {
-    state = 'request'; selected.clear(); stream.innerHTML = ''; spineList.innerHTML = ''; keyInfoRevealed = false; relationshipInfoRevealed = false; closeInspector();
+    state = 'request'; selected.clear(); stream.innerHTML = ''; spineList.innerHTML = ''; keyInfoRevealed = false; relationshipInfoRevealed = false; closeInspector(); $('#s1-next').disabled = true;
     $$('.catalog-card').forEach((card) => { card.classList.remove('selected'); card.querySelector('.catalog-status').textContent = 'add'; });
     $('#s1-catalog-feedback').hidden = true; $('#s1-relations').innerHTML = '<span class="hint">Select the two relations that contain the requested information.</span>';
     ['#s1-schema', '#s1-measure', '#s1-teaching', '#s1-sql', '#s1-enrich'].forEach((id) => { $(id).hidden = true; });
@@ -220,7 +220,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   function complete() {
     state = 'complete'; markCurrentAction(); renderInspector(); spine('Verified: 18 rows, same grain'); teacher('Yes. The result contains 18 rows, one for each article, and each row carries the matching source information. The count stayed at 18 because each article matched one source.');
     concept('JOIN verified', 'The relationship reasoning predicted the row count and grain before the query existed; the actual result confirmed both. SQL is not the conclusion by itself — the verified meaning of its result is.');
-    $('#s1-sql-editor').disabled = true; $('#s1-sql-actions').hidden = true;
+    $('#s1-sql-editor').disabled = true; $('#s1-sql-actions').hidden = true; $('#s1-next').disabled = false;
     const completion = add(node('<div class="completion"><div class="completion-eyebrow">Success · verified result</div><h3>Stage 1 complete</h3><p>You carried one argument from request to evidence: relations, link, cardinality, grain, baseline, prediction, JOIN, <code>ON</code>, SQL, and a verified 18-row result. Source attributes were added while the result remained one row per article.</p><p class="completion-next">Continue within RouteCraft · SQL Lab to Funding participation.</p><button class="primary continue-stage" type="button">Continue to Funding participation</button></div>'));
     completion.querySelector('.continue-stage').addEventListener('click', () => onContinue?.());
     spine('Stage 1: argument closed'); $('#s1-enrich').hidden = false; $('#s1-enrich-panel').innerHTML = '<button class="enrichment-btn" id="s1-enrich-toggle">Go deeper: How the JOIN produced this result</button>';
@@ -249,6 +249,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   $('#s1-solution-button').addEventListener('click', () => { $('#s1-sql-editor').value = SOLUTION; setExecutionStatus('Not executed', 'idle'); $('#s1-sql-editor').focus(); $('#s1-diagnostic').innerHTML = '<div class="assist">The solution is now in the editor. It has not run, and the stage has not advanced.</div>'; });
   $('#s1-inspector').addEventListener('click', (event) => { if (event.target.closest('.inspector-close')) closeInspector(); });
   $('#s1-inspector-insert').addEventListener('click', insertInspectedRelation);
+  $('#s1-next').addEventListener('click', () => { if (state === 'complete') onContinue?.(); });
   $('#s1-sql-editor').addEventListener('keydown', (event) => { if (!event.isComposing && event.key === 'Enter' && (event.ctrlKey || event.metaKey)) { event.preventDefault(); executeSql(); } });
   $('#s1-sql-editor').addEventListener('input', () => { if (state === 'sql') setExecutionStatus('Not executed', 'idle'); });
   $('#s1-execute').addEventListener('click', executeSql); $('#s1-restart').addEventListener('click', reset);

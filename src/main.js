@@ -392,7 +392,7 @@ function activateFundingParticipationEncounter({ continuedFromStage1 = false } =
   clearError();
   activeEncounter = null;
   document.title = 'RouteCraft · Funding participation';
-  if (!stage2Experience) stage2Experience = createStage2Prototype({ root: el('stage2-root'), getDatabase: () => db });
+  if (!stage2Experience) stage2Experience = createStage2Prototype({ root: el('stage2-root'), getDatabase: () => db, onPrevious: activateMediaCoverageEncounter });
   stage2Experience.setContinuation(continuedFromStage1);
 }
 
