@@ -4,7 +4,8 @@ BEGIN TRANSACTION;
 
 -- ============================================================
 -- COMPANIES
--- Protected Stage 3 company contract
+-- Course data; company rows also retain compatibility with the
+-- preserved Stage 3 candidate without making it current authority.
 -- ============================================================
 
 INSERT INTO company
@@ -144,7 +145,8 @@ INSERT INTO investor_sector_focus (investor_id, sector_id) VALUES
 
 -- ============================================================
 -- FUNDING ROUNDS
--- Protected Stage 2/3 data
+-- Lesson 2 data; the zero-match company is also retained for
+-- compatibility with the preserved Stage 3 candidate.
 -- Lumina Bio (20) intentionally has no funding round.
 -- ============================================================
 
@@ -191,7 +193,7 @@ VALUES
 
 -- ============================================================
 -- ROUND INVESTMENTS
--- Protected Stage 2 data
+-- Lesson 2 data
 -- ============================================================
 
 INSERT INTO round_investment
@@ -329,7 +331,7 @@ VALUES
 
 -- ============================================================
 -- NEWS
--- Protected Stage 1 data
+-- Lesson 1 data
 -- ============================================================
 
 INSERT INTO news_source (news_source_id, name, website_url) VALUES
