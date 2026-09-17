@@ -33,7 +33,7 @@ const html = `
           <div class="teach-step" data-step="2"><div class="teach-kicker">Beat 2 · condition</div><div class="teach-title">The relationship becomes <code>ON</code></div><div class="teach-copy">The match rule says: compare the article’s foreign key with the source’s primary key. In SQL, that relationship becomes <span class="on-line">ON news_article.news_source_id = news_source.news_source_id</span>.</div><div class="sample"><div class="sample-card"><div class="sample-head">article side</div><div class="sample-row">news_article.news_source_id</div></div><div class="sample-arrow">=</div><div class="sample-card"><div class="sample-head">source side</div><div class="sample-row">news_source.news_source_id</div></div></div><div class="teach-actions"><button class="primary beat-next" data-next="3">Map the condition</button></div></div>
           <div class="teach-step" data-step="3"><div class="teach-kicker">Beat 3 · meaning</div><div class="teach-title">The full query answers the request</div><div class="teach-copy">The <code>JOIN</code> combines the two relations; <code>ON</code> follows the relationship; and the selected columns return every article with its publisher at one article per row.</div><div class="sample"><div class="sample-card"><div class="sample-head">business request</div><div class="sample-row">every article + its publisher</div></div><div class="sample-arrow">↔</div><div class="sample-card"><div class="sample-head">result grain</div><div class="sample-row">one article per row</div></div></div><div class="teach-actions"><button class="primary" id="s1-to-sql">Write the query</button></div></div>
         </div></div>
-        <div class="wb-block" id="s1-sql" hidden><div class="wb-head"><span class="eyebrow">SQL authoring</span><h3>Make the argument executable</h3></div><div class="editor"><div class="editor-gutter">1<br>2<br>3<br>4<br>5</div><textarea class="sql-editor" id="s1-sql-editor" spellcheck="false" aria-keyshortcuts="Control+Enter Meta+Enter" placeholder="Write a SELECT that joins news_article to news_source…"></textarea></div><div class="editor-actions" id="s1-sql-actions"><button class="primary" id="s1-execute">Execute SQL</button><button class="secondary" id="s1-assist-button">Show a nudge</button><button class="secondary" id="s1-solution-button">Show solution</button><span class="run-note">Runs against the course database and checks the returned meaning.</span></div><div id="s1-assist" hidden></div><div id="s1-diagnostic"></div><div id="s1-result"></div></div>
+        <div class="wb-block" id="s1-sql" hidden><div class="wb-head"><span class="eyebrow">SQL authoring</span><h3>Make the argument executable</h3></div><div class="editor"><div class="editor-gutter">1<br>2<br>3<br>4<br>5</div><textarea class="sql-editor" id="s1-sql-editor" spellcheck="false" aria-keyshortcuts="Control+Enter Meta+Enter" placeholder="Write a SELECT that joins news_article to news_source…"></textarea></div><div class="editor-actions" id="s1-sql-actions"><button class="primary" id="s1-execute">Execute SQL</button><button class="secondary" id="s1-assist-button">Show a nudge</button><button class="secondary" id="s1-solution-button">Show solution</button><span class="run-note">Runs against the course database and checks the returned meaning.</span></div><div class="execution-status" id="s1-execution-status" hidden></div><div id="s1-assist" hidden></div><div id="s1-diagnostic"></div><div id="s1-result"></div></div>
         <div class="wb-block" id="s1-enrich" hidden><div class="wb-head"><span class="eyebrow">Optional enrichment</span><h3>Go deeper: How the JOIN produced this result</h3></div><div class="enrichment" id="s1-enrich-panel"></div></div>
         <aside class="relation-inspector" id="s1-inspector" aria-labelledby="s1-inspector-title" hidden><div class="inspector-head"><div><span class="eyebrow">Relation inspector</span><h3 id="s1-inspector-title"></h3></div><button class="inspector-close" type="button" aria-label="Close relation inspector">×</button></div><div id="s1-inspector-body"></div><button class="secondary inspector-insert" id="s1-inspector-insert" type="button" hidden>Insert into SQL</button></aside>
       </section>
@@ -79,6 +79,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
     const editor = $('#s1-sql-editor'); const start = editor.selectionStart; const end = editor.selectionEnd;
     editor.setRangeText(inspectedRelation, start, end, 'end'); editor.focus();
   };
+  const setExecutionStatus = (message = '', status = '') => { const element = $('#s1-execution-status'); element.textContent = message; element.dataset.status = status; element.hidden = !message; };
   const ask = ({ prompt, options, correct, wrong, onCorrect }) => {
     const wrap = node(`<div class="ask"><p class="ask-q">${prompt}</p><form class="ask-form">${options.map(([value, label]) => `<label class="opt"><input type="radio" name="answer" value="${value}"><span class="opt-mark"></span><span class="opt-text">${label}</span></label>`).join('')}<div class="ask-actions"><button class="primary" type="submit" disabled>Check</button></div></form><div class="ask-error" hidden></div></div>`);
     const form = wrap.querySelector('form');
@@ -104,7 +105,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
     $('#s1-entry').hidden = false; $('#s1-ws').className = 'ws locked'; $('#s1-link').className = 'link';
     $$('.col').forEach((column) => column.classList.remove('picked', 'wrong')); $$('.card').forEach((card) => card.classList.remove('interactive'));
     $('#s1-run-measure').disabled = false; $('#s1-run-note').textContent = 'Prepared for you — you don’t write this one.'; $('#s1-measure-out').innerHTML = '';
-    $('#s1-sql-editor').value = ''; $('#s1-sql-editor').disabled = false; $('#s1-execute').disabled = false; $('#s1-sql-actions').hidden = false; $('#s1-assist').hidden = true; $('#s1-assist').innerHTML = ''; $('#s1-diagnostic').innerHTML = ''; $('#s1-result').innerHTML = ''; $('#s1-enrich-panel').innerHTML = '';
+    $('#s1-sql-editor').value = ''; $('#s1-sql-editor').disabled = false; $('#s1-execute').disabled = false; $('#s1-sql-actions').hidden = false; setExecutionStatus(); $('#s1-assist').hidden = true; $('#s1-assist').innerHTML = ''; $('#s1-diagnostic').innerHTML = ''; $('#s1-result').innerHTML = ''; $('#s1-enrich-panel').innerHTML = '';
     $$('.teach-step').forEach((step) => step.classList.toggle('active', step.dataset.step === '1'));
     teacher('The research team is reviewing media coverage. They want a list of <strong>every article with the name of the source that published it</strong>. We will make that request precise, then check the result against a prediction — not just run a query and hope it looks right. Which relations should we bring into the working schema?');
     state = 'relations'; spine('Request: every article + its publisher'); markCurrentAction('#s1-entry'); conversation.scrollTop = 0;
@@ -182,13 +183,15 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   }
 
   function executeSql() {
-    const sql = $('#s1-sql-editor').value.trim(); const diagnostic = $('#s1-diagnostic'); diagnostic.innerHTML = '';
+    const sql = $('#s1-sql-editor').value.trim(); const diagnostic = $('#s1-diagnostic'); diagnostic.innerHTML = ''; setExecutionStatus();
     if (!sql) { diagnostic.innerHTML = '<div class="diag">The editor is empty. Begin with <code>news_article</code>, the relation carrying the result grain.</div>'; return; }
     if (!/^\s*(?:with\b[\s\S]+?\bselect\b|select\b)/i.test(sql)) { diagnostic.innerHTML = '<div class="diag">Use a <code>SELECT</code> query to return the requested article rows.</div>'; return; }
     if (/\b(?:insert|update|delete|drop|alter|create|replace|attach|detach|pragma|vacuum)\b/i.test(sql) || sql.replace(/;\s*$/, '').includes(';')) { diagnostic.innerHTML = '<div class="diag">Run one read-only <code>SELECT</code> statement for this request.</div>'; return; }
     if (!/\bjoin\b/i.test(sql) || !/\bon\b/i.test(sql)) { diagnostic.innerHTML = '<div class="diag">Express both the combination and its match rule with <code>JOIN</code> and <code>ON</code>.</div>'; return; }
+    let executed = false;
     try {
       const db = getDatabase(); const execution = db.exec(sql);
+      executed = true; setExecutionStatus('Executed · checking task meaning', 'executed');
       if (execution.length !== 1) throw new Error('Return one result set for this request.');
       const { columns, values } = execution[0];
       const titleIndex = columns.findIndex((column) => column.toLowerCase() === 'title');
@@ -197,8 +200,8 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
       const expected = db.exec('SELECT news_article.title, news_source.name AS source_name FROM news_article INNER JOIN news_source ON news_article.news_source_id = news_source.news_source_id ORDER BY news_article.news_article_id;')[0].values.map((row) => `${row[0]}\u0000${row[1]}`).sort();
       const actual = values.map((row) => `${row[titleIndex]}\u0000${row[sourceIndex]}`).sort();
       if (actual.length !== 18 || JSON.stringify(actual) !== JSON.stringify(expected)) throw new Error('The result does not yet contain the 18 expected article–publisher matches. Check the ON relationship and selected columns.');
-      renderResults(columns, values); state = 'verification'; $('#s1-execute').disabled = true; teacher('The query returned a result. Read it against the prediction you made earlier — the result is evidence now, not the conclusion. What does it establish?'); askVerification();
-    } catch (error) { diagnostic.innerHTML = `<div class="diag"><strong>Not verified yet.</strong> ${escapeText(error.message)}</div>`; }
+      renderResults(columns, values); setExecutionStatus('Verified · result satisfies the task', 'verified'); state = 'verification'; $('#s1-execute').disabled = true; teacher('The query returned a result. Read it against the prediction you made earlier — the result is evidence now, not the conclusion. What does it establish?'); askVerification();
+    } catch (error) { setExecutionStatus(executed ? 'Executed · not verified' : 'Execution failed', executed ? 'executed' : 'failed'); diagnostic.innerHTML = `<div class="diag"><strong>${executed ? 'Not verified yet.' : 'SQL execution failed.'}</strong> ${escapeText(error.message)}</div>`; }
   }
 
   function renderResults(columns, values) {
@@ -242,10 +245,11 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   $$('.beat-next').forEach((button) => button.addEventListener('click', () => { const next = button.dataset.next; $$('.teach-step').forEach((step) => step.classList.toggle('active', step.dataset.step === next)); teacher(next === '2' ? 'You traced the row match. Now watch the relationship become a condition SQL can execute.' : 'The operation, its match rule, and the business meaning now line up. Write that argument as SQL.'); }));
   $('#s1-to-sql').addEventListener('click', () => { state = 'sql'; $('#s1-sql').hidden = false; $('#s1-teaching').hidden = true; markCurrentAction('#s1-sql'); renderInspector(); teacher('The Workbench is yours now. Write the query that implements the relationship and preserves the grain you predicted.'); $('#s1-sql-editor').focus(); });
   $('#s1-assist-button').addEventListener('click', () => { const assist = $('#s1-assist'); assist.hidden = !assist.hidden; assist.innerHTML = '<div class="assist"><strong>Nudge:</strong> Start from <code>news_article</code>. Bring in <code>news_source</code> with <code>JOIN</code>, then compare the article foreign key with the source primary key in <code>ON</code>.</div>'; });
-  $('#s1-solution-button').addEventListener('click', () => { $('#s1-sql-editor').value = SOLUTION; $('#s1-sql-editor').focus(); $('#s1-diagnostic').innerHTML = '<div class="assist">The solution is now in the editor. It has not run, and the stage has not advanced.</div>'; });
+  $('#s1-solution-button').addEventListener('click', () => { $('#s1-sql-editor').value = SOLUTION; setExecutionStatus('Not executed', 'idle'); $('#s1-sql-editor').focus(); $('#s1-diagnostic').innerHTML = '<div class="assist">The solution is now in the editor. It has not run, and the stage has not advanced.</div>'; });
   $('#s1-inspector').addEventListener('click', (event) => { if (event.target.closest('.inspector-close')) closeInspector(); });
   $('#s1-inspector-insert').addEventListener('click', insertInspectedRelation);
   $('#s1-sql-editor').addEventListener('keydown', (event) => { if (!event.isComposing && event.key === 'Enter' && (event.ctrlKey || event.metaKey)) { event.preventDefault(); executeSql(); } });
+  $('#s1-sql-editor').addEventListener('input', () => { if (state === 'sql') setExecutionStatus('Not executed', 'idle'); });
   $('#s1-execute').addEventListener('click', executeSql); $('#s1-restart').addEventListener('click', reset);
   reset();
   return { restart: reset };
