@@ -8,6 +8,10 @@ This document manages current course work. It is **not** pedagogical, visual, Le
 
 Historical Stage 1 stabilization plans, early Stage 2 planning statements, and superseded Cycle 1 next-action snapshots previously stored here have been removed from the current management surface. Their history remains available through Git history, durable production artifacts, audits, and test-drive records. Historical/internal `Stage` naming in paths does not change the current learner-facing `Lesson` terminology.
 
+Cross-project authority ownership, precedence, runtime/authority distinction, schema/data precedence, and status semantics are defined in:
+
+`source-of-truth-hierarchy.md`
+
 ## 1. Project goal
 
 Build a Relational Reasoning + SQL course that enables learners to demonstrate the capabilities defined in:
@@ -22,7 +26,7 @@ and the pedagogical foundations established in:
 
 `pedagogical-foundations.md`
 
-The final number of encounters / Stages is not predetermined by this management record.
+The final number of encounters / Lessons is not predetermined by this management record.
 
 ## 2. Definition of Done
 
@@ -38,7 +42,7 @@ The Learning Product is complete only when:
 - no unresolved blocking issue prevents required capabilities from being demonstrated;
 - no unexplained exit-capability gap remains.
 
-Implementation presence alone is not evidence of learner capability.
+Implementation presence alone is not evidence of learner capability or normative authority.
 
 ## 3. Current course state
 
@@ -90,15 +94,17 @@ Primary current course-level sources include:
 - `pedagogical-foundations.md` — pedagogical foundations;
 - `course-design/course-visual-language.md` — visual / interaction-role authority;
 - `course-design/course-controls.md` — course-shell controls and SQL-local assistance;
-- `startup-ecosystem/startup-ecosystem-schema.md`;
-- `startup-ecosystem/startup-ecosystem-schema.sql`;
-- `startup-ecosystem/startup-ecosystem-seed.sql`.
+- `startup-ecosystem/startup-ecosystem-schema.md` — human-readable schema/grain/design documentation;
+- `startup-ecosystem/startup-ecosystem-schema.sql` — executable structural truth;
+- `startup-ecosystem/startup-ecosystem-seed.sql` — executable current data-instance truth.
+
+Domain ownership and precedence between these sources are defined in `source-of-truth-hierarchy.md`.
 
 There is currently no separate Lessons 1–2 topology authority.
 
 Spatial/interaction conformance must therefore be derived directly from `course-visual-language.md`, `course-controls.md`, and the relevant Lesson authority. If those sources do not settle a material spatial question, it remains unresolved until explicitly decided.
 
-Historical production and audit artifacts remain evidence/provenance unless a current authority source explicitly incorporates or points to them.
+Historical production and audit artifacts remain evidence/provenance unless a current authority source explicitly incorporates an accepted decision.
 
 ## 5. Historical Learning Experience initiative
 
@@ -106,9 +112,11 @@ Historical production and audit artifacts remain evidence/provenance unless a cu
 
 ## 6. Current next action
 
-After this documentation reconciliation, the next planned project layer is explicit **Source-of-Truth hierarchy / authority precedence** work.
+The Source-of-Truth hierarchy / authority-precedence layer is established in `source-of-truth-hierarchy.md`.
 
-This management record does not define that hierarchy. No runtime implementation, Lesson 3 design, or new navigation model is authorized by this next-action statement.
+The next planned project layer is **Production Contract v1**.
+
+This management record does not define that contract. No runtime implementation, Lesson 3 design, or new navigation model is authorized by this next-action statement.
 
 ## 7. Capability coverage and future course development
 
@@ -137,7 +145,7 @@ Before release-level or exit-capability completion claims, course-level validati
 
 ## 9. Current open / blocking areas
 
-There is no current Lessons 1–2 implementation blocker recorded here. The documentation/canon reconciliation establishes the accepted product baseline before the planned Source-of-Truth hierarchy / authority-precedence work.
+There is no current Lessons 1–2 implementation blocker recorded here. Canon reconciliation and Source-of-Truth authority mapping are complete; unresolved matters remain governed by their current authority/status rather than being inferred from runtime or historical artifacts.
 
 Other open matters should enter active work only when evidence or implementation makes them necessary. Current examples include:
 
