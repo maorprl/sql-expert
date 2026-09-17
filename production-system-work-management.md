@@ -6,7 +6,7 @@
 
 This document manages work on the system used to produce, review, implement, validate, and coordinate learner encounters.
 
-It is not pedagogical, visual, Stage, schema, data, process, or execution authority. Those decisions remain in their dedicated current-source documents.
+It is not pedagogical, visual, Lesson, schema, data, process, or execution authority. Those decisions remain in their dedicated current-source documents.
 
 Project-level planning structure is defined in:
 
@@ -61,17 +61,19 @@ Cycle 1 produced a substantial durable history under:
 
 That directory is retained as production history/provenance. It must not be read as a flat set of current course authority.
 
-The previous live Cycle 1 execution mapping became stale while later course work continued through the current Stage 1–3 runtime, Stage 2 authority extraction, Stage 1–3 topology work, Wave 4, Wave 5A, and the Wave 5B decision gate.
+The previous live Cycle 1 execution mapping became stale while later course work continued through the then-current Stage 1–3 runtime, Lesson 2 authority extraction, topology work, Wave 4, Wave 5A, and the Wave 5B decision gate. Those records are production history; the current accepted Learning Product is Lessons 1–2.
 
 Accordingly:
 
 - there is **no active Cycle 1 next-action claim in this management record**;
-- the current Learning Product work state is managed in `course-experience-improvement-work-management.md` and `course-work-management.md`;
+- the current Learning Product work state is managed in `course-work-management.md`; `course-experience-improvement-work-management.md` is a historical/superseded initiative record;
 - any future learner-encounter production cycle must establish an explicit current execution mapping tied to its actual baseline before process-gated implementation begins.
 
 ## 4. Current active control
 
 Preserve durable handoffs and authority boundaries whenever the production process is used.
+
+After the current documentation reconciliation, the planned Source-of-Truth hierarchy / authority-precedence work belongs to project coordination across Programs A and B. This record does not define that hierarchy or redesign Program B.
 
 Where a completed phase output becomes an input to another role, preserve the actual completed artifact according to the process's durable-handoff rule. Do not substitute conversational memory or summary text for required repository evidence.
 

@@ -2,25 +2,28 @@
 
 A browser-only SQLite workspace for the startup ecosystem dataset.
 
-The learner journey currently contains three implemented encounters in one shared SQL Lab runtime:
+The accepted learner journey currently contains two implemented Lessons in one SQL Lab runtime:
 
-1. **Stage 1 — Media coverage / first JOIN** using `news_article → news_source`;
-2. **Stage 2 — Funding participation / row multiplication** using `funding_round → round_investment`;
-3. **Stage 3 — INNER JOIN unmatched / zero-match coverage** using `company → funding_round`.
+1. **Lesson 1 — Media coverage / first JOIN** using `news_article → news_source`;
+2. **Lesson 2 — Funding participation / row multiplication** using `funding_round → round_investment`.
 
-The current encounter runtime files are:
+`Lesson` is the learner-facing product term. Historical/internal paths and identifiers retain `stage1`, `stage2`, `stage-1`, and `stage-2` where renaming would create unnecessary implementation churn.
 
-- `src/media-coverage.js` — Stage 1;
-- `src/funding-participation.js` — Stage 2;
-- `src/inner-join-unmatched.js` — Stage 3;
-- `src/interaction-lifecycle.js` — shared interaction lifecycle;
-- `src/main.js` — shared course/runtime orchestration.
+The accepted learner journey is rendered by:
+
+- `src/stage1-prototype-runtime.js` and `src/stage1-prototype-runtime.css` — Lesson 1 Conversation/Workbench runtime;
+- `src/stage2-prototype-runtime.js` and `src/stage2-prototype-runtime.css` — Lesson 2 Conversation/Workbench runtime;
+- `src/main.js` — database initialization and Lesson orchestration;
+- `src/course-navigation.css` and `src/styles.css` — surrounding runtime styling.
+
+Older encounter modules remain in the repository but are not the accepted Lessons 1–2 learner journey.
 
 Current encounter authority is stored separately from runtime code:
 
-- Stage 1: `course-design/stage-1/stage-1-learner-route.md` and `course-design/stage-1/stage-1-interaction-decisions.md`;
-- Stage 2: `course-design/stage-2/stage-2-authority.md`;
-- Stage 3: `course-design/stage-3/stage-3-learner-route.md` and `course-design/stage-3/stage-3-interaction-decisions.md`.
+- Lesson 1: `course-design/stage-1/stage-1-learner-route.md` and `course-design/stage-1/stage-1-interaction-decisions.md`;
+- Lesson 2: `course-design/stage-2/stage-2-authority.md`.
+
+The Stage 3 documents are preserved candidate/history and are not current learner-product authority. No Lesson 3 is currently part of the accepted journey.
 
 Course-wide learner-experience authority is currently defined by:
 
@@ -28,15 +31,15 @@ Course-wide learner-experience authority is currently defined by:
 - `course-design/course-visual-language.md`;
 - `course-design/course-controls.md`.
 
-There is currently **no separate Stage 1–3 topology authority**. The previous target-topology decision/review/post-build chain was removed from the active tree because it introduced derived UX ownership rules that exceeded the higher-order authority it was meant to translate. Spatial and interaction conformance must be derived directly from the current course-level and Stage authority above.
+There is currently no separate Lessons 1–2 topology authority. Spatial and interaction conformance is derived directly from the current course-level and Lesson authority above.
 
-A course-level chapter selector allows the learner to switch among the three encounters without completing the current encounter first. Chapter selection is navigation rather than learner evidence and is visually separated from task actions such as `Check answer`, `Continue`, and `Run query`.
+A compact Previous / Next control in the masthead provides progression-safe inter-Lesson navigation. Lesson 1 Next becomes usable only after the existing completion progression authorizes Lesson 2. Lesson 2 Previous returns to Lesson 1, and Lesson 2 has no usable Next because no Lesson 3 is currently approved.
 
-Within the current browser run, each encounter keeps its own in-memory reasoning state, editor text, and rendered SQL result when the learner switches away and back. This does not establish a broader persistence contract across reloads or browser sessions.
+Within the current browser run, each available Lesson keeps its own in-memory reasoning state, editor text, result, completion state, and other existing runtime state when the learner navigates away and back. This does not establish a broader persistence contract across reloads or browser sessions.
 
 `Show solution` is not a persistent course-shell control. Where available, it is SQL-workspace-local assistance during active SQL authoring and follows `course-design/course-controls.md`.
 
-Stage 2 begins with reuse checkpoints rather than a pre-resolved relationship: the learner selects the relevant relations from Live Schema and identifies the connecting participation field before the PK/FK relationship is revealed. These are reuse actions, not new first-exposure teaching and not the encounter's core row-multiplication evidence.
+Lesson 2 begins with reuse checkpoints rather than a pre-resolved relationship: the learner selects the relevant relations and identifies the connecting participation field before the PK/FK relationship is revealed. These are reuse actions, not new first-exposure teaching and not the encounter's core row-multiplication evidence.
 
 This README describes the runnable product and current observable runtime structure. It does **not** define pedagogical authority or the project's next authorized work item.
 
@@ -44,7 +47,7 @@ For current work state and authority boundaries, use:
 
 - `routecraft-work-management.md` — project-level current work state;
 - `course-work-management.md` — Learning Product work state and current authority boundary;
-- `course-experience-improvement-work-management.md` — current learner-experience improvement state;
+- `course-experience-improvement-work-management.md` — historical/superseded learner-experience initiative record;
 - `learner-encounter-production-process.md` — production roles, gates, independence, review, and acceptance rules for learner-encounter production;
 - `learner-encounter-production-execution.md` — historical / superseded Cycle 1 execution snapshot unless explicitly reactivated for a future production cycle;
 - `course-design/production/cycle-1/` — durable Cycle 1 production artifacts and historical provenance.
@@ -61,8 +64,6 @@ Build a static production bundle with:
 ```sh
 npm run build
 ```
-
-The former `scripts/topology-contract.test.mjs` suite was removed from the active validation path because it encoded parts of the superseded topology decision. A replacement conformance suite must be derived from current authority before automated conformance PASS claims are made.
 
 ## Database source and runtime
 

@@ -34,6 +34,6 @@ The capability being assessed is knowing:
 
 ## Status
 
-First draft.
+CURRENT COURSE-LEVEL CAPABILITY AUTHORITY.
 
-This document is intended to be the starting point for designing the new course, before the knowledge map, learner flow, and unit structure.
+This document defines the course exit capabilities. It does not determine the current Lesson sequence or claim that the accepted Lessons 1–2 journey already satisfies every exit criterion.

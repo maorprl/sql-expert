@@ -4,9 +4,9 @@
 **Status:** WORKING  
 **Role:** Current Learning Product work-management record
 
-This document manages current course work. It is **not** pedagogical, visual, Stage, schema, data, process, execution, review, or validation authority. Those decisions remain in their dedicated current-source documents.
+This document manages current course work. It is **not** pedagogical, visual, Lesson, schema, data, process, execution, review, or validation authority. Those decisions remain in their dedicated current-source documents.
 
-Historical Stage 1 stabilization plans, early Stage 2 planning statements, and superseded Cycle 1 next-action snapshots previously stored here have been removed from the current management surface. Their history remains available through Git history, durable production artifacts, audits, and test-drive records.
+Historical Stage 1 stabilization plans, early Stage 2 planning statements, and superseded Cycle 1 next-action snapshots previously stored here have been removed from the current management surface. Their history remains available through Git history, durable production artifacts, audits, and test-drive records. Historical/internal `Stage` naming in paths does not change the current learner-facing `Lesson` terminology.
 
 ## 1. Project goal
 
@@ -42,9 +42,9 @@ Implementation presence alone is not evidence of learner capability.
 
 ## 3. Current course state
 
-The current runnable course contains three implemented encounters:
+The current accepted runnable course contains two implemented encounters:
 
-### Stage 1 — Media coverage / first JOIN
+### Lesson 1 — Media coverage / first JOIN
 
 Case:
 
@@ -57,9 +57,10 @@ Current authority:
 
 Current runtime:
 
-- `src/media-coverage.js`
+- `src/stage1-prototype-runtime.js`
+- `src/stage1-prototype-runtime.css`
 
-### Stage 2 — Funding participation / row multiplication
+### Lesson 2 — Funding participation / row multiplication
 
 Case:
 
@@ -71,24 +72,14 @@ Current authority:
 
 Current runtime:
 
-- `src/funding-participation.js`
+- `src/stage2-prototype-runtime.js`
+- `src/stage2-prototype-runtime.css`
 
-Stage 2 authority was extracted from the earlier production-history chain so that current learner requirements no longer have to be reconstructed from `course-design/production/cycle-1/`. The later circular dependency on the superseded Stage 1–3 target-topology chain has been removed.
+Lesson 2 authority was extracted from the earlier production-history chain so that current learner requirements no longer have to be reconstructed from `course-design/production/cycle-1/`.
 
-### Stage 3 — INNER JOIN unmatched / zero-match coverage
+### Lesson 3 — not currently accepted
 
-Case:
-
-`company → funding_round`
-
-Current authority:
-
-- `course-design/stage-3/stage-3-learner-route.md`
-- `course-design/stage-3/stage-3-interaction-decisions.md`
-
-Current runtime:
-
-- `src/inner-join-unmatched.js`
+The preserved files under `course-design/stage-3/` and the older `src/inner-join-unmatched.js` runtime are candidate/history, not current learner-product authority or implementation. Future Lesson 3 work requires fresh authorization from the accepted Lessons 1–2 baseline through the current production process.
 
 ## 4. Current course-wide authority
 
@@ -103,40 +94,21 @@ Primary current course-level sources include:
 - `startup-ecosystem/startup-ecosystem-schema.sql`;
 - `startup-ecosystem/startup-ecosystem-seed.sql`.
 
-There is currently **no separate Stage 1–3 topology authority**. The former `stage-1-3-target-topology-decision-2026-09-15.md` and its review/post-build chain were removed from the active tree because they introduced derived UX ownership rules that exceeded the higher-order authority they were meant to translate.
+There is currently no separate Lessons 1–2 topology authority.
 
-Spatial/interaction conformance must therefore be derived directly from `course-visual-language.md`, `course-controls.md`, and the relevant Stage authority. If those sources do not settle a material spatial question, it remains unresolved until explicitly decided.
+Spatial/interaction conformance must therefore be derived directly from `course-visual-language.md`, `course-controls.md`, and the relevant Lesson authority. If those sources do not settle a material spatial question, it remains unresolved until explicitly decided.
 
 Historical production and audit artifacts remain evidence/provenance unless a current authority source explicitly incorporates or points to them.
 
-## 5. Current Learning Experience initiative
+## 5. Historical Learning Experience initiative
 
-The current improvement initiative is managed in:
-
-`course-experience-improvement-work-management.md`
-
-Current status:
-
-- the topology-authority cleanup is complete;
-- Teacher voice / Walkthrough work through Wave 5B remains initiative evidence for the changes it actually established;
-- Wave 4 diagnostic feedback and Wave 5A narrow response-aware feedback remain implemented work, subject to fresh conformance validation where they interact with current spatial authority;
-- Wave 5B graduated / adaptive assistance was evaluated and **implementation is not authorized** because current evidence does not justify that machinery;
-- the Orientation & progress Back / Forward scope remains a valid bounded control contract, but it does not certify Stage spatial/topology conformance.
+`course-experience-improvement-work-management.md` and its Wave/orientation records are historical/superseded initiative evidence. They do not override the accepted Lessons 1–2 runtime or current authority.
 
 ## 6. Current next action
 
-**Execute fresh Stage 1–3 conformance directly against current authority before further learner Test Drive or additional experience implementation.**
+After this documentation reconciliation, the next planned project layer is explicit **Source-of-Truth hierarchy / authority precedence** work.
 
-The fresh conformance execution must:
-
-1. use only `pedagogical-foundations.md`, `course-design/course-visual-language.md`, `course-design/course-controls.md`, and the relevant Stage authority as substantive authority;
-2. treat the current runtime as implementation to be checked, not as authority;
-3. inspect every material learner-visible state and transition, including prompt/response location, concept/reveal timing, feedback, Continue labels, Working Schema role, prepared evidence, SQL, Results, verification, Completed Steps, and completion;
-4. cover correct, wrong-answer, no-selection, diagnostic, assistance, and relevant review/navigation substates;
-5. classify every material requirement as `PASS WITH EVIDENCE`, `DEFECT`, or `UNVERIFIED / CANON DECISION REQUIRED`;
-6. correct proven defects before a new pedagogical Test Drive is treated as valid evidence.
-
-No prior PASS from the superseded topology chain can satisfy this requirement.
+This management record does not define that hierarchy. No runtime implementation, Lesson 3 design, or new navigation model is authorized by this next-action statement.
 
 ## 7. Capability coverage and future course development
 
@@ -146,7 +118,7 @@ When a new learner encounter is considered, assess:
 
 exit criterion → capability gap → genuine prerequisites → current learner state → case validation → intended evidence → encounter need → implementation → validation → remaining gap
 
-Do not create a new Stage merely because the current sequence ends at Stage 3.
+Do not create a new Lesson merely because the current accepted journey ends at Lesson 2.
 
 Do not treat the existence of preserved schema relations or historical designs as proof that they should be taught next.
 
@@ -165,14 +137,14 @@ Before release-level or exit-capability completion claims, course-level validati
 
 ## 9. Current open / blocking areas
 
-The current **blocking** issue is fresh Stage 1–3 runtime conformance after invalidation of the derived topology authority chain.
+There is no current Lessons 1–2 implementation blocker recorded here. The documentation/canon reconciliation establishes the accepted product baseline before the planned Source-of-Truth hierarchy / authority-precedence work.
 
 Other open matters should enter active work only when evidence or implementation makes them necessary. Current examples include:
 
 - broader persistence semantics across reloads/sessions;
 - Retry / Redo reset and downstream invalidation semantics;
 - broader hint / adaptive-assistance policy (Wave 5B remains deferred, not authorized);
-- future Stage structure beyond the current implemented Stage 1–3 sequence;
+- future Lesson structure beyond the accepted Lessons 1–2 journey;
 - broader initial schema exposure where later work requires a decision;
 - release-level accessibility, responsive, cross-browser, and cumulative-regression validation.
 

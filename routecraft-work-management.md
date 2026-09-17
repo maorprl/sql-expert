@@ -5,7 +5,7 @@
 
 This document defines RouteCraft's current project-management structure.
 
-It does not replace or override pedagogical, visual, Stage, schema, data, process, execution, review, or validation authority. Those remain in their dedicated current-source documents.
+It does not replace or override pedagogical, visual, Lesson, schema, data, process, execution, review, or validation authority. Those remain in their dedicated current-source documents.
 
 ## 1. Project planning model
 
@@ -20,17 +20,11 @@ Authority and quality controls apply across both Programs but are not a third Pr
 
 ## 2. Current project state
 
-The current runnable Learning Product contains three implemented encounters (Stage 1–3).
+The current accepted runnable Learning Product contains two encounters: Lesson 1 and Lesson 2. The accepted implementation baseline is `main@9b8f6ffc1f22ce2d2783f49e52a48c480a0945fa`.
 
-The currently active learner-experience initiative is:
+Lesson 3 is not currently accepted or implemented as part of the learner journey. Preserved Stage 3 files are candidate/history only.
 
-`course-experience-improvement-work-management.md`
-
-The derived Stage 1–3 target-topology decision/review/post-build chain was invalidated after learner-visible contradictions were found and has been removed from the active tree. Current authority and management sources have been corrected so that the removed chain is not treated as current authority or conformance evidence.
-
-The current project priority is therefore:
-
-**fresh Stage 1–3 conformance execution against current authority.**
+This reconciliation aligns current documentation with that accepted Lessons 1–2 baseline. The next planned project layer is explicit **Source-of-Truth hierarchy / authority precedence** work. That hierarchy is not defined in this reconciliation.
 
 The old `learner-encounter-production-execution.md` Cycle 1 action sequence remains historical / superseded and must not be used as the project-wide current-action source.
 
@@ -71,9 +65,10 @@ Includes:
 
 Current encounter authority is located under:
 
-- `course-design/stage-1/`
-- `course-design/stage-2/`
-- `course-design/stage-3/`
+- `course-design/stage-1/` — Lesson 1 authority;
+- `course-design/stage-2/` — Lesson 2 authority.
+
+`course-design/stage-3/` is preserved candidate/history and is not current authority.
 
 Historical Cycle 1 production artifacts remain under `course-design/production/cycle-1/` as provenance/history and should not be used as a flat current-authority set.
 
@@ -94,13 +89,9 @@ Primary current authority sources include:
 - `course-design/course-visual-language.md`
 - `course-design/course-controls.md`
 
-There is currently no separate Stage 1–3 topology authority. Spatial conformance must be derived from these course-level sources together with encounter-local authority. The removed topology chain remains available only through Git history.
+There is currently no separate Lessons 1–2 topology authority. Spatial conformance is derived from these course-level sources together with encounter-local authority.
 
-Runtime behavior introduced by the superseded topology implementation is not automatically accepted or reverted. It is implementation evidence awaiting fresh conformance classification.
-
-Current initiative:
-
-`course-experience-improvement-work-management.md`
+The accepted Lessons 1–2 runtime is the current product baseline. `course-experience-improvement-work-management.md` is a historical/superseded initiative record, not the current project-state pointer.
 
 ### A4 — Course-Level Validation & Release Readiness
 
@@ -187,7 +178,7 @@ RouteCraft
 │   ├── A1 — Course Foundations
 │   ├── A2 — Learner Encounter Development
 │   ├── A3 — Learning Experience & Runtime
-│   │   └── Current initiative: Existing Course Experience Improvement
+│   │   └── Accepted current runtime: Lessons 1–2
 │   └── A4 — Course-Level Validation & Release Readiness
 │
 └── Program B — Production System
