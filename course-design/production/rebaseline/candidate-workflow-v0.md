@@ -69,7 +69,9 @@ The build boundary should identify:
 
 **Block when:** the implementer would have to invent a pedagogical, learner-evidence, governed-control, or other material product decision in order to proceed.
 
-**Output:** an Implementation Boundary, preferably inside the Encounter Definition or the appropriate existing authority rather than as a mandatory additional handoff artifact.
+**Authority boundary before Build:** a complete Encounter Definition or review packet is not implementation authority merely because it is detailed or finished. Before Build begins, all material accepted encounter decisions that implementation must obey must be durable in the appropriate **current authority source** for that encounter/domain. Candidate, evaluation, review, or provisional material cannot authorize Build by itself.
+
+**Output:** an Implementation Boundary, preferably inside the current accepted encounter authority or linked directly from it rather than as a mandatory additional handoff artifact. Candidate/evaluation material may be used to prepare that boundary but does not become authority automatically.
 
 ## 4. Build
 
@@ -164,7 +166,7 @@ Candidate Workflow v0 does not yet decide:
 - who or which tool performs each stage;
 - where independent challenge is required by impact/risk, if anywhere;
 - which checks should become deterministic automation versus LLM/human review;
-- whether the Encounter Definition should be a standalone artifact or an update to an existing authority source;
+- the exact document form used to carry a candidate Encounter Definition before accepted decisions are promoted into current authority;
 - how CI should map to validation categories;
 - exact validation depth for each future impact class.
 
