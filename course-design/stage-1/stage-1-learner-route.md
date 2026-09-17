@@ -6,6 +6,10 @@ The business request remains visible as context; it is not a learner step:
 
 This first JOIN encounter develops the ability to preserve one article per output row while adding its publishing source.
 
+## Stage gist — Matching
+
+Stage 1's conceptual identity is **Matching**: one article row matches its related source row through the established relationship. JOIN expresses that match and adds publishing-source context while the requested result remains one article per row. This gist organizes the teaching and completion of the Stage; it does not replace or remove any required reasoning move below.
+
 The route contains five top-level learner episodes. These episodes package the established reasoning sequence into a more continuous guided flow; they do not remove required reasoning moves or learner evidence.
 
 1. **Identify relevant relations.** From the live schema, identify and add `news_article`, which contains the articles, and `news_source`, which contains publishing-source information, to the Working Schema. The task requires two relations; the Working Schema capacity of four is not a task target.
