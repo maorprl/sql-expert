@@ -87,7 +87,9 @@ Lesson 2 authority was extracted from the earlier production-history chain so th
 
 ### Lesson 3 — not currently accepted
 
-The preserved files under `course-design/stage-3/` and the older `src/inner-join-unmatched.js` runtime are candidate/history, not current learner-product authority or implementation. Future Lesson 3 work requires fresh authorization from the accepted Lessons 1–2 baseline through the current production process.
+The preserved files under `course-design/stage-3/` and the older `src/inner-join-unmatched.js` runtime are candidate/history, not current learner-product authority or implementation.
+
+The current learner-encounter production process remains the formal production-process authority until an explicit cutover changes that status. However, Lesson 3 design and implementation are currently paused while the active production-system rebaseline subplan below evaluates a candidate replacement. Preserved Stage 3 material remains candidate/history during that work.
 
 ## 4. Current course-wide authority
 
@@ -114,15 +116,54 @@ Historical production and audit artifacts remain evidence/provenance unless a cu
 
 `course-experience-improvement-work-management.md` and its Wave/orientation records are historical/superseded initiative evidence. They do not override the accepted Lessons 1–2 runtime or current authority.
 
-## 6. Current next action
+## 6. Current planning state
 
-The Source-of-Truth hierarchy / authority-precedence layer is established in `source-of-truth-hierarchy.md`.
+This section records work state only. It does not create or replace product, pedagogy, Lesson, process, validation, or implementation authority.
 
-Production Contract v1 is established in `production-contract-v1.md`.
+### 6.1 Master plan
 
-The next planned Learning Product step is **Lesson 3 design through the current learner-encounter production process**.
+The established project plan remains:
 
-This management record does not define Lesson 3's capability, case, learner flow, pedagogy, or implementation. Preserved Stage 3 material remains candidate/history until fresh process authorization establishes current Lesson 3 authority.
+1. **DONE** — Preserve the accepted Lessons 1–2 runtime baseline.
+2. **DONE** — Full external UI/UX review of Lessons 1–2.
+3. **DONE** — Consolidated Lessons 1–2 cleanup.
+4. **DONE** — Full repository documentation / canon reconciliation.
+5. **DONE** — Source-of-Truth hierarchy / authority precedence.
+6. **DONE** — Production Contract v1.
+7. **NOT STARTED — PAUSED BY ACTIVE SUBPLAN** — Lesson 3 design.
+8. **NOT STARTED** — Build the production system / “machine”.
+9. **NOT STARTED** — CI.
+10. **NOT STARTED** — Implement Lesson 3 through the production system.
+11. **NOT STARTED** — CD.
+12. **NOT STARTED** — Lesson 4 through the production system.
+13. **NOT STARTED** — Whole-course planning.
+14. **NOT STARTED** — Engineering cleanup.
+
+The active subplan below is corrective work required before proceeding with Master Plan Step 7. It does not renumber or replace the master plan.
+
+### 6.2 Active subplan — Production-system rebaseline
+
+This subplan exists because the current learner-encounter production process was found to contain legacy-derived agent/process architecture that must be revalidated before it is used as the basis for future Lesson production.
+
+1. **DONE** — Inventory the current production process and separate product requirements, legacy architecture choices, and unresolved matters.
+2. **DONE** — Draft Production System Requirements without copying the legacy agent topology.
+3. **DONE** — Perform traceability / necessity audit of the proposed requirements and derive the cleaned requirement set.
+4. **DESIGN COMPLETE — DURABLE RECORD PENDING** — Candidate Workflow v0 has been designed from the audited requirements. It is not current authority and has not yet been preserved as its own repository artifact.
+5. **NOT STARTED** — Run a Lesson 3 dry run through the candidate workflow, without implementation, and check it against the rest of the applicable current canon.
+6. **NOT STARTED** — Compare the candidate against the legacy process by outcomes and failure protection: what was lost, what was simplified, and what legacy mechanism—if any—was actually necessary.
+7. **NOT STARTED** — If the candidate survives the dry run and comparison, perform an atomic documentation cutover so that the production process, Source-of-Truth mapping, Production Contract references, and management state agree on one current process.
+
+Until Step 7 completes, `learner-encounter-production-process.md` remains the formal current production-process authority. Candidate work is evaluative and non-authoritative.
+
+### 6.3 Current action
+
+**CURRENT ACTION:** reconcile this management record before additional Lesson work.
+
+That reconciliation must classify existing management content as `DONE`, `SUPERSEDED / OBSOLETE`, `STILL OPEN`, or `UNRESOLVED DISPOSITION` against repository evidence rather than deleting, reviving, or completing historical work by assumption.
+
+After the management reconciliation establishes a clean current tracker, preserve the already-completed Production System Requirements audit and Candidate Workflow v0 as explicit **CANDIDATE / NON-AUTHORITATIVE** durable material before beginning the Lesson 3 dry run.
+
+Do not begin Lesson 3 design or implementation while this current action remains incomplete.
 
 ## 7. Capability coverage and future course development
 
@@ -167,6 +208,8 @@ Other open matters should enter active work only when evidence or implementation
 Learner-encounter production process authority remains in:
 
 `learner-encounter-production-process.md`
+
+That authority is currently under production-system rebaseline review. It remains current until an explicit atomic cutover changes the authority mapping; the Candidate Workflow does not currently replace it.
 
 Execution / coordination guidance remains in:
 
