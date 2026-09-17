@@ -83,7 +83,8 @@ CREATE TABLE investor_sector_focus (
 
 -- ============================================================
 -- Funding
--- Protected Stage 2/3 contract
+-- Lesson 2 contract; company/funding-round structure also retains
+-- compatibility with the preserved Stage 3 candidate.
 -- ============================================================
 
 CREATE TABLE funding_round (
@@ -147,7 +148,7 @@ CREATE TABLE company_acquisition (
 
 -- ============================================================
 -- News
--- Protected Stage 1 contract
+-- Lesson 1 contract
 -- ============================================================
 
 CREATE TABLE news_source (
