@@ -6,7 +6,7 @@ import initSqlJs from 'sql.js';
 import wasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
 import './styles.css';
 import './course-navigation.css';
-import { createMediaCoverage } from './media-coverage.js';
+import { createStage1Prototype } from './stage1-prototype-runtime.js';
 import { createFundingParticipation } from './funding-participation.js';
 import { createInnerJoinUnmatched } from './inner-join-unmatched.js';
 import { createInteractionLifecycle } from './interaction-lifecycle.js';
@@ -51,7 +51,6 @@ let schema = [];
 let editor;
 let activeEncounter;
 let activeEncounterName = 'media-coverage';
-let mediaCoverageEncounter;
 let fundingParticipationEncounter;
 let innerJoinUnmatchedEncounter;
 const encounterEditorText = { 'media-coverage': '', 'funding-participation': '', 'inner-join-unmatched': '' };
@@ -373,25 +372,21 @@ function applyInnerJoinUnmatchedShell() {
 }
 
 function activateMediaCoverageEncounter() {
-  if (activeEncounterName === 'media-coverage') return;
-  saveEncounterSurface();
+  if (activeEncounterName !== 'media-coverage') saveEncounterSurface();
   activeEncounterName = 'media-coverage';
   clearError();
-  resetEncounterDom();
-  applyMediaCoverageShell();
-  activeEncounter = mediaCoverageEncounter;
-  editor.setValue(encounterEditorText['media-coverage'] || '', -1);
-  restoreEncounterResults('media-coverage');
-  activeEncounter.refresh?.();
-  renderSchema();
-  updateChapterNavigation();
-  el('stage-scroll').scrollTop = 0;
+  activeEncounter = null;
+  el('app').hidden = true;
+  el('stage1-root').hidden = false;
+  document.title = 'RouteCraft · Media coverage';
 }
 
 function activateFundingParticipationEncounter() {
   if (activeEncounterName === 'funding-participation') return;
   saveEncounterSurface();
   activeEncounterName = 'funding-participation';
+  el('stage1-root').hidden = true;
+  el('app').hidden = false;
   clearError();
   resetEncounterDom();
   applyFundingParticipationShell();
@@ -418,6 +413,8 @@ function activateInnerJoinUnmatchedEncounter() {
   if (activeEncounterName === 'inner-join-unmatched') return;
   saveEncounterSurface();
   activeEncounterName = 'inner-join-unmatched';
+  el('stage1-root').hidden = true;
+  el('app').hidden = false;
   clearError();
   resetEncounterDom();
   applyInnerJoinUnmatchedShell();
@@ -454,11 +451,10 @@ el('schema-search').addEventListener('input', renderSchema);
 configureEditor();
 ensureSqlSolutionControls();
 ensureChapterNavigation();
-applyMediaCoverageShell();
 const interactionLifecycle = createInteractionLifecycle({ currentElement: el('current-step'), completedElement: el('completed-steps') });
-mediaCoverageEncounter = createMediaCoverage({ editor, getDatabase: () => db, getSchema: () => schema, onSelectionChange: renderSchema, interactionLifecycle });
-activeEncounter = mediaCoverageEncounter;
-updateChapterNavigation();
+activeEncounter = null;
 SQL = await initSqlJs({ locateFile: () => wasmUrl });
 db = new SQL.Database();
 await loadDatabase();
+createStage1Prototype({ root: el('stage1-root'), getDatabase: () => db });
+activateMediaCoverageEncounter();
