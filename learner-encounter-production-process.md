@@ -1,946 +1,232 @@
 # Learner Encounter Production Process
 
 **Status:** CURRENT  
-**Role:** Process and quality-control protocol for producing future learner encounters
+**Role:** Current process and quality-control protocol for producing new or materially changed learner encounters
 
-This document defines the repeatable process for moving from the current trusted course state to the next justified learner encounter, implementation, validation, and coverage update.
+This document defines the shortest reliable path from the current trusted course state to an accepted learner encounter.
 
-It is **not** a pedagogical, visual, Stage, schema, or data source of truth. Those decisions remain in their dedicated current-source documents.
+It is **not** pedagogical, visual, Lesson, schema, data, or implementation authority. Those decisions remain in their dedicated current-source documents. It also does not require a permanent agent topology, fixed reviewer roles, or a fixed number of artifacts.
 
-The process is designed to provide substantial agent autonomy without allowing agent autonomy to become course authority.
+The process is outcome-driven. It preserves the controls that matter: current-state grounding, justified learner need, valid learner evidence, material authority before implementation, impact-based validation, accepted-product preservation, and explicit acceptance.
 
-It is built around five distinct questions:
+Worker/tool assignment and Git coordination are governed separately by `agent-assisted-work-protocol.md` and `chatgpt-git-safety.md`.
 
-1. What capability, if any, should be developed next?
-2. Does a justified learner situation and data case exist for developing it now?
-3. Is the proposed encounter pedagogically and experientially sound?
-4. Did implementation preserve the approved design?
-5. What validated capability evidence now exists, and what gap remains?
+## 1. Establish Basis
 
----
+Before encounter design begins, establish the actual starting point:
 
-## 1. Functional Roles
+- the accepted runtime/product baseline;
+- the canonical repository state;
+- the applicable current authority under `source-of-truth-hierarchy.md`;
+- the capability gap or learner need that may justify new work;
+- only the prior learner capabilities that the course may legitimately assume.
 
-### 1.1 Encounter Architect
+Prior exposure is not proof of mastery. Historical runtime, preserved Lesson/Stage material, prior production artifacts, and old designs may be evidence or candidate material only; they do not become current authority because they already exist.
 
-Owns the reasoning chain from capability need through encounter design.
+A new encounter is not justified merely because the accepted journey currently ends, because a schema feature is available, or because preserved material can be reused.
 
-Responsibilities:
+**Stop when:**
 
-- assess current capability coverage;
-- identify the next required capability, if any;
-- establish genuine prerequisites;
-- establish the **Course-Assumed Learner State**;
-- perform Case Validation;
-- design the learner encounter;
-- define intended learner evidence;
-- define implementation invariants and permitted implementation discretion.
+- the accepted baseline cannot be established;
+- a required current source is missing or materially contradictory;
+- the proposed learner-state assumption is stronger than current evidence supports;
+- the apparent need is actually an implementation, validation, or documentation gap rather than an encounter gap.
 
-Cannot:
+The basis may be recorded inside the encounter-design work when a separate artifact would add no value.
 
-- approve its own capability decision;
-- approve its own design;
-- resolve OPEN course decisions;
-- invent new course authority;
-- declare its own encounter validated.
+## 2. Define the Encounter
 
-### 1.2 Pedagogy Reviewer
+Define the encounter from the learner need, not from the available implementation.
 
-Independent from the Encounter Architect.
+The design must establish:
 
-Operates at three points:
-
-1. lightweight review of the Capability & Case Brief;
-2. full review of the encounter design before implementation;
-3. review of the actual learner experience after implementation.
-
-Focus includes:
-
-- capability justification;
+- the target capability / learner need and why it matters now;
 - genuine prerequisites;
-- Course-Assumed Learner State;
-- sequencing;
-- scaffolding;
-- cognitive-load concerns;
-- prior exposure versus first exposure;
-- whether the learner actually performs the intended reasoning;
-- whether the proposed evidence corresponds to the target capability;
-- justified reuse versus unnecessary re-teaching;
-- the instructional function of each material learner-facing step, including teacher-led explanation, continuity bridges, measurement/baseline work, tool use, result interpretation, and assistance;
-- continuity between prior first-exposure teaching and later reuse;
-- whether compressing or removing earlier teaching is justified by the Course-Assumed Learner State;
-- the learner consequence of removing or compressing a step, not only whether that step is classified as core evidence;
-- appropriateness of the learner situation.
+- a schema/data-valid and analytically legitimate case;
+- the business or analytical question;
+- what relational reasoning the learner must perform;
+- what learner action or judgment counts as evidence of that reasoning;
+- what support/scaffolding is present and how it preserves that evidence;
+- reveal order and concept timing where they affect evidence;
+- the coherent journey through reasoning, SQL/tool use where applicable, produced evidence, and interpretation/verification.
 
-The reviewer distinguishes between:
+### Case validity and comparison
 
-- authority violation;
-- material professional concern;
-- advisory professional recommendation;
-- OPEN / owner decision.
+Do not invent schema, data, Grain, Cardinality, row counts, NULL behavior, or SQL-result facts that are not established by current sources.
 
-The reviewer does not rewrite the encounter or establish new course authority through review comments.
+A case should make analytical sense independently of the teaching objective. The target relational difficulty should arise naturally from the information need rather than from an otherwise unmotivated detail added only to manufacture the concept.
 
-### 1.3 Learning Experience / UX Reviewer
+When more than one **materially plausible current case** can exercise the same capability and their differences create meaningful learner trade-offs, compare the relevant alternatives proportionally and record why the selected case is preferable now. Do not create a case-comparison ceremony when no meaningful alternative or trade-off exists.
 
-Independent from the Encounter Architect.
+### Evidence Independence
 
-Reviews:
+For every core evidence-bearing action, ask:
 
-- the intended learning experience before implementation;
-- the actual interactive experience after implementation.
+> Could the learner produce the correct response from wording, quantities, conclusions, answer structure, visuals, or scaffolds already supplied without performing the target reasoning?
 
-Focus:
+If yes, revise the evidence claim, revise the interaction, or rely on another action that actually requires the reasoning.
 
-- learner orientation;
-- visual hierarchy;
-- continuity of the reasoning journey;
-- attention choreography;
-- evidence locality;
-- progressive disclosure;
-- interaction burden;
-- role of teacher guidance;
-- transitions between reasoning, tools, SQL workspace, and results;
-- whether visual or interaction decisions accidentally perform reasoning for the learner.
+Closed or constrained interactions are allowed. Supplying premises the learner genuinely needs is allowed. The problem is supplying the conclusion or a shortcut to it while still claiming the later response as evidence of the reasoning.
 
-UX recommendations cannot silently change pedagogy.
+### Support-to-evidence calibration
 
-Professional UX recommendations that are not grounded in existing authority must be explicitly identified as **PROCESS / PROFESSIONAL PROPOSALS**, not existing course requirements.
+Support must match the strength of the evidence claim. Guidance may help the learner without performing the protected inference for them.
 
-### 1.4 Implementer
+If the experience records labels such as `unassisted`, `hint-assisted`, or `solution-assisted`, those labels must truthfully reflect the guidance delivered **before** the evidence was produced and must not be retroactively changed by assistance viewed afterward. A production system is not required to track assistance provenance when the encounter does not need that claim.
 
-Receives frozen implementation authority and builds it.
+### Continuity
 
-May decide only implementation details explicitly within delegated discretion.
+Material learner-facing steps should form one intelligible reasoning thread. The learner should be able to understand what problem is being solved, what has already been established, and why the next material move exists.
 
-Must stop and raise a decision request when implementation exposes:
+Do not remove a useful instructional step merely because it is not core assessment evidence. Likewise, do not preserve repeated ceremony or re-teach prior concepts as first exposure without a current reason.
 
-- pedagogical ambiguity;
-- UX ambiguity affecting learner behavior;
-- missing authority or evidence;
-- design infeasibility;
-- a likely design defect.
+**Stop when:**
 
-The Implementer cannot resolve these by silently choosing an interpretation.
+- the case is unsupported or artificial;
+- intended evidence can be satisfied through answer leakage or a shortcut;
+- a prerequisite assumption is unjustified;
+- a material part of the journey has no defensible design;
+- a genuine authority conflict or required owner decision remains unresolved.
 
-### 1.5 Conformance & Validation Auditor
+## 3. Make It Buildable
 
-Independent from both the Encounter Architect and Implementer.
+Before implementation, separate the material decisions the build must obey from implementation discretion.
 
-This is a **control function**, not a pedagogy or UX authority.
+The build boundary should identify:
 
-Before implementation, the Auditor checks that:
+- learner-behavior and evidence requirements;
+- current authority that constrains the build;
+- accepted behavior that must be preserved;
+- implementation discretion;
+- validation expectations appropriate to the planned impact;
+- explicit stop conditions if implementation exposes a new material decision.
 
-- the capability decision passed independent pedagogy review;
-- Case Validation was completed;
-- Course-Assumed Learner State was established;
-- both expert design reviews were completed;
-- findings received explicit disposition;
-- OPEN matters were not silently resolved;
-- required evidence/data sources were actually available;
-- the design contains sufficient implementation authority;
-- acceptance evidence is defined.
+### Current-Scope Necessity
 
-After implementation, the Auditor checks:
+An `OPEN` matter blocks only when the present build genuinely depends on it. Do not force future or unrelated OPEN questions into the current task merely because they exist.
 
-- implementation against frozen design authority;
-- runtime behavior and state transitions;
-- data / SQL / result contracts where relevant;
-- undocumented deviations;
-- whether required learner paths were exercised;
-- whether required validation evidence was collected;
-- whether all findings from the three post-build review streams received disposition.
+At the same time, do not label an implementation-affecting learner-behavior decision “future” merely to keep work moving.
 
-The Auditor does **not** decide whether pedagogy should override UX or vice versa.
+### Authority before Build
 
-It applies the acceptance rules mechanically.
+A finished design packet, candidate, review, or conversational decision is **not** implementation authority merely because it is detailed or complete.
 
-### 1.6 Course Authority Owner
+Before Build begins, all material accepted encounter decisions that implementation must obey must be durable in the appropriate **current authority source** for that encounter/domain.
 
-Human authority is required only where existing sources cannot legitimately settle the issue.
+### Risk-triggered challenge
 
-Typical cases:
+Before promoting material encounter decisions into current authority, obtain an independent challenge when the consequence of a design error is material and the decision is meaningfully uncertain or difficult to self-validate.
 
-- resolving an OPEN decision;
-- establishing a new course-wide principle;
-- resolving a genuine authority conflict;
-- accepting a material pedagogy-UX trade-off;
-- approving an exception or waiver;
-- changing Exit Criteria;
-- declaring course-level completion.
+Typical triggers include:
 
-Routine work that remains within current authority should not require manual owner approval at every cycle.
+- protected learner evidence or answer-leak risk;
+- substantial scaffolding whose effect on evidence is uncertain;
+- novel interaction semantics that can mutate evidence or reveal order;
+- materially plausible case alternatives with consequential trade-offs;
+- genuine cross-domain tension between pedagogy, controls, visual behavior, or data constraints.
 
----
+The challenger supplies evidence and findings. The challenge does not create authority by itself, and this rule does not require a permanent reviewer role or a fixed review count.
 
-## 2. Phase 1 — Capability, Case and Course-Assumed Learner-State Brief
+**Stop when:** the implementer would still need to invent a pedagogical, learner-evidence, governed-control, visual-authority, or other material product decision.
 
-The Encounter Architect begins from the current trusted course state.
+## 4. Build
 
-### 2.1 Capability Need
+Implement from the known baseline and within current authority.
 
-Determine:
+During Build:
 
-- What required capability remains insufficiently covered?
-- Which Exit Criterion requires it?
-- What evidence already exists?
-- Is the apparent gap:
-  - an encounter gap;
-  - an implementation gap;
-  - a validation gap;
-  - or a cumulative-progression gap?
-- Is a new learner encounter actually necessary?
+- preserve accepted behavior outside the authorized change;
+- use the smallest implementation consistent with authority and existing architecture;
+- do not silently expand scope;
+- do not resolve a material new product decision in code;
+- if a material ambiguity, authority conflict, likely design defect, or infeasible requirement appears, return to the point that owns it rather than hiding it in implementation.
 
-### 2.2 Genuine Prerequisites
+Implementation may choose non-pedagogical details that are genuinely within delegated discretion and do not silently close a broader OPEN matter.
 
-For every proposed prerequisite ask:
+The implementation handoff must make the actual resulting change inspectable. The actual diff is evidence; an implementer summary is not a substitute for it.
 
-> Could the learner meaningfully engage with the proposed capability without already possessing this earlier capability?
+## 5. Validate by Impact
 
-If yes, conceptual relatedness alone is insufficient to classify it as a required prerequisite.
+Validate what the actual change could break. Do not run a fixed review ceremony merely because a file or Lesson changed.
 
-### 2.3 Course-Assumed Learner State
+Depending on impact, validation may include:
 
-This does **not** claim that an individual learner has mastered earlier material.
+- authority/conformance review of the actual diff;
+- build or executable checks;
+- schema/data checks;
+- SQL/result semantic validation, including adversarial checks where a permissive validator could accept an out-of-scope path;
+- learner-evidence and scaffolding validation;
+- learner-flow / UX and transition validation;
+- browser-level interaction validation;
+- regression across accepted Lessons or shared behavior materially exposed to the change.
 
-Record what the course may legitimately assume based on prior course state.
+A successful build is not evidence that pedagogy or learner evidence is correct. Matching the expected final rows is not sufficient when the encounter also constrains the relational operation or evidence path.
 
-Useful distinctions include:
+Validation depth must be proportional to impact. Where the evidentiary or conformance claim is material and author-only validation would not provide sufficient challenge, use an independent validation perspective. Independence is selected by risk/impact, not by a permanent Auditor role or three fixed post-build streams.
 
-- **introduced** — the capability or idea has been presented;
-- **supported / practised** — it has been exercised with support;
-- **independently exercised** — the learner has been required to use it without that same level of support;
-- **encounter-validated** — there is evidence that a prior encounter can elicit or expose the intended capability;
-- **not yet established for cumulative transfer** — broader transfer or course-level independent performance has not yet been demonstrated.
+### Failure routing
 
-The next encounter must not silently assume a stronger learner state than the evidence supports.
+Return a defect to its point of origin rather than restarting the whole process automatically:
 
-### 2.4 Case Validation
+- technical implementation defect → **Build**;
+- invalid case, learner evidence, scaffolding, reveal order, or journey → **Define the Encounter**;
+- missing material authority / build-boundary problem → **Make It Buildable**;
+- genuine conflict between current authority sources → resolve the authority conflict before proceeding.
 
-Case Validation determines whether the proposed situation can genuinely support the intended reasoning.
+## 6. Accept and Reconcile
 
-#### SOURCE-REQUIRED checks
+These states are distinct:
 
-Where applicable:
+- `IMPLEMENTED` — behavior exists;
+- `VALIDATED TO SCOPE` — required validation for the declared impact/scope has passed;
+- `ACCEPTED PRODUCT BASELINE` — the validated behavior is accepted as product state future work must preserve;
+- `COURSE-LEVEL VALIDATED / RELEASE READY` — a broader claim requiring the applicable cumulative evidence.
 
-- the case must exercise a required capability;
-- the relevant data structure must support the claimed relational behavior;
-- relevant Grain, keys, relationships, and Cardinality must be correctly understood;
-- schema or infrastructure features must not by themselves determine what is taught;
-- intended learner evidence must be defined.
+Only after the required validation should a change be accepted.
 
-#### PROCESS / PROFESSIONAL PROPOSAL checks
+When accepted:
 
-These are useful quality judgments but must not be represented as existing course authority:
+- update the accepted runtime/product baseline if observable accepted behavior changed;
+- ensure material accepted decisions needed by future work are durable in their proper current authority source;
+- update `routecraft-work-management.md` so project state and next action match reality;
+- keep review, test-drive, audit, and rebaseline material as evidence/provenance unless a current authority source explicitly incorporates the accepted decision.
 
-- whether the business or analytical situation is sufficiently credible;
-- whether the framing feels artificially constructed around a concept;
-- cognitive-load judgment beyond explicit existing principles;
-- whether repetition is pedagogically worthwhile.
+Do not let a review artifact, runtime implementation, or newest document promote itself into authority merely because it is detailed or later-dated.
 
-Professional judgment used to select or reject a case must be **consequence-grounded**. A label such as “clean,” “credible,” “artificial,” “familiar,” “high load,” or “good transfer” is not by itself a sufficient rationale. The Architect must identify:
+## 7. Durable-record discipline
 
-1. the concrete feature of the learner situation or data that supports the judgment;
-2. what that feature causes the learner to reason about, attend to, assume, or do;
-3. how that learner consequence strengthens or weakens the intended capability evidence at the learner's current course position.
+Create durable records because later work needs the decision or evidence, not because every transition must generate a file.
 
-Business / analytical credibility must also be tested operationally. Ask:
+Required principles:
 
-> Would the task, requested output, and starting Grain still make analytical sense if the course were not trying to teach the target concept?
+- current authority carries accepted normative decisions;
+- `routecraft-work-management.md` carries current project work state;
+- implementation is represented by the actual repository change;
+- validation evidence should be durable enough to support the acceptance claim being made;
+- historical/review artifacts remain evidence rather than shadow authority.
 
-and:
+There is no universal requirement for a Capability Brief file, Step Ledger, Architect Reconciliation file, frozen-authority handoff file, Implementation Record form, `provenance.md`, or verbatim role-to-role artifact chain.
 
-> Does the relational difficulty arise naturally from that analytical need, or is the need mainly constructed in order to manufacture the target behavior?
+## 8. Worker / topology neutrality
 
-Analytical authenticity requires more than a plausible starting report plus a plausible relational modification. The analytical need that introduces an additional relation, detail, or relational operation must itself have an independently coherent purpose.
+This process defines required work and controls, not permanent workers.
 
-The Architect must identify:
+One person or agent may perform several non-conflicting activities. Separate workers or an independent model may be used when the risk-triggered challenge or validation rule calls for meaningful independence.
 
-1. what information required by the business or analytical task is not already available at the starting Grain;
-2. why that additional information is useful to the stated task independently of the teaching objective;
-3. why consulting the additional relation or performing the proposed relational operation is a natural consequence of that information need rather than a device introduced mainly to expose the target concept.
+Worker/tool choice, branch ownership, synchronization, and local/remote execution are governed by `agent-assisted-work-protocol.md`.
 
-If the target relational behavior appears only because the scenario adds an otherwise unmotivated field, detail request, or proposed operation, the case is concept-driven rather than analytically grounded.
+## 9. Maintenance and change impact
 
-A deliberately flawed relational proposal may still be analytically authentic, but only when evaluating that proposal is itself a credible work task and the proposal has a plausible independent business or analytical motivation. “A teammate proposed it” is not, by itself, sufficient motivation.
+Use `production-contract-v1.md` to route changes by impact and to preserve the accepted product baseline.
 
-A case does not fail merely because the target concept becomes visible in it. The concern is whether the analytical purpose independently justifies the task, the additional information need, the relational move, and the output shape.
+Change this process only when the production workflow or its required quality controls change. Do not copy Lesson-specific pedagogy, visual rules, Git commands, or implementation details into this file.
 
-When more than one materially plausible current case can exercise the same target capability, Case Validation must compare the relevant alternatives rather than validate only the first sufficient case. The comparison should be proportionate, not exhaustive, and should consider where applicable:
+The rebaseline evidence that led to this current process is preserved under:
 
-- how directly each case exposes the target reasoning and intended evidence;
-- instructional distinctness from recent encounters, including whether familiarity helps isolate the new reasoning or merely reduces meaningful transfer;
-- continuity from the learner's current course position and usefulness for later transfer, without pre-deciding future Stage structure or encounter order;
-- credibility of the business or analytical situation;
-- additional concepts or confounds introduced by the actual data, such as unmatched rows, NULL behavior, or mechanisms outside the target capability;
-- cognitive load and data cleanliness.
+`course-design/production/rebaseline/`
 
-When alternatives have different strengths, the selection rationale must make the **trade-off explicit**. It must state which learner consequence matters more for the current encounter and why. No criterion such as local cleanliness, familiarity, authenticity, novelty, or transfer has automatic priority merely by being present.
+Cycle 1 remains historical production evidence under:
 
-The Architect must record why the selected case is preferable to the materially plausible alternatives considered. Technical validity or local cleanliness alone is not sufficient justification when another available case may better serve the learner's current progression.
+`course-design/production/cycle-1/`
 
-A previously covered capability may legitimately recur when there is a distinct justified purpose, for example:
-
-- reinforcement;
-- reduced scaffolding;
-- transfer;
-- integration with another capability;
-- stronger validation evidence.
-
-These categories are **PROCESS PROPOSALS**, not an already-established RouteCraft unit taxonomy.
-
-The relevant question is:
-
-> Does this case repeat an already covered capability without a distinct and justified purpose?
-
-### 2.5 Missing Data / Evidence Rule
-
-Case Validation may not invent facts about unavailable schema, data, or runtime behavior.
-
-If the justification depends on unavailable evidence such as:
-
-- Grain;
-- PK/FK structure;
-- Cardinality;
-- fan-out;
-- NULL behavior;
-- row counts;
-- SQL result behavior;
-
-the Architect must not assume it.
-
-Possible result:
-
-**MISSING AUTHORITY / EVIDENCE**
-
-or:
-
-**CONDITIONAL CASE VALIDATION**
-
-A conditional result may allow conceptual exploration, but cannot promote the encounter to implementation-ready status until the required evidence is available.
-
-### 2.6 Durable artifact — Capability & Case Brief
-
-Contains only what is needed to make the decision:
-
-- target capability;
-- Exit Criteria trace;
-- residual gap;
-- prerequisite reasoning;
-- Course-Assumed Learner State;
-- Case Validation;
-- comparative case rationale when materially relevant;
-- intended evidence;
-- source-required vs. process-proposal distinctions;
-- missing evidence;
-- OPEN exclusions;
-- recommendation.
-
----
-
-## 3. Lightweight Independent Pedagogy Gate
-
-Before a full Encounter Design is produced, the Pedagogy Reviewer performs a narrow review of the Capability & Case Brief.
-
-The reviewer checks only:
-
-- does the claimed capability gap actually exist?
-- is a new encounter required?
-- are claimed prerequisites genuinely necessary?
-- does the Course-Assumed Learner State avoid unsupported assumptions?
-- can the proposed case exercise the intended capability?
-- when multiple materially plausible cases exist, did the Brief compare the relevant alternatives and justify why the selected case is preferable for the learner's current course position rather than merely sufficient?
-- are material professional judgments consequence-grounded rather than asserted only as labels?
-- where alternatives involve real trade-offs, does the rationale explain which learner consequence should dominate now and why?
-- where business / analytical credibility materially affects selection, is it supported by an independently coherent analytical task, requested output, and Grain rather than by concept-driven framing alone?
-- where an additional relation, detail request, or relational operation creates the target behavior, is the need for that information or operation independently motivated by the analytical task rather than introduced mainly to manufacture the concept?
-- if the case centers on evaluating a deliberately flawed proposal, is evaluating that proposal itself a credible work task and is the proposal independently motivated rather than justified only by having been suggested?
-- is the proposed learner evidence relevant to that capability?
-- does proceeding require an unresolved authority decision?
-
-This is intentionally a lightweight gate.
-
-It is not a full encounter review.
-
-### Outcomes
-
-- **PROCEED**
-- **NO NEW ENCOUNTER REQUIRED**
-- **VALIDATION / IMPLEMENTATION WORK ONLY**
-- **REVISE**
-- **MISSING AUTHORITY / EVIDENCE**
-- **OWNER DECISION REQUIRED**
-
-Only **PROCEED** opens Encounter Design.
-
----
-
-## 4. Encounter Design
-
-The Encounter Architect now produces the full encounter design.
-
-It establishes:
-
-- learner situation;
-- learner goal;
-- required reasoning;
-- reasoning progression;
-- learner actions;
-- reveal order;
-- concept timing;
-- scaffolding;
-- feedback and checks;
-- SQL's role;
-- evidence of understanding;
-- learning-experience requirements;
-- implementation invariants;
-- permitted implementation discretion;
-- validation criteria.
-
-It must answer:
-
-> What must the learner actually do that would constitute meaningful evidence of the capability approved at the Capability Gate?
-
-### Evidence Independence Test
-
-For every evidence-bearing learner action, the Encounter Architect must identify the target reasoning that the action is intended to evidence and ask:
-
-> Could a learner produce the correct response from quantities, wording, conclusions, answer structure, or scaffolds already supplied without performing that target reasoning?
-
-If yes, that action may still serve as guidance, practice, or supporting evidence, but it must not by itself be treated as sufficient core evidence of the capability. The design must either revise the action so that the target reasoning is required or rely on another evidence-bearing action that does require it.
-
-This test does not prohibit closed or constrained interactions, nor does it prohibit supplying premises that the learner legitimately needs in order to reason. The issue is whether the interaction supplies the conclusion, or a shortcut to the conclusion, such that the claimed target reasoning can be bypassed.
-
-### Scaffolding-to-Evidence Calibration
-
-Scaffolding must be calibrated to both the Course-Assumed Learner State and the evidence purpose of the encounter.
-
-A scaffold appropriate for first exposure or supported practice must not be inherited automatically into an encounter whose stated purpose is reduced scaffolding, transfer, integration, stronger validation evidence, or another stronger form of learner evidence.
-
-For each core evidence-bearing action, the design must make clear what support is present and why that support does not perform the target reasoning for the learner. Assistance, hints, or solution use must remain distinguishable in evidence provenance where they could affect the strength of the resulting capability claim.
-
-This does not create a general rule that less scaffolding is always better. The required support depends on learner state and encounter purpose; the requirement is that the claimed evidence strength match the reasoning the learner actually has to perform.
-
-### Instructional Function and Continuity Trace
-
-Evidence design alone is not sufficient to establish a sound encounter. The Encounter Design must also preserve the instructional functions needed to move the learner through the accepted reasoning journey.
-
-For every **material learner-facing step or transition**, the design must identify its primary function or functions. Relevant functions include, where applicable:
-
-- business / analytical orientation;
-- reused learner action or reuse checkpoint;
-- first-exposure teaching;
-- continuity or translation scaffold;
-- measurement / baseline work;
-- core evidence;
-- supporting practice or supporting evidence;
-- concept naming / consolidation;
-- tool or SQL authoring;
-- result inspection / interpretation;
-- assistance, hint, or solution support.
-
-A step may serve more than one function. Classification as **not core evidence** does not make a step dispensable.
-
-When an encounter reuses a capability that was previously introduced with explicit teaching or guided translation, the design must state:
-
-1. what the Course-Assumed Learner State permits the course to assume now;
-2. which earlier instructional mapping or explanation is still needed for continuity and which part may legitimately be compressed or removed;
-3. what learner-facing support replaces any removed first-exposure teaching function, if that function is still necessary;
-4. what concrete learner consequence would result from removing the step entirely.
-
-The removal consequence must be expressed in terms of what the learner would then have to infer, recall, translate, or do without support. Examples of material consequences include forcing the learner to recall syntax without reconnecting it to the established relational meaning, jumping from reasoning directly into a tool without the needed translation, losing the business or schema anchor for the next action, or making the next correct action depend on an unstated inference.
-
-A later encounter may be more concise than first exposure. It may not, however, use “already introduced,” “not core evidence,” or “reduced scaffolding” as a sufficient reason by itself to remove instructional continuity that the current assumed learner state does not support removing.
-
-### Durable artifact — Encounter Design Packet
-
-This may map onto existing learner-route / interaction-decision documents rather than requiring a new repository file type.
-
----
-
-## 5. Independent Pedagogy and UX Design Review
-
-The same frozen Design Packet is reviewed independently by:
-
-- Pedagogy Reviewer;
-- UX Reviewer.
-
-Neither reviewer should depend on the other's judgment when forming the initial review.
-
-The full Pedagogy Design Review must review the **whole material encounter sequence**, not only the interactions labelled as core evidence.
-
-For each material learner-facing step or transition, the Pedagogy Reviewer must identify and test:
-
-1. **Learner state entering the step** — what the course may legitimately assume the learner currently knows, has established locally, or still needs to infer.
-2. **Instructional function** — what pedagogical job the step performs now: orientation, reused action, first-exposure teaching, continuity/translation scaffold, measurement/baseline, evidence, practice, concept consolidation, tool work, result interpretation, or assistance.
-3. **Learner action** — what the learner actually has to notice, decide, predict, author, inspect, or interpret.
-4. **Support present and calibration** — what guidance, visible premises, optional scaffold, prepared measurement, solution assistance, prior completed evidence, or other support is present; why it is appropriate to the Course-Assumed Learner State; and whether it performs reasoning that the learner is meant to perform.
-5. **Placement and dependency** — what must already be established before the step and what later step depends on it.
-6. **Transition function** — what the step makes possible next and whether the handoff into that next action is sufficiently supported.
-7. **Removal / compression consequence** — what the learner would be forced to infer, recall, translate, or do unsupported if the step were removed or materially compressed.
-8. **Finding** — PASS, ADVISORY, REVISION REQUIRED, BLOCKER, or OWNER DECISION REQUIRED under the existing finding rules.
-
-The completed full Pedagogy Design Review must contain an explicit **Step Ledger** covering the material learner sequence in learner order. A review that discusses only episodes, core evidence, or selected key steps without accounting for every material learner-facing step and transition is incomplete.
-
-The reviewer must then test continuity across the encounter's actual transitions. Where present, this includes the chain from business request and schema reasoning through baseline/measurement, prediction, semantic operation or concept introduction, translation into `JOIN ... ON ...` or other SQL structure, learner-authored SQL/tool work, actual results, and final interpretation. The reviewer must also inspect optional scaffolds such as hints, Desired Output, and Show solution separately from the unassisted path.
-
-When a capability is being **reused rather than introduced**, the reviewer must compare the proposed treatment with the Course-Assumed Learner State and the relevant prior first-exposure teaching. The reviewer must not treat either of the following as sufficient justification for removal:
-
-- “the learner has seen this before”;
-- “this step is not part of the new core evidence.”
-
-If prior first-exposure teaching is removed or compressed, the reviewer must verify that the learner state supports that compression and that any still-necessary conceptual or procedural translation remains available. The question is not whether the later encounter should replay first exposure. The question is whether the function performed by the removed teaching is still needed for the learner to understand and execute the current task.
-
-For reuse of a recent prerequisite encounter, the reviewer must compare progression by **function**, not by visual or step-count symmetry. The review must identify which earlier functions legitimately disappear after first exposure, which become shorter or optional, which still need to remain for continuity/retrieval/measurement/implementation mapping/verification, and what genuinely new reasoning receives the increased cognitive budget. A later encounter may be shorter and more independent without becoming pedagogically thin.
-
-### 5.1 Measurement / Baseline Test
-
-A baseline, prepared measurement, or other empirical starting point is **not automatically required** because an earlier encounter used one. Conversely, determining that a baseline is not a prerequisite for the target concept does not establish that it has no pedagogical function.
-
-Where a measurement could materially affect the learner journey, the Pedagogy Reviewer must ask:
-
-- does it orient the learner to the starting data state?
-- does it create a meaningful before/after or starting/result comparison?
-- does it support prediction without revealing the conclusion the learner is meant to derive?
-- would it strengthen or weaken the diagnostic value of later evidence?
-- if it is omitted, what other step supplies the necessary empirical or structural point of departure, if one is needed?
-
-The disposition must be consequence-grounded. This test does not establish a course-wide requirement that every encounter contain a baseline or `COUNT(*)`.
-
-### 5.2 Business Situation / Prompt Test
-
-The full Pedagogy Design Review must inspect the opening business or analytical situation as part of the learner sequence, not only as Case Validation background.
-
-The opening request must be checked for whether it:
-
-- expresses a coherent analytical need in natural work language;
-- is precise enough to orient the learner;
-- avoids reading primarily as schema description or hidden solution specification;
-- avoids pre-resolving Grain, Cardinality, relation selection, row behavior, or another judgment the learner is expected to make later;
-- provides enough purpose for subsequent information requests and relational operations to make sense.
-
-When exact output fields are needed only for implementation, the reviewer should test whether they are better supplied as a local implementation/output contract rather than loaded into the opening request, unless current authority requires otherwise.
-
-### 5.3 Reasoning-to-SQL and SQL-to-Result Continuity Test
-
-Whenever an encounter moves from relational/business reasoning into learner-authored SQL or another implementation tool, the reviewer must inspect the handoff explicitly.
-
-The reviewer must ask:
-
-- what established relation choice, relationship, Grain, prediction, or operation is being carried into implementation?
-- is the implementation request a natural continuation of that reasoning rather than disconnected syntax recall?
-- is there enough local support to reconnect known SQL vocabulary or structure to the current case without replaying unnecessary first-exposure teaching?
-- is optional assistance available where appropriate without solving the task by default?
-- does the learner remain responsible for the SQL or tool evidence the encounter intends to collect?
-
-A thin instruction such as “write the JOIN” is not acceptable merely because JOIN syntax was introduced previously; the review must determine whether the bridge is appropriately reduced or simply missing.
-
-When SQL or tool execution produces evidence the learner must interpret, the reviewer must also check whether the evidence context preserves the reasoning needed for comparison. Where applicable:
-
-- learner-authored SQL should remain visible or immediately recoverable during result interpretation unless a specific pedagogical reason justifies hiding it;
-- the prior prediction or reasoning claim should remain visible or immediately recoverable during verification;
-- result prominence may increase after execution, but should not erase evidence needed to understand what produced the result;
-- assistance such as Show solution should remain local to the authoring task and should not obscure unrelated result or verification evidence.
-
-These are continuity requirements, not a universal visual-layout template.
-
-### 5.4 Required full Pedagogy Review deliverable
-
-In addition to its normal findings, the full Independent Pedagogy Design Review must contain:
-
-1. the Step Ledger covering the material learner sequence;
-2. a continuity assessment against the relevant prior first-exposure or prerequisite encounter when one materially informs the current learner state;
-3. explicit disposition of any materially removed or reduced teaching/scaffold/measurement/bridge/verification function from that prior encounter;
-4. explicit review of the reasoning→SQL/tool and SQL/tool→result handoffs where those handoffs are in scope;
-5. a final statement answering whether the encounter forms a complete and supportable learner journey, not merely a valid set of capability-evidence checkpoints.
-
-A full-review approval is incomplete if these required elements are absent.
-
-These review controls strengthen **how pedagogy is evaluated**; they do not establish a reusable learner-facing template. They do not require every encounter to contain a baseline, the same SQL scaffold, the same number of steps, the same visual composition, or the same degree of support. Differences must be justified by learner state, instructional function, intended evidence, and concrete learner consequence.
-
-For the full Pedagogy Design Review, the Pedagogy Reviewer must also specifically verify:
-
-- whether each claimed core evidence-bearing action actually requires the learner to perform the target reasoning, rather than allowing the correct response to be produced from quantities, wording, conclusions, answer structure, or scaffolds already supplied;
-- whether the level of scaffolding matches the encounter's stated evidence purpose and the Course-Assumed Learner State, especially where the encounter claims reduced-scaffolding, transfer, integration, or stronger validation evidence;
-- whether an interaction classified as core evidence is in fact evidence of the target capability rather than guided practice whose support performs material parts of the reasoning;
-- whether removing or compressing a teaching/continuity step leaves a later action as disconnected recall, syntax reproduction, guesswork, or an unsupported translation from established reasoning into the learner's tool action;
-- whether assistance and solution paths change the interpretation of the resulting evidence without silently changing the required teaching sequence.
-
-A defect in these checks is material when it weakens the capability claim the encounter is intended to support **or** removes instructional continuity required for the learner to meaningfully perform the accepted current-scope work. The reviewer should classify the finding according to the existing finding rules below rather than create a separate review category.
-
-Each finding is classified as:
-
-### BLOCKER
-
-Contradicts current authority, invalidates the intended capability/evidence, or depends on an unresolved required decision.
-
-### REVISION REQUIRED
-
-A material professional defect that should be corrected before implementation.
-
-A professional defect is **material** only when the reviewer identifies a concrete consequence for the target capability or evidence, learner reasoning, unsupported learner-state assumptions, or the current-scope learning experience, and explains why that consequence warrants rework before implementation. A concern that cannot establish such a consequence is **ADVISORY**, not REVISION REQUIRED merely because the reviewer prefers another design choice.
-
-### ADVISORY
-
-A professional improvement that is not required by current authority.
-
-### OWNER DECISION REQUIRED
-
-Cannot legitimately be settled from current sources.
-
-Reviewers must clearly distinguish:
-
-- **SOURCE-DERIVED requirement**;
-- **PROFESSIONAL / PROCESS recommendation**.
-
-### 5.5 Current-Scope Necessity Test
-
-Before an existing **OPEN**, **BACKLOG**, deferred, or otherwise unresolved matter may be classified as **BLOCKER** or **OWNER DECISION REQUIRED**, the reviewer must establish that it is necessary to the **current implementation scope**.
-
-The reviewer must ask:
-
-1. Is this behavior or decision actually required in the current build?
-2. If it remains unresolved, would the Implementer have to choose its semantics in order to implement or validate the accepted current scope?
-3. Can the behavior instead remain explicitly excluded or deferred without undermining the target capability, required learner evidence, or current authority?
-
-If the matter is not required in the current build and can remain explicitly outside the accepted scope, it must not be escalated merely because it could theoretically interact with the encounter. Record it as **OPEN / BACKLOG / OUT OF CURRENT SCOPE** or as an advisory scope note, as appropriate.
-
-A theoretical dependency is not by itself an implementation dependency.
-
-They do not directly rewrite the encounter.
-
----
-
-## 6. Architect Reconciliation
-
-The Encounter Architect responds to all findings.
-
-Each receives one disposition:
-
-- **ACCEPTED**;
-- **ACCEPTED WITH MODIFICATION**;
-- **REJECTED WITH RATIONALE**;
-- **OWNER DECISION REQUIRED**.
-
-A reviewer recommendation does not become authority merely because it is accepted as a useful local design choice.
-
-If a recommendation creates a new course-wide rule, it must go through the appropriate authority process.
-
-For any finding classified as BLOCKER or OWNER DECISION REQUIRED because of an unresolved OPEN / BACKLOG matter, the Architect must re-run the **Current-Scope Necessity Test** before carrying the escalation forward. If the matter can remain explicitly outside the current build without weakening capability, evidence, or authority, the reconciliation must return it to nonblocking OPEN / BACKLOG status and record the implementation boundary rather than requesting an unnecessary owner decision.
-
----
-
-## 7. Auditor Pre-Build Control
-
-The Conformance & Validation Auditor performs a formal process/conformance check.
-
-It verifies:
-
-- Capability Gate passed;
-- required evidence sources are available;
-- all design reviews are complete;
-- the full Pedagogy Design Review contains the required Step Ledger and other mandatory review deliverables from Section 5 where applicable;
-- all blockers are closed;
-- all REVISION REQUIRED findings are resolved;
-- every finding has disposition;
-- no implementation-affecting OPEN issue has been silently resolved;
-- validation criteria exist;
-- implementation invariants are clear;
-- permitted implementation discretion is clear.
-
-An unresolved matter is **implementation-affecting** only if the accepted current build must implement that behavior, or if the accepted validation scope depends on it. An OPEN / BACKLOG matter that is explicitly excluded from the current build and can remain deferred without weakening the target capability, required evidence, or current authority is nonblocking. The Auditor must verify the exclusion boundary rather than route such a matter to the Course Authority Owner solely because the unresolved matter exists.
-
-### Outcomes
-
-- **PASS → Frozen Implementation Authority**
-- **REVISE**
-- **MISSING AUTHORITY / EVIDENCE**
-- **OWNER DECISION REQUIRED**
-
-The Auditor does not perform a new pedagogy or UX judgment at this point.
-
----
-
-## 8. Frozen Implementation Authority
-
-Once the pre-build gate passes, the approved design becomes the implementation authority for that build.
-
-Any later design change must be explicit and routed according to the change rules below.
-
----
-
-## 9. Implementation
-
-The Implementer builds only within the frozen authority.
-
-A lightweight implementation record captures:
-
-- material discretionary decisions;
-- deviations;
-- unresolved ambiguities;
-- change requests.
-
-If a proposed implementation choice affects:
-
-- pedagogy;
-- learner reasoning;
-- evidence;
-- concept timing;
-- UX semantics;
-- learner flow;
-
-it is outside implementation discretion.
-
----
-
-## 10. Independent Post-Build Review
-
-Validation occurs on the actual learner experience.
-
-Three separate verdicts are produced.
-
-### 10.1 Runtime / Conformance Verdict
-
-Produced by the Auditor.
-
-Checks:
-
-- conformance with frozen design;
-- required states and transitions;
-- SQL/data/output contracts;
-- deviations;
-- required paths;
-- required validation evidence.
-
-### 10.2 Pedagogy Verdict
-
-Produced by the Pedagogy Reviewer.
-
-Checks:
-
-- whether the learner actually performs the intended reasoning;
-- whether implementation leaks or performs reasoning;
-- whether scaffolding behaves appropriately in practice;
-- whether concept timing is preserved;
-- whether the collected evidence can support the intended capability claim;
-- whether runtime exposed a design defect invisible during static review;
-- whether every material runtime step still performs its approved instructional function rather than being reduced to UI state or omitted;
-- whether transitions that carry conceptual or procedural translation remain understandable in practice, especially transitions from established relational reasoning into SQL/tool action and from execution evidence into interpretation;
-- whether optional assistance or Show solution changes what the learner must reason about or merely reveals support, and whether evidence provenance reflects that difference.
-
-The post-build Pedagogy Reviewer must re-run the **Step Ledger and instructional-function / removal-impact check** against the actual runtime path, in learner order, and record material differences from the approved design. A design may have named a continuity or teaching function correctly while the implementation makes it too weak, too remote, too late, visually ignorable, or absent to perform that function. Conversely, runtime must not add a scaffold that performs reasoning reserved for the learner.
-
-Where applicable, the post-build Pedagogy Review must additionally verify:
-
-- intended continuity scaffolds are actually reachable, legible, and present at the intended moment;
-- optional assistance appears at the intended moment and locality rather than obscuring unrelated evidence;
-- SQL/tool authoring, execution, results, and verification preserve the approved evidence continuity, including visibility or immediate recoverability of the learner's authored operation and prior prediction/reasoning when needed for comparison;
-- CSS, responsive layout, state choreography, or conditional rendering has not effectively removed a pedagogically required surface even when its underlying content technically exists;
-- switching between chapters/encounters or equivalent runtime contexts does not carry stale pedagogical state into another encounter where such switching exists.
-
-Static conformance to design text does not substitute for this runtime pedagogy check.
-
-### 10.3 UX / Learning Experience Verdict
-
-Produced by the UX Reviewer.
-
-Checks:
-
-- learner orientation;
-- first-scan path;
-- hierarchy;
-- continuity;
-- evidence locality;
-- tool prominence;
-- guidance salience;
-- interaction burden;
-- state transitions and accumulation;
-- whether implementation altered the intended learning experience.
-
----
-
-## 11. Rule-Based Acceptance Gate
-
-Acceptance is not a new expert judgment.
-
-The Auditor verifies whether the declared conditions are satisfied.
-
-### VALIDATED TO SCOPE is possible only when:
-
-- no open BLOCKER exists in Runtime/Conformance, Pedagogy, or UX;
-- no unresolved REVISION REQUIRED finding exists;
-- every deviation from frozen design is documented and resolved;
-- all required acceptance evidence has been collected;
-- no unresolved OPEN issue affects the behavior being accepted;
-- all three review streams have published their verdicts;
-- every material finding has explicit disposition.
-
-If these conditions are satisfied, acceptance is mechanical.
-
-If they are not, the corresponding route is triggered.
-
-The Auditor cannot resolve a pedagogy-UX disagreement.
-
-A genuine unresolved professional conflict not settled by current authority goes to the Course Authority Owner.
-
-### Outcomes
-
-- **VALIDATED TO SCOPE**
-- **IMPLEMENTATION FIX**
-- **UX REVISION**
-- **PEDAGOGY / DESIGN REVISION**
-- **EVIDENCE DESIGN REVISION**
-- **CAPABILITY / CASE REOPENED**
-- **MISSING AUTHORITY / EVIDENCE**
-- **OWNER DECISION REQUIRED**
-- **ACCEPTED WITH NONBLOCKING BACKLOG**
-
-Acceptance does not mean learner mastery.
-
-It means:
-
-> The implemented encounter has been independently verified, to its stated scope, as conforming to approved authority and as capable of eliciting the identified learner evidence.
-
----
-
-## 12. Change Impact and Re-Review Rules
-
-Not every correction restarts the full cycle.
-
-### 12.1 Implementation-only change
-
-Examples:
-
-- technical bug;
-- state logic defect;
-- incorrect SQL result rendering;
-- implementation divergence with no design change.
-
-Requires:
-
-- Auditor re-validation;
-- only those post-build specialist reviews whose observed experience could have changed.
-
-### 12.2 UX-only change with no pedagogical effect
-
-Requires:
-
-- UX Reviewer;
-- Auditor.
-
-Pedagogy review is not repeated unless the UX change affects learner reasoning, concept timing, scaffolding, or evidence.
-
-### 12.3 Pedagogical or learner-evidence change
-
-Requires:
-
-- Pedagogy Reviewer;
-- UX Reviewer if the learning experience is affected;
-- Auditor.
-
-### 12.4 Capability, prerequisite, Course-Assumed Learner State, or Case-justification change
-
-Returns to:
-
-**Capability & Case Brief → Lightweight Pedagogy Gate**
-
-### 12.5 OPEN / authority-triggering change
-
-Stops affected work and routes to Course Authority Owner only when the unresolved matter is required inside the affected current scope. If the matter can remain explicitly deferred and outside the accepted scope, preserve it as OPEN / BACKLOG and continue the unaffected work.
-
----
-
-## 13. Cycle Closure
-
-After acceptance, update the existing management state:
-
-**Exit Criterion → required capability → prerequisites → encounter contribution → validation evidence → residual gap**
-
-Also record:
-
-- Course-Assumed Learner State that future work may safely rely upon;
-- remaining validation limits;
-- OPEN matters;
-- nonblocking backlog.
-
-The next cycle does not automatically produce another Stage.
-
-It begins again with:
-
-> What capability, if any, is now genuinely required?
-
----
-
-## 14. Minimum Durable Record Set
-
-Avoid creating a new file for every conceptual distinction.
-
-The minimum useful durable records are:
-
-1. **Capability & Case Brief**
-2. **Encounter Design Packet**
-3. **Expert Review + Reconciliation Record**
-4. **Implementation / Deviation Record**
-5. **Validation / Acceptance Record**
-6. existing **Capability Coverage / Work Management state**
-
-OPEN decisions remain in the appropriate authority/management location rather than requiring a duplicate universal register.
-
----
-
-## 15. Required Independence
-
-Mandatory:
-
-- Encounter Architect ≠ formal Pedagogy Reviewer;
-- Encounter Architect ≠ formal UX Reviewer;
-- Implementer ≠ Conformance & Validation Auditor;
-- OPEN authority decisions ≠ autonomous agent decisions.
-
-Permitted combinations:
-
-- capability planning + encounter design;
-- design + initial traceability;
-- pre-build and post-build review by the same independent discipline reviewer;
-- conformance checking + runtime validation;
-- orchestration + mechanical gate enforcement.
-
-“Independent” means independent judgment and context, not necessarily a different model vendor.
-
----
-
-## 16. Core Process
-
-```text
-Current trusted course state
-        ↓
-Capability + Case + Course-Assumed Learner-State Brief
-        ↓
-Lightweight Independent Pedagogy Gate
-        ↓
-Encounter Design
-        ↓
-Independent Pedagogy Review + Independent UX Review
-        ↓
-Architect Reconciliation
-        ↓
-Auditor Pre-Build Control
-        ↓
-Frozen Implementation Authority
-        ↓
-Implementation
-        ↓
-Runtime/Conformance Validation
-+ Post-Build Pedagogy Review
-+ Post-Build UX Review
-        ↓
-Rule-Based Acceptance Gate
-        ↓
-Capability Coverage + Evidence + Residual Gap Update
-        ↓
-Next cycle
-```
-
-The process is autonomous wherever current authority and evidence are sufficient.
-
-It stops where continuing would require an agent to invent authority, assume unavailable evidence, or certify its own material judgment.
+Neither directory is a flat set of current authority.

@@ -8,11 +8,11 @@ This contract defines the minimum conditions under which RouteCraft changes may 
 It does **not** replace:
 
 - `source-of-truth-hierarchy.md` for authority ownership and precedence;
-- `learner-encounter-production-process.md` for encounter design, review, implementation, validation, acceptance, and change-impact workflow;
-- `agent-assisted-work-protocol.md` for agent/tool assignment, branch coordination, synchronization, and execution mechanics;
+- `learner-encounter-production-process.md` for new/materially changed encounter workflow and quality controls;
+- `agent-assisted-work-protocol.md` for worker/tool assignment, branch coordination, synchronization, and execution mechanics;
 - `chatgpt-git-safety.md` for ChatGPT-specific Git safety.
 
-The contract exists to connect those systems to the accepted product baseline without duplicating them.
+The contract connects those systems to the accepted product baseline without duplicating them.
 
 ## 1. Two baseline concepts
 
@@ -50,7 +50,7 @@ Therefore a new change must not silently:
 - reactivate historical, superseded, or candidate material as current authority;
 - treat existing runtime behavior as authority when current authority says otherwise.
 
-Implementation may change internal structure without changing accepted behavior when that change remains within implementation discretion and passes the validation appropriate to its impact.
+Implementation may change internal structure without changing accepted behavior when that change remains within implementation discretion and passes validation appropriate to its impact.
 
 ## 3. Route changes by impact, not by file type
 
@@ -91,13 +91,13 @@ The scope of regression should follow actual impact; this rule does not require 
 
 ### 3.4 Pedagogy, learner evidence, Lesson-flow, or learner-experience change
 
-A change that affects pedagogy, learner reasoning, evidence, concept timing, scaffolding, learner flow, or material UX semantics must be routed through the applicable authority and the change-impact rules in `learner-encounter-production-process.md`.
+A change that affects pedagogy, learner reasoning, evidence, concept timing, scaffolding, learner flow, or material UX semantics must be routed through the applicable current authority and, for a new or materially changed encounter, through `learner-encounter-production-process.md`.
 
 Implementation must not absorb such a decision as a local coding choice.
 
 ### 3.5 New or materially changed encounter
 
-A new Lesson or a change that reopens capability, prerequisite, learner-state, or case justification begins from the current accepted course state through the encounter production process.
+A new Lesson or a change that reopens capability, prerequisite, learner-state, case, evidence, or material journey justification begins from the current accepted course state through `learner-encounter-production-process.md`.
 
 Existing historical designs or runtime code may be evidence or candidate material only; their existence does not authorize the encounter.
 
@@ -108,12 +108,13 @@ A task branch may be promoted into `main` only when all conditions relevant to t
 1. the exact starting baseline is known;
 2. the change has a bounded declared scope;
 3. the applicable current authority has been identified;
-4. the actual resulting diff has been reviewed, not only an agent summary;
-5. required validation for the change impact has been completed;
-6. accepted behavior outside the authorized change has been preserved where materially exposed;
-7. no unresolved material deviation, authority conflict, or implementation-affecting OPEN matter is being hidden by the promotion;
-8. any required durable production/review record has been stored according to the governing process;
-9. the branch can be promoted without inventing a reconciliation strategy that has not been authorized.
+4. material accepted decisions needed by implementation are durable in current authority before Build relies on them;
+5. the actual resulting diff has been reviewed, not only an agent summary;
+6. required validation for the change impact has been completed;
+7. accepted behavior outside the authorized change has been preserved where materially exposed;
+8. no unresolved material deviation, authority conflict, or implementation-affecting OPEN matter is being hidden by the promotion;
+9. validation evidence and durable decisions needed to support the acceptance claim have been recorded at the level required by the current production process;
+10. the branch can be promoted without inventing an unauthorized reconciliation strategy.
 
 The mechanics of branch ownership, synchronization, fast-forwarding, review branches, and Git safety remain governed by `agent-assisted-work-protocol.md` and `chatgpt-git-safety.md`.
 
@@ -131,7 +132,7 @@ This says nothing by itself about authority conformance, pedagogy, UX quality, v
 
 ### `VALIDATED TO SCOPE`
 
-The encounter production process has established that the implemented encounter satisfies its declared acceptance conditions to the reviewed scope.
+Validation appropriate to the declared scope and impact has established that the implementation satisfies its current authority and acceptance evidence to that scope.
 
 This does not mean learner mastery, cumulative course validation, or release readiness.
 
@@ -154,13 +155,15 @@ Lesson 3 work must begin from:
 - the accepted Lessons 1–2 product baseline;
 - the current canonical repository state;
 - current authority defined by `source-of-truth-hierarchy.md`;
-- the current capability gap and Course-Assumed Learner State established through `learner-encounter-production-process.md`.
+- a freshly established capability gap / learner need and bounded course-assumed learner state under `learner-encounter-production-process.md`.
 
-The preserved files under `course-design/stage-3/` and older Lesson/Stage 3 runtime material are candidate/history only.
+The preserved files under `course-design/stage-3/`, older Lesson/Stage 3 runtime material, and the Lesson 3 rebaseline dry-run design are candidate/history only.
 
-They may be reconsidered, compared, or reused only after fresh authorization through the current process. They must not be treated as the default design, sequence, case, or implementation authority merely because they already exist.
+They may be reconsidered, compared, or reused only after fresh evaluation through the current process. They must not be treated as the default design, sequence, case, or implementation authority merely because they already exist.
 
-Before process-gated implementation begins, the new Lesson 3 production cycle must establish an explicit execution mapping tied to the actual canonical and accepted runtime baselines being used.
+Before Lesson 3 implementation begins, its material accepted design decisions must exist in the appropriate current Lesson/domain authority and its implementation boundary must be sufficiently clear that Build does not need to invent pedagogy, evidence, controls, or other governed behavior.
+
+No separate role-permitted-next execution mapping is required unless later coordination evidence establishes a need for one.
 
 ## 7. What v1 deliberately does not require
 
@@ -169,9 +172,10 @@ Production Contract v1 does not introduce:
 - a mandatory CI platform;
 - a new automated test suite;
 - one universal validation command for every change;
-- a new branch topology beyond the existing execution protocol;
+- a mandatory permanent role/agent topology;
+- a fixed number of design or post-build reviewers;
+- a universal artifact-per-handoff scheme;
 - a new Lesson template;
-- a new agent architecture;
 - a duplicate acceptance process.
 
 The current repository exposes `dev`, `build`, and `preview` scripts but no general automated test suite. Validation requirements therefore remain impact-based unless future accepted infrastructure expands them.
