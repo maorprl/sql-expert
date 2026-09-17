@@ -12,6 +12,10 @@ Cross-project authority ownership, precedence, runtime/authority distinction, sc
 
 `source-of-truth-hierarchy.md`
 
+Cross-project product/repository production and promotion invariants are defined in:
+
+`production-contract-v1.md`
+
 ## 1. Project goal
 
 Build a Relational Reasoning + SQL course that enables learners to demonstrate the capabilities defined in:
@@ -114,9 +118,11 @@ Historical production and audit artifacts remain evidence/provenance unless a cu
 
 The Source-of-Truth hierarchy / authority-precedence layer is established in `source-of-truth-hierarchy.md`.
 
-The next planned project layer is **Production Contract v1**.
+Production Contract v1 is established in `production-contract-v1.md`.
 
-This management record does not define that contract. No runtime implementation, Lesson 3 design, or new navigation model is authorized by this next-action statement.
+The next planned Learning Product step is **Lesson 3 design through the current learner-encounter production process**.
+
+This management record does not define Lesson 3's capability, case, learner flow, pedagogy, or implementation. Preserved Stage 3 material remains candidate/history until fresh process authorization establishes current Lesson 3 authority.
 
 ## 7. Capability coverage and future course development
 
@@ -145,7 +151,7 @@ Before release-level or exit-capability completion claims, course-level validati
 
 ## 9. Current open / blocking areas
 
-There is no current Lessons 1–2 implementation blocker recorded here. Canon reconciliation and Source-of-Truth authority mapping are complete; unresolved matters remain governed by their current authority/status rather than being inferred from runtime or historical artifacts.
+There is no current Lessons 1–2 implementation blocker recorded here. Canon reconciliation, Source-of-Truth authority mapping, and Production Contract v1 are complete; unresolved matters remain governed by their current authority/status rather than being inferred from runtime or historical artifacts.
 
 Other open matters should enter active work only when evidence or implementation makes them necessary. Current examples include:
 
