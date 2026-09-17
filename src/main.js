@@ -7,7 +7,7 @@ import wasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
 import './styles.css';
 import './course-navigation.css';
 import { createStage1Prototype } from './stage1-prototype-runtime.js';
-import { createFundingParticipation } from './funding-participation.js';
+import { createStage2Prototype } from './stage2-prototype-runtime.js';
 import { createInnerJoinUnmatched } from './inner-join-unmatched.js';
 import { createInteractionLifecycle } from './interaction-lifecycle.js';
 
@@ -51,7 +51,7 @@ let schema = [];
 let editor;
 let activeEncounter;
 let activeEncounterName = 'media-coverage';
-let fundingParticipationEncounter;
+let stage2Experience;
 let innerJoinUnmatchedEncounter;
 const encounterEditorText = { 'media-coverage': '', 'funding-participation': '', 'inner-join-unmatched': '' };
 const encounterResults = { 'media-coverage': null, 'funding-participation': null, 'inner-join-unmatched': null };
@@ -376,37 +376,23 @@ function activateMediaCoverageEncounter() {
   activeEncounterName = 'media-coverage';
   clearError();
   activeEncounter = null;
+  el('stage2-root').hidden = true;
   el('app').hidden = true;
   el('stage1-root').hidden = false;
   document.title = 'RouteCraft · Media coverage';
 }
 
 function activateFundingParticipationEncounter() {
-  if (activeEncounterName === 'funding-participation') return;
-  saveEncounterSurface();
+  if (activeEncounterName === 'funding-participation' && !el('stage2-root').hidden) return;
+  if (activeEncounterName !== 'funding-participation') saveEncounterSurface();
   activeEncounterName = 'funding-participation';
   el('stage1-root').hidden = true;
-  el('app').hidden = false;
+  el('stage2-root').hidden = false;
+  el('app').hidden = true;
   clearError();
-  resetEncounterDom();
-  applyFundingParticipationShell();
-  editor.setValue(encounterEditorText['funding-participation'] || '', -1);
-  restoreEncounterResults('funding-participation');
-
-  if (!fundingParticipationEncounter) {
-    fundingParticipationEncounter = createFundingParticipation({
-      editor,
-      getDatabase: () => db,
-      getSchema: () => schema,
-      onSelectionChange: renderSchema,
-      interactionLifecycle,
-    });
-  }
-  activeEncounter = fundingParticipationEncounter;
-  activeEncounter.refresh?.();
-  renderSchema();
-  updateChapterNavigation();
-  el('stage-scroll').scrollTop = 0;
+  activeEncounter = null;
+  document.title = 'RouteCraft · Funding participation';
+  if (!stage2Experience) stage2Experience = createStage2Prototype({ root: el('stage2-root'), getDatabase: () => db });
 }
 
 function activateInnerJoinUnmatchedEncounter() {
@@ -414,6 +400,7 @@ function activateInnerJoinUnmatchedEncounter() {
   saveEncounterSurface();
   activeEncounterName = 'inner-join-unmatched';
   el('stage1-root').hidden = true;
+  el('stage2-root').hidden = true;
   el('app').hidden = false;
   clearError();
   resetEncounterDom();
@@ -456,5 +443,5 @@ activeEncounter = null;
 SQL = await initSqlJs({ locateFile: () => wasmUrl });
 db = new SQL.Database();
 await loadDatabase();
-createStage1Prototype({ root: el('stage1-root'), getDatabase: () => db });
+createStage1Prototype({ root: el('stage1-root'), getDatabase: () => db, onContinue: activateFundingParticipationEncounter });
 activateMediaCoverageEncounter();

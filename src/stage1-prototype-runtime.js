@@ -32,7 +32,7 @@ const html = `
     </div></main>
   </div>`;
 
-export function createStage1Prototype({ root, getDatabase }) {
+export function createStage1Prototype({ root, getDatabase, onContinue }) {
   root.innerHTML = html;
   const $ = (selector) => root.querySelector(selector);
   const $$ = (selector) => [...root.querySelectorAll(selector)];
@@ -183,7 +183,8 @@ export function createStage1Prototype({ root, getDatabase }) {
     state = 'complete'; spine('Verified: 18 rows, same grain'); teacher('Yes. The result contains 18 rows, one for each article, and each row carries the matching source information. The count stayed at 18 because each article matched one source.');
     concept('JOIN verified', 'The relationship reasoning predicted the row count and grain before the query existed; the actual result confirmed both. SQL is not the conclusion by itself — the verified meaning of its result is.');
     $('#s1-sql-editor').disabled = true; $('#s1-sql-actions').hidden = true;
-    add(node('<div class="completion"><h3>Stage 1 complete</h3><p>You carried one argument from request to evidence: relations, link, cardinality, grain, baseline, prediction, JOIN, <code>ON</code>, SQL, and a verified 18-row result. Source attributes were added while the result remained one row per article.</p></div>'));
+    const completion = add(node('<div class="completion"><h3>Stage 1 complete</h3><p>You carried one argument from request to evidence: relations, link, cardinality, grain, baseline, prediction, JOIN, <code>ON</code>, SQL, and a verified 18-row result. Source attributes were added while the result remained one row per article.</p><button class="primary continue-stage" type="button">Continue to Funding participation</button></div>'));
+    completion.querySelector('.continue-stage').addEventListener('click', () => onContinue?.());
     spine('Stage 1: argument closed'); $('#s1-enrich').hidden = false; $('#s1-enrich-panel').innerHTML = '<button class="enrichment-btn" id="s1-enrich-toggle">Go deeper: How the JOIN produced this result</button>';
     $('#s1-enrich-toggle').addEventListener('click', showEnrichment);
   }
