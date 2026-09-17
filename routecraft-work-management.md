@@ -24,7 +24,11 @@ The current accepted runnable Learning Product contains two encounters: Lesson 1
 
 Lesson 3 is not currently accepted or implemented as part of the learner journey. Preserved Stage 3 files are candidate/history only.
 
-This reconciliation aligns current documentation with that accepted Lessons 1–2 baseline. The next planned project layer is explicit **Source-of-Truth hierarchy / authority precedence** work. That hierarchy is not defined in this reconciliation.
+The Lessons 1–2 canon reconciliation is complete. Cross-project authority ownership and precedence are now defined in:
+
+`source-of-truth-hierarchy.md`
+
+The next planned project layer is **Production Contract v1**. This management record does not define that contract.
 
 The old `learner-encounter-production-execution.md` Cycle 1 action sequence remains historical / superseded and must not be used as the project-wide current-action source.
 
@@ -91,7 +95,9 @@ Primary current authority sources include:
 
 There is currently no separate Lessons 1–2 topology authority. Spatial conformance is derived from these course-level sources together with encounter-local authority.
 
-The accepted Lessons 1–2 runtime is the current product baseline. `course-experience-improvement-work-management.md` is a historical/superseded initiative record, not the current project-state pointer.
+The accepted Lessons 1–2 runtime is the current product baseline for observable implementation behavior. Runtime does not become normative course authority by implementation presence alone; the cross-project rule is defined in `source-of-truth-hierarchy.md`.
+
+`course-experience-improvement-work-management.md` is a historical/superseded initiative record, not the current project-state pointer.
 
 ### A4 — Course-Level Validation & Release Readiness
 
@@ -141,6 +147,10 @@ Includes:
 Potential RAG, embedding, vector, orchestration, or persistent-memory architecture remains conditional rather than selected.
 
 ## 5. Cross-cutting authority and quality controls
+
+Cross-project authority ownership and precedence are defined in:
+
+`source-of-truth-hierarchy.md`
 
 Across both Programs, preserve:
 
