@@ -45,12 +45,15 @@ This README describes the runnable product and current observable runtime struct
 
 For current work state and authority boundaries, use:
 
-- `routecraft-work-management.md` — project-level current work state;
-- `course-work-management.md` — Learning Product work state and current authority boundary;
-- `course-experience-improvement-work-management.md` — historical/superseded learner-experience initiative record;
-- `learner-encounter-production-process.md` — production roles, gates, independence, review, and acceptance rules for learner-encounter production;
+- `routecraft-work-management.md` — the single current project work-state tracker;
+- `source-of-truth-hierarchy.md` — current authority ownership and precedence;
+- `production-contract-v1.md` — cross-project preservation, change-routing, state, and promotion invariants;
+- `learner-encounter-production-process.md` — the formally current learner-encounter production-process authority unless an explicit later cutover changes that status;
+- `agent-assisted-work-protocol.md` — execution / coordination guidance;
 - `learner-encounter-production-execution.md` — historical / superseded Cycle 1 execution snapshot unless explicitly reactivated for a future production cycle;
 - `course-design/production/cycle-1/` — durable Cycle 1 production artifacts and historical provenance.
+
+Historical management records include `course-work-management.md`, `production-system-work-management.md`, and `course-experience-improvement-work-management.md`; they are not current work-state sources.
 
 ## Run
 

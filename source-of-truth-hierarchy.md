@@ -31,9 +31,9 @@ A source has authority only within the scope it is responsible for. A source mus
 | Human-readable schema intent and relation/grain documentation | `startup-ecosystem/startup-ecosystem-schema.md` | Documents schema purpose, row meanings, grains, and design intent; it must remain consistent with executable schema/data facts. |
 | Learner-encounter production workflow and gates | `learner-encounter-production-process.md` | Owns roles, gates, review/independence requirements, durable handoffs, acceptance, and change-impact rules. |
 | Agent/tool execution and coordination | `agent-assisted-work-protocol.md` | Owns worker allocation, branch/handoff mechanics, synchronization, and execution efficiency; remains subordinate to mandatory production-process gates. |
-| Current Learning Product work state | `course-work-management.md` | Describes what work is current; it does not create pedagogy, visual, Lesson, schema, process, or validation authority. |
-| Current Production System work state | `production-system-work-management.md` | Describes Program B work state; it does not create course-content or process authority. |
-| Project-level planning index | `routecraft-work-management.md` | Organizes Programs A/B and current project state; it does not override dedicated authority sources. |
+| Current project work state and planning | `routecraft-work-management.md` | Single live tracker for the master plan, active subplans, current action, and non-authoritative backlog state; it does not create pedagogy, Lesson, process, validation, or implementation authority. |
+
+`course-work-management.md` and `production-system-work-management.md` are historical / superseded management records and are not current work-state owners.
 
 `course-design/stage-3/` is preserved candidate/history and is not current Lesson authority.
 
@@ -149,7 +149,7 @@ When an accepted decision changes an authority boundary or resolves an OPEN/conf
 
 1. update the appropriate current authority source;
 2. update this map only if domain ownership or precedence itself changed;
-3. update management state if the project phase/next action changed;
+3. update `routecraft-work-management.md` if the project phase, plan status, active subplan, or current action changed;
 4. leave historical evidence historical rather than rewriting it to look current.
 
 This map should remain small. It is not a second copy of the course specification, production process, or Lesson designs.

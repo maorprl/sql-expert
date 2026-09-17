@@ -3,7 +3,7 @@
 **Status:** HISTORICAL / SUPERSEDED INITIATIVE RECORD — NOT CURRENT WORK AUTHORIZATION
 **Role:** Preserved Program A / A3 initiative history
 
-This file records the earlier Stage 1–3 experience-improvement initiative and its then-current priorities. It is preserved as initiative history and must not be used as the current project-state, runtime, control, or authority source. The accepted current learner journey is Lessons 1–2; current work state is maintained in `course-work-management.md` and `routecraft-work-management.md`.
+This file records the earlier Stage 1–3 experience-improvement initiative and its then-current priorities. It is preserved as initiative history and must not be used as the current project-state, runtime, control, or authority source. The accepted current learner journey is Lessons 1–2; current work state is maintained only in `routecraft-work-management.md`.
 
 This document historically managed improvement work for the then-existing implemented course experience.
 

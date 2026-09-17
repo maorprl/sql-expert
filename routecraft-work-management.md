@@ -1,206 +1,160 @@
 # RouteCraft Work Management
 
 **Status:** WORKING  
-**Role:** Project-level planning index
+**Role:** Single current project work-state tracker
 
-This document defines RouteCraft's current project-management structure.
+This is the only live management tracker for RouteCraft. It records current project position, the master plan, active subplans, current action, and non-authoritative backlog state.
 
-It does not replace or override pedagogical, visual, Lesson, schema, data, process, execution, review, or validation authority. Those remain in their dedicated current-source documents.
+It is **not** pedagogical, visual, Lesson, schema, data, production-process, execution, review, validation, or implementation authority. Those decisions remain in their dedicated current-source documents.
 
-## 1. Project planning model
-
-RouteCraft is managed as two Programs:
-
-1. **Program A — Learning Product**  
-   Builds and validates the course experienced by the learner.
-2. **Program B — Production System**  
-   Builds and calibrates the repeatable system used to produce, review, implement, and validate learner encounters.
-
-Authority and quality controls apply across both Programs but are not a third Program.
-
-## 2. Current project state
-
-The current accepted runnable Learning Product contains two encounters: Lesson 1 and Lesson 2. The accepted **runtime baseline** is `9b8f6ffc1f22ce2d2783f49e52a48c480a0945fa`; the canonical repository state is the current accepted `main` HEAD and may advance without changing runtime behavior.
-
-Lesson 3 is not currently accepted or implemented as part of the learner journey. Preserved Stage 3 files are candidate/history only.
-
-The Lessons 1–2 canon reconciliation is complete. Cross-project authority ownership and precedence are defined in:
+Authority ownership and precedence are defined in:
 
 `source-of-truth-hierarchy.md`
 
-Cross-project product/repository production invariants are defined in:
+Cross-project preservation, change-routing, state-vocabulary, and promotion invariants are defined in:
 
 `production-contract-v1.md`
 
-The next planned Learning Product step is **Lesson 3 design through the current learner-encounter production process**. This management record does not define Lesson 3 content, case, sequence, or implementation.
+Historical management records must not be used as current work-state sources.
 
-The old `learner-encounter-production-execution.md` Cycle 1 action sequence remains historical / superseded and must not be used as the project-wide current-action source.
+## 1. Current project baseline
 
-## 3. Program A — Learning Product
+The accepted runnable Learning Product contains two Lessons:
 
-Primary management record:
+- **Lesson 1 — Media coverage / first JOIN** using `news_article → news_source`;
+- **Lesson 2 — Funding participation / row multiplication** using `funding_round → round_investment`.
 
-`course-work-management.md`
+The accepted runtime baseline remains:
 
-### A1 — Course Foundations
+`9b8f6ffc1f22ce2d2783f49e52a48c480a0945fa`
 
-Includes:
+The canonical repository state is the current accepted `main` HEAD and may advance without changing the accepted runtime baseline.
 
-- exit criteria;
-- knowledge and dependency mapping;
-- pedagogical foundations;
-- capability coverage and remaining-gap reasoning;
-- data/schema foundation used by learner encounters and SQL runtime.
+Lesson 3 is not currently accepted or implemented as part of the learner journey. Preserved Stage 3 material remains candidate/history only.
 
-Primary current sources include:
+The current learner-encounter production process remains the formal production-process authority until an explicit cutover changes that status. The active production-system rebaseline below is evaluating a candidate replacement and does not itself authorize Lesson 3 implementation.
 
-- `course-exit-criteria.md`
-- `course-knowledge-map.md`
-- `pedagogical-foundations.md`
-- `startup-ecosystem/startup-ecosystem-schema.md`
-- `startup-ecosystem/startup-ecosystem-schema.sql`
-- `startup-ecosystem/startup-ecosystem-seed.sql`
+## 2. Master plan
 
-### A2 — Learner Encounter Development
+This is the established project plan. The active production-system rebaseline in Section 3 is corrective work required before proceeding with Step 7; it does not renumber or replace this plan.
 
-Includes:
+1. **DONE** — Preserve the accepted Lessons 1–2 runtime baseline.  
+   Evidence: accepted runtime baseline `9b8f6ffc1f22ce2d2783f49e52a48c480a0945fa`.
+2. **DONE** — Full external UI/UX review of Lessons 1–2.
+3. **DONE** — Consolidated Lessons 1–2 cleanup.
+4. **DONE** — Full repository documentation / canon reconciliation.
+5. **DONE** — Source-of-Truth hierarchy / authority precedence.  
+   Evidence: `source-of-truth-hierarchy.md`.
+6. **DONE** — Production Contract v1.  
+   Evidence: `production-contract-v1.md`.
+7. **NOT STARTED — PAUSED BY ACTIVE SUBPLAN** — Lesson 3 design.
+8. **NOT STARTED** — Build the production system / “machine”.
+9. **NOT STARTED** — CI.
+10. **NOT STARTED** — Implement Lesson 3 through the production system.
+11. **NOT STARTED** — CD.
+12. **NOT STARTED** — Lesson 4 through the production system.
+13. **NOT STARTED** — Whole-course planning.
+14. **NOT STARTED** — Engineering cleanup.
 
-- encounter-local design authority;
-- learner-route / interaction authority;
-- encounter implementation;
-- encounter-local validation;
-- contribution to capability coverage.
+`DONE` records accepted project state. If later repository evidence materially contradicts a DONE claim, reclassify it explicitly rather than silently reconstructing history.
 
-Current encounter authority is located under:
+## 3. Active subplan — Production-system rebaseline
 
-- `course-design/stage-1/` — Lesson 1 authority;
-- `course-design/stage-2/` — Lesson 2 authority.
+This subplan exists because the current learner-encounter production process was found to contain legacy-derived agent/process architecture that must be revalidated before it is used as the basis for future Lesson production.
 
-`course-design/stage-3/` is preserved candidate/history and is not current authority.
+1. **DONE** — Inventory the current production process and separate product requirements, legacy architecture choices, and unresolved matters.
+2. **DONE** — Draft Production System Requirements without copying the legacy agent topology.
+3. **DONE** — Perform traceability / necessity audit of the proposed requirements and derive the cleaned requirement set.
+4. **DESIGN COMPLETE — DURABLE RECORD PENDING** — Candidate Workflow v0 has been designed from the audited requirements. It is not current authority and has not yet been preserved as its own repository artifact.
+5. **NOT STARTED** — Run a Lesson 3 dry run through the candidate workflow, without implementation, and check it against the rest of the applicable current canon.
+6. **NOT STARTED** — Compare the candidate against the legacy process by outcomes and failure protection: what was lost, what was simplified, and what legacy mechanism—if any—was actually necessary.
+7. **NOT STARTED** — If the candidate survives the dry run and comparison, perform an atomic documentation cutover so that the production process, Source-of-Truth mapping, Production Contract references, and management state agree on one current process.
 
-Historical Cycle 1 production artifacts remain under `course-design/production/cycle-1/` as provenance/history and should not be used as a flat current-authority set.
+Until Substep 7 completes, `learner-encounter-production-process.md` remains the formal current production-process authority. Candidate work is evaluative and non-authoritative.
 
-### A3 — Learning Experience & Runtime
+### Current action
 
-Includes course-wide learner-experience and shared runtime concerns such as:
+**CURRENT ACTION:** preserve the already-completed Production System Requirements work, traceability / necessity audit, and Candidate Workflow v0 as explicit **CANDIDATE / NON-AUTHORITATIVE** durable repository material, then review that diff before beginning Substep 5.
 
-- visual language;
-- course controls;
-- shared interaction behavior;
-- course shell;
-- SQL workspace behavior shared across encounters;
-- shared UI/runtime infrastructure;
-- accessibility, responsive, browser, persistence, and release-runtime concerns when they become current work.
+Do not begin Lesson 3 design or implementation while the active production-system rebaseline has not reached the appropriate authorization point.
 
-Primary current authority sources include:
+## 4. Work areas
 
-- `course-design/course-visual-language.md`
-- `course-design/course-controls.md`
+The following labels organize work only. They are not separate trackers and do not create authority.
 
-There is currently no separate Lessons 1–2 topology authority. Spatial conformance is derived from these course-level sources together with encounter-local authority.
+### Learning Product
 
-The accepted Lessons 1–2 runtime is the current product baseline for observable implementation behavior. Runtime does not become normative course authority by implementation presence alone; the cross-project rule is defined in `source-of-truth-hierarchy.md` and the preservation/promotion contract is defined in `production-contract-v1.md`.
+Current state:
 
-`course-experience-improvement-work-management.md` is a historical/superseded initiative record, not the current project-state pointer.
+- Lessons 1–2 are the accepted learner journey;
+- Lesson 3 remains unaccepted and paused by the active production-system rebaseline;
+- current Lesson, pedagogy, visual, control, schema, and data authority remains in the sources identified by `source-of-truth-hierarchy.md`.
 
-### A4 — Course-Level Validation & Release Readiness
+### Production System
 
-Includes validation that cannot be established from one encounter alone:
+Current state:
+
+- the legacy-derived production process remains formally current until explicit cutover;
+- the rebaseline subplan is active;
+- historical Cycle 1 production artifacts remain evidence/provenance rather than a flat set of current authority;
+- the Candidate Workflow cannot authorize implementation while it remains candidate/non-authoritative.
+
+## 5. Reconciled future / conditional work
+
+These items are not current blockers unless present work makes them necessary.
+
+### Learning Product — future / conditional
+
+- broader persistence semantics across reloads or sessions;
+- Retry / Redo reset and downstream-invalidation semantics;
+- broader hint / adaptive-assistance policy — deferred unless new evidence justifies reopening;
+- Lesson structure beyond the accepted Lessons 1–2 journey;
+- broader initial schema exposure where future Lesson work actually requires a decision;
+- release-level accessibility, responsive, cross-browser, and cumulative-regression validation.
+
+Before any course-level or release-readiness claim, validation still needs, where relevant:
 
 - cumulative progression validation;
 - prerequisite validation across encounters;
-- transfer and independent performance;
 - cross-encounter regression;
 - exit-criteria coverage review;
-- release-level completion evidence.
+- checks for dependence on knowledge not appropriately introduced or developed;
+- transfer / independent-performance evidence appropriate to the exit criteria.
 
-This remains a distinct future/current-as-needed workstream; encounter-level PASS results do not by themselves complete it.
+### Production System — deferred architecture choices
 
-## 4. Program B — Production System
+Do not select merely because the repository contains many documents or previous multi-agent work:
 
-Primary management record:
+- permanent one-role-per-agent topology;
+- fixed permanent agent count;
+- orchestration platform;
+- automated gate engine;
+- universal artifact schema;
+- vector database / embeddings / RAG;
+- persistent agent-memory architecture;
+- broader machine-readable process state beyond demonstrated need.
 
-`production-system-work-management.md`
+These become active only when evidence from the rebaseline, dry run, implementation, validation, or later scale shows they are necessary.
 
-### B1 — Encounter Production Lifecycle
+## 6. Historical management disposition
 
-Primary authority:
+As of the single-tracker reconciliation:
 
-`learner-encounter-production-process.md`
+- `course-work-management.md` is a **HISTORICAL / SUPERSEDED management record**;
+- `production-system-work-management.md` is a **HISTORICAL / SUPERSEDED management record**;
+- `course-experience-improvement-work-management.md` remains a **HISTORICAL / SUPERSEDED initiative record**.
 
-Includes process roles, gates, handoffs, review, implementation-control, validation, acceptance, and change-impact rules.
+Their prior detailed contents remain available through Git history. They must not be used to infer current next action, active backlog, or management ownership.
 
-### B2 — Execution & orchestration
+Accepted product or process decisions remain authoritative only through their dedicated current authority sources; superseding a management record does not supersede authority documents it once referenced.
 
-Primary guidance:
+## 7. Tracker discipline
 
-`agent-assisted-work-protocol.md`
+To prevent conversational memory or stale files from becoming project state:
 
-`learner-encounter-production-execution.md` is currently historical / superseded. If a future production cycle begins, an explicit current execution mapping must be established against its actual baseline.
-
-### B3 — Process state, context & provenance
-
-Includes:
-
-- durable production records;
-- provenance;
-- artifact identity/version/authority metadata;
-- deterministic source loading;
-- future machine-readable state or retrieval support only where evidence justifies it.
-
-Potential RAG, embedding, vector, orchestration, or persistent-memory architecture remains conditional rather than selected.
-
-## 5. Cross-cutting authority and quality controls
-
-Cross-project authority ownership and precedence are defined in:
-
-`source-of-truth-hierarchy.md`
-
-Cross-project production/promotion invariants are defined in:
-
-`production-contract-v1.md`
-
-Across both Programs, preserve:
-
-- source-of-truth discipline;
-- explicit authority/status boundaries;
-- independent review where required;
-- provenance and durable-handoff requirements;
-- conformance/validation controls;
-- change-impact and re-review rules.
-
-Planning classification does not determine authority. Each artifact's authority is determined by its role and the governing current sources.
-
-A derived audit, target-design document, implementation record, or test must not promote itself above the authority it is supposed to check.
-
-When a derived decision chain is invalidated, its downstream implementation and tests must be reclassified against the higher-order authority rather than silently preserved as truth.
-
-## 6. Repository-organization rule
-
-Do not move or merge files merely to make the tree look symmetrical.
-
-Prefer:
-
-1. one clear current authority surface per concern;
-2. historical review/production evidence retained in clearly historical locations or Git history;
-3. management files that describe only current work state rather than preserving obsolete `Current Position` sections;
-4. Git history for superseded management snapshots instead of leaving contradictory snapshots live in current management files;
-5. when an authority chain is invalidated, update the existing current authority/management surfaces directly and rely on Git history for the superseded chain rather than creating a permanent extra repair-document layer unless one is strictly necessary.
-
-## 7. Management hierarchy
-
-```text
-RouteCraft
-│
-├── Program A — Learning Product
-│   ├── A1 — Course Foundations
-│   ├── A2 — Learner Encounter Development
-│   ├── A3 — Learning Experience & Runtime
-│   │   └── Accepted current runtime: Lessons 1–2
-│   └── A4 — Course-Level Validation & Release Readiness
-│
-└── Program B — Production System
-    ├── B1 — Encounter Production Lifecycle
-    ├── B2 — Execution & Orchestration
-    └── B3 — Process State, Context & Provenance
-```
+1. read this tracker before starting substantial project work;
+2. keep exactly one `CURRENT ACTION` here;
+3. when work becomes durably complete, update its status here in the same accepted change that establishes or records the result whenever practical;
+4. do not duplicate current work state in another management file;
+5. classify newly discovered work as current, future/conditional, historical/superseded, or unresolved before treating it as an active task;
+6. if a management statement conflicts with a dedicated authority source, the management statement does not win.
