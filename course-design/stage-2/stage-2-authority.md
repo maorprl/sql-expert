@@ -92,9 +92,9 @@ The current sequence is:
 
 5. **Predict result row behavior.** With participation Grain, the one-to-many relationship, and the 72-row baseline established, the learner predicts **72 result rows — one for each recorded participation** when each participation is joined to the round it belongs to. The course must not yet name row multiplication as the answer.
 
-6. **Reason about repeated round context.** The learner reasons that round-level values may repeat across several participation-grain result rows without those rows being duplicates. A local source-instance example may make the concrete case inspectable — especially `funding_round_id = 1003`, where one funding-round row relates to three participation rows — but must not show the joined-result construction before the learner has made the repeated-context judgment.
+6. **Reason about repeated round context.** The learner reasons that round-level values may repeat across several participation-grain result rows without those rows being duplicates. A local source-instance example may make the concrete case inspectable — especially `funding_round_id = 1003`, where one funding-round row relates to four participation rows — but must not show the joined-result construction before the learner has made the repeated-context judgment.
 
-7. **Show the multiple-match mechanism, then name it.** After the learner has made the row-count prediction and the repeated-context judgment, a focused Workbench teaching visual shows the concrete mechanism for `funding_round_id = 1003`: one `funding_round` row, three matching `round_investment` rows, and the three result rows formed by those matches. The explanation makes explicit that one round row matched three participation rows, so its values contribute once per match. Only after this mechanism is visible does the course name **JOIN row multiplication**. The teaching must also state what the concept does not mean: the JOIN did not invent participation records, did not accidentally duplicate rows, and did not change the result Grain away from participation.
+7. **Show the multiple-match mechanism, then name it.** After the learner has made the row-count prediction and the repeated-context judgment, a focused Workbench teaching visual shows the concrete mechanism for `funding_round_id = 1003`: one `funding_round` row, four matching `round_investment` rows, and the four result rows formed by those matches. The explanation makes explicit that one round row matched four participation rows, so its values contribute once per match. Only after this mechanism is visible does the course name **JOIN row multiplication**. The teaching must also state what the concept does not mean: the JOIN did not invent participation records, did not accidentally duplicate rows, and did not change the result Grain away from participation.
 
 8. **Implement the INNER JOIN.** The learner authors the required six-field JOIN. JOIN and `ON` are reused terminology; there is no Stage-1-style three-beat JOIN teaching sequence and no separate semantic-operation choice. During active authoring the teacher becomes quiet and the SQL Workspace owns execution diagnostics and local assistance.
 
@@ -259,7 +259,7 @@ The substantive reconciled decisions are:
 - the prepared 72-row participation baseline is part of the route;
 - reused relationship/Cardinality and result Grain are handled compactly without first-exposure re-teaching;
 - the learner predicts row behavior and reasons about repeated context before the mechanism is named;
-- a concrete `1003` relation-instance visual demonstrates one round row matching three participation rows and producing three result rows;
+- a concrete `1003` relation-instance visual demonstrates one round row matching four participation rows and producing four result rows;
 - `JOIN row multiplication` names that multiple-match mechanism after the learner reasoning;
 - the former mandatory standalone `3 participations → 3 rows` application is no longer completion evidence;
 - the accepted result keeps all 72 rows inspectable and final verification uses a `1003` slice derived from that result.

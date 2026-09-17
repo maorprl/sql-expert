@@ -357,7 +357,7 @@ function applyMediaCoverageShell() {
 function applyFundingParticipationShell() {
   document.title = 'SQL Lab · Funding participation';
   document.querySelector('.stage-label').hidden = true;
-  el('business-request-title').textContent = 'The investment team is reviewing participation in funding rounds and needs funding-round context together with recorded investor-participation details.';
+  el('business-request-title').textContent = 'The investment team wants to review every recorded investor participation with its funding round type, announced date, investor, and lead status.';
   document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
   el('working-schema-status').textContent = 'Build it from the Live Schema';
   resetLearningPanelState();
