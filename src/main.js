@@ -382,7 +382,7 @@ function activateMediaCoverageEncounter() {
   document.title = 'RouteCraft · Media coverage';
 }
 
-function activateFundingParticipationEncounter() {
+function activateFundingParticipationEncounter({ continuedFromStage1 = false } = {}) {
   if (activeEncounterName === 'funding-participation' && !el('stage2-root').hidden) return;
   if (activeEncounterName !== 'funding-participation') saveEncounterSurface();
   activeEncounterName = 'funding-participation';
@@ -393,6 +393,7 @@ function activateFundingParticipationEncounter() {
   activeEncounter = null;
   document.title = 'RouteCraft · Funding participation';
   if (!stage2Experience) stage2Experience = createStage2Prototype({ root: el('stage2-root'), getDatabase: () => db });
+  stage2Experience.setContinuation(continuedFromStage1);
 }
 
 function activateInnerJoinUnmatchedEncounter() {
@@ -443,5 +444,5 @@ activeEncounter = null;
 SQL = await initSqlJs({ locateFile: () => wasmUrl });
 db = new SQL.Database();
 await loadDatabase();
-createStage1Prototype({ root: el('stage1-root'), getDatabase: () => db, onContinue: activateFundingParticipationEncounter });
+createStage1Prototype({ root: el('stage1-root'), getDatabase: () => db, onContinue: () => activateFundingParticipationEncounter({ continuedFromStage1: true }) });
 activateMediaCoverageEncounter();
