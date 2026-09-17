@@ -43,8 +43,6 @@ Establish:
 - the support boundary needed to preserve that evidence;
 - the coherent learner journey through relational reasoning, SQL/result work where applicable, and verification/interpretation.
 
-When more than one **materially plausible current case** could exercise the same capability and the alternatives create meaningful learner trade-offs, compare the relevant alternatives proportionally and record why the selected case is preferable for the current learner need. This is not a requirement to produce a case matrix when no meaningful alternative or trade-off exists.
-
 **Block when:**
 
 - the case is artificial or unsupported by current schema/data;
@@ -71,11 +69,7 @@ The build boundary should identify:
 
 **Block when:** the implementer would have to invent a pedagogical, learner-evidence, governed-control, or other material product decision in order to proceed.
 
-**Authority boundary before Build:** a complete Encounter Definition or review packet is not implementation authority merely because it is detailed or finished. Before Build begins, all material accepted encounter decisions that implementation must obey must be durable in the appropriate **current authority source** for that encounter/domain. Candidate, evaluation, review, or provisional material cannot authorize Build by itself.
-
-**Risk-triggered challenge before authority promotion:** when a material design decision is meaningfully uncertain or difficult to self-validate, obtain a challenge perspective that did not author the decision before promoting it into current authority. Typical triggers include protected learner evidence, answer-leak risk, substantial scaffolding, novel interaction semantics, meaningful competing-case trade-offs, or genuine cross-domain tension. The challenger supplies evidence and findings; it does not become authority. This is a risk control, not a permanent reviewer role or mandatory review phase for every encounter.
-
-**Output:** an Implementation Boundary, preferably inside the current accepted encounter authority or linked directly from it rather than as a mandatory additional handoff artifact. Candidate/evaluation material may be used to prepare that boundary but does not become authority automatically.
+**Output:** an Implementation Boundary, preferably inside the Encounter Definition or the appropriate existing authority rather than as a mandatory additional handoff artifact.
 
 ## 4. Build
 
@@ -109,7 +103,7 @@ Depending on impact, validation may include:
 - learner-flow / UX validation;
 - regression across materially exposed accepted Lessons or shared behavior.
 
-Validation depth must be proportional to the change. Where the evidentiary or conformance claim is material and author-only validation would not provide sufficient challenge, use an independent validation perspective. Independence is therefore available by risk/impact rather than encoded as a permanent Auditor role or a fixed number of review streams.
+Validation depth must be proportional to the change.
 
 There is no candidate requirement for three fixed post-build verdict streams or a fixed set of reviewers.
 
@@ -168,27 +162,24 @@ When evaluating it:
 Candidate Workflow v0 does not yet decide:
 
 - who or which tool performs each stage;
-- the exact risk threshold or worker choice for an independent challenge in a particular case;
+- where independent challenge is required by impact/risk, if anywhere;
 - which checks should become deterministic automation versus LLM/human review;
-- the exact document form used to carry a candidate Encounter Definition before accepted decisions are promoted into current authority;
+- whether the Encounter Definition should be a standalone artifact or an update to an existing authority source;
 - how CI should map to validation categories;
 - exact validation depth for each future impact class.
 
-These are not omissions to be silently filled during implementation. They should be resolved only when actual work makes the choice material.
+These are not omissions to be silently filled during the dry run. The Lesson 3 dry run should expose which of them genuinely need decisions.
 
-## 10. Rebaseline evaluation record
+## 10. Dry-run evaluation target
 
-Candidate Workflow v0 was evaluated through a fresh Lesson 3 design dry run without implementation and then compared against concrete failure protections from the legacy Cycle 1 process.
+The next evaluation step is a Lesson 3 **design dry run without implementation**.
 
-The dry run and comparison are recorded in:
+The dry run must check this candidate against all applicable current canon, including course exit criteria, knowledge/dependency authority, pedagogical foundations, relevant accepted Lesson authority, course controls, visual language, schema/data, Source-of-Truth rules, and the valid preservation/change-routing parts of Production Contract v1.
 
-- `course-design/production/rebaseline/lesson-3-candidate-workflow-dry-run.md`;
-- `course-design/production/rebaseline/candidate-vs-legacy-outcome-comparison.md`.
+The dry run should record:
 
-The evaluation found that the candidate can preserve the required protections without restoring the legacy permanent-role topology, provided that:
-
-- candidate design is promoted into the appropriate current authority before Build;
-- materially plausible case alternatives are compared proportionally when their trade-off matters;
-- independent challenge remains available when material design or validation risk warrants it.
-
-This document remains non-authoritative until the production-system rebaseline performs an explicit atomic cutover.
+- whether every required decision can be made without reviving legacy choreography;
+- where the candidate is insufficient or ambiguous;
+- whether any omitted legacy mechanism protected a failure mode that the candidate fails to protect;
+- what remains unnecessarily procedural in the legacy process;
+- whether the candidate can proceed to outcome comparison without authorizing implementation.

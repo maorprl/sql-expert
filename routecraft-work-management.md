@@ -3,7 +3,7 @@
 **Status:** WORKING  
 **Role:** Single current project work-state tracker
 
-This is the only live management tracker for RouteCraft. It records current project position, the master plan, active/closed subplans, current action, and non-authoritative backlog state.
+This is the only live management tracker for RouteCraft. It records current project position, the master plan, active subplans, current action, and non-authoritative backlog state.
 
 It is **not** pedagogical, visual, Lesson, schema, data, production-process, execution, review, validation, or implementation authority. Those decisions remain in their dedicated current-source documents.
 
@@ -30,13 +30,13 @@ The accepted runtime baseline remains:
 
 The canonical repository state is the current accepted `main` HEAD and may advance without changing the accepted runtime baseline.
 
-Lesson 3 is not currently accepted or implemented as part of the learner journey. Preserved Stage 3 material and the rebaseline Lesson 3 dry-run design remain candidate/history only.
+Lesson 3 is not currently accepted or implemented as part of the learner journey. Preserved Stage 3 material remains candidate/history only.
 
-`learner-encounter-production-process.md` is the current rebaselined production-process authority. It no longer requires the legacy permanent-role / fixed-review / verbatim-handoff choreography.
+The current learner-encounter production process remains the formal production-process authority until an explicit cutover changes that status. The active production-system rebaseline below is evaluating a candidate replacement and does not itself authorize Lesson 3 implementation.
 
 ## 2. Master plan
 
-This is the established project plan. The production-system rebaseline in Section 3 is complete; it did not renumber or replace this plan.
+This is the established project plan. The active production-system rebaseline in Section 3 is corrective work required before proceeding with Step 7; it does not renumber or replace this plan.
 
 1. **DONE** — Preserve the accepted Lessons 1–2 runtime baseline.  
    Evidence: accepted runtime baseline `9b8f6ffc1f22ce2d2783f49e52a48c480a0945fa`.
@@ -47,7 +47,7 @@ This is the established project plan. The production-system rebaseline in Sectio
    Evidence: `source-of-truth-hierarchy.md`.
 6. **DONE** — Production Contract v1.  
    Evidence: `production-contract-v1.md`.
-7. **CURRENT** — Fresh Lesson 3 design through the current rebaselined learner-encounter production process.
+7. **NOT STARTED — PAUSED BY ACTIVE SUBPLAN** — Lesson 3 design.
 8. **NOT STARTED** — Build the production system / “machine”.
 9. **NOT STARTED** — CI.
 10. **NOT STARTED** — Implement Lesson 3 through the production system.
@@ -58,32 +58,28 @@ This is the established project plan. The production-system rebaseline in Sectio
 
 `DONE` records accepted project state. If later repository evidence materially contradicts a DONE claim, reclassify it explicitly rather than silently reconstructing history.
 
-## 3. Closed subplan — Production-system rebaseline
+## 3. Active subplan — Production-system rebaseline
 
-**Status:** DONE
+This subplan exists because the current learner-encounter production process was found to contain legacy-derived agent/process architecture that must be revalidated before it is used as the basis for future Lesson production.
 
-1. **DONE** — Inventory the prior production process and separate product requirements, legacy architecture choices, and unresolved matters.
+1. **DONE** — Inventory the current production process and separate product requirements, legacy architecture choices, and unresolved matters.
 2. **DONE** — Draft and preserve Production System Requirements without copying the legacy agent topology.  
    Evidence: `course-design/production/rebaseline/production-system-requirements-candidate.md`.
-3. **DONE** — Perform and preserve the traceability / necessity audit and derive the cleaned requirement set.  
+3. **DONE** — Perform and preserve the traceability / necessity audit of the proposed requirements and derive the cleaned requirement set.  
    Evidence: `course-design/production/rebaseline/production-system-requirements-traceability-audit.md`.
-4. **DONE** — Design and preserve Candidate Workflow v0 from the audited requirements.  
+4. **DONE** — Design and preserve Candidate Workflow v0 from the audited requirements as **CANDIDATE / NON-AUTHORITATIVE** material.  
    Evidence: `course-design/production/rebaseline/candidate-workflow-v0.md`.
-5. **DONE** — Run a fresh Lesson 3 design dry run through the candidate workflow without implementation. The dry run exposed and corrected the authority-before-Build ambiguity.  
-   Evidence: `course-design/production/rebaseline/lesson-3-candidate-workflow-dry-run.md`.
-6. **DONE** — Compare the candidate against the legacy process by outcomes and protected failure modes. The comparison retained proportional case comparison and risk-triggered independent challenge as conditional protections without restoring permanent roles/review streams.  
-   Evidence: `course-design/production/rebaseline/candidate-vs-legacy-outcome-comparison.md`.
-7. **DONE** — Atomic documentation cutover: the rebaselined workflow became current process authority and Source-of-Truth, Production Contract, agent/execution guidance, README, rebaseline status, and management state were aligned in one cutover.
+5. **CURRENT** — Run a Lesson 3 dry run through the candidate workflow, without implementation, and check it against the rest of the applicable current canon.
+6. **NOT STARTED** — Compare the candidate against the legacy process by outcomes and failure protection: what was lost, what was simplified, and what legacy mechanism—if any—was actually necessary.
+7. **NOT STARTED** — If the candidate survives the dry run and comparison, perform an atomic documentation cutover so that the production process, Source-of-Truth mapping, Production Contract references, and management state agree on one current process.
 
-The rebaseline artifacts are evidence/history for why the current process looks the way it does. They are not a second process authority.
+Until Substep 7 completes, `learner-encounter-production-process.md` remains the formal current production-process authority. Candidate work is evaluative and non-authoritative.
 
 ### Current action
 
-**CURRENT ACTION:** execute Master Plan Step 7 — design Lesson 3 freshly through `learner-encounter-production-process.md`, beginning from the accepted Lessons 1–2 baseline and current canon.
+**CURRENT ACTION:** execute Substep 5 — a Lesson 3 design dry run through `course-design/production/rebaseline/candidate-workflow-v0.md`, with **no implementation**, and test the candidate against all applicable current canon and the accepted Lessons 1–2 baseline.
 
-The production-system dry-run Lesson 3 design is **not** current Lesson 3 authority. It may be considered as candidate evidence only after the fresh process establishes the capability need, learner state, and case.
-
-Do not implement Lesson 3 during Step 7. Implementation remains Master Plan Step 10.
+The dry run must not treat preserved Stage 3 material as current authority, must not use the Candidate Workflow to authorize implementation, and must record any point where the candidate is insufficient, ambiguous, or fails to preserve a required control.
 
 ## 4. Work areas
 
@@ -94,17 +90,17 @@ The following labels organize work only. They are not separate trackers and do n
 Current state:
 
 - Lessons 1–2 are the accepted learner journey;
-- Lesson 3 is the current design task but has no current Lesson authority yet;
-- current pedagogy, visual, control, schema, data, and accepted Lesson authority remains in the sources identified by `source-of-truth-hierarchy.md`.
+- Lesson 3 remains unaccepted and paused by the active production-system rebaseline;
+- current Lesson, pedagogy, visual, control, schema, and data authority remains in the sources identified by `source-of-truth-hierarchy.md`.
 
 ### Production System
 
 Current state:
 
-- the rebaselined `learner-encounter-production-process.md` is current;
-- worker/tool assignment remains in `agent-assisted-work-protocol.md`;
-- Cycle 1 and rebaseline directories remain evidence/provenance, not flat current authority;
-- permanent role topology, fixed review counts, and universal handoff artifacts are not current process requirements.
+- the legacy-derived production process remains formally current until explicit cutover;
+- the rebaseline subplan is active;
+- historical Cycle 1 production artifacts remain evidence/provenance rather than a flat set of current authority;
+- the Candidate Workflow cannot authorize implementation while it remains candidate/non-authoritative.
 
 ## 5. Reconciled future / conditional work
 
@@ -115,7 +111,7 @@ These items are not current blockers unless present work makes them necessary.
 - broader persistence semantics across reloads or sessions;
 - Retry / Redo reset and downstream-invalidation semantics;
 - broader hint / adaptive-assistance policy — deferred unless new evidence justifies reopening;
-- Lesson structure beyond the accepted Lessons 1–2 journey and current Lesson 3 design work;
+- Lesson structure beyond the accepted Lessons 1–2 journey;
 - broader initial schema exposure where future Lesson work actually requires a decision;
 - release-level accessibility, responsive, cross-browser, and cumulative-regression validation.
 
@@ -141,18 +137,19 @@ Do not select merely because the repository contains many documents or previous 
 - persistent agent-memory architecture;
 - broader machine-readable process state beyond demonstrated need.
 
-These become active only when evidence from implementation, validation, or later scale shows they are necessary.
+These become active only when evidence from the rebaseline, dry run, implementation, validation, or later scale shows they are necessary.
 
 ## 6. Historical management disposition
 
+As of the single-tracker reconciliation:
+
 - `course-work-management.md` is a **HISTORICAL / SUPERSEDED management record**;
 - `production-system-work-management.md` is a **HISTORICAL / SUPERSEDED management record**;
-- `course-experience-improvement-work-management.md` is a **HISTORICAL / SUPERSEDED initiative record**;
-- `learner-encounter-production-execution.md` is a **HISTORICAL / SUPERSEDED Cycle 1 execution snapshot**.
+- `course-experience-improvement-work-management.md` remains a **HISTORICAL / SUPERSEDED initiative record**.
 
-Their prior detailed contents remain available through Git history. They must not be used to infer current next action, active backlog, production topology, or management ownership.
+Their prior detailed contents remain available through Git history. They must not be used to infer current next action, active backlog, or management ownership.
 
-Accepted product or process decisions remain authoritative only through their dedicated current authority sources; superseding a management/execution record does not supersede authority documents it once referenced.
+Accepted product or process decisions remain authoritative only through their dedicated current authority sources; superseding a management record does not supersede authority documents it once referenced.
 
 ## 7. Tracker discipline
 
