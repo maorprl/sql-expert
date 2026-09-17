@@ -47,7 +47,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
   }
 
   function teacherVoice(content) {
-    return `<aside class="teacher-voice"><span class="teacher-voice-label">Guidance</span><p>${content}</p></aside>`;
+    return `<div class="conversation-turn teacher-turn"><span class="speaker-label">Teacher</span><p>${content}</p></div>`;
   }
 
   function relationshipLevel() {
@@ -144,6 +144,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       id: item.id,
       summaryHtml: `<span class="complete-mark">✓</span><span>${escapeHtml(item.label)}</span><span class="completed-answer" title="${escapeHtml(item.answer)}">${escapeHtml(item.answer)}</span>`,
       reviewHtml: `<p class="review-question"><strong>${escapeHtml(stripMarkup(item.prompt))}</strong></p><p><strong>${escapeHtml(item.answerLabel)}:</strong> ${escapeHtml(item.answer)}</p>${item.options ? `<fieldset class="choices review-choices" disabled>${item.options.map(([value, label]) => `<label class="${value === item.value ? 'selected-choice' : ''}"><input type="radio" ${value === item.value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>` : ''}${item.feedback ? `<div class="review-feedback">${item.feedback}</div>` : ''}`,
+      historyHtml: `<article class="conversation-exchange" data-exchange-id="${escapeHtml(item.id)}"><div class="conversation-turn teacher-turn completed-turn"><span class="speaker-label">Teacher</span><p>${escapeHtml(stripMarkup(item.prompt))}</p></div><div class="conversation-turn learner-turn"><span class="speaker-label">You</span><p>${escapeHtml(item.answer)}</p></div>${item.feedback ? `<div class="conversation-turn teacher-turn teacher-response"><span class="speaker-label">Teacher</span><div>${item.feedback}</div></div>` : ''}</article>`,
     })));
   }
 
@@ -191,12 +192,11 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       prompt: stripMarkup(prompt),
       evidenceIds: evidenceInPlay(),
     });
-    const transition = state.transition?.feedback
-      ? `<section class="reasoning-transition" aria-label="Previous reasoning feedback">${state.transition.feedback}</section>`
-      : '';
-    return state.current !== 'complete'
-      ? `${transition}<div class="step-kicker">${label}</div>${intro}<h2 class="prompt">${prompt}</h2>${body}`
-      : `${transition}<h2 class="prompt">${prompt}</h2>${body}`;
+    if (state.current === 'complete') return `<div class="stage-completion-turn"><h2 class="prompt">${prompt}</h2>${body}</div>`;
+    if (state.current === 'sql' || (state.current === 'baselineRun' && !state.baselineExecuted)) {
+      return `<div class="step-kicker">${label}</div><section class="workbench-task-brief"><span>Workbench task</span><h2 class="prompt">${prompt}</h2>${body}</section>`;
+    }
+    return `<div class="step-kicker">${label}</div>${intro}<div class="conversation-turn teacher-turn active-teacher-turn"><span class="speaker-label">Teacher</span><h2 class="prompt">${prompt}</h2></div><div class="learner-response-slot">${body}</div>`;
   }
 
   function clearWorkspaceAction() {
@@ -441,12 +441,13 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       </section>
     `;
 
-    interactionLifecycle.renderCurrent(stepShell('See how the relationship becomes a JOIN.', `
+    renderWorkspaceAction(`
       <div class="join-progress" aria-label="JOIN explanation progress"><span>Teaching step ${beat} of 3</span><div><i class="${beat >= 1 ? 'done' : ''}"></i><i class="${beat >= 2 ? 'done' : ''}"></i><i class="${beat >= 3 ? 'done' : ''}"></i></div></div>
       <div class="join-teaching">${beatMarkup}</div>
-      <div class="teaching-navigation">
-        <button id="join-teaching-next" class="primary">${beat < 3 ? (beat === 1 ? 'Next: express the match in SQL' : 'Next: map the whole query') : 'Continue to SQL implementation'}</button>
-      </div>
+    `, 'join-teaching-evidence');
+    interactionLifecycle.renderCurrent(stepShell('See how the relationship becomes a JOIN.', `
+      <p class="step-copy">Teaching step ${beat} of 3 is open in the Workbench.</p>
+      <button id="join-teaching-next" class="primary">${beat < 3 ? (beat === 1 ? 'Next: express the match in SQL' : 'Next: map the whole query') : 'Continue to SQL implementation'}</button>
     `, teacherVoice(guidance)));
 
     document.getElementById('join-teaching-next').addEventListener('click', () => {

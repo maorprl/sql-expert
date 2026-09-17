@@ -13,24 +13,37 @@
       </header>
       <section id="error-panel" class="message error" hidden></section>
       <section class="workspace">
-        <aside class="schema-panel">
-          <div class="panel-header"><div><span class="eyebrow">Explore</span><h2>Live Schema</h2></div><input id="schema-search" type="search" placeholder="Find relations or columns" aria-label="Search schema" /></div>
-          <div id="schema-viewer" class="schema-viewer" aria-live="polite"></div>
-        </aside>
-        <section class="learning-panel">
-          <div id="stage-scroll" class="stage-scroll">
+        <section class="learning-panel experience-shell">
+          <section class="conversation-lane" aria-label="Conversation">
             <section class="business-request" aria-labelledby="business-request-title">
               <span class="eyebrow">Business request</span>
               <h2 id="business-request-title">The research team is reviewing media coverage and wants every article to include the source that published it.</h2>
             </section>
-            <div class="lesson-surface">
-              <div class="reasoning-column">
+            <div class="conversation-body">
+              <aside class="reasoning-thread" aria-label="Reasoning thread">
+                <div class="reasoning-thread-heading"><span>Thread</span><strong>Your argument</strong></div>
                 <section id="completed-steps" class="completed-steps" aria-label="Completed reasoning"></section>
-                <section id="current-step" class="current-step" aria-live="polite"></section>
+              </aside>
+              <div id="stage-scroll" class="conversation-stream" aria-live="polite">
+                <div id="conversation-history" class="conversation-history"></div>
+                <section id="current-step" class="current-step"></section>
               </div>
+            </div>
+          </section>
+
+          <section class="workbench-lane" aria-label="Workbench">
+            <header class="workbench-heading">
+              <div><span class="eyebrow">Workbench</span><h2>Inspect, manipulate, and test</h2></div>
+              <p>Schema objects, SQL, results, and evidence stay here.</p>
+            </header>
+            <div class="workbench-body">
+              <aside class="schema-panel">
+                <div class="panel-header"><div><span class="eyebrow">Explore</span><h2>Live Schema</h2></div><input id="schema-search" type="search" placeholder="Find relations or columns" aria-label="Search schema" /></div>
+                <div id="schema-viewer" class="schema-viewer" aria-live="polite"></div>
+              </aside>
               <div class="implementation-column">
                 <section class="working-schema-panel" aria-labelledby="working-schema-title">
-                  <div class="working-schema-header"><div><span class="eyebrow">Reasoning surface</span><h2 id="working-schema-title">Working Schema</h2></div><span id="working-schema-status">Selected relations persist as you reason</span></div>
+                  <div class="working-schema-header"><div><span class="eyebrow">Working object</span><h2 id="working-schema-title">Working Schema</h2></div><span id="working-schema-status">Selected relations persist as you reason</span></div>
                   <div id="relation-preview" class="relation-preview" aria-label="Working schema"></div>
                 </section>
                 <section id="lab-workspace" class="lab-workspace" hidden>
@@ -44,7 +57,7 @@
                 <section id="sql-diagnostic" class="sql-diagnostic" role="alert" hidden></section>
               </div>
             </div>
-          </div>
+          </section>
         </section>
       </section>
     </main>

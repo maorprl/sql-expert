@@ -10,6 +10,7 @@ import { createMediaCoverage } from './media-coverage.js';
 import { createFundingParticipation } from './funding-participation.js';
 import { createInnerJoinUnmatched } from './inner-join-unmatched.js';
 import { createInteractionLifecycle } from './interaction-lifecycle.js';
+import './experience-shell.css';
 
 const SOURCE_FILES = [
   '/startup-ecosystem/startup-ecosystem-schema.sql',
@@ -321,6 +322,7 @@ function saveEncounterSurface() {
 function resetEncounterDom() {
   document.getElementById('workspace-evidence-action')?.remove();
   el('completed-steps').innerHTML = '';
+  el('conversation-history').innerHTML = '';
   el('current-step').innerHTML = '';
   el('relation-preview').innerHTML = '';
   clearSqlDiagnostic();
@@ -350,7 +352,7 @@ function applyMediaCoverageShell() {
   const stageLabel = document.querySelector('.stage-label');
   stageLabel.hidden = true;
   el('business-request-title').textContent = 'The research team is reviewing media coverage and wants every article to include the source that published it.';
-  document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
+  document.querySelector('.working-schema-header .eyebrow').textContent = 'Working object';
   resetLearningPanelState();
 }
 
@@ -358,7 +360,7 @@ function applyFundingParticipationShell() {
   document.title = 'SQL Lab · Funding participation';
   document.querySelector('.stage-label').hidden = true;
   el('business-request-title').textContent = 'The investment team wants to review every recorded investor participation with its funding round type, announced date, investor, and lead status.';
-  document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
+  document.querySelector('.working-schema-header .eyebrow').textContent = 'Working object';
   el('working-schema-status').textContent = 'Build it from the Live Schema';
   resetLearningPanelState();
 }
@@ -367,7 +369,7 @@ function applyInnerJoinUnmatchedShell() {
   document.title = 'SQL Lab · INNER JOIN unmatched rows';
   document.querySelector('.stage-label').hidden = true;
   el('business-request-title').textContent = 'The investment team wants a table of companies that have recorded funding rounds, with each company\'s status alongside the round type and announced date.';
-  document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
+  document.querySelector('.working-schema-header .eyebrow').textContent = 'Working object';
   el('working-schema-status').textContent = 'Build it from the Live Schema';
   resetLearningPanelState();
 }
@@ -455,7 +457,11 @@ configureEditor();
 ensureSqlSolutionControls();
 ensureChapterNavigation();
 applyMediaCoverageShell();
-const interactionLifecycle = createInteractionLifecycle({ currentElement: el('current-step'), completedElement: el('completed-steps') });
+const interactionLifecycle = createInteractionLifecycle({
+  currentElement: el('current-step'),
+  completedElement: el('completed-steps'),
+  historyElement: el('conversation-history'),
+});
 mediaCoverageEncounter = createMediaCoverage({ editor, getDatabase: () => db, getSchema: () => schema, onSelectionChange: renderSchema, interactionLifecycle });
 activeEncounter = mediaCoverageEncounter;
 updateChapterNavigation();

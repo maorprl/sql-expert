@@ -81,13 +81,14 @@ function createInteractionState({ initial, thread, data = {} }) {
   return state;
 }
 
-export function createInteractionLifecycle({ currentElement, completedElement }) {
+export function createInteractionLifecycle({ currentElement, completedElement, historyElement = null }) {
   const openCompletedIds = new Set();
 
   function renderCurrent(html) {
     currentElement.innerHTML = normalizeCurrentHtml(html);
     currentElement.dataset.interactionState = 'current';
     currentElement.setAttribute('aria-current', 'step');
+    requestAnimationFrame(() => currentElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' }));
     return currentElement;
   }
 
@@ -106,6 +107,11 @@ export function createInteractionLifecycle({ currentElement, completedElement })
         </details>
       `;
     }).join('');
+
+    if (historyElement) {
+      historyElement.innerHTML = items.map((item) => item.historyHtml || '').join('');
+      historyElement.toggleAttribute('hidden', items.every((item) => !item.historyHtml));
+    }
 
     completedElement.querySelectorAll('[data-interaction-id]').forEach((details) => {
       details.addEventListener('toggle', () => {
