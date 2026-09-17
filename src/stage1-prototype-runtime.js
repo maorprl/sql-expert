@@ -7,6 +7,13 @@ FROM news_article
 INNER JOIN news_source
   ON news_article.news_source_id = news_source.news_source_id;`;
 
+const RELATION_INFO = {
+  news_article: { description: 'Articles published by news sources.', columns: [['news_article_id', 'INTEGER', 'The article record identifier.'], ['title', 'TEXT', 'The published article title.'], ['news_source_id', 'INTEGER', 'The recorded news_source_id value.']] },
+  news_source: { description: 'Organizations that publish news articles.', columns: [['news_source_id', 'INTEGER', 'The source record identifier.'], ['name', 'TEXT', 'The publishing source name.']] },
+  funding_round: { description: 'Recorded company funding rounds.', columns: [['funding_round_id', 'INTEGER', 'The funding-round record identifier.'], ['round_type', 'TEXT', 'The category of funding round.']] },
+  company: { description: 'Companies and their business attributes.', columns: [['company_id', 'INTEGER', 'The company record identifier.'], ['name', 'TEXT', 'The company name.']] },
+};
+
 const html = `
   <div class="stage1-routecraft">
     <header class="masthead"><div><div class="mh-course">RouteCraft · SQL Lab</div><div class="mh-title">Media coverage — one article, one publisher</div></div><div class="mh-right"><span class="mh-stage">Stage 1 · request → verified JOIN</span><button class="ghost" id="s1-restart">Restart</button></div></header>
@@ -14,10 +21,10 @@ const html = `
       <section class="conversation" id="s1-conversation" aria-label="Conversation"><aside class="spine" aria-label="Reasoning thread"><div class="spine-label">Thread</div><ol class="spine-list" id="s1-spine"></ol></aside><div class="stream" id="s1-stream" aria-live="polite"></div></section>
       <section class="workbench" aria-label="Workbench">
         <div class="wb-block" id="s1-entry"><div class="wb-head"><span class="eyebrow">Schema catalog</span><h3>Choose the relations that hold the request</h3></div><div class="catalog" id="s1-catalog">
-          <button class="catalog-card" data-rel="news_article"><span><span class="catalog-name">news_article</span><span class="catalog-desc">articles and their titles</span></span><span class="catalog-status">add</span></button>
-          <button class="catalog-card" data-rel="news_source"><span><span class="catalog-name">news_source</span><span class="catalog-desc">publisher names</span></span><span class="catalog-status">add</span></button>
-          <button class="catalog-card" data-rel="funding_round"><span><span class="catalog-name">funding_round</span><span class="catalog-desc">round dates and amounts</span></span><span class="catalog-status">add</span></button>
-          <button class="catalog-card" data-rel="company"><span><span class="catalog-name">company</span><span class="catalog-desc">company names and sectors</span></span><span class="catalog-status">add</span></button>
+          <div class="catalog-card" data-rel="news_article"><button class="catalog-select" type="button"><span><span class="catalog-name">news_article</span><span class="catalog-desc">articles and their titles</span></span><span class="catalog-status">add</span></button><button class="inspect-relation" type="button">Inspect</button></div>
+          <div class="catalog-card" data-rel="news_source"><button class="catalog-select" type="button"><span><span class="catalog-name">news_source</span><span class="catalog-desc">publisher names</span></span><span class="catalog-status">add</span></button><button class="inspect-relation" type="button">Inspect</button></div>
+          <div class="catalog-card" data-rel="funding_round"><button class="catalog-select" type="button"><span><span class="catalog-name">funding_round</span><span class="catalog-desc">round dates and amounts</span></span><span class="catalog-status">add</span></button><button class="inspect-relation" type="button">Inspect</button></div>
+          <div class="catalog-card" data-rel="company"><button class="catalog-select" type="button"><span><span class="catalog-name">company</span><span class="catalog-desc">company names and sectors</span></span><span class="catalog-status">add</span></button><button class="inspect-relation" type="button">Inspect</button></div>
         </div><div class="catalog-feedback" id="s1-catalog-feedback" hidden></div><div class="wb-head bench-head"><span class="eyebrow">Working schema</span><h3>Relations on the bench</h3></div><div class="relations" id="s1-relations"><span class="hint">Select the two relations that contain the requested information.</span></div></div>
         <div class="wb-block" id="s1-schema" hidden><div class="wb-head"><span class="eyebrow">Working schema</span><h3>The two relations on the bench</h3></div><div class="ws locked" id="s1-ws"><article class="card" data-rel="news_article"><div class="card-head">news_article</div><ul class="cols"><li><button class="col" data-rel="news_article" data-col="news_article_id"><code>news_article_id</code><span class="badge">PK</span></button></li><li><button class="col" data-rel="news_article" data-col="title"><code>title</code></button></li><li><button class="col" data-rel="news_article" data-col="news_source_id"><code>news_source_id</code><span class="badge badge-fk">FK</span></button></li></ul></article><div class="link" id="s1-link"><span class="line"></span><span class="cd m">M</span><span class="cd one">1</span></div><article class="card" data-rel="news_source"><div class="card-head">news_source</div><ul class="cols"><li><button class="col" data-rel="news_source" data-col="news_source_id"><code>news_source_id</code><span class="badge">PK</span></button></li><li><button class="col" data-rel="news_source" data-col="name"><code>name</code></button></li></ul></article></div></div>
         <div class="wb-block" id="s1-measure" hidden><div class="wb-head"><span class="eyebrow">Measurement</span><h3>Baseline — starting article rows</h3></div><div class="editor"><div class="editor-gutter">1</div><pre class="editor-code">SELECT COUNT(*) FROM news_article;</pre></div><div class="editor-actions"><button class="primary" id="s1-run-measure">Run measurement</button><span class="run-note" id="s1-run-note">Prepared for you — you don’t write this one.</span></div><div id="s1-measure-out"></div></div>
@@ -28,6 +35,7 @@ const html = `
         </div></div>
         <div class="wb-block" id="s1-sql" hidden><div class="wb-head"><span class="eyebrow">SQL authoring</span><h3>Make the argument executable</h3></div><div class="editor"><div class="editor-gutter">1<br>2<br>3<br>4<br>5</div><textarea class="sql-editor" id="s1-sql-editor" spellcheck="false" placeholder="Write a SELECT that joins news_article to news_source…"></textarea></div><div class="editor-actions" id="s1-sql-actions"><button class="primary" id="s1-execute">Execute SQL</button><button class="secondary" id="s1-assist-button">Show a nudge</button><button class="secondary" id="s1-solution-button">Show solution</button><span class="run-note">Runs against the course database and checks the returned meaning.</span></div><div id="s1-assist" hidden></div><div id="s1-diagnostic"></div><div id="s1-result"></div></div>
         <div class="wb-block" id="s1-enrich" hidden><div class="wb-head"><span class="eyebrow">Optional enrichment</span><h3>Go deeper: How the JOIN produced this result</h3></div><div class="enrichment" id="s1-enrich-panel"></div></div>
+        <aside class="relation-inspector" id="s1-inspector" aria-labelledby="s1-inspector-title" hidden><div class="inspector-head"><div><span class="eyebrow">Relation inspector</span><h3 id="s1-inspector-title"></h3></div><button class="inspector-close" type="button" aria-label="Close relation inspector">×</button></div><div id="s1-inspector-body"></div><button class="secondary inspector-insert" id="s1-inspector-insert" type="button" hidden>Insert into SQL</button></aside>
       </section>
     </div></main>
   </div>`;
@@ -42,6 +50,9 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   const spineList = $('#s1-spine');
   const selected = new Set();
   let state = 'request';
+  let inspectedRelation = null;
+  let keyInfoRevealed = false;
+  let relationshipInfoRevealed = false;
 
   const scroll = () => { conversation.scrollTop = conversation.scrollHeight; };
   const add = (element) => { stream.append(element); scroll(); return element; };
@@ -52,6 +63,21 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   const markCurrentAction = (selector = null) => {
     $$('.wb-block').forEach((block) => { block.classList.remove('is-current-action'); block.removeAttribute('aria-current'); });
     if (selector) { const block = $(selector); block.classList.add('is-current-action'); block.setAttribute('aria-current', 'step'); }
+  };
+  const renderInspector = () => {
+    if (!inspectedRelation) return;
+    const info = RELATION_INFO[inspectedRelation];
+    $('#s1-inspector-title').textContent = inspectedRelation;
+    const keyLabels = keyInfoRevealed ? { news_article_id: 'PK', news_source_id: inspectedRelation === 'news_article' ? 'FK' : 'PK' } : {};
+    $('#s1-inspector-body').innerHTML = `<p class="inspector-description">${info.description}</p><ul class="inspector-fields">${info.columns.map(([name, type, description]) => `<li><div><code>${name}</code><span class="field-type">${type}</span>${keyLabels[name] ? `<span class="badge${keyLabels[name] === 'FK' ? ' badge-fk' : ''}">${keyLabels[name]}</span>` : ''}</div><p>${description}</p></li>`).join('')}</ul>${relationshipInfoRevealed && ['news_article','news_source'].includes(inspectedRelation) ? '<p class="inspector-relationship"><strong>Revealed relationship:</strong> one source can publish many articles; each article names one source.</p>' : ''}`;
+    $('#s1-inspector-insert').hidden = state !== 'sql';
+  };
+  const openInspector = (relation) => { inspectedRelation = relation; renderInspector(); $('#s1-inspector').hidden = false; };
+  const closeInspector = () => { $('#s1-inspector').hidden = true; inspectedRelation = null; };
+  const insertInspectedRelation = () => {
+    if (state !== 'sql' || !inspectedRelation) return;
+    const editor = $('#s1-sql-editor'); const start = editor.selectionStart; const end = editor.selectionEnd;
+    editor.setRangeText(inspectedRelation, start, end, 'end'); editor.focus();
   };
   const ask = ({ prompt, options, correct, wrong, onCorrect }) => {
     const wrap = node(`<div class="ask"><p class="ask-q">${prompt}</p><form class="ask-form">${options.map(([value, label]) => `<label class="opt"><input type="radio" name="answer" value="${value}"><span class="opt-mark"></span><span class="opt-text">${label}</span></label>`).join('')}<div class="ask-actions"><button class="primary" type="submit" disabled>Check</button></div></form><div class="ask-error" hidden></div></div>`);
@@ -71,7 +97,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   };
 
   function reset() {
-    state = 'request'; selected.clear(); stream.innerHTML = ''; spineList.innerHTML = '';
+    state = 'request'; selected.clear(); stream.innerHTML = ''; spineList.innerHTML = ''; keyInfoRevealed = false; relationshipInfoRevealed = false; closeInspector();
     $$('.catalog-card').forEach((card) => { card.classList.remove('selected'); card.querySelector('.catalog-status').textContent = 'add'; });
     $('#s1-catalog-feedback').hidden = true; $('#s1-relations').innerHTML = '<span class="hint">Select the two relations that contain the requested information.</span>';
     ['#s1-schema', '#s1-measure', '#s1-teaching', '#s1-sql', '#s1-enrich'].forEach((id) => { $(id).hidden = true; });
@@ -105,7 +131,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
     if (!feedback) { feedback = node('<div class="ask-error" id="s1-connection-feedback" hidden></div>'); add(feedback); }
     if (button.dataset.rel !== 'news_article') { feedback.hidden = false; feedback.innerHTML = 'Look inside <code>news_article</code> — the article row carries the pointer to its publisher.'; return; }
     if (button.dataset.col !== 'news_source_id') { button.classList.add('wrong'); setTimeout(() => button.classList.remove('wrong'), 450); feedback.hidden = false; feedback.textContent = 'Which one column would let you look up the outlet that published this article?'; return; }
-    feedback.hidden = true; button.classList.add('picked'); $('#s1-ws').classList.remove('locked'); $$('.card').forEach((card) => card.classList.remove('interactive')); $('#s1-link').classList.add('on');
+    feedback.hidden = true; button.classList.add('picked'); $('#s1-ws').classList.remove('locked'); $$('.card').forEach((card) => card.classList.remove('interactive')); $('#s1-link').classList.add('on'); keyInfoRevealed = true; renderInspector();
     learner('<code>news_article.news_source_id</code>'); spine('Link: <code>news_source_id</code>'); state = 'cardinality';
     teacher('That’s the column — <code>news_article.news_source_id</code>.');
     concept('Primary key / foreign key', '<code>news_article.news_source_id</code> is a <strong>foreign key</strong>. It points at <code>news_source.news_source_id</code>, the source relation’s <strong>primary key</strong>. That stored identity is the basis of the join.');
@@ -114,7 +140,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   }
 
   function afterCardinality() {
-    spine('Cardinality: <code>1 → M</code>'); concept('Cardinality', 'This relationship is <strong>one-to-many</strong>, written 1 → M: one <code>news_source</code> can be pointed at by many <code>news_article</code> rows.'); $('#s1-link').classList.add('cardinality'); state = 'grain';
+    spine('Cardinality: <code>1 → M</code>'); concept('Cardinality', 'This relationship is <strong>one-to-many</strong>, written 1 → M: one <code>news_source</code> can be pointed at by many <code>news_article</code> rows.'); $('#s1-link').classList.add('cardinality'); relationshipInfoRevealed = true; renderInspector(); state = 'grain';
     teacher('The team wants a list of articles, each with its publisher. What should one returned row represent?');
     markCurrentAction();
     ask({ prompt: 'If the result should show every article with its source, what should one result row represent?', options: [['article', 'a news article'], ['source', 'a news source'], ['country', 'a country'], ['pair', 'a combination of article and source']], correct: 'article', wrong: { source: 'The request is a list of articles. What is the row about?', country: 'There is no country in either relation.', pair: 'The request organises the information around articles. What does one row stand for?' }, onCorrect: afterGrain });
@@ -189,7 +215,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   }
 
   function complete() {
-    state = 'complete'; markCurrentAction(); spine('Verified: 18 rows, same grain'); teacher('Yes. The result contains 18 rows, one for each article, and each row carries the matching source information. The count stayed at 18 because each article matched one source.');
+    state = 'complete'; markCurrentAction(); renderInspector(); spine('Verified: 18 rows, same grain'); teacher('Yes. The result contains 18 rows, one for each article, and each row carries the matching source information. The count stayed at 18 because each article matched one source.');
     concept('JOIN verified', 'The relationship reasoning predicted the row count and grain before the query existed; the actual result confirmed both. SQL is not the conclusion by itself — the verified meaning of its result is.');
     $('#s1-sql-editor').disabled = true; $('#s1-sql-actions').hidden = true;
     const completion = add(node('<div class="completion"><h3>Stage 1 complete</h3><p>You carried one argument from request to evidence: relations, link, cardinality, grain, baseline, prediction, JOIN, <code>ON</code>, SQL, and a verified 18-row result. Source attributes were added while the result remained one row per article.</p><button class="primary continue-stage" type="button">Continue to Funding participation</button></div>'));
@@ -203,7 +229,9 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   }
 
   $('#s1-catalog').addEventListener('click', (event) => {
-    const card = event.target.closest('.catalog-card'); if (!card || state !== 'relations') return; const relation = card.dataset.rel;
+    const inspect = event.target.closest('.inspect-relation'); const card = event.target.closest('.catalog-card');
+    if (inspect && card) { openInspector(card.dataset.rel); return; }
+    if (!event.target.closest('.catalog-select') || !card || state !== 'relations') return; const relation = card.dataset.rel;
     if (!['news_article', 'news_source'].includes(relation)) { $('#s1-catalog-feedback').hidden = false; $('#s1-catalog-feedback').textContent = 'That relation does not carry either part of this request. Look for articles and their publishers.'; return; }
     $('#s1-catalog-feedback').hidden = true;
     if (selected.has(relation)) { selected.delete(relation); card.classList.remove('selected'); card.querySelector('.catalog-status').textContent = 'add'; } else { selected.add(relation); card.classList.add('selected'); card.querySelector('.catalog-status').textContent = 'on bench'; }
@@ -212,9 +240,11 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   $$('.col').forEach((button) => button.addEventListener('click', () => onColumn(button)));
   $('#s1-run-measure').addEventListener('click', runMeasurement);
   $$('.beat-next').forEach((button) => button.addEventListener('click', () => { const next = button.dataset.next; $$('.teach-step').forEach((step) => step.classList.toggle('active', step.dataset.step === next)); teacher(next === '2' ? 'You traced the row match. Now watch the relationship become a condition SQL can execute.' : 'The operation, its match rule, and the business meaning now line up. Write that argument as SQL.'); }));
-  $('#s1-to-sql').addEventListener('click', () => { state = 'sql'; $('#s1-sql').hidden = false; $('#s1-teaching').hidden = true; markCurrentAction('#s1-sql'); teacher('The Workbench is yours now. Write the query that implements the relationship and preserves the grain you predicted.'); $('#s1-sql-editor').focus(); });
+  $('#s1-to-sql').addEventListener('click', () => { state = 'sql'; $('#s1-sql').hidden = false; $('#s1-teaching').hidden = true; markCurrentAction('#s1-sql'); renderInspector(); teacher('The Workbench is yours now. Write the query that implements the relationship and preserves the grain you predicted.'); $('#s1-sql-editor').focus(); });
   $('#s1-assist-button').addEventListener('click', () => { const assist = $('#s1-assist'); assist.hidden = !assist.hidden; assist.innerHTML = '<div class="assist"><strong>Nudge:</strong> Start from <code>news_article</code>. Bring in <code>news_source</code> with <code>JOIN</code>, then compare the article foreign key with the source primary key in <code>ON</code>.</div>'; });
   $('#s1-solution-button').addEventListener('click', () => { $('#s1-sql-editor').value = SOLUTION; $('#s1-sql-editor').focus(); $('#s1-diagnostic').innerHTML = '<div class="assist">The solution is now in the editor. It has not run, and the stage has not advanced.</div>'; });
+  $('#s1-inspector').addEventListener('click', (event) => { if (event.target.closest('.inspector-close')) closeInspector(); });
+  $('#s1-inspector-insert').addEventListener('click', insertInspectedRelation);
   $('#s1-execute').addEventListener('click', executeSql); $('#s1-restart').addEventListener('click', reset);
   reset();
   return { restart: reset };
