@@ -117,6 +117,36 @@ Guidance should preserve this continuity without performing the reasoning for th
 
 This does not prescribe a fixed interaction pattern, require an explanation between every step, or determine a universal amount of scaffolding.
 
+## WORKING — Teacher continuity and reasoning thread
+
+Across a guided sequence, the learner should experience one teacher carrying one argument forward rather than a series of disconnected narrators. Teacher guidance begins from what the learner has just established when that contribution matters to the next move, and connects it to why the next reasoning question now matters.
+
+Teacher voice should be spent on reasoning purpose, interpretation, and the naming or explanation of genuinely new ideas rather than on interface logistics that the tool or layout can communicate directly. When the learner is actively working — for example authoring SQL, running a prepared measurement, or inspecting produced evidence — the teacher should normally become quieter and let the work surface lead. The teacher returns when the produced evidence needs interpretation or the reasoning argument needs to move forward.
+
+When a concept is named for the first time, the explanation should attach the formal term to meaning the learner has already established. Later reuse of the same concept should normally use, confirm, or correct it rather than automatically re-teach it as a first exposure. Prior encounter alone does not prove mastery, so later encounters may still retain reasoning or support where their evidence requires it.
+
+The course should maintain a functional reasoning thread sufficient to reconstruct the argument so far. Where relevant to the encounter, that thread includes:
+
+- the persistent business question;
+- the ordered facts the learner has established;
+- the current reasoning question;
+- the evidence currently in play;
+- the learner's active prediction or expectation when later verification depends on it.
+
+The thread should preserve learner-attributed contributions rather than replace them with an administrative transcript or a fresh canonical restatement at every step. It is ordered by the logic of the argument, not by quiz identifiers or implementation-state names. This is a functional continuity requirement; it does not require a particular panel, transcript layout, or state-storage representation.
+
+Progression should not create a standalone learner state whose only purpose is to acknowledge an already-completed move before the next reasoning move can begin. Corrective or consolidating feedback and the next move may remain distinct content, but they should be connected to the reasoning that produced them. Learner-paced teaching progression that reveals a genuinely new explanatory layer is not an acknowledgement-only state.
+
+## WORKING — Conservative reuse and scaffolding reduction
+
+Reuse should reduce explanatory and ceremonial load before removing reasoning structure. A concept or relational pattern having appeared earlier does not, by itself, establish mastery, retention, independent transfer, or permission to remove an encounter's required reasoning evidence.
+
+When competence is being reused, first ask whether the same reasoning move still matters to the current encounter. If it does, preserve the move while reducing unnecessary re-teaching, repeated terminology, duplicate checks, acknowledgement cycles, or explanatory weight. Structural removal should follow only when the current encounter no longer needs that reasoning move or when evidence justifies a different interaction.
+
+The amount of instructional attention may therefore reflect novelty: genuinely new reasoning can receive fuller explanation, assessment, and pacing, while reused reasoning may receive lighter confirmation or correction-on-error where the encounter permits it. This principle does not create a universal rule that every reused concept becomes implicit or unassessed.
+
+The governing preference is: **reduce explanation before reducing structure**.
+
 ## WORKING — Relation Identification from the Business Question
 
 The learner must be able to connect the business question, the information required to answer it, and the relations that provide that information. When identifying relevant relations is part of the intended relational reasoning, the learner should determine them from the available schema rather than receive the required relation set pre-resolved.
