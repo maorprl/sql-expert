@@ -49,6 +49,10 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   const learner = (copy) => add(node(`<div class="learner"><span class="learner-label">You</span><span class="learner-text">${copy}</span></div>`));
   const concept = (term, copy) => add(node(`<div class="concept"><div class="concept-eyebrow">Concept</div><div class="concept-term">${term}</div><div class="concept-body">${copy}</div></div>`));
   const spine = (copy) => spineList.append(node(`<li>${copy}</li>`));
+  const markCurrentAction = (selector = null) => {
+    $$('.wb-block').forEach((block) => { block.classList.remove('is-current-action'); block.removeAttribute('aria-current'); });
+    if (selector) { const block = $(selector); block.classList.add('is-current-action'); block.setAttribute('aria-current', 'step'); }
+  };
   const ask = ({ prompt, options, correct, wrong, onCorrect }) => {
     const wrap = node(`<div class="ask"><p class="ask-q">${prompt}</p><form class="ask-form">${options.map(([value, label]) => `<label class="opt"><input type="radio" name="answer" value="${value}"><span class="opt-mark"></span><span class="opt-text">${label}</span></label>`).join('')}<div class="ask-actions"><button class="primary" type="submit" disabled>Check</button></div></form><div class="ask-error" hidden></div></div>`);
     const form = wrap.querySelector('form');
@@ -77,7 +81,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
     $('#s1-sql-editor').value = ''; $('#s1-sql-editor').disabled = false; $('#s1-execute').disabled = false; $('#s1-sql-actions').hidden = false; $('#s1-assist').hidden = true; $('#s1-assist').innerHTML = ''; $('#s1-diagnostic').innerHTML = ''; $('#s1-result').innerHTML = ''; $('#s1-enrich-panel').innerHTML = '';
     $$('.teach-step').forEach((step) => step.classList.toggle('active', step.dataset.step === '1'));
     teacher('The research team is reviewing media coverage. They want a list of <strong>every article with the name of the source that published it</strong>. We will make that request precise, then check the result against a prediction — not just run a query and hope it looks right. Which relations should we bring into the working schema?');
-    state = 'relations'; spine('Request: every article + its publisher'); conversation.scrollTop = 0;
+    state = 'relations'; spine('Request: every article + its publisher'); markCurrentAction('#s1-entry'); conversation.scrollTop = 0;
   }
 
   function renderRelations() {
@@ -91,6 +95,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
     state = 'connection'; $('#s1-entry').hidden = true; $('#s1-schema').hidden = false;
     spine('Relations: <code>news_article</code> + <code>news_source</code>'); learner('<code>news_article</code> + <code>news_source</code>');
     teacher('These are the two places where the requested information lives: the article relation and the publisher relation. Now point to the column in an article row that answers: <strong>who published this article?</strong>');
+    markCurrentAction('#s1-schema');
     $('.card[data-rel="news_article"]').classList.add('interactive');
   }
 
@@ -111,12 +116,14 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   function afterCardinality() {
     spine('Cardinality: <code>1 → M</code>'); concept('Cardinality', 'This relationship is <strong>one-to-many</strong>, written 1 → M: one <code>news_source</code> can be pointed at by many <code>news_article</code> rows.'); $('#s1-link').classList.add('cardinality'); state = 'grain';
     teacher('The team wants a list of articles, each with its publisher. What should one returned row represent?');
+    markCurrentAction();
     ask({ prompt: 'If the result should show every article with its source, what should one result row represent?', options: [['article', 'a news article'], ['source', 'a news source'], ['country', 'a country'], ['pair', 'a combination of article and source']], correct: 'article', wrong: { source: 'The request is a list of articles. What is the row about?', country: 'There is no country in either relation.', pair: 'The request organises the information around articles. What does one row stand for?' }, onCorrect: afterGrain });
   }
 
   function afterGrain() {
     spine('Grain: one article per row'); concept('Grain', 'The result’s <strong>grain</strong> is what a single row represents — here, <strong>one news article per row</strong>.'); state = 'baseline';
     teacher('Now measure the starting point. The prepared line on the bench counts rows in <code>news_article</code>. This is measurement, not SQL to learn.'); $('#s1-measure').hidden = false; $('#s1-ws').classList.add('dim'); $('#s1-run-measure').focus();
+    markCurrentAction('#s1-measure');
   }
 
   function runMeasurement() {
@@ -127,6 +134,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
       state = 'baseline-interpret'; $('#s1-run-measure').disabled = true; $('#s1-run-note').textContent = `${count} rows returned.`;
       $('#s1-measure-out').innerHTML = `<div class="results"><div class="results-top"><span>Baseline measurement</span><span class="results-count">${count} rows</span></div><table><thead><tr><th>COUNT(*)</th></tr></thead><tbody><tr><td><b>${count}</b></td></tr></tbody></table></div>`;
       teacher(`There’s the number: <strong>${count}</strong>. But a number only helps if we know what it counts.`);
+      markCurrentAction();
       ask({ prompt: `What does the number ${count} represent here?`, options: [['articles', '18 news articles'], ['sources', '18 news sources'], ['companies', '18 companies'], ['dates', '18 publication dates']], correct: 'articles', wrong: { sources: 'The measurement ran on <code>news_article</code>.', companies: 'There is no company relation here.', dates: '<code>COUNT(*)</code> counts rows, not dates.' }, onCorrect: afterInterpret });
     } catch (error) { $('#s1-measure-out').innerHTML = `<div class="diag">The database measurement could not run: ${escapeText(error.message)}</div>`; }
   }
@@ -143,6 +151,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
 
   function afterSemantic() {
     concept('JOIN', 'A <strong>JOIN</strong> combines rows from related relations according to the relationship between them. You chose the meaning first; now we give the operation its SQL name.'); state = 'join-teaching'; $('#s1-teaching').hidden = false;
+    markCurrentAction('#s1-teaching');
     teacher('Follow three connected views on the bench: one row match, the relationship translated into <code>ON</code>, and the full query mapped back to the request.'); $('#s1-teach-board').scrollIntoView({ block: 'nearest' });
   }
 
@@ -180,7 +189,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   }
 
   function complete() {
-    state = 'complete'; spine('Verified: 18 rows, same grain'); teacher('Yes. The result contains 18 rows, one for each article, and each row carries the matching source information. The count stayed at 18 because each article matched one source.');
+    state = 'complete'; markCurrentAction(); spine('Verified: 18 rows, same grain'); teacher('Yes. The result contains 18 rows, one for each article, and each row carries the matching source information. The count stayed at 18 because each article matched one source.');
     concept('JOIN verified', 'The relationship reasoning predicted the row count and grain before the query existed; the actual result confirmed both. SQL is not the conclusion by itself — the verified meaning of its result is.');
     $('#s1-sql-editor').disabled = true; $('#s1-sql-actions').hidden = true;
     const completion = add(node('<div class="completion"><h3>Stage 1 complete</h3><p>You carried one argument from request to evidence: relations, link, cardinality, grain, baseline, prediction, JOIN, <code>ON</code>, SQL, and a verified 18-row result. Source attributes were added while the result remained one row per article.</p><button class="primary continue-stage" type="button">Continue to Funding participation</button></div>'));
@@ -203,7 +212,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   $$('.col').forEach((button) => button.addEventListener('click', () => onColumn(button)));
   $('#s1-run-measure').addEventListener('click', runMeasurement);
   $$('.beat-next').forEach((button) => button.addEventListener('click', () => { const next = button.dataset.next; $$('.teach-step').forEach((step) => step.classList.toggle('active', step.dataset.step === next)); teacher(next === '2' ? 'You traced the row match. Now watch the relationship become a condition SQL can execute.' : 'The operation, its match rule, and the business meaning now line up. Write that argument as SQL.'); }));
-  $('#s1-to-sql').addEventListener('click', () => { state = 'sql'; $('#s1-sql').hidden = false; $('#s1-teaching').hidden = true; teacher('The Workbench is yours now. Write the query that implements the relationship and preserves the grain you predicted.'); $('#s1-sql-editor').focus(); });
+  $('#s1-to-sql').addEventListener('click', () => { state = 'sql'; $('#s1-sql').hidden = false; $('#s1-teaching').hidden = true; markCurrentAction('#s1-sql'); teacher('The Workbench is yours now. Write the query that implements the relationship and preserves the grain you predicted.'); $('#s1-sql-editor').focus(); });
   $('#s1-assist-button').addEventListener('click', () => { const assist = $('#s1-assist'); assist.hidden = !assist.hidden; assist.innerHTML = '<div class="assist"><strong>Nudge:</strong> Start from <code>news_article</code>. Bring in <code>news_source</code> with <code>JOIN</code>, then compare the article foreign key with the source primary key in <code>ON</code>.</div>'; });
   $('#s1-solution-button').addEventListener('click', () => { $('#s1-sql-editor').value = SOLUTION; $('#s1-sql-editor').focus(); $('#s1-diagnostic').innerHTML = '<div class="assist">The solution is now in the editor. It has not run, and the stage has not advanced.</div>'; });
   $('#s1-execute').addEventListener('click', executeSql); $('#s1-restart').addEventListener('click', reset);
