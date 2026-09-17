@@ -12,6 +12,10 @@ Project-level planning structure is defined in:
 
 `routecraft-work-management.md`
 
+Cross-project authority ownership and precedence are defined in:
+
+`source-of-truth-hierarchy.md`
+
 The Learning Product is managed separately in:
 
 `course-work-management.md`
@@ -73,7 +77,7 @@ Accordingly:
 
 Preserve durable handoffs and authority boundaries whenever the production process is used.
 
-After the current documentation reconciliation, the planned Source-of-Truth hierarchy / authority-precedence work belongs to project coordination across Programs A and B. This record does not define that hierarchy or redesign Program B.
+The Source-of-Truth hierarchy / authority-precedence layer is established in `source-of-truth-hierarchy.md`. The next planned project layer is **Production Contract v1**; this record does not define that contract.
 
 Where a completed phase output becomes an input to another role, preserve the actual completed artifact according to the process's durable-handoff rule. Do not substitute conversational memory or summary text for required repository evidence.
 
