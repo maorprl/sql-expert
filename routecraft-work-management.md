@@ -32,7 +32,7 @@ Lesson 3 is not currently accepted or implemented as part of the learner journey
 
 `learner-encounter-production-process.md` remains the formal production-process authority until an explicit accepted cutover changes that status.
 
-The Production System rebaseline has preserved candidate material, but that material is **not accepted process authority** and must be revalidated from the corrected management baseline before any dry-run result can be used to advance the subplan.
+The Production System rebaseline has one preserved candidate path. There is no second competing Candidate Workflow.
 
 ## 2. Master plan
 
@@ -58,20 +58,22 @@ The Production System rebaseline has preserved candidate material, but that mate
 This subplan exists because the current learner-encounter production process contains legacy-derived process architecture that must be revalidated before it is used as the basis for future Lesson production.
 
 1. **DONE** — Inventory the current production process and separate product requirements, legacy architecture choices, and unresolved matters.
-2. **PRESERVED DRAFT — REVALIDATION REQUIRED** — Production System Requirements candidate exists at `course-design/production/rebaseline/production-system-requirements-candidate.md`, but its prior progression status was recorded before management preservation reconciliation was complete.
-3. **PRESERVED DRAFT — REVALIDATION REQUIRED** — Traceability / necessity audit exists at `course-design/production/rebaseline/production-system-requirements-traceability-audit.md`, but must be checked against the restored management obligations below.
-4. **PRESERVED DRAFT — REVALIDATION REQUIRED** — `course-design/production/rebaseline/candidate-workflow-v0.md` exists as **CANDIDATE / NON-AUTHORITATIVE** material. Do not create a second competing workflow. Revalidate and, where necessary, amend this same candidate.
-5. **NOT AUTHORIZED YET** — A Lesson 3 dry run may occur only after Substeps 2–4 have been revalidated from the corrected baseline. Any earlier dry-run result in Git history is evidence only and cannot advance the current subplan.
-6. **NOT STARTED** — Compare the revalidated candidate against the legacy process by outcomes, calibration criteria, and protected failure modes.
+2. **REVALIDATED CANDIDATE / NON-AUTHORITATIVE** — Production System Requirements candidate has been revalidated against the corrected management-preservation baseline. Evidence: `course-design/production/rebaseline/production-system-requirements-candidate.md`.
+3. **REVALIDATED CANDIDATE EVIDENCE / NON-AUTHORITATIVE** — The traceability / necessity audit has been rechecked against restored Course Definition of Done, capability coverage, pedagogy-operationalization status, calibration criteria, and B3 future/conditional topics. Evidence: `course-design/production/rebaseline/production-system-requirements-traceability-audit.md`.
+4. **REVALIDATED CANDIDATE / NON-AUTHORITATIVE** — The same `candidate-workflow-v0.md` has been amended/revalidated; no second competing workflow was created.
+5. **READY FOR CHECKPOINT — NOT YET RUN** — A new Lesson 3 design dry run may occur only after the explicit project checkpoint below. Any earlier dry-run result in Git history is evidence only and cannot advance the current subplan.
+6. **NOT STARTED** — Compare the revalidated candidate against the legacy process by outcomes, preserved failure protections, and the historical production-system calibration criteria.
 7. **NOT STARTED** — If the candidate survives the dry run and comparison, consider an atomic documentation cutover. No cutover is currently authorized.
 
 Until Substep 7 is explicitly accepted, `learner-encounter-production-process.md` remains the formal current production-process authority.
 
 ### Current action
 
-**CURRENT ACTION:** revalidate the existing preserved Production System Requirements, traceability audit, and Candidate Workflow v0 against the corrected management-preservation baseline in Section 4.
+**CURRENT ACTION:** explicit checkpoint before Substep 5.
 
-Do **not** create a second Candidate Workflow. Do **not** run or accept a Lesson 3 dry run until that revalidation is complete. Do **not** implement Lesson 3.
+The management-preservation reconciliation is complete to the reviewed historical management sources, and the existing candidate path has been revalidated against it. Before any new dry run begins, review this state with the user.
+
+Do **not** create a second Candidate Workflow. Do **not** begin Lesson 3 implementation. Do **not** advance to Substep 6 or 7 automatically.
 
 ## 4. Management-preservation reconciliation
 

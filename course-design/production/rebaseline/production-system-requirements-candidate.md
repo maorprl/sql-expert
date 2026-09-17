@@ -1,15 +1,17 @@
 # Production System Requirements — Rebaseline Candidate
 
-**Status:** CANDIDATE / NON-AUTHORITATIVE  
+**Status:** REVALIDATED CANDIDATE / NON-AUTHORITATIVE  
 **Role:** Audited requirement set for evaluating a replacement production workflow  
 
 This document records the cleaned requirement set produced by the production-system rebaseline. It is an evaluation artifact, not current production-process authority.
 
-Until an explicit atomic cutover is accepted, `learner-encounter-production-process.md` remains the current production-process authority. Nothing in this document authorizes Lesson 3 implementation.
+It has been revalidated against the corrected management-preservation baseline in `routecraft-work-management.md`. That revalidation restores course Definition of Done and capability-coverage obligations, preserves unresolved pedagogy operationalization and production-system calibration work, and keeps B3 source/provenance topics future/conditional unless evidence activates them.
+
+Until an explicit accepted cutover, `learner-encounter-production-process.md` remains the current production-process authority. Nothing in this document authorizes Lesson 3 implementation.
 
 ## 1. Purpose
 
-The goal of the rebaseline is to preserve the controls that are genuinely required for reliable learner-encounter production without automatically preserving the legacy role topology, agent choreography, handoff count, artifact count, or review sequence.
+The goal of the rebaseline is to preserve the controls genuinely required for reliable learner-encounter production without automatically preserving the legacy role topology, agent choreography, handoff count, artifact count, or review sequence.
 
 The requirements below describe outcomes and constraints that a candidate workflow must satisfy. They deliberately do not prescribe who performs the work, how many agents are used, or how many files are created.
 
@@ -17,7 +19,7 @@ The requirements below describe outcomes and constraints that a candidate workfl
 
 ### PSR-C01 — Ground work in current state
 
-Before designing or changing a learner encounter, establish the accepted runtime baseline, canonical repository state, and the applicable current authority.
+Before designing or changing a learner encounter, establish the accepted runtime baseline, canonical repository state, applicable current authority, and current project-management constraints relevant to the work.
 
 Historical or preserved material may be evidence or candidate material, but must not silently become current authority.
 
@@ -27,7 +29,7 @@ A new or materially changed encounter must be justified by a capability gap or o
 
 ### PSR-C03 — Bound learner-state assumptions
 
-State only the prior learner capabilities that are genuinely needed for the proposed encounter. Prior exposure alone must not be treated as proof of mastery.
+State only the prior learner capabilities genuinely needed for the proposed encounter. Prior exposure alone must not be treated as proof of mastery.
 
 ### PSR-C04 — Use a valid and credible case
 
@@ -54,6 +56,8 @@ Instructional continuity must be sufficient for the learner to understand why ea
 ### PSR-C08 — Settle material design authority before implementation
 
 Material decisions that affect pedagogy, learner evidence, learner behavior, or governed UX semantics must be settled before implementation depends on them.
+
+If current pedagogical authority is too under-operationalized to support an implementation decision the encounter actually depends on, resolve that scoped authority question before Build rather than silently converting interpretation into requirement.
 
 Implementation freedom should remain available for non-material details that do not create or override product authority.
 
@@ -83,6 +87,12 @@ Accepted behavior outside the authorized change must be preserved where material
 
 When a decision is accepted and is needed for future work, it must become durable in the appropriate current authority or work-state source rather than remaining only in conversational memory.
 
+### PSR-C14 — Reconcile course capability coverage after accepted learner change
+
+When an accepted, validated learner encounter changes course capability coverage, reconcile the current course-management trace so that exit criteria, required capabilities, prerequisites, encounter coverage, implementation, validation evidence, and remaining gaps still reflect reality.
+
+This requirement does not mandate a separate residual-gap artifact after every encounter. It preserves the course-management discipline that coverage is reassessed after validated encounters and before course-completion claims.
+
 ## 3. Explicit non-requirements
 
 The rebaseline has not established the following as universal product requirements:
@@ -99,14 +109,19 @@ The rebaseline has not established the following as universal product requiremen
 - verbatim repository artifact handoffs for every transition;
 - three fixed post-build review streams;
 - a fixed number of production artifacts;
-- a universal requirement to update a residual capability-gap artifact after every encounter;
+- a separate residual capability-gap artifact after every encounter;
+- artifact identity/version metadata beyond demonstrated need;
+- deterministic role-specific source loading beyond demonstrated need;
+- automated retrieval provenance / authority-aware filtering where no automated retrieval system exists;
 - any particular orchestration platform, agent count, RAG system, or machine-readable process engine.
 
-These mechanisms may still be useful in a specific case if evidence shows that they are needed. Their existence in the legacy process does not make them requirements by default.
+These mechanisms may still be useful in a specific case if evidence shows that they are needed. Their existence in legacy management or process history does not make them requirements by default.
 
 ## 4. Evaluation rule
 
-A candidate production workflow should be judged by whether it satisfies the cleaned requirements above and protects against the concrete failure modes observed in prior work, not by how closely it resembles the legacy process.
+A candidate production workflow should be judged by whether it satisfies the cleaned requirements above, preserves restored course-management obligations, and protects against concrete failure modes observed in prior work — not by how closely it resembles the legacy process.
+
+Production-system calibration should also consider context duplication/pollution, stale or ambiguous process state, durable-artifact value, coordination cost/failure modes, and whether lighter execution-state machinery is justified. Those are evaluation questions, not automatically workflow requirements.
 
 The associated traceability audit is recorded in:
 
