@@ -138,6 +138,11 @@ button.working-column:hover { border-color: var(--blue); background: #f0f5ff; }
 .success-feedback { border: 1px solid #b8e4ce; background: var(--green-soft); color: #236744; }
 .confirmed-answer { margin: 12px 0; color: #44566c; font-size: 13px; }
 .continue-after-feedback { margin-top: 14px; }
+.reasoning-transition { display: grid; gap: 8px; margin: -4px 0 18px; padding-bottom: 16px; border-bottom: 1px solid #e2e9f1; }
+.reasoning-transition .success-feedback,
+.reasoning-transition .concept-callout,
+.reasoning-transition .prediction-equation,
+.reasoning-transition .grain-takeaway { margin-top: 0; }
 .concept-callout { display: grid; gap: 4px; margin-top: 10px; padding: 11px 12px; border: 1px solid #d6cdfa; border-radius: 10px; background: var(--concept-soft); color: #574f76; font-size: 12px; }
 .concept-callout > strong { color: var(--concept); font-size: 10px; letter-spacing: .08em; }
 .concept-callout > b { color: #4f389f; font-size: 13px; }

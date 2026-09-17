@@ -349,7 +349,7 @@ function applyMediaCoverageShell() {
   document.title = 'SQL Lab · Media coverage';
   const stageLabel = document.querySelector('.stage-label');
   stageLabel.hidden = true;
-  el('business-request-title').textContent = 'The research team is reviewing media coverage and needs article details together with information about the sources that published them.';
+  el('business-request-title').textContent = 'The research team is reviewing media coverage and wants every article to include the source that published it.';
   document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
   resetLearningPanelState();
 }

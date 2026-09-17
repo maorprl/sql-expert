@@ -17,13 +17,19 @@ const INTERACTION_LABELS = {
 };
 
 const REQUIRED_RELATIONS = ['news_article', 'news_source'];
+const BUSINESS_QUESTION = 'The research team is reviewing media coverage and wants every article to include the source that published it.';
 
 export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectionChange, interactionLifecycle }) {
-  const state = {
-    current: 'relations', completed: [], evidence: new Set(), drafts: {}, localFeedback: '',
-    selectedRelations: [], selectedColumn: '', baselineExecuted: false, baselinePrepared: false,
-    implementationPrepared: false, pendingAdvance: null, joinTeachingBeat: 1,
-  };
+  const reasoningThread = interactionLifecycle.createReasoningThread({ businessQuestion: BUSINESS_QUESTION });
+  const state = interactionLifecycle.createInteractionState({
+    initial: 'relations',
+    thread: reasoningThread,
+    data: {
+      evidence: new Set(), drafts: {}, localFeedback: '',
+      selectedRelations: [], selectedColumn: '', baselineExecuted: false, baselinePrepared: false,
+      implementationPrepared: false, joinTeachingBeat: 1,
+    },
+  });
 
   const relationEl = document.getElementById('relation-preview');
   const workingStatusEl = document.getElementById('working-schema-status');
@@ -52,7 +58,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
 
   function renderColumn(relation, column) {
     const keyLevel = relationshipLevel();
-    const isConnectingChoice = state.current === 'connection' && !state.pendingAdvance && relation.name === 'news_article';
+    const isConnectingChoice = state.current === 'connection' && relation.name === 'news_article';
     const isSelected = isConnectingChoice && state.selectedColumn === column.column;
     const isArticleForeignKey = keyLevel > 0 && relation.name === 'news_article' && column.column === 'news_source_id';
     const isSourcePrimaryKey = keyLevel > 0 && relation.name === 'news_source' && column.column === 'news_source_id';
@@ -73,12 +79,12 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
   }
 
   function workingSchemaStatus() {
-    if (state.current === 'relations' && !state.pendingAdvance) return 'Build it from the live schema';
+    if (state.current === 'relations') return 'Build it from the live schema';
+    if (state.current === 'connection') return 'Select the article field that identifies its source';
     return '';
   }
 
   function renderRelations() {
-    document.getElementById('working-schema-action')?.remove();
     const selected = orderedSelectedRelations();
     const showRelationship = relationshipLevel() > 0 && REQUIRED_RELATIONS.every((name) => state.selectedRelations.includes(name));
     relationEl.classList.toggle('relationship-visible', showRelationship);
@@ -94,7 +100,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
 
     const cards = selected.map((relation) => `
       <article class="data-card" data-relation="${escapeHtml(relation.name)}">
-        <div class="data-card-title"><code>${escapeHtml(relation.name)}</code>${state.current === 'relations' && !state.pendingAdvance ? `<button type="button" class="remove-relation" data-remove-relation="${escapeHtml(relation.name)}">Remove</button>` : ''}</div>
+        <div class="data-card-title"><code>${escapeHtml(relation.name)}</code>${state.current === 'relations' ? `<button type="button" class="remove-relation" data-remove-relation="${escapeHtml(relation.name)}">Remove</button>` : ''}</div>
         <ul class="working-columns">${relation.columns.map((column) => renderColumn(relation, column)).join('')}</ul>
       </article>
     `);
@@ -110,39 +116,10 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       state.localFeedback = '';
       render();
     }));
-    if (state.current === 'connection') renderConnectionAction();
-  }
-
-  function renderConnectionAction() {
-    const success = state.pendingAdvance?.item.id === 'connection';
-    const element = document.createElement('section');
-    element.id = 'working-schema-action';
-    element.className = 'working-schema-action';
-    element.innerHTML = success ? `
-      <div><span class="eyebrow">Connection established</span><strong><code>news_article.news_source_id</code> identifies the publishing source.</strong></div>
-      ${state.pendingAdvance.item.feedback}
-      <button id="continue-after-connection" class="primary connection-continue">Continue</button>
-    ` : `
-      <div><span class="eyebrow">Current action</span><strong>Which column in <code>news_article</code> tells us which source published the article?</strong></div>
-      <button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>
-      ${feedbackMarkup()}
-    `;
-    relationEl.append(element);
-    if (success) return;
-    element.querySelector('#check-column').addEventListener('click', () => {
-      if (state.selectedColumn !== 'news_source_id') return wrong('Look at the article row and ask which column could tell us which source published it. The relationship stays hidden until you establish that connection.');
-      record({
-        evidence: 'connection',
-        prompt: 'Which column in news_article tells us which source published the article?',
-        answer: 'news_article.news_source_id',
-        feedback: '<div class="success-feedback">Correct. <code>news_source_id</code> tells us which source belongs to this article.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>Primary Key / Foreign Key</b><span>You just found the link between the two relations. <code>news_article.news_source_id</code> is a Foreign Key (FK). It points to <code>news_source.news_source_id</code>, the Primary Key (PK). That lets us find the source row, including its <code>name</code>.</span></div>',
-        next: 'cardinality',
-      });
-    });
   }
 
   function addRelation(name) {
-    if (state.current !== 'relations' || state.pendingAdvance || state.selectedRelations.includes(name)) return;
+    if (state.current !== 'relations' || state.selectedRelations.includes(name)) return;
     if (state.selectedRelations.length >= 4) {
       state.localFeedback = 'The Working Schema can contain up to four relations. Remove one to add another.';
       render();
@@ -155,7 +132,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
   }
 
   function removeRelation(name) {
-    if (state.current !== 'relations' || state.pendingAdvance) return;
+    if (state.current !== 'relations') return;
     state.selectedRelations = state.selectedRelations.filter((item) => item !== name);
     state.localFeedback = '';
     render();
@@ -163,25 +140,24 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
   }
 
   function renderCompleted() {
-    interactionLifecycle.renderCompleted(state.completed.filter((item) => item.id !== state.pendingAdvance?.item.id).map((item) => ({
+    interactionLifecycle.renderCompleted(state.completed.map((item) => ({
       id: item.id,
       summaryHtml: `<span class="complete-mark">✓</span><span>${escapeHtml(item.label)}</span><span class="completed-answer" title="${escapeHtml(item.answer)}">${escapeHtml(item.answer)}</span>`,
       reviewHtml: `<p class="review-question"><strong>${escapeHtml(stripMarkup(item.prompt))}</strong></p><p><strong>${escapeHtml(item.answerLabel)}:</strong> ${escapeHtml(item.answer)}</p>${item.options ? `<fieldset class="choices review-choices" disabled>${item.options.map(([value, label]) => `<label class="${value === item.value ? 'selected-choice' : ''}"><input type="radio" ${value === item.value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>` : ''}${item.feedback ? `<div class="review-feedback">${item.feedback}</div>` : ''}`,
     })));
   }
 
-  function setCurrent(next) {
-    state.current = next;
+  function setCurrent(next, options) {
+    state.moveTo(next, options);
     state.localFeedback = '';
     render();
     onSelectionChange();
   }
 
-  function record({ evidence, prompt, answer, answerLabel = 'Your answer', feedback = '', next, label, value, options }) {
+  function record({ evidence, prompt, answer, answerLabel = 'Your answer', feedback = '', next, label, value, options, threadEntries = [] }) {
     if (evidence) state.evidence.add(evidence);
     const item = { id: state.current, label: label || INTERACTION_LABELS[state.current], prompt, answer, answerLabel, feedback, value, options };
-    state.completed.push(item);
-    state.pendingAdvance = { next, item };
+    state.complete({ item, next, threadEntries });
     state.localFeedback = '';
     render();
     onSelectionChange();
@@ -193,9 +169,34 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
     return state.localFeedback ? `<div class="local-feedback incorrect" role="alert"><strong>Not quite.</strong> ${state.localFeedback.replace(/^Not quite\.\s*/i, '')}</div>` : '';
   }
 
+  function evidenceInPlay() {
+    const byState = {
+      connection: ['relevant-relations'],
+      cardinality: ['article-source-connection'],
+      output: ['relevant-relations', 'cardinality'],
+      baselineRun: ['result-grain'],
+      prediction: ['result-grain', 'baseline-measurement', 'cardinality'],
+      operation: ['result-grain', 'baseline-measurement', 'article-source-result'],
+      joinTeaching: ['article-source-connection', 'result-grain', 'baseline-measurement', 'article-source-result', 'semantic-operation'],
+      sql: ['article-source-connection', 'article-source-result', 'semantic-operation'],
+      finalGrain: ['join-result', 'article-source-result'],
+    };
+    return byState[state.current] || [];
+  }
+
   function stepShell(prompt, body, intro = '') {
     const label = INTERACTION_LABELS[state.current];
-    return state.current !== 'complete' ? `<div class="step-kicker">${label}</div>${intro}<h2 class="prompt">${prompt}</h2>${body}` : `<h2 class="prompt">${prompt}</h2>${body}`;
+    reasoningThread.setCurrentQuestion(state.current === 'complete' ? null : {
+      id: state.current,
+      prompt: stripMarkup(prompt),
+      evidenceIds: evidenceInPlay(),
+    });
+    const transition = state.transition?.feedback
+      ? `<section class="reasoning-transition" aria-label="Previous reasoning feedback">${state.transition.feedback}</section>`
+      : '';
+    return state.current !== 'complete'
+      ? `${transition}<div class="step-kicker">${label}</div>${intro}<h2 class="prompt">${prompt}</h2>${body}`
+      : `${transition}<h2 class="prompt">${prompt}</h2>${body}`;
   }
 
   function clearWorkspaceAction() {
@@ -212,77 +213,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
     return element;
   }
 
-  function continueFromPending(buttonId) {
-    document.getElementById(buttonId).addEventListener('click', () => {
-      const next = state.pendingAdvance.next;
-      state.pendingAdvance = null;
-      setCurrent(next);
-    });
-  }
-
-  function renderAcknowledgement() {
-    const { next, item } = state.pendingAdvance;
-
-    if (item.id === 'connection') {
-      interactionLifecycle.renderCurrent(stepShell('Connection established.', teacherVoice('Continue to the next reasoning step.')));
-      continueFromPending('continue-after-connection');
-      requestAnimationFrame(() => document.getElementById('continue-after-connection')?.scrollIntoView({ block: 'nearest' }));
-      return;
-    }
-
-    if (item.id === 'baselineRun' && next === 'prediction') {
-      interactionLifecycle.renderCurrent(stepShell('Baseline established.', teacherVoice('The measurement gives us the starting evidence for the next prediction.')));
-      renderWorkspaceAction(`
-        ${item.feedback}
-        ${teacherVoice('Use this baseline together with the one-source-per-article relationship to predict what should happen when source information is added.')}
-        <button id="continue-after-baseline" class="primary">Continue</button>
-      `, 'baseline-followup');
-      continueFromPending('continue-after-baseline');
-      return;
-    }
-
-    if (item.id === 'prediction' && next === 'operation') {
-      interactionLifecycle.renderCurrent(stepShell('Prediction established.', teacherVoice('You now have an expectation for the result. Next, decide what relational action can add the source information while preserving it.')));
-      renderWorkspaceAction(`
-        ${item.feedback}
-        <button id="continue-after-prediction" class="primary">Continue</button>
-      `, 'prediction-followup');
-      continueFromPending('continue-after-prediction');
-      return;
-    }
-
-    if (item.id === 'sql' && next === 'finalGrain') {
-      interactionLifecycle.renderCurrent(stepShell('Inspect the result.', teacherVoice('Your activity has moved from authoring to evidence. Inspect Results: use the returned columns, row count, and article/source rows before deciding whether the earlier prediction held.')));
-      renderWorkspaceAction(`
-        ${item.feedback}
-        ${teacherVoice('Compare what you see with the earlier prediction: 18 rows, one article per row.')}
-        <button id="continue-to-verification" class="primary">Continue to verification</button>
-      `, 'result-followup');
-      continueFromPending('continue-to-verification');
-      return;
-    }
-
-    if (item.id === 'finalGrain' && next === 'complete') {
-      interactionLifecycle.renderCurrent(stepShell('Verification complete.', teacherVoice('You used the actual result to close the reasoning loop.')));
-      renderWorkspaceAction(`
-        <p class="confirmed-answer"><strong>${escapeHtml(item.answerLabel)}:</strong> ${escapeHtml(item.answer)}</p>
-        ${item.feedback}
-        <button id="complete-after-verification" class="primary">Complete stage</button>
-      `, 'verification-followup');
-      continueFromPending('complete-after-verification');
-      return;
-    }
-
-    const continueLabel = next === 'complete' ? 'Complete stage' : 'Continue';
-    interactionLifecycle.renderCurrent(stepShell(item.prompt, `
-      <p class="confirmed-answer"><strong>${escapeHtml(item.answerLabel)}:</strong> ${escapeHtml(item.answer)}</p>
-      ${item.feedback}
-      <button id="continue-after-feedback" class="primary continue-after-feedback">${continueLabel}</button>
-    `));
-    continueFromPending('continue-after-feedback');
-  }
-
-  function choiceQuestion({ prompt, options, correct, feedback, wrongFeedback, next, evidence, intro = '' }) {
+  function choiceQuestion({ prompt, options, correct, feedback, wrongFeedback, next, evidence, intro = '', threadEntries = [] }) {
     const draft = state.drafts[state.current] || '';
     interactionLifecycle.renderCurrent(stepShell(prompt, `<form id="answer-form" class="answer-form"><fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${escapeHtml(value)}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset><button class="primary" type="submit">Check answer</button></form>${feedbackMarkup()}`, intro));
     document.getElementById('answer-form').addEventListener('submit', (event) => {
@@ -290,7 +221,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       const answer = new FormData(event.currentTarget).get('answer');
       state.drafts[state.current] = answer || '';
       if (answer !== correct) return wrong(wrongFeedback);
-      record({ evidence, prompt, answer: stripMarkup(options.find(([value]) => value === answer)[1]), value: answer, options, feedback, next });
+      record({ evidence, prompt, answer: stripMarkup(options.find(([value]) => value === answer)[1]), value: answer, options, feedback, next, threadEntries });
     });
   }
 
@@ -302,17 +233,15 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       ['dates', '18 publication dates'],
     ];
     const draft = state.drafts.baselineRun || '';
-    interactionLifecycle.renderCurrent(stepShell('Interpret the measurement.', teacherVoice('Keep the returned count in view and identify what it tells us about our starting point.')));
-    const action = renderWorkspaceAction(`
-      <div class="evidence-kicker">Interpret the evidence</div>
-      <h3>What does the number 18 represent here?</h3>
+    interactionLifecycle.renderCurrent(stepShell('What does the number 18 represent here?', `
+      <p class="step-copy">Use the prepared query and its visible result as the evidence for your answer.</p>
       <form id="baseline-answer-form" class="answer-form">
         <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${value}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>
         <button class="primary" type="submit">Check answer</button>
       </form>
       ${feedbackMarkup()}
-    `, 'baseline-interpretation');
-    action.querySelector('#baseline-answer-form').addEventListener('submit', (event) => {
+    `));
+    document.getElementById('baseline-answer-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const answer = new FormData(event.currentTarget).get('answer');
       state.drafts.baselineRun = answer || '';
@@ -325,6 +254,10 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
         options,
         feedback: '<div class="success-feedback">Correct. We have 18 starting article rows. This is our baseline.</div>',
         next: 'prediction',
+        threadEntries: [
+          { kind: 'fact', id: 'baseline', label: 'Starting article rows', value: 18 },
+          { kind: 'evidence', id: 'baseline-measurement', label: 'COUNT(*) result for news_article', value: { rowCount: 18, sql: BASELINE_SQL } },
+        ],
       });
     });
   }
@@ -336,22 +269,19 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
       ['more', 'More than 18 rows — some articles would produce multiple result rows'],
     ];
     const draft = state.drafts.prediction || '';
-    interactionLifecycle.renderCurrent(stepShell('Predict from the evidence.', teacherVoice('We start with 18 article rows, and each article matches one source. Use those two established facts before we combine the rows.')));
-    const action = renderWorkspaceAction(`
+    interactionLifecycle.renderCurrent(stepShell('What should happen when we add each article’s source information?', `
       <div class="baseline-result compact"><span>Established baseline</span><strong>18</strong><span>news articles</span></div>
       <div class="prediction-premises" aria-label="Established facts for the prediction">
         <div><span>Starting rows</span><strong>18 article rows</strong></div>
         <div><span>Matches per article</span><strong>1 source row</strong></div>
       </div>
-      <div class="evidence-kicker">Predict behavior</div>
-      <h3>What should happen when we add each article’s source information?</h3>
       <form id="prediction-answer-form" class="answer-form">
         <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${value}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>
         <button class="primary" type="submit">Check answer</button>
       </form>
       ${feedbackMarkup()}
-    `, 'prediction-question');
-    action.querySelector('#prediction-answer-form').addEventListener('submit', (event) => {
+    `, teacherVoice('We start with 18 article rows, and each article matches one source. Use those two established facts before we combine the rows.')));
+    document.getElementById('prediction-answer-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const answer = new FormData(event.currentTarget).get('answer');
       state.drafts.prediction = answer || '';
@@ -364,37 +294,44 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
         options,
         feedback: '<div class="success-feedback">Correct. We start with 18 article rows, and each article matches exactly one source. Adding the source name does not create extra article rows.</div><div class="prediction-equation">18 news articles × 1 matching source each = 18 result rows</div><p class="grain-takeaway">The Grain remains one news article per row.</p>',
         next: 'operation',
+        threadEntries: [{
+          kind: 'prediction',
+          id: 'article-source-result',
+          label: 'Expected JOIN result',
+          value: { rowCount: 18, grain: 'one news article per row', matchCountPerArticle: 1 },
+        }],
       });
     });
   }
 
   function renderFinalVerification() {
+    const prediction = reasoningThread.getPrediction();
+    const expectedRows = prediction?.value?.rowCount;
+    const expectedGrain = prediction?.value?.grain;
     const options = [
-      ['yes', '18 rows, with one article per row and its matching source_name'],
-      ['source-grain', '18 rows, but each row now represents a source rather than an article'],
-      ['multiplied', 'More than 18 rows because some articles were duplicated by the JOIN'],
+      ['yes', `${expectedRows} rows, with ${expectedGrain} and its matching source_name`],
+      ['source-grain', `${expectedRows} rows, but each row now represents a source rather than an article`],
+      ['multiplied', `More than ${expectedRows} rows because some articles were duplicated by the JOIN`],
     ];
     const draft = state.drafts.finalGrain || '';
-    interactionLifecycle.renderCurrent(stepShell('Verify the result.', teacherVoice('Keep Results in view. Compare its row count and row meaning with the 18-row, one-article-per-row prediction you made before writing SQL.')));
-    const action = renderWorkspaceAction(`
+    interactionLifecycle.renderCurrent(stepShell('What does the result show?', `
       <div class="verification-prompt"><strong>Compare the result with your prediction</strong><span>Earlier prediction: 18 rows, one news article per row.</span></div>
-      <h3>What does the result show?</h3>
       <form id="verification-answer-form" class="answer-form">
         <fieldset class="choices">${options.map(([value, label]) => `<label><input type="radio" name="answer" value="${value}" ${draft === value ? 'checked' : ''}> <span>${label}</span></label>`).join('')}</fieldset>
         <button class="primary" type="submit">Check answer</button>
       </form>
       ${feedbackMarkup()}
-    `, 'verification-question');
-    action.querySelector('#verification-answer-form').addEventListener('submit', (event) => {
+    `, '<p class="step-copy">Inspect the returned columns, row count, and article/source rows in Results before answering.</p>'));
+    document.getElementById('verification-answer-form').addEventListener('submit', (event) => {
       event.preventDefault();
       const answer = new FormData(event.currentTarget).get('answer');
       state.drafts.finalGrain = answer || '';
       if (answer !== 'yes') {
         if (answer === 'source-grain') {
-          return wrong('The visible result has 18 rows. Focus on what one returned row represents: is the article still the organizing record, with source_name added alongside it?');
+          return wrong(`The visible result has ${expectedRows} rows. Focus on what one returned row represents: is the article still the organizing record, with source_name added alongside it?`);
         }
         if (answer === 'multiplied') {
-          return wrong('Check the visible row count against the earlier prediction. The result shows 18 rows, and each article was predicted to match one source row.');
+          return wrong(`Check the visible row count against the earlier prediction. The result shows ${expectedRows} rows, and each article was predicted to match one source row.`);
         }
         return wrong('Use the visible result as evidence: compare its row count with the 18-row prediction, then inspect what each returned row represents.');
       }
@@ -404,8 +341,9 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
         answer: stripMarkup(options.find(([value]) => value === answer)[1]),
         value: answer,
         options,
-        feedback: '<div class="success-feedback">Correct. The result has 18 rows, just as predicted. Each row still represents one article, and the JOIN added the matching source information without changing the Grain.</div>',
+        feedback: `<div class="success-feedback">Correct. The result has ${expectedRows} rows, just as predicted. Each row still represents one article, and the JOIN added the matching source information without changing the Grain.</div>`,
         next: 'complete',
+        threadEntries: [{ kind: 'fact', id: 'verified-result', label: 'Verified result', value: { rowCount: expectedRows, grain: expectedGrain } }],
       });
     });
   }
@@ -436,7 +374,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
     const implementationWorkspace = ['sql', 'finalGrain'].includes(state.current);
     const visible = baselineWorkspace || implementationWorkspace;
     const baselineEvidence = (state.current === 'baselineRun' && state.baselineExecuted) || predictionEvidence;
-    const resultsEvidence = (state.current === 'sql' && state.pendingAdvance?.next === 'finalGrain') || state.current === 'finalGrain';
+    const resultsEvidence = state.current === 'finalGrain';
     const sqlImplementation = state.current === 'sql' && !resultsEvidence;
 
     if (state.current === 'baselineRun' && !state.baselinePrepared) {
@@ -514,6 +452,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
     document.getElementById('join-teaching-next').addEventListener('click', () => {
       if (state.joinTeachingBeat < 3) {
         state.joinTeachingBeat += 1;
+        state.clearTransition();
         render();
         return;
       }
@@ -527,11 +466,6 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
     renderCompleted();
     updateWorkspaceVisibility();
 
-    if (state.pendingAdvance) {
-      renderAcknowledgement();
-      return;
-    }
-
     if (state.current === 'relations') {
       interactionLifecycle.renderCurrent(stepShell('Which relations contain the information we need?', '<p class="step-copy">In the Live Schema on the left, find the relevant relations and add them to the Working Schema beside this task.</p><button id="continue-relations" class="primary" disabled>Check selection</button>' + feedbackMarkup()));
       const relationButton = document.getElementById('continue-relations');
@@ -544,10 +478,31 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
           answer: 'news_article and news_source',
           feedback: '<div class="success-feedback">Correct. <code>news_article</code> gives us the articles, and <code>news_source</code> contains the source information we need. Now we need to work out how an article is connected to its source.</div>',
           next: 'connection',
+          threadEntries: [{ kind: 'fact', id: 'relevant-relations', label: 'Relevant relations', value: ['news_article', 'news_source'] }],
         });
       });
     } else if (state.current === 'connection') {
-      interactionLifecycle.renderCurrent(stepShell('Trace the article-to-source connection in the Working Schema.', '<p class="step-copy">Select the connecting field directly in the Working Schema.</p>', teacherVoice('You found the two relations that supply the requested information. Now trace from an article row to its source so we can establish how those relations connect.')));
+      interactionLifecycle.renderCurrent(stepShell(
+        'Which column in news_article tells us which source published the article?',
+        `<p class="step-copy">Select the field directly in the Working Schema, then check your selection here.</p><button id="check-column" class="primary" ${state.selectedColumn ? '' : 'disabled'}>Check selected column</button>${feedbackMarkup()}`,
+        teacherVoice('You established the two relations that supply the requested information. Now trace from an article row to its source so we can establish how those relations connect.'),
+      ));
+      document.getElementById('check-column').addEventListener('click', () => {
+        if (state.selectedColumn !== 'news_source_id') return wrong('Look at the article row and ask which column could tell us which source published it. The relationship stays hidden until you establish that connection.');
+        record({
+          evidence: 'connection',
+          prompt: 'Which column in news_article tells us which source published the article?',
+          answer: 'news_article.news_source_id',
+          feedback: '<div class="success-feedback">Correct. <code>news_source_id</code> tells us which source belongs to this article.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>Primary Key / Foreign Key</b><span>You just found the link between the two relations. <code>news_article.news_source_id</code> is a Foreign Key (FK). It points to <code>news_source.news_source_id</code>, the Primary Key (PK). That lets us find the source row, including its <code>name</code>.</span></div>',
+          next: 'cardinality',
+          threadEntries: [{
+            kind: 'fact',
+            id: 'article-source-connection',
+            label: 'Article-to-source relationship',
+            value: { from: 'news_article.news_source_id', to: 'news_source.news_source_id' },
+          }],
+        });
+      });
     } else if (state.current === 'cardinality') {
       choiceQuestion({
         intro: teacherVoice('The key connection you found is now visible in the Working Schema. Use that same connection to reason about how many rows can relate in each direction.'),
@@ -561,6 +516,7 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
         correct: 'correct', evidence: 'cardinality', next: 'output',
         feedback: '<div class="success-feedback">Correct. One source can publish many articles, while each article has one publishing source.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>Cardinality</b><span>This is a one-to-many relationship: one <code>news_source</code> → many <code>news_article</code> rows.</span></div>',
         wrongFeedback: 'Use the relationship you just found: each article stores one source ID, while the same source ID can appear in multiple article rows.',
+        threadEntries: [{ kind: 'fact', id: 'cardinality', label: 'Relationship cardinality', value: 'one source to many articles; each article has one source' }],
       });
     } else if (state.current === 'output') {
       choiceQuestion({
@@ -570,10 +526,11 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
         correct: 'article', evidence: 'output', next: 'baselineRun',
         feedback: '<div class="success-feedback">Correct. Each row is still about one news article. We will add the source information to that article row.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>Grain</b><span>Grain tells us what one row represents. Here: one news article per row.</span></div>',
         wrongFeedback: 'The row will contain source information, but the request is still organized around every article. What is each row mainly about?',
+        threadEntries: [{ kind: 'fact', id: 'result-grain', label: 'Requested result Grain', value: 'one news article per row' }],
       });
     } else if (state.current === 'baselineRun') {
       if (!state.baselineExecuted) {
-        interactionLifecycle.renderCurrent(stepShell('How many article rows do we start with?', `${teacherVoice('You established the Grain: one result row should represent one article. Now move to the SQL Workspace beside this task and measure the starting article rows.')}<div class="measurement-note"><code>COUNT(*)</code> counts the rows in <code>news_article</code>. Run the prepared measurement in the SQL Workspace; you do not need to write SQL yet. Then inspect Results directly below it.</div>`));
+        interactionLifecycle.renderCurrent(stepShell('How many article rows do we start with?', '<p class="step-copy">Run the prepared measurement in the SQL Workspace and inspect Results.</p><div class="measurement-note"><code>COUNT(*)</code> counts the rows in <code>news_article</code>. Here it measures the starting article rows; you do not need to write SQL yet.</div>'));
         if (state.localFeedback) renderWorkspaceAction(feedbackMarkup(), 'tool-diagnostic');
       } else {
         renderBaselineInterpretation();
@@ -588,11 +545,12 @@ export function createMediaCoverage({ editor, getDatabase, getSchema, onSelectio
         correct: 'combine', evidence: 'operation', next: 'joinTeaching',
         feedback: '<div class="success-feedback">Correct. We need to combine each article with its matching source row.</div><div class="concept-callout"><strong>CONCEPT MOMENT</strong><b>JOIN</b><span>A JOIN combines rows from different relations when they match. Here, each article row will be combined with its matching source row.</span></div>',
         wrongFeedback: 'The request needs source information added to every existing article row without filtering articles away or collapsing them together.',
+        threadEntries: [{ kind: 'fact', id: 'semantic-operation', label: 'Relational action', value: 'combine each article with its matching source' }],
       });
     } else if (state.current === 'joinTeaching') {
       renderJoinTeaching();
     } else if (state.current === 'sql') {
-      interactionLifecycle.renderCurrent(stepShell('Now translate the relationship into SQL.', `<p class="step-copy">Move to the SQL Workspace and write the query you just mapped from the business request and the established relationship in the Working Schema.</p><p class="implementation-check"><strong>Earlier prediction:</strong> 18 rows · one article per row.</p>`, teacherVoice('You mapped the requested fields, starting article rows, matching source, and ON relationship. Implement that same map now; the earlier prediction gives you a result to check afterward.')));
+      interactionLifecycle.renderCurrent(stepShell('Now translate the relationship into SQL.', '<p class="step-copy">Write the query you just mapped in the SQL Workspace. The Working Schema remains available as a reference.</p><p class="implementation-check"><strong>Earlier prediction:</strong> 18 rows · one article per row.</p>'));
       renderWorkspaceAction(`
         <details class="optional-scaffold desired-output"><summary>Show desired output</summary><div class="optional-scaffold-body"><div class="desired-output-grid"><code>title</code><code>source_name</code></div><p>Use <code>news_source.name AS source_name</code> for the publishing-source column.</p></div></details>
         <details class="optional-scaffold sql-structure"><summary>Show SQL structure</summary><div class="optional-scaffold-body"><pre>SELECT ...
@@ -655,11 +613,12 @@ JOIN news_source
       const result = resultSets.at(-1);
       if (statement.trim() !== BASELINE_SQL || result?.values?.[0]?.[0] !== 18) return wrong('Run the prepared measurement to establish the Stage 1 starting count. Reset the database and try again if it does not return 18.');
       state.baselineExecuted = true;
+      state.clearTransition();
       state.localFeedback = '';
       render();
       return;
     }
-    if (state.current !== 'sql' || state.pendingAdvance) return;
+    if (state.current !== 'sql') return;
     const validation = validateArticleSourceResult(statement, resultSets);
     if (!validation.valid) return wrong(articleSourceDiagnosticFeedback(validation));
     record({
@@ -667,8 +626,14 @@ JOIN news_source
       prompt: 'Return every article title with its publishing source as source_name.',
       answer: 'Query ran successfully',
       answerLabel: 'Result',
-      feedback: '<div class="success-feedback">The query ran successfully. Inspect the result.</div>',
+      feedback: '<div class="success-feedback">The query ran successfully. Inspect the result, then compare it with your earlier prediction.</div>',
       next: 'finalGrain',
+      threadEntries: [{
+        kind: 'evidence',
+        id: 'join-result',
+        label: 'Executed JOIN result',
+        value: { rowCount: resultSets.at(-1)?.values?.length ?? 0, columns: resultSets.at(-1)?.columns ?? [] },
+      }],
     });
   }
 
@@ -679,7 +644,8 @@ JOIN news_source
     addRelation,
     isRelationSelected: (name) => state.selectedRelations.includes(name),
     relationshipLevel,
-    canAddRelations: () => state.current === 'relations' && !state.pendingAdvance,
+    canAddRelations: () => state.current === 'relations',
+    reasoningThread: () => reasoningThread.snapshot(),
     refresh: render,
   };
 }

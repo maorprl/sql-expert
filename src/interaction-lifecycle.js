@@ -15,6 +15,72 @@ function normalizeCurrentHtml(html) {
   );
 }
 
+function createReasoningThread({ businessQuestion = '' } = {}) {
+  const facts = new Map();
+  const evidence = new Map();
+  let currentQuestion = null;
+  let prediction = null;
+
+  function normalizeEntry(entry) {
+    return {
+      id: String(entry.id),
+      label: entry.label || '',
+      value: entry.value,
+      source: entry.source || 'learner',
+    };
+  }
+
+  function record(entry) {
+    const normalized = normalizeEntry(entry);
+    if (entry.kind === 'prediction') prediction = normalized;
+    else if (entry.kind === 'evidence') evidence.set(normalized.id, normalized);
+    else facts.set(normalized.id, normalized);
+    return normalized;
+  }
+
+  return {
+    setBusinessQuestion(value) { businessQuestion = value; },
+    setCurrentQuestion(question) { currentQuestion = question ? { ...question } : null; },
+    record,
+    getFact(id) { return facts.get(String(id)) || null; },
+    getEvidence(id) { return evidence.get(String(id)) || null; },
+    getPrediction() { return prediction; },
+    snapshot() {
+      return {
+        businessQuestion,
+        facts: [...facts.values()],
+        currentQuestion: currentQuestion ? { ...currentQuestion } : null,
+        evidence: [...evidence.values()],
+        prediction,
+      };
+    },
+  };
+}
+
+function createInteractionState({ initial, thread, data = {} }) {
+  const state = {
+    ...data,
+    current: initial,
+    completed: [],
+    transition: null,
+  };
+
+  state.complete = ({ item, next, threadEntries = [] }) => {
+    state.completed.push(item);
+    threadEntries.forEach((entry) => thread?.record(entry));
+    state.transition = item;
+    state.current = next;
+  };
+
+  state.moveTo = (next, { keepTransition = false } = {}) => {
+    state.current = next;
+    if (!keepTransition) state.transition = null;
+  };
+
+  state.clearTransition = () => { state.transition = null; };
+  return state;
+}
+
 export function createInteractionLifecycle({ currentElement, completedElement }) {
   const openCompletedIds = new Set();
 
@@ -50,5 +116,10 @@ export function createInteractionLifecycle({ currentElement, completedElement })
     });
   }
 
-  return { renderCurrent, renderCompleted };
+  return {
+    renderCurrent,
+    renderCompleted,
+    createReasoningThread,
+    createInteractionState,
+  };
 }
