@@ -14,7 +14,7 @@ const REQUIRED = ['funding_round_id', 'round_type', 'announced_date', 'round_inv
 
 const template = `
 <div class="stage2-routecraft">
-  <header class="masthead"><div><div class="mh-title">Funding participation — who invested in which round</div><div class="mh-sub">The team wants the funding record: every recorded participation of an investor in a funding round, with the round it belongs to.</div></div><div class="mh-right"><span class="mh-stage">Stage 2 · participation grain</span><button class="ghost" id="s2-restart">Restart</button></div></header>
+  <header class="masthead"><div><div class="mh-course">RouteCraft · SQL Lab</div><div class="mh-title">Funding participation — who invested in which round</div></div><div class="mh-right"><span class="mh-stage">Stage 2 · participation grain</span><button class="ghost" id="s2-restart">Restart</button></div></header>
   <main class="app"><div class="zones">
     <section class="conversation" id="s2-conversation" aria-label="Conversation"><aside class="spine" aria-label="Reasoning thread"><div class="spine-label">Thread</div><ol class="spine-list" id="s2-spine"></ol></aside><div class="stream" id="s2-stream" aria-live="polite"></div></section>
     <section class="workbench" aria-label="Workbench">

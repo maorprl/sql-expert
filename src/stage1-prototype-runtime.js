@@ -9,7 +9,7 @@ INNER JOIN news_source
 
 const html = `
   <div class="stage1-routecraft">
-    <header class="masthead"><div><div class="mh-title">Media coverage — one article, one publisher</div><div class="mh-sub">The research team is reviewing media coverage and wants every article to include the source that published it.</div></div><div class="mh-right"><span class="mh-stage">Stage 1 · request → verified JOIN</span><button class="ghost" id="s1-restart">Restart</button></div></header>
+    <header class="masthead"><div><div class="mh-course">RouteCraft · SQL Lab</div><div class="mh-title">Media coverage — one article, one publisher</div></div><div class="mh-right"><span class="mh-stage">Stage 1 · request → verified JOIN</span><button class="ghost" id="s1-restart">Restart</button></div></header>
     <main class="app"><div class="zones">
       <section class="conversation" id="s1-conversation" aria-label="Conversation"><aside class="spine" aria-label="Reasoning thread"><div class="spine-label">Thread</div><ol class="spine-list" id="s1-spine"></ol></aside><div class="stream" id="s1-stream" aria-live="polite"></div></section>
       <section class="workbench" aria-label="Workbench">
