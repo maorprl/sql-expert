@@ -119,7 +119,9 @@ This does not prescribe a fixed interaction pattern, require an explanation betw
 
 ## WORKING — Teacher continuity and reasoning thread
 
-Across a guided sequence, the learner should experience one teacher carrying one argument forward rather than a series of disconnected narrators. Teacher guidance begins from what the learner has just established when that contribution matters to the next move, and connects it to why the next reasoning question now matters.
+Across the current course, the learner should experience one continuous teacher relationship rather than a series of disconnected narrators. Within an encounter, that teacher carries one argument forward; across encounters, the same teacher recognizes established prior work and changes how much it explains as the learner gains experience.
+
+Teacher guidance begins from what the learner has just established when that contribution matters to the next move, and connects it to why the next reasoning question now matters.
 
 Teacher voice should be spent on reasoning purpose, interpretation, and the naming or explanation of genuinely new ideas rather than on interface logistics that the tool or layout can communicate directly. When the learner is actively working — for example authoring SQL, running a prepared measurement, or inspecting produced evidence — the teacher should normally become quieter and let the work surface lead. The teacher returns when the produced evidence needs interpretation or the reasoning argument needs to move forward.
 
