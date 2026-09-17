@@ -4,7 +4,7 @@
 
 WORKING
 
-This document defines the initial visual language for the course, using Stage 1 as the calibration specimen.
+This document defines the initial visual language for the course, using Lesson 1 as the calibration specimen. Historical/internal repository naming may retain `Stage` identifiers.
 
 It is not a full design system.
 
@@ -68,9 +68,9 @@ Cardinality notation should read immediately as part of the relationship represe
 
 ## 8. Attention choreography and evidence locality
 
-Visual hierarchy should change as the learner's task changes. Persistent elements such as the Business Request, Working Schema, editors, and completed work do not have a fixed visual rank throughout a stage.
+Visual hierarchy should change as the learner's task changes. Persistent elements such as the Business Request, Working Schema, editors, and completed work do not have a fixed visual rank throughout a Lesson.
 
-The active reasoning or action surface should lead; established artifacts should shift into reference roles when appropriate. In Stage 1, for example, the Working Schema can be central while the learner establishes the relationship, then become secondary when a Baseline measurement, JOIN explanation, SQL implementation, result inspection, or final verification becomes the current task.
+The active reasoning or action surface should lead; established artifacts should shift into reference roles when appropriate. In Lesson 1, for example, the Working Schema can be central while the learner establishes the relationship, then become secondary when a Baseline measurement, JOIN explanation, SQL implementation, result inspection, or final verification becomes the current task.
 
 When a learner action produces evidence that must be interpreted immediately, keep the action, resulting evidence, and immediate interpretation spatially associated enough to read as one continuous reasoning cycle. Avoid unnecessary left-right or top-bottom jumps that make the learner search for the next action after producing evidence.
 
@@ -88,7 +88,7 @@ Concise bridges that explain why the next reasoning move matters, and explicit t
 
 The distinction must be perceptible at a glance. Guidance should not look like a subdued neutral note, status message, or incidental annotation that can be visually skipped without noticing that the course is actively orienting the learner. It should have enough salience to register as a teacher intervention while remaining subordinate to the learner's current task or evidence surface when that task is primary.
 
-This does not mean that every explanatory sentence should receive a special treatment. The distinct guidance role is reserved for text that actively orients the learner through the reasoning journey or explains a concept before the learner acts. The exact visual treatment remains an implementation decision, but the role should be applied consistently enough that the learner can recognize it across the stage.
+This does not mean that every explanatory sentence should receive a special treatment. The distinct guidance role is reserved for text that actively orients the learner through the reasoning journey or explains a concept before the learner acts. The exact visual treatment remains an implementation decision, but the role should be applied consistently enough that the learner can recognize it across the Lesson.
 
 ## 10. Cross-encounter visual consistency
 
@@ -100,13 +100,13 @@ Consistency does not require pixel-identical screens or identical scaffolding. A
 
 Shared visual behavior should therefore be implemented from a clear common source where practical, while encounter-local styling should be reserved for genuine encounter-specific needs. This is an implementation constraint in service of visual consistency, not a requirement to create a separate design-system layer.
 
-## 11. Stage 1 as Calibration Specimen
+## 11. Lesson 1 as Calibration Specimen
 
-Stage 1 tests and refines this visual language. The language should be reusable, but is not yet a complete system for every future stage. Do not over-generalize from Stage 1 to future concepts that have not yet been designed.
+Lesson 1 tests and refines this visual language. The language should be reusable, but is not yet a complete system for every future Lesson. Do not over-generalize from Lesson 1 to future concepts that have not yet been designed.
 
 ## 12. Locked Pedagogy
 
-Visual changes must not silently alter learner flow, question intent, answer logic, concept timing, SQL reasoning, hint logic, solution logic, or stage completion logic.
+Visual changes must not silently alter learner flow, question intent, answer logic, concept timing, SQL reasoning, hint logic, solution logic, or Lesson completion logic.
 
 Where the current pedagogical authority explicitly changes learner-facing wording, answer distinctions, feedback behavior, evidence handling, or interaction sequencing, visual implementation should follow that updated authority rather than preserve stale copy for its own sake.
 
@@ -118,13 +118,13 @@ The Working Schema must allow the learner to keep up to four selected relations 
 
 ## 14. Course controls and local assistance
 
-Global course controls are visually distinct from Stage-local task content. They belong to a stable course-shell layer rather than appearing as another scaffold, disclosure, or action inside the current reasoning card or SQL task.
+Global course controls are visually distinct from Lesson-local task content. They belong to a stable course-shell layer rather than appearing as another scaffold, disclosure, or action inside the current reasoning card or SQL task.
 
 Their role and behavior are defined in `course-design/course-controls.md`.
 
-The control layer should remain easy to find and consistent across Stages where a global control is available, while staying visually subordinate to the learner's current task, evidence, or authoring surface.
+The control layer should remain easy to find and consistent across Lessons where a global control is available, while staying visually subordinate to the learner's current task, evidence, or authoring surface.
 
-Back and Retry / Redo should therefore read as course-level actions rather than as content generated by the current Stage. `Show solution` is not part of that persistent global layer: where available, it is local SQL-workspace assistance and should use a consistent secondary treatment across applicable SQL authoring tasks. Exact placement, grouping, responsive treatment, and visual styling remain implementation decisions within the role boundaries established in `course-design/course-controls.md`.
+Inter-Lesson Previous / Next and Retry / Redo should therefore read as course-level actions rather than as content generated by the current Lesson. `Show solution` is not part of that persistent global layer: where available, it is local SQL-workspace assistance and should use a consistent secondary treatment across applicable SQL authoring tasks. Exact placement, grouping, responsive treatment, and visual styling remain implementation decisions within the role boundaries established in `course-design/course-controls.md`.
 
 ## 15. Interaction topology and locality contract
 
@@ -141,9 +141,9 @@ For those interactions, the following elements remain together in that lane:
 - `Check` or equivalent answer-submission control;
 - response-specific corrective and success feedback;
 - Concept Moment or reused-concept consequence that follows that reasoning move;
-- `Continue`, `Complete stage`, or another local progression control that follows the completed reasoning move.
+- `Continue`, `Complete lesson`, or another local progression control that follows the completed reasoning move.
 
-This ownership does not alternate between lanes because a runtime state changes, because another surface becomes visually primary, or because the evidence being inspected is displayed elsewhere. Equivalent learner-response roles across Stages follow the same spatial pattern.
+This ownership does not alternate between lanes because a runtime state changes, because another surface becomes visually primary, or because the evidence being inspected is displayed elsewhere. Equivalent learner-response roles across Lessons follow the same spatial pattern.
 
 ### 15.2 Workspace, object, tool, and evidence lane
 
@@ -170,11 +170,11 @@ Directly manipulated workspace objects may show local selection, hover, focus, v
 
 ### 15.4 Transition controls
 
-Local reasoning progression controls stay with the learner-response role. `Continue`, `Complete stage`, verification progression, and equivalent controls that follow reasoning feedback remain in the learner-response lane and must not alternate between page regions as different states use different runtime containers.
+Local reasoning progression controls stay with the learner-response role. `Continue`, `Complete lesson`, verification progression, and equivalent controls that follow reasoning feedback remain in the learner-response lane and must not alternate between page regions as different states use different runtime containers.
 
 Tool controls remain local to the tool they execute. `Run query`, editor assistance, and comparable tool actions therefore stay in the workspace/evidence lane.
 
-Course-shell navigation such as Back / Forward or chapter navigation is exempt from this rule because it has a persistent navigation role defined separately in `course-design/course-controls.md`.
+Course-shell inter-Lesson Previous / Next navigation is exempt from this rule because it has a persistent navigation role defined separately in `course-design/course-controls.md`.
 
 ### 15.5 Persistent references and responsive ordering
 
@@ -199,9 +199,9 @@ Within the current course interaction model, a phase handoff changes attention a
 
 A layout must not treat every state transition as a phase handoff. If a future encounter genuinely requires a different response-location model, that exception must be established explicitly in current course and encounter authority before implementation; it must not be inferred from a state change, tool prominence, or evidence locality.
 
-### 15.7 Single ownership of spatial behavior
+### 15.7 Coherent ownership of spatial behavior
 
-Course-wide spatial behavior should have one clear shared implementation owner where practical. Stage-specific CSS or DOM relocation should be reserved for real encounter-specific differences, not used as another layer of general layout control.
+Course-wide spatial behavior should remain coherent across Lessons. This is a conformance requirement, not a mandate to introduce generalized components or a new shared-component architecture. Lesson-specific CSS or DOM behavior should represent genuine encounter-specific differences rather than conflicting role ownership.
 
 The same learner-facing object must not receive conflicting placement rules from the base layout, shared state CSS, encounter CSS, and runtime DOM reparenting without an explicit precedence contract. If implementation requires such competing ownership, treat that as a design/conformance defect to resolve rather than a normal styling technique.
 

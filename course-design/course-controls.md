@@ -6,49 +6,40 @@ WORKING
 
 This document defines course-level learner controls and establishes where course-wide controls end and task-local assistance begins.
 
-It is intentionally narrow. It does not define the broader stage sequence, hint policy, or persistence model.
+It is intentionally narrow. It does not define the broader Lesson sequence, hint policy, or persistence model.
 
-When this document conflicts with a Stage-local placement decision for a control covered here, the current course-level decision here takes precedence.
+When this document conflicts with a Lesson-local placement decision for a control covered here, the current course-level decision here takes precedence.
 
 ---
 
-## 1. Course chapter navigation
+## 1. Inter-Lesson navigation
 
-The learner must be able to move directly between currently available course chapters / encounters without completing the current chapter first.
+The current learner journey contains Lesson 1 and Lesson 2. Navigation between them uses lightweight **Previous** / **Next** controls in the course masthead, adjacent to Lesson/progress orientation and visually separate from pedagogical actions such as `Check answer`, `Continue`, and `Run query`.
 
-Chapter navigation belongs to the **course shell**, not inside a reasoning card, task card, SQL task, feedback block, or completion state.
+Navigation reads the existing progression state; it does not create a second unlock model, mark evidence complete, fabricate learner evidence, or reset an available Lesson merely because the learner navigates.
 
-For the currently implemented course surface, the navigation exposes three encounters:
+For the accepted Lessons 1–2 journey:
 
-- **Media coverage / first JOIN** — `news_article → news_source`;
-- **Funding participation / row multiplication** — `funding_round → round_investment`;
-- **INNER JOIN unmatched / zero-match coverage** — `company → funding_round`.
+- Lesson 1 has no usable Previous control;
+- Lesson 1 Next is unavailable until the existing Lesson 1 completion progression authorizes Lesson 2;
+- after Lesson 1 completion, Next opens Lesson 2;
+- Lesson 2 Previous returns to the already available Lesson 1;
+- returning between available Lessons preserves their established in-memory learner state;
+- Lesson 2 has no usable Next because no Lesson 3 is currently accepted.
 
-The navigation must:
-
-- remain visually separate from pedagogical actions such as `Check answer`, `Continue`, and `Run query`;
-- make the currently active chapter clear;
-- allow direct switching in either direction at any time;
-- not require completion, correctness, or evidence submission before switching;
-- not itself mark evidence complete or alter the learner's answers merely because a chapter was selected.
-
-The chapter selector is navigation, not a forward-progression reward and not part of the current task's evidence.
-
-The exact visual treatment may vary, but it should read as a compact, stable course-level chapter control rather than as another button inside the active exercise.
+This document does not require unrestricted chapter switching, a three-chapter selector, or navigation to an unapproved future Lesson.
 
 ### Navigation naming consistency
 
-Learner-facing chapter labels should use one naming scheme across the selector.
+Learner-facing sequence labels use **Lesson**. Internal paths, identifiers, and historical artifacts may retain `Stage` naming.
 
-The current repository has an established Stage 1–3 sequence, but a stage/order identifier and a descriptive encounter title are still different kinds of labels. Navigation should not present one encounter only by a Stage number while presenting another only by a descriptive title as though those labels served the same role.
-
-For the current course surface, descriptive encounter titles should be used consistently for learner-facing chapter selection. If an established Stage number or sequence identifier is also shown, it should appear as separate metadata or be applied consistently rather than replace the descriptive title for only some encounters.
+A Lesson/order identifier and a descriptive encounter title are different label roles. Navigation should apply those roles consistently across the accepted Lessons.
 
 The exact descriptive titles remain an implementation/content decision, but the naming role must be consistent.
 
-### OPEN — chapter-state persistence
+### OPEN — broader persistence
 
-This decision establishes free chapter navigation, but does not yet establish a general course-wide persistence contract across reloads, browser sessions, or future chapter types.
+The accepted runtime preserves each available Lesson's state while navigating during the current runtime session. This does not establish a general course-wide persistence contract across reloads, browser sessions, or future Lesson types.
 
 Implementation should avoid inventing broader persistence semantics beyond what the current runtime can safely preserve.
 
@@ -58,15 +49,11 @@ Implementation should avoid inventing broader persistence semantics beyond what 
 
 Other controls that manage navigation or learner actions across the course should be presented as a stable course-level layer rather than re-created as local content inside individual tasks.
 
-At the current point in the design, this layer includes the chapter navigation established above and the established needs for:
-
-- **Back**
-- **Forward**
-- **Retry / Redo**
+At the current point in the design, this layer includes the inter-Lesson Previous / Next navigation established above. Retry / Redo remains an unresolved need with unresolved reset semantics.
 
 These controls are distinct from local task actions such as `Check answer`, `Run query`, `Continue`, `Desired Output`, `SQL Structure`, or `Show solution`.
 
-The exact shell placement, responsive treatment, labels, icons, and grouping of global controls remain implementation decisions, but those controls should have a consistent role and predictable location across Stages where they are available.
+The exact responsive treatment, labels, icons, and grouping remain implementation decisions, but available controls should have a consistent role and predictable location across Lessons.
 
 ## 3. Show solution — SQL-workspace assistance
 
@@ -83,7 +70,7 @@ It is local assistance for a concrete SQL authoring task and belongs inside the 
 - remain absent during earlier reasoning, prediction, relationship, Grain, Cardinality, or other pre-SQL states;
 - disappear when the SQL Workspace is no longer the active SQL-authoring surface, including result-only and verification states.
 
-Availability follows the task condition above, not the identity of a particular Stage or encounter. If multiple encounters each contain an active SQL authoring task with a concrete solution, the learner should receive the same control role and a consistent placement/treatment unless an explicit encounter-level authority establishes a real pedagogical exception.
+Availability follows the task condition above, not the identity of a particular Lesson or encounter. If multiple encounters each contain an active SQL authoring task with a concrete solution, the learner should receive the same control role and a consistent placement/treatment unless an explicit encounter-level authority establishes a real pedagogical exception.
 
 The learner should therefore not see a persistent `Show solution` control while reasoning toward the SQL task.
 
@@ -110,7 +97,7 @@ Activating `Show solution` must not by itself:
 
 - run SQL;
 - mark required learner evidence complete;
-- bypass result inspection or later verification required by the Stage or encounter.
+- bypass result inspection or later verification required by the Lesson or encounter.
 
 Where an encounter tracks assistance provenance, use of `Show solution` may be recorded as a stronger assistance level in the same way that hint use can distinguish supported from unassisted work. This does not create a separate owner gate for solution use.
 
@@ -141,64 +128,21 @@ It should not silently become a full worked query, specify the entire relational
 
 `SQL Structure`, where used, remains a separate scaffold: it can support query shape or syntax structure without supplying the complete answer.
 
-## 5. Back / Forward — journey-history navigation
+## 5. Within-Lesson review
 
-The course requires clear **Back** and **Forward** controls owned by the course experience. The learner should not have to rely on browser history or on opening Completed Steps merely to revisit an earlier point and then return to where they were.
+The current Lessons 1–2 product does not require course-shell Back / Forward journey-history navigation inside an active Lesson. Important completed reasoning and evidence remain reviewable through the accepted Conversation/Thread and Workbench presentation.
 
-Back / Forward are navigation inside the **currently active encounter**. They are distinct from the chapter selector and from pedagogical progression controls such as `Continue`.
-
-### 5.1 Back
-
-Back moves to the nearest previously visited learner state in the current encounter.
-
-Using Back must not by itself:
-
-- erase or roll back completed evidence;
-- change a previously recorded answer;
-- clear assistance provenance;
-- clear editor contents or produced results;
-- change completion/progress state;
-- turn review of an earlier state into a new attempt.
-
-An earlier state reached through Back is therefore a **review state**. The learner may inspect the prompt, their recorded response, relevant feedback, concepts, established evidence, and other reviewable material associated with that point in the journey.
-
-### 5.2 Forward
-
-Forward is available only after the learner has moved backward through already visited history.
-
-Forward moves through that already visited history toward the learner's current progression frontier. It must not:
-
-- enter a learner state that has never been reached;
-- bypass an unanswered question, required learner action, evidence gate, SQL execution, or verification requirement;
-- mark new evidence complete;
-- act as a substitute for `Continue`, `Check answer`, `Run query`, or another required local progression action.
-
-At the progression frontier, Forward is unavailable. New progress is made only through the encounter's normal pedagogical actions.
-
-### 5.3 Review versus retry
-
-Back / Forward do not create an editable branch of the learner journey. Historical review is not Retry / Redo.
-
-Controls that would change a historical answer, rerun an earlier evidence-bearing activity as a new attempt, reveal new assistance, or otherwise mutate the recorded journey should not be active merely because the learner navigated backward. A separate Retry / Redo action is required when the course supports reattempting earlier work.
-
-This separation prevents navigation from silently changing evidence or invalidating later work.
-
-### 5.4 History scope
-
-Back / Forward operate within the active encounter. They do not replace chapter navigation and do not automatically traverse into another chapter.
-
-The exact persistence of navigation history across page reloads or browser sessions remains OPEN under the broader persistence question. Within the active runtime session, the learner should be able to move backward and forward through the encounter history already created.
+Reviewability does not authorize editing historical answers, rerunning earlier evidence-bearing activity as a new attempt, or mutating later evidence. Those behaviors belong to Retry / Redo, whose reset and downstream-invalidation semantics remain OPEN.
 
 ## 6. Retry / Redo — established need, reset semantics still OPEN
 
-The course requires a clear learner action for trying an activity again. Review of a completed step and Back / Forward navigation are not substitutes for Retry / Redo.
+The course requires a clear learner action for trying an activity again. Review of completed work and inter-Lesson navigation are not substitutes for Retry / Redo.
 
 Retry / Redo is also distinct from:
 
 - browser refresh;
 - database reset;
-- Back / Forward navigation;
-- chapter selection;
+- inter-Lesson Previous / Next navigation;
 - ordinary wrong-answer correction inside an active attempt.
 
 The exact scope and reset behavior remain OPEN. The design has not yet determined whether Retry / Redo applies to the current task, a completed task, or both, nor which parts of learner state are preserved or reset.
@@ -214,13 +158,13 @@ Implementation must not silently decide the fate of:
 - Concept Moment visibility;
 - downstream completed work.
 
-## 7. Relationship to Stage-local interactions
+## 7. Relationship to Lesson-local interactions
 
 Course-shell controls should support movement through the course without replacing pedagogically meaningful local actions.
 
-A Stage may still define its own local controls where those controls are part of the learner encounter — for example `Check answer`, `Run query`, `Continue`, `Desired Output`, `SQL Structure`, or the SQL-workspace `Show solution` action established above. Those actions remain governed by the Stage interaction authority together with this course-level boundary.
+A Lesson may still define its own local controls where those controls are part of the learner encounter — for example `Check answer`, `Run query`, `Continue`, `Desired Output`, `SQL Structure`, or the SQL-workspace `Show solution` action established above. Those actions remain governed by the Lesson interaction authority together with this course-level boundary.
 
-Chapter navigation, Back, Forward, and Retry / Redo should not be independently redesigned inside each Stage.
+Inter-Lesson navigation and Retry / Redo should not be independently redefined inside each Lesson.
 
 ## 8. Visual role
 
@@ -228,7 +172,7 @@ Course-shell navigation should be easy to find without becoming the primary visu
 
 Its visual identity should make clear that it is persistent navigation rather than content belonging to the current reasoning card or SQL task.
 
-Back and Forward should read as a stable paired journey-history control. Their position should not move with the current Stage state, and disabled/unavailable states should clearly communicate when there is no earlier or later visited history to traverse.
+Previous and Next should read as a stable inter-Lesson navigation pair. Disabled/unavailable states should clearly communicate when there is no authorized earlier or later Lesson to open.
 
 `Show solution` is deliberately excluded from that global layer. When available, it should read visually as secondary assistance attached to the SQL Workspace rather than as a primary course-level action.
 
@@ -239,11 +183,11 @@ The current learner task, evidence, or authoring surface should remain visually 
 This document does **not** currently establish:
 
 - a global hint system;
-- automatic completion-based chapter locking or unlocking;
+- a generalized Lesson locking/unlocking system beyond the accepted Lessons 1–2 progression;
 - exact keyboard shortcuts;
 - exact mobile behavior;
 - Retry / Redo reset and downstream invalidation semantics;
-- how progress and journey-history navigation are stored across sessions;
-- how these controls behave across future Stage types that have not yet been designed.
+- persistence across sessions;
+- how these controls behave across future Lesson types that have not yet been designed.
 
 Those decisions remain OPEN until explicitly established.

@@ -1,4 +1,6 @@
-# Stage 1 interaction decisions
+# Lesson 1 interaction decisions
+
+The repository path retains the historical/internal `stage-1` name. The learner-facing product label is **Lesson 1**.
 
 ## Business case and schema basis
 
@@ -18,7 +20,7 @@ The Working Schema remains the same guided reasoning surface as the learner prog
 
 ## Reasoning, concepts, and progressive relationship reveal
 
-Stage 1 reasoning remains constrained / closed rather than open-text unless a later explicit decision changes a specific interaction.
+Lesson 1 reasoning remains constrained / closed rather than open-text unless a later explicit decision changes a specific interaction.
 
 Concepts appear only after the learner's prerequisite reasoning:
 
@@ -57,17 +59,17 @@ When feedback follows a correct reasoning move, it should do more than report UI
 
 The active reasoning task or action remains the strongest visual focus. Completed work remains visible and reviewable but visually quieter.
 
-Completed Stage 1 work retains the original question or task, learner answer or selection, completion state, relevant feedback or concept consequence, and any opened hints for review. When one top-level episode contains more than one reasoning move, those distinct evidence-bearing moves must remain inspectable rather than collapsing into one opaque success state. The exact internal state representation is not prescribed here.
+Completed Lesson 1 work retains the original question or task, learner answer or selection, completion state, relevant feedback or concept consequence, and any opened hints for review. When one top-level episode contains more than one reasoning move, those distinct evidence-bearing moves must remain inspectable rather than collapsing into one opaque success state. The exact internal state representation is not prescribed here.
 
 During active authoring or other tool-led work, completed review must not displace the current task from the working area or separate that task from the tool used to perform it. Completed work may move to a secondary placement or treatment while remaining reviewable.
 
-Grain, PK/FK, Cardinality, and JOIN are the Concept Moments in this Stage. Concept Moments use the learning accent and remain visually distinct from correctness feedback. Green primarily communicates correctness / success rather than concept identity.
+Grain, PK/FK, Cardinality, and JOIN are the Concept Moments in this Lesson. Concept Moments use the learning accent and remain visually distinct from correctness feedback. Green primarily communicates correctness / success rather than concept identity.
 
 Instructional bridges and teacher-led explanation have a distinct visual role from the learner task, system/status text, correctness feedback, and Concept Moments. Guidance that actively orients the learner through the reasoning journey should be visually recognizable as course guidance rather than undifferentiated body copy. This does not require every explanatory sentence to receive special treatment.
 
 Visual aids are explanatory rather than decorative, are local to the reasoning they support, appear only after learner engagement, and do not give away answers prematurely.
 
-Persistent artifacts do not have a fixed visual rank throughout the Stage. Their prominence should follow their current pedagogical role: the Working Schema may be the primary reasoning surface while the learner is establishing the relationship, then become a quieter reference while measurement, teaching, SQL implementation, or result inspection is the active task.
+Persistent artifacts do not have a fixed visual rank throughout the Lesson. Their prominence should follow their current pedagogical role: the Working Schema may be the primary reasoning surface while the learner is establishing the relationship, then become a quieter reference while measurement, teaching, SQL implementation, or result inspection is the active task.
 
 When a learner action produces evidence that must immediately be interpreted, the produced evidence, its relevant control, and the immediate interpretation should remain visually and spatially connected enough to read as one reasoning cycle. Avoid unnecessary attention jumps across unrelated page regions between producing evidence and interpreting it.
 
@@ -89,13 +91,13 @@ Before JOIN terminology appears, the learner predicts that adding one publishing
 
 The prediction uses a closed response; no open rationale is required. The closed options should distinguish the relevant relational interpretations rather than test recall of the number 18 alone — for example, one result row per article versus one result row per distinct source versus row multiplication from multiple matches. The feedback makes the PK/FK and Cardinality basis explicit: each article matches one source row. The continuous chain is: one article per requested result row → 18 starting article rows → one matching source per article → 18 result rows with the same Grain.
 
-This encounter establishes the mechanism that later makes row multiplication / fan-out understandable, but Stage 1 does not need to introduce the term `fan-out` here.
+This encounter establishes the mechanism that later makes row multiplication / fan-out understandable, but Lesson 1 does not need to introduce the term `fan-out` here.
 
 The learner then chooses the semantic action of combining each article with its matching source. This learner decision is retained; it is not replaced by an instructional statement. Only after that choice is **JOIN** introduced. Learner-facing terminology across this transition should stay consistent enough that the learner can follow the same idea from “matching source row” into JOIN rather than encountering unnecessary shifts among unrelated labels.
 
 ## JOIN teaching climax
 
-The JOIN introduction is the instructional climax of Stage 1.
+The JOIN introduction is the instructional climax of Lesson 1.
 
 Its purpose is not merely to introduce JOIN syntax. It must make explicit that the SQL query is the implementation of the relational reasoning already established from the business request.
 
@@ -191,25 +193,25 @@ Completion evaluation must establish that the output contract is `title | source
 
 ### Execution evidence and final verification
 
-A semantically correct execution is not itself the learner-facing verification conclusion. After the query executes successfully, the learner should inspect the actual result as evidence before being told that the earlier prediction and Grain have been preserved.
+A semantically correct execution is not itself the learner's interpretive verification conclusion. After execution, the system may report that semantic validation established that the produced SQL result satisfies the required task/result contract: required fields, 18 expected article/source associations, and the accepted row set.
 
-The interface may confirm that the query executed, but before the learner's verification response it must not state the conclusion that the result is semantically correct, that it has one article per row, or that the 18-row prediction has been confirmed. Those are the claims the learner is about to verify from the result evidence.
+That system status must not supply the answer to the later reasoning question. It must not explain for the learner why the evidence preserves one article per row, how the JOIN relates to the earlier prediction, or what relational meaning should be concluded from the result.
 
 The result evidence includes the returned row count, output columns, and actual article/source rows. The transition from result inspection to verification should remain visibly associated with that evidence rather than requiring an unrelated navigation jump.
 
-The learner then explicitly answers a closed final verification question that requires interpreting the result against the earlier prediction and requested-result Grain. The actual result evidence should remain visible or immediately adjacent while this verification question is answered; the learner should not have to rely on memory of a previous screen. The options should distinguish materially different interpretations, such as 18 rows with one article per row, 18 rows organized around sources, or row multiplication / duplication. This verification must not be answerable merely by repeating a conclusion already displayed by the system.
+The learner then explicitly answers a closed final verification question that requires interpreting the result against the earlier prediction and requested-result Grain. The actual result evidence should remain visible or immediately adjacent while this verification question is answered; the learner should not have to rely on memory of a previous screen. The options should distinguish materially different interpretations, such as 18 rows with one article per row, 18 rows organized around sources, or row multiplication / duplication. Semantic acceptance of the result does not complete this learner interpretation.
 
 Only after the learner verifies correctly should the course close the reasoning loop explicitly: the actual result has 18 rows as predicted, each row still represents one article, and the JOIN added the matching source information without changing the requested Grain.
 
-Stage completion is a state, not a numbered learner episode.
+Lesson completion is a state, not a numbered learner episode.
 
 ### Optional enrichment
 
 Relational algebra and Venn-style representations may be offered as optional enrichment after the core JOIN explanation.
 
-Relational algebra may show the JOIN as a formal representation of the same relational operation already understood by the learner. It is not required learner evidence and its notation is not assessed in Stage 1.
+Relational algebra may show the JOIN as a formal representation of the same relational operation already understood by the learner. It is not required learner evidence and its notation is not assessed in Lesson 1.
 
-Venn-style representations may support enrichment about row participation across JOIN types. They are not the primary explanatory model for how the task-specific JOIN matches rows and they are not required learner evidence in Stage 1.
+Venn-style representations may support enrichment about row participation across JOIN types. They are not the primary explanatory model for how the task-specific JOIN matches rows and they are not required learner evidence in Lesson 1.
 
 Neither optional representation may replace the row-matching explanation or become a prerequisite for learner-authored SQL.
 
