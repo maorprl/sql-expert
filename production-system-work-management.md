@@ -16,6 +16,10 @@ Cross-project authority ownership and precedence are defined in:
 
 `source-of-truth-hierarchy.md`
 
+Cross-project product/repository production and promotion invariants are defined in:
+
+`production-contract-v1.md`
+
 The Learning Product is managed separately in:
 
 `course-work-management.md`
@@ -71,13 +75,17 @@ Accordingly:
 
 - there is **no active Cycle 1 next-action claim in this management record**;
 - the current Learning Product work state is managed in `course-work-management.md`; `course-experience-improvement-work-management.md` is a historical/superseded initiative record;
-- any future learner-encounter production cycle must establish an explicit current execution mapping tied to its actual baseline before process-gated implementation begins.
+- any future learner-encounter production cycle must establish an explicit current execution mapping tied to its actual canonical and accepted runtime baselines before process-gated implementation begins.
 
 ## 4. Current active control
 
 Preserve durable handoffs and authority boundaries whenever the production process is used.
 
-The Source-of-Truth hierarchy / authority-precedence layer is established in `source-of-truth-hierarchy.md`. The next planned project layer is **Production Contract v1**; this record does not define that contract.
+The Source-of-Truth hierarchy / authority-precedence layer is established in `source-of-truth-hierarchy.md`.
+
+Production Contract v1 is established in `production-contract-v1.md` and governs cross-project preservation, change routing, product-state vocabulary, and promotion invariants without replacing the encounter production lifecycle.
+
+The next planned Learning Product step is Lesson 3 design through the current learner-encounter production process. Program B does not predefine the Lesson 3 capability, case, pedagogy, or implementation.
 
 Where a completed phase output becomes an input to another role, preserve the actual completed artifact according to the process's durable-handoff rule. Do not substitute conversational memory or summary text for required repository evidence.
 
