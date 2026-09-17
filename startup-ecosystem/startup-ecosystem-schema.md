@@ -5,17 +5,19 @@
 **Domain:** startups, funding rounds, investors, sectors, company locations, acquisitions, and news  
 **Current size:** 16 relations
 
+Authority note: executable structural facts are defined by `startup-ecosystem-schema.sql`; current row/value facts are defined by `startup-ecosystem-seed.sql`. This Markdown document records human-readable schema intent, relation grains, and design rationale under `source-of-truth-hierarchy.md`.
+
 ## 1. Revision boundary
 
 This revision treats the schema as course infrastructure rather than as a normalization exercise.
 
-The learner-facing contracts already used by Stages 1–3 are protected:
+The learner-facing contracts used by the accepted Lessons 1–2 are protected. The `company → funding_round` structure used by the preserved Stage 3 candidate is retained for compatibility, but that retention does not make Lesson 3 current authority:
 
-- `news_source` and `news_article` — Stage 1;
-- `funding_round` and `round_investment` — Stage 2;
-- `company` and `funding_round` — Stage 3.
+- `news_source` and `news_article` — Lesson 1;
+- `funding_round` and `round_investment` — Lesson 2;
+- `company` and `funding_round` — preserved Stage 3 candidate compatibility.
 
-For those relations, the relation names, learner-used columns, stage-required row meanings, and stage-dependent data are preserved.
+For these relations, relation names, learner-used columns, accepted Lesson 1–2 row meanings/data, and preserved Stage 3 candidate compatibility are retained.
 
 The surrounding schema was reconsidered from first principles. An unrelated supertype or supporting structure is not retained merely because it is normalized or realistic.
 
@@ -61,7 +63,7 @@ news_source ──< news_article
 
 ### `company`
 
-**Protected Stage 3 contract.**  
+**Retained course-infrastructure contract.**  
 One row per company.
 
 Important columns:
@@ -73,7 +75,7 @@ Important columns:
 - `status`
 - `description`
 
-The company name is directly available in the relation. No identity-only join is needed to understand which company a row represents.
+The company name is directly available in the relation. No identity-only join is needed to understand which company a row represents. The relation also preserves compatibility with the Stage 3 candidate without granting that candidate current Lesson authority.
 
 ### `person`
 
@@ -132,12 +134,12 @@ One row per investor–sector focus relationship.
 
 ### `funding_round`
 
-**Protected Stage 2/3 contract.**  
+**Lesson 2 contract with preserved Stage 3 candidate compatibility.**  
 One row per funding round.
 
 ### `round_investment`
 
-**Protected Stage 2 contract.**  
+**Lesson 2 contract.**  
 One row per investor participation in a funding round.
 
 Intended grain:
@@ -170,12 +172,12 @@ This provides a natural optional relationship for 1:0..1 reasoning, LEFT JOIN be
 
 ### `news_source`
 
-**Protected Stage 1 contract.**  
+**Lesson 1 contract.**  
 One row per news publisher.
 
 ### `news_article`
 
-**Protected Stage 1 contract.**  
+**Lesson 1 contract.**  
 One row per news article.
 
 ### `article_company`
@@ -250,24 +252,29 @@ The 16-relation model still provides natural material for:
 
 The schema does not add relations merely to create one exercise per feature.
 
-## 7. Stage protection
+## 7. Lesson contracts and candidate compatibility
 
-The schema revision must not silently change the already implemented Stage 1–3 learner contracts.
+The schema revision must not silently change the accepted Lesson 1–2 learner/data contracts.
 
 Validated protected runtime facts in the revised seed are:
 
-- Stage 1 `news_article → news_source`: 18 joined article rows;
-- Stage 2 `funding_round → round_investment`: 72 participation rows;
-- Stage 3 `company → funding_round`: 26 matched funding-round rows;
-- `Lumina Bio` remains present in `company` and absent from `funding_round`, preserving the zero-match Stage 3 case.
+- Lesson 1 `news_article → news_source`: 18 joined article rows;
+- Lesson 2 `funding_round → round_investment`: 72 participation rows.
 
-The removal of the old `company → party` supertype foreign key is outside the Stage 3 reasoning contract; Stage 3 still uses `funding_round.company_id → company.company_id`.
+The current data also preserves compatibility with the Stage 3 candidate:
+
+- `company → funding_round`: 26 matched funding-round rows;
+- `Lumina Bio` remains present in `company` and absent from `funding_round`, preserving the candidate zero-match case.
+
+Those preserved facts do not make Lesson 3 current authority.
+
+The removal of the old `company → party` supertype foreign key does not alter the preserved candidate relationship `funding_round.company_id → company.company_id`.
 
 ## 8. Boundary
 
 This schema defines data infrastructure, not:
 
-- stage order;
+- Lesson order;
 - learner prompts;
 - instructional scaffolding;
 - hints;
