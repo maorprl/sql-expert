@@ -1,10 +1,10 @@
 # Wave 5B — Graduated / Adaptive Assistance Decision Gate
 
-**Status:** DECISION GATE COMPLETE — IMPLEMENTATION NOT AUTHORIZED  
+**Status:** HISTORICAL / SUPERSEDED INITIATIVE DECISION RECORD — IMPLEMENTATION NOT AUTHORIZED
 **Date:** 2026-09-15  
 **Scope:** current implemented Stage 1–3 course only
 
-This document records the decision on whether the current course provides sufficient evidence to open implementation of a broader graduated / adaptive assistance system after completion of Wave 5A.
+This document preserves the decision made at that time on whether the then-current course provided sufficient evidence to open implementation of a broader graduated / adaptive assistance system after completion of Wave 5A. It is historical evidence, not current authority or work authorization.
 
 It does not authorize runtime changes.
 

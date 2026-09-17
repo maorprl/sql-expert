@@ -1,10 +1,10 @@
 # Wave 5A — Response-Aware Feedback Decision
 
-**Status:** APPROVED DESIGN DECISION — IMPLEMENTATION AUTHORIZED WITHIN THE BOUNDARY BELOW  
+**Status:** HISTORICAL / SUPERSEDED INITIATIVE DECISION RECORD — NOT CURRENT AUTHORITY OR WORK AUTHORIZATION
 **Date:** 2026-09-15  
 **Scope:** current Stage 2 Funding Participation and Stage 3 INNER JOIN unmatched-company encounters only
 
-This document is the durable decision record for the currently approved Wave 5A direction. It consolidates the inference-distance review, misconception mapping, diagnostic-observability review, approved response-aware feedback treatment, pedagogy check, explicit non-scope, and implementation boundary into one authority surface.
+This document is the durable historical decision record for the Wave 5A direction at that time. It is preserved as initiative evidence and does not override the accepted Lessons 1–2 runtime or current Lesson authority. The historical analysis and implementation boundary below are not rewritten retroactively.
 
 It does not authorize a broader adaptive-assistance system and it does not reopen the established Stage 1–3 learner routes.
 

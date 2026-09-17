@@ -5,7 +5,7 @@
 
 This file previously recorded the live execution state of learner-encounter production Cycle 1.
 
-It is **not** the source of truth for the repository's current work state or next action. Later repository work overtook the final Cycle 1 execution state, including the current Stage 1–3 runtime, Stage 2 authority extraction, and subsequent learner-experience work.
+It is **not** the source of truth for the repository's current work state or next action. Later repository work overtook the final Cycle 1 execution state, including the then-current Stage 1–3 runtime, Stage 2 authority extraction, and subsequent learner-experience work.
 
 The historical Cycle 1 durable outputs remain under:
 

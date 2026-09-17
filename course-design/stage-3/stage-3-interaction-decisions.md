@@ -1,5 +1,9 @@
 # Stage 3 interaction decisions — INNER JOIN unmatched company coverage
 
+**Status:** PRESERVED CANDIDATE / NOT CURRENT AUTHORITY
+
+This historical interaction design is retained in place without redesign. It is not part of the accepted Lessons 1–2 learner journey. Any future Lesson 3 requires fresh authorization and design from the accepted Lessons 1–2 baseline through the current production process.
+
 ## Encounter purpose
 
 Stage 3 reinforces the already-learned INNER JOIN through one new relational case: a starting row with zero matches contributes zero result rows. The encounter must also distinguish total result-row count from entity coverage.

@@ -1,10 +1,10 @@
 # Orientation & Progress — category selection and first-scope mapping
 
 **Date:** 2026-09-16  
-**Status:** CATEGORY SELECTED — FIRST CONFORMANCE SCOPE MAPPED — RUNTIME CHANGE NOT PART OF THIS DECISION  
+**Status:** HISTORICAL / SUPERSEDED DECISION RECORD — NOT CURRENT AUTHORITY OR WORK AUTHORIZATION
 **Baseline:** current `main` after authority cleanup and Wave 5B closure
 
-**Authority cleanup note — 2026-09-16:** the original category-comparison rationale referred to the now-superseded Stage 1–3 target-topology decision/review/post-build chain as if it had closed known spatial defects. That claim is withdrawn. This document remains valid only for the bounded Back / Forward behavioral contract below. It is not evidence that spatial/topology conformance is closed.
+**Canon reconciliation note:** the bounded intra-Lesson Back / Forward contract recorded below has been superseded for the accepted Lessons 1–2 product. Current control authority is `course-design/course-controls.md`, which establishes progression-safe inter-Lesson Previous / Next navigation and does not require within-Lesson journey-history controls. The historical rationale below is preserved unchanged as decision history.
 
 ## 1. Decision
 

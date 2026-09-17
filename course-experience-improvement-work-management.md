@@ -1,9 +1,11 @@
 # Course Experience Improvement Work Management
 
-**Status:** WORKING — AUTHORITY CLEANUP COMPLETE; FRESH CONFORMANCE REQUIRED  
-**Role:** Program A / A3 — Learning Experience & Runtime initiative work-management record
+**Status:** HISTORICAL / SUPERSEDED INITIATIVE RECORD — NOT CURRENT WORK AUTHORIZATION
+**Role:** Preserved Program A / A3 initiative history
 
-This document manages improvement work for the **existing implemented course experience**.
+This file records the earlier Stage 1–3 experience-improvement initiative and its then-current priorities. It is preserved as initiative history and must not be used as the current project-state, runtime, control, or authority source. The accepted current learner journey is Lessons 1–2; current work state is maintained in `course-work-management.md` and `routecraft-work-management.md`.
+
+This document historically managed improvement work for the then-existing implemented course experience.
 
 It is management state, not pedagogical, visual, Stage, control, schema, data, process, execution, review, or validation authority. Authority remains in the appropriate current-source documents.
 

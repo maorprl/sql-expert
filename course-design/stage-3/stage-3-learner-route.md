@@ -1,5 +1,9 @@
 # Stage 3 learner route — INNER JOIN unmatched company coverage
 
+**Status:** PRESERVED CANDIDATE / NOT CURRENT AUTHORITY
+
+This historical design is retained in place without redesign. It is not part of the accepted Lessons 1–2 learner journey. Any future Lesson 3 requires fresh authorization and design from the accepted Lessons 1–2 baseline through the current production process.
+
 The business request remains visible as context; it is not a learner step:
 
 > The investment team is validating a funding-round report. It should show every recorded funding round with the company's status, and they also need to know whether every company is represented in the report.

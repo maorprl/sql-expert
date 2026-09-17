@@ -1,9 +1,11 @@
 # Wave 4 — Diagnostic Feedback Decision Gate
 
 **Date:** 2026-09-15  
-**Status:** COMPLETE — CROSS-STAGE SCOPE FINALIZED; STAGE 1 IMPLEMENTATION CALIBRATION AUTHORIZED  
+**Status:** HISTORICAL / SUPERSEDED INITIATIVE DECISION RECORD — NOT CURRENT AUTHORITY OR WORK AUTHORIZATION
 **Initiative:** Existing-course experience improvement  
 **Action type:** Mapping / decision gate
+
+This audit is preserved as evidence of the earlier initiative. It does not override the accepted Lessons 1–2 runtime or current Lesson authority.
 
 ## Revision history and supersession
 
