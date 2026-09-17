@@ -71,16 +71,17 @@ This subplan exists because the current learner-encounter production process was
    Evidence: `course-design/production/rebaseline/candidate-workflow-v0.md`.
 5. **DONE** — Run a fresh Lesson 3 design dry run through the candidate workflow, without implementation, against current canon and the accepted Lessons 1–2 baseline. The dry run identified and corrected one candidate ambiguity: accepted encounter decisions must become current authority before Build.  
    Evidence: `course-design/production/rebaseline/lesson-3-candidate-workflow-dry-run.md` and the clarified `candidate-workflow-v0.md`.
-6. **CURRENT** — Compare the candidate against the legacy process by outcomes and failure protection: what was lost, what was simplified, and what legacy mechanism—if any—was actually necessary.
-7. **NOT STARTED** — If the candidate survives the dry run and comparison, perform an atomic documentation cutover so that the production process, Source-of-Truth mapping, Production Contract references, and management state agree on one current process.
+6. **DONE** — Compare the candidate against the legacy process by outcomes and protected failure modes. The comparison preserved proportional case comparison and risk-triggered independent challenge as conditional protections, while finding no universal need for the legacy permanent-role / fixed-review choreography.  
+   Evidence: `course-design/production/rebaseline/candidate-vs-legacy-outcome-comparison.md` and the refined `candidate-workflow-v0.md`.
+7. **CURRENT** — Perform an atomic documentation cutover so that the production process, Source-of-Truth mapping, Production Contract references, agent/execution guidance, and management state agree on one current process.
 
 Until Substep 7 completes, `learner-encounter-production-process.md` remains the formal current production-process authority. Candidate work is evaluative and non-authoritative.
 
 ### Current action
 
-**CURRENT ACTION:** execute Substep 6 — compare Candidate Workflow v0 against the legacy learner-encounter production process by **outcomes and protected failure modes**, not by role/phase similarity.
+**CURRENT ACTION:** execute Substep 7 as one atomic documentation cutover. Promote the rebaselined workflow into current production-process authority; remove legacy role/gate/handoff mandates from current process/execution references; align `source-of-truth-hierarchy.md`, `production-contract-v1.md`, `agent-assisted-work-protocol.md`, and this tracker; keep Cycle 1 and rebaseline artifacts as evidence/history.
 
-The comparison must identify which legacy mechanisms protected a requirement that the candidate does not protect, which mechanisms are redundant choreography, and whether any remaining candidate gap must be corrected before an atomic cutover can be considered.
+The cutover must not authorize or implement Lesson 3. After the cutover, the active master-plan position returns to Step 7 — fresh Lesson 3 design through the new current process.
 
 ## 4. Work areas
 
@@ -138,7 +139,7 @@ Do not select merely because the repository contains many documents or previous 
 - persistent agent-memory architecture;
 - broader machine-readable process state beyond demonstrated need.
 
-These become active only when evidence from the rebaseline, dry run, implementation, validation, or later scale shows they are necessary.
+These become active only when evidence from implementation, validation, or later scale shows they are necessary.
 
 ## 6. Historical management disposition
 
