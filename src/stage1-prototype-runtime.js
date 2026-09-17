@@ -18,7 +18,7 @@ const html = `
   <div class="stage1-routecraft">
     <header class="masthead"><div><div class="mh-course">RouteCraft · SQL Lab</div><div class="mh-title">Media coverage — one article, one publisher</div></div><div class="mh-right"><span class="mh-stage">Stage 1 · request → verified JOIN</span><nav class="lesson-nav" aria-label="Course lessons"><button class="lesson-nav-button" id="s1-previous" type="button" disabled>Previous</button><button class="lesson-nav-button" id="s1-next" type="button" disabled>Next</button></nav><button class="ghost" id="s1-restart">Restart</button></div></header>
     <main class="app"><div class="zones">
-      <section class="conversation" id="s1-conversation" aria-label="Conversation"><aside class="spine" aria-label="Reasoning thread"><div class="spine-label">Thread</div><ol class="spine-list" id="s1-spine"></ol></aside><div class="stream" id="s1-stream" aria-live="polite"></div></section>
+      <section class="conversation" id="s1-conversation" aria-label="Conversation"><aside class="spine" aria-label="Reasoning thread"><div class="spine-head"><div class="spine-label">Thread</div><button class="spine-toggle" id="s1-spine-toggle" type="button" aria-controls="s1-spine" aria-expanded="true" aria-label="Collapse thread" title="Collapse thread">‹</button></div><ol class="spine-list" id="s1-spine"></ol></aside><div class="stream" id="s1-stream" aria-live="polite"></div></section>
       <section class="workbench" aria-label="Workbench">
         <div class="wb-block" id="s1-entry"><div class="wb-head"><span class="eyebrow">Schema catalog</span><h3>Choose the relations that hold the request</h3></div><div class="catalog" id="s1-catalog">
           <div class="catalog-card" data-rel="news_article"><button class="catalog-select" type="button"><span><span class="catalog-name">news_article</span><span class="catalog-desc">articles and their titles</span></span><span class="catalog-status">add</span></button><button class="inspect-relation" type="button">Inspect</button></div>
@@ -80,6 +80,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
     editor.setRangeText(inspectedRelation, start, end, 'end'); editor.focus();
   };
   const setExecutionStatus = (message = '', status = '') => { const element = $('#s1-execution-status'); element.textContent = message; element.dataset.status = status; element.hidden = !message; };
+  const setThreadCollapsed = (collapsed) => { root.firstElementChild.classList.toggle('thread-collapsed', collapsed); const button = $('#s1-spine-toggle'); button.textContent = collapsed ? '›' : '‹'; button.setAttribute('aria-expanded', String(!collapsed)); button.setAttribute('aria-label', collapsed ? 'Expand thread' : 'Collapse thread'); button.title = collapsed ? 'Expand thread' : 'Collapse thread'; };
   const ask = ({ prompt, options, correct, wrong, onCorrect }) => {
     const wrap = node(`<div class="ask"><p class="ask-q">${prompt}</p><form class="ask-form">${options.map(([value, label]) => `<label class="opt"><input type="radio" name="answer" value="${value}"><span class="opt-mark"></span><span class="opt-text">${label}</span></label>`).join('')}<div class="ask-actions"><button class="primary" type="submit" disabled>Check</button></div></form><div class="ask-error" role="alert" hidden></div></div>`);
     const form = wrap.querySelector('form');
@@ -249,6 +250,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
   $('#s1-solution-button').addEventListener('click', () => { $('#s1-sql-editor').value = SOLUTION; setExecutionStatus('Not executed', 'idle'); $('#s1-sql-editor').focus(); $('#s1-diagnostic').innerHTML = '<div class="assist">The solution is now in the editor. It has not run, and the stage has not advanced.</div>'; });
   $('#s1-inspector').addEventListener('click', (event) => { if (event.target.closest('.inspector-close')) closeInspector(); });
   $('#s1-inspector-insert').addEventListener('click', insertInspectedRelation);
+  $('#s1-spine-toggle').addEventListener('click', () => setThreadCollapsed(!root.firstElementChild.classList.contains('thread-collapsed')));
   $('#s1-next').addEventListener('click', () => { if (state === 'complete') onContinue?.(); });
   $('#s1-sql-editor').addEventListener('keydown', (event) => { if (!event.isComposing && event.key === 'Enter' && (event.ctrlKey || event.metaKey)) { event.preventDefault(); executeSql(); } });
   $('#s1-sql-editor').addEventListener('input', () => { if (state === 'sql') setExecutionStatus('Not executed', 'idle'); });

@@ -22,7 +22,7 @@ const template = `
 <div class="stage2-routecraft">
   <header class="masthead"><div><div class="mh-course">RouteCraft · SQL Lab</div><div class="mh-title">Funding participation — who invested in which round</div></div><div class="mh-right"><span class="mh-continuation" id="s2-continuation" hidden>Continued from Stage 1</span><span class="mh-stage">Stage 2 · participation grain</span><nav class="lesson-nav" aria-label="Course lessons"><button class="lesson-nav-button" id="s2-previous" type="button">Previous</button><button class="lesson-nav-button" id="s2-next" type="button" disabled>Next</button></nav><button class="ghost" id="s2-restart">Restart</button></div></header>
   <main class="app"><div class="zones">
-    <section class="conversation" id="s2-conversation" aria-label="Conversation"><aside class="spine" aria-label="Reasoning thread"><div class="spine-label">Thread</div><ol class="spine-list" id="s2-spine"></ol></aside><div class="stream" id="s2-stream" aria-live="polite"></div></section>
+    <section class="conversation" id="s2-conversation" aria-label="Conversation"><aside class="spine" aria-label="Reasoning thread"><div class="spine-head"><div class="spine-label">Thread</div><button class="spine-toggle" id="s2-spine-toggle" type="button" aria-controls="s2-spine" aria-expanded="true" aria-label="Collapse thread" title="Collapse thread">‹</button></div><ol class="spine-list" id="s2-spine"></ol></aside><div class="stream" id="s2-stream" aria-live="polite"></div></section>
     <section class="workbench" aria-label="Workbench">
       <div class="wb-block" id="s2-entry"><div class="wb-head"><span class="eyebrow">Schema catalog</span><h3>Bring in the relations this request needs</h3></div><div class="catalog" id="s2-catalog">
         <div class="catalog-card" data-rel="funding_round"><button class="catalog-select" type="button"><span><span class="catalog-name">funding_round</span><span class="catalog-desc">round type and announced date</span></span><span class="catalog-status">add</span></button><button class="inspect-relation" type="button">Inspect</button></div>
@@ -69,6 +69,7 @@ export function createStage2Prototype({ root, getDatabase, onPrevious }) {
   const closeInspector = () => { $('#s2-inspector').hidden = true; inspectedRelation = null; };
   const insertInspectedRelation = () => { if (state !== 'sql' || !inspectedRelation) return; const editor = $('#s2-editor'); editor.setRangeText(inspectedRelation, editor.selectionStart, editor.selectionEnd, 'end'); editor.focus(); };
   const setExecutionStatus = (message = '', status = '') => { const element = $('#s2-execution-status'); element.textContent = message; element.dataset.status = status; element.hidden = !message; };
+  const setThreadCollapsed = (collapsed) => { root.firstElementChild.classList.toggle('thread-collapsed', collapsed); const button = $('#s2-spine-toggle'); button.textContent = collapsed ? '›' : '‹'; button.setAttribute('aria-expanded', String(!collapsed)); button.setAttribute('aria-label', collapsed ? 'Expand thread' : 'Collapse thread'); button.title = collapsed ? 'Expand thread' : 'Collapse thread'; };
 
   function query(sql) { const result = getDatabase().exec(sql)[0]; return { columns: result?.columns || [], values: result?.values || [] }; }
   function source1003() {
@@ -166,6 +167,7 @@ export function createStage2Prototype({ root, getDatabase, onPrevious }) {
   $('#s2-assist-button').addEventListener('click', () => { const assist = $('#s2-assist'); assist.hidden = !assist.hidden; assist.innerHTML = '<div class="assist"><strong>Nudge:</strong> Start from <code>round_investment</code>, join <code>funding_round</code> on their funding-round ids, and select the six requested fields.</div>'; });
   $('#s2-solution-button').addEventListener('click', () => { $('#s2-editor').value = SOLUTION; setExecutionStatus('Not executed', 'idle'); $('#s2-editor').focus(); $('#s2-diagnostic').innerHTML = '<div class="assist">The solution is in the editor. It has not run, and the Stage has not advanced.</div>'; });
   $('#s2-inspector').addEventListener('click', (event) => { if (event.target.closest('.inspector-close')) closeInspector(); }); $('#s2-inspector-insert').addEventListener('click', insertInspectedRelation);
+  $('#s2-spine-toggle').addEventListener('click', () => setThreadCollapsed(!root.firstElementChild.classList.contains('thread-collapsed')));
   $('#s2-previous').addEventListener('click', () => onPrevious?.());
   $('#s2-editor').addEventListener('keydown', (event) => { if (!event.isComposing && event.key === 'Enter' && (event.ctrlKey || event.metaKey)) { event.preventDefault(); executeSql(); } });
   $('#s2-editor').addEventListener('input', () => { if (state === 'sql') setExecutionStatus('Not executed', 'idle'); });
