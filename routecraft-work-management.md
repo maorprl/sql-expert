@@ -69,17 +69,18 @@ This subplan exists because the current learner-encounter production process was
    Evidence: `course-design/production/rebaseline/production-system-requirements-traceability-audit.md`.
 4. **DONE** — Design and preserve Candidate Workflow v0 from the audited requirements as **CANDIDATE / NON-AUTHORITATIVE** material.  
    Evidence: `course-design/production/rebaseline/candidate-workflow-v0.md`.
-5. **CURRENT** — Run a Lesson 3 dry run through the candidate workflow, without implementation, and check it against the rest of the applicable current canon.
-6. **NOT STARTED** — Compare the candidate against the legacy process by outcomes and failure protection: what was lost, what was simplified, and what legacy mechanism—if any—was actually necessary.
+5. **DONE** — Run a fresh Lesson 3 design dry run through the candidate workflow, without implementation, against current canon and the accepted Lessons 1–2 baseline. The dry run identified and corrected one candidate ambiguity: accepted encounter decisions must become current authority before Build.  
+   Evidence: `course-design/production/rebaseline/lesson-3-candidate-workflow-dry-run.md` and the clarified `candidate-workflow-v0.md`.
+6. **CURRENT** — Compare the candidate against the legacy process by outcomes and failure protection: what was lost, what was simplified, and what legacy mechanism—if any—was actually necessary.
 7. **NOT STARTED** — If the candidate survives the dry run and comparison, perform an atomic documentation cutover so that the production process, Source-of-Truth mapping, Production Contract references, and management state agree on one current process.
 
 Until Substep 7 completes, `learner-encounter-production-process.md` remains the formal current production-process authority. Candidate work is evaluative and non-authoritative.
 
 ### Current action
 
-**CURRENT ACTION:** execute Substep 5 — a Lesson 3 design dry run through `course-design/production/rebaseline/candidate-workflow-v0.md`, with **no implementation**, and test the candidate against all applicable current canon and the accepted Lessons 1–2 baseline.
+**CURRENT ACTION:** execute Substep 6 — compare Candidate Workflow v0 against the legacy learner-encounter production process by **outcomes and protected failure modes**, not by role/phase similarity.
 
-The dry run must not treat preserved Stage 3 material as current authority, must not use the Candidate Workflow to authorize implementation, and must record any point where the candidate is insufficient, ambiguous, or fails to preserve a required control.
+The comparison must identify which legacy mechanisms protected a requirement that the candidate does not protect, which mechanisms are redundant choreography, and whether any remaining candidate gap must be corrected before an atomic cutover can be considered.
 
 ## 4. Work areas
 
