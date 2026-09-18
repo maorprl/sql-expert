@@ -1,6 +1,6 @@
 # Lesson 1 Remediation Classification / Decision Preparation — 2026-09-18
 
-**Status:** PLANNING / CLASSIFICATION ONLY — NOT IMPLEMENTATION AUTHORITY
+**Status:** CLASSIFICATION COMPLETE / HUMAN DECISIONS RECONCILED — NOT IMPLEMENTATION AUTHORITY
 
 **Repository:** `maorprl/sql-expert`
 
@@ -572,3 +572,256 @@ Decision gates around implementation sets:
 **YES — CLASSIFICATION COMPLETE**
 
 Implementation remains unauthorized. Human decisions are required for category C, authority resolution is required before any work on D-1, and accepted category-B change sets still require an authorized implementation phase.
+
+# Human Decision Reconciliation — 2026-09-18
+
+This appended section records the human decisions made after the classification above. The preceding classification, evidence, candidate change sets, counts, and historical conclusions remain the durable pre-decision baseline. This reconciliation is not course, Lesson, visual, control, implementation, or other current authority.
+
+## Reconciliation boundary
+
+- Category-A remains 49 preservation/regression invariants.
+- Category-B remains 21 implementation-remediation candidates; none is implemented or converted into an authorized change set here.
+- The 26 original Category-C items reconcile to 18 decided and 8 `TBD / DO NOT TOUCH` items.
+- Category-D Finding `3.4` is decided at the decision level, but requires later authority maintenance before dependent implementation.
+- The non-numbered technical follow-up `E-1` concerning exact historical deployment identity remains preserved and non-blocking.
+
+## Category C — decided human reconciliation
+
+### 1.3 — Trial-and-error remains possible
+
+**Decision:** `DECIDED — KEEP` / no remediation.
+
+Do not add artificial friction merely because the small relation catalog makes guessing possible. Preserve the learner’s responsibility to identify the relevant relations and preserve wrong selections as locally corrective and non-revealing.
+
+### 1.5 — `bench` terminology
+
+**Decision:** `DECIDED — CHANGE`.
+
+Remove learner-facing `bench` terminology in favor of functional state language. The accepted learner-facing selected-state wording is `Added`.
+
+This applies wherever the same learner-facing `bench` metaphor is used for the same functional role, but this reconciliation does not broaden implementation scope. Future authority maintenance is required before cross-course implementation relies on the broader terminology decision.
+
+### 4.5 — Grain distractor quality
+
+**Decision:** `DECIDED — CHANGE`.
+
+Replace the weak `country` distractor with a more plausible distractor representing a genuine row-meaning misconception. Preserve the useful article/source-pair misconception. Exact replacement wording remains an implementation detail.
+
+### 5.5 — `bench` language in baseline transition
+
+**Decision:** `DECIDED — CHANGE`.
+
+Use direct language about the measurement. Do not use a `bench` metaphor for the prepared measurement. Exact final copy may be determined during implementation within the accepted semantic requirement.
+
+### 6.3 — Coordinated guidance/tool focus
+
+**Decision:** `DECIDED — CHANGE` — accepted as an important course-wide visual principle.
+
+At every moment it should be visually clear where the learner is currently working. When action moves between the instructional/guidance area and the active work surface:
+
+- visual focus moves with the active task;
+- the active instruction and active work surface read as the same current moment;
+- the active work surface receives the strongest relevant visual priority; and
+- previous/reference areas remain available but visually secondary.
+
+This does not mandate dimming, borders, motion, animation, or any other specific technical treatment. Implementation treatment remains local to each encounter. Future maintenance in the appropriate current visual authority is required before cross-course implementation relies on this principle.
+
+### 7.4 — Baseline interpretation MCQ
+
+**Decision:** `DECIDED — CHANGE`.
+
+Remove the separate MCQ. After the prepared measurement returns `18`, keep the interpretation explicit inline: the baseline is **18 article rows**. Then proceed directly into prediction. Do not leave `18` uninterpreted and do not require a separate multiple-choice gate merely to identify what was counted.
+
+### 8.6 — Post-prediction visual
+
+**Decision:** `DECIDED — CHANGE`.
+
+After the learner has committed to the prediction, show a compact explanatory visual with this required conceptual meaning:
+
+`1 article row → 1 matching source row → 1 result row`
+
+Then scale that reasoning to the 18-row case. The visual must appear after learner engagement, not before the prediction, so it does not leak the answer. Coordinate it later with Category-B Finding `8.5`, which already requires the unit-bearing relational mechanism to be explained.
+
+### 9.2 — Semantic-action evidence quality
+
+**Decision:** `DECIDED — KEEP` / no remediation.
+
+The current semantic-action gate provides sufficient evidence for its role in this guided first-JOIN encounter. Preserve meaning-before-JOIN-terminology. Do not add an additional gate merely to make the interaction harder.
+
+### 9.3 — Semantic-action distractor quality
+
+**Decision:** `DECIDED — KEEP` / no current remediation.
+
+The current distractors do not require remediation in the present Lesson 1 scope. They may be polished in future work, but that is not an authorized change in the present remediation.
+
+### 11.4 — `Map the condition` control
+
+**Decision:** `DECIDED — CHANGE`.
+
+Accepted replacement: `Map the condition` → `See how it fits together`.
+
+The ON condition has already been shown; this control advances to the next explanatory layer rather than asking the learner to map a condition that is already present.
+
+### 12.4 — SELECT wording
+
+**Decision:** `DECIDED — CHANGE`.
+
+Use this accepted semantic explanation:
+
+> `FROM` starts from the article rows. `JOIN` brings in the matching source row. `ON` defines how the rows match. `SELECT` chooses which article and source fields appear in each result row. Because each article matches one source, the result remains one article per row.
+
+Preserve the distinction that `SELECT` chooses visible attributes; it does not itself determine result Grain.
+
+### 12.5 — Business request ↔ Grain equivalence
+
+**Decision:** `DECIDED — CHANGE` under a course-wide semantic-precision principle.
+
+Do not use a visual symbol that implies equivalence when the concepts are not equivalent. The business request informs/derives the requested row meaning; it is not identical to Grain. For the current Lesson 1 visual, do not retain the misleading `↔` equivalence treatment. The exact local visual remains an implementation detail, provided it expresses correct directional/derivational meaning.
+
+Together with `19.5` and `19.7`, this records the broader accepted principle: learner-facing visual symbols and metaphors must not imply a relational operation, identity, or equivalence that is not actually true. Future maintenance in the appropriate current authority is required before broader implementation relies on that principle.
+
+### 13.2 — Previous teaching beat disappears
+
+**Decision:** `DECIDED — CHANGE`.
+
+Previous explanations must not disappear as the learner progresses through the JOIN teaching sequence. They remain available and reviewable. The active explanation may have stronger visual focus than previous explanations.
+
+### 13.3 — Compact prior beats
+
+**Decision:** `DECIDED — CHANGE`.
+
+Retain previous explanations as available/reviewable. This decision does not mandate a compact-card treatment: compression, visual quieting, or another local presentation remains an implementation detail, provided earlier explanations do not disappear.
+
+### 13.4 — Learner-facing `Beat`
+
+**Decision:** `DECIDED — CHANGE`.
+
+Do not expose the instructional-design term `Beat` to the learner. Use functional/conceptual action labels instead. This reconciliation does not invent the final learner-facing labels; they may be settled during implementation within this boundary.
+
+### 14.4 — `Workbench` terminology
+
+**Decision:** `DECIDED — CHANGE`.
+
+Accepted replacement: `Workbench` → `SQL workspace`.
+
+Apply it consistently to the same learner-facing functional role. Do not perform cross-Lesson edits in this task.
+
+### 19.5 — `+` connector semantics
+
+**Decision:** `DECIDED — CHANGE` under the accepted semantic-precision principle.
+
+Do not use `+` when it may imply arithmetic addition, concatenation, or stacking instead of row matching. The later local visual should express that matching rows contribute to a result row without implying the wrong relational operation. Exact connector and layout remain implementation details.
+
+### 19.7 — `JOIN is the bridge`
+
+**Decision:** `DECIDED — CHANGE` under the accepted semantic-precision principle.
+
+Do not rely on `JOIN is the bridge` as the learner-facing explanation when direct relational language can state the mechanism. Prefer direct meaning such as JOIN combining rows that match the `ON` condition. Preserve the accepted schema-versus-instance distinction from Finding `19.2`.
+
+## Category C — TBD / DO NOT TOUCH
+
+These findings remain intentionally unresolved for the current remediation. Do not resolve, redesign, or include their proposed changes in later remediation scope unless a new explicit human decision is made.
+
+| Finding | Status | Boundary |
+|---|---|---|
+| `3.3` | `TBD / DO NOT TOUCH` | Teacher/Cardinality-prompt duplication is non-blocking polish. |
+| `4.4` | `TBD / DO NOT TOUCH` | Teacher/Grain-prompt duplication is non-blocking polish. |
+| `8.4` | `TBD / DO NOT TOUCH` | Teacher/prediction-prompt duplication is non-blocking polish. |
+| `15.1` | `TBD / DO NOT TOUCH` | Exact assistance-control behavior. |
+| `15.2` | `TBD / DO NOT TOUCH` | First-nudge strength and escalation. |
+| `15.3` | `TBD / DO NOT TOUCH` | Nudge behavior after successful SQL. |
+| `15.4` | `TBD / DO NOT TOUCH` | Show-solution behavior after successful SQL. |
+| `16.5` | `TBD / DO NOT TOUCH` | Post-success assistance/result competition where resolution depends on assistance lifecycle behavior. |
+
+Do not derive an assistance-lifecycle policy from `15.1`–`15.4` or `16.5`.
+
+## Category D — human authority decision
+
+### 3.4 — One-to-many evidence sufficiency
+
+**Decision:** `DECIDED — AUTHORITY MAINTENANCE REQUIRED`.
+
+An FK→PK link alone does not establish full relationship Cardinality. Relationship fields establish what is connected. Cardinality is reasoned by considering possible multiplicity in both directions of the relationship, using the structural constraints and domain meaning available in the encounter.
+
+The reusable reasoning questions are conceptually:
+
+- for one X, how many Y can participate?
+- for one Y, how many X can participate?
+
+In Lesson 1, because Cardinality is a first exposure, both directions should be reasoned explicitly before formal Cardinality label/notation is introduced. In later Lessons, the same reasoning model may be reused more compactly rather than re-taught as first exposure.
+
+Do not reduce this decision to `FKs can repeat`; a foreign key may itself be constrained unique. Do not rely on observed seed examples as the sole evidence for structural Cardinality.
+
+### Authority consequence
+
+This accepted decision resolves and changes current pedagogical authority. This review/planning artifact is not replacement authority. A later authorized authority-maintenance task must reconcile the appropriate current authority source(s) before implementation changes Cardinality evidence, prompt, or reveal behavior. No authority file is changed by this reconciliation.
+
+## Category-C decision reconciliation table
+
+Each original Category-C ID appears once in this table.
+
+| Category-C ID | Reconciled status |
+|---|---|
+| `1.3` | `DECIDED — KEEP` |
+| `1.5` | `DECIDED — CHANGE` |
+| `3.3` | `TBD / DO NOT TOUCH` |
+| `4.4` | `TBD / DO NOT TOUCH` |
+| `4.5` | `DECIDED — CHANGE` |
+| `5.5` | `DECIDED — CHANGE` |
+| `6.3` | `DECIDED — CHANGE` |
+| `7.4` | `DECIDED — CHANGE` |
+| `8.4` | `TBD / DO NOT TOUCH` |
+| `8.6` | `DECIDED — CHANGE` |
+| `9.2` | `DECIDED — KEEP` |
+| `9.3` | `DECIDED — KEEP` |
+| `11.4` | `DECIDED — CHANGE` |
+| `12.4` | `DECIDED — CHANGE` |
+| `12.5` | `DECIDED — CHANGE` |
+| `13.2` | `DECIDED — CHANGE` |
+| `13.3` | `DECIDED — CHANGE` |
+| `13.4` | `DECIDED — CHANGE` |
+| `14.4` | `DECIDED — CHANGE` |
+| `15.1` | `TBD / DO NOT TOUCH` |
+| `15.2` | `TBD / DO NOT TOUCH` |
+| `15.3` | `TBD / DO NOT TOUCH` |
+| `15.4` | `TBD / DO NOT TOUCH` |
+| `16.5` | `TBD / DO NOT TOUCH` |
+| `19.5` | `DECIDED — CHANGE` |
+| `19.7` | `DECIDED — CHANGE` |
+
+| Reconciliation result | Count |
+|---|---:|
+| `DECIDED — KEEP` | 3 |
+| `DECIDED — CHANGE` | 15 |
+| **DECIDED total** | **18** |
+| `TBD / DO NOT TOUCH` | 8 |
+| `UNRESOLVED` | 0 |
+| **Category-C total** | **26** |
+
+## Relationship to Category B
+
+A later remediation-planning step must:
+
+1. retain all 49 Category-A preservation/regression invariants;
+2. carry forward all 21 Category-B required remediation findings;
+3. incorporate the accepted Category-C `CHANGE` decisions;
+4. preserve Category-C `KEEP` decisions as non-remediation constraints;
+5. exclude the 8 `TBD / DO NOT TOUCH` findings from current remediation scope;
+6. perform required authority maintenance for `3.4` before dependent Cardinality implementation; and
+7. re-evaluate change-set boundaries after those inputs are combined.
+
+This is a record of future planning inputs, not a remediation plan. No change set is authorized or modified here.
+
+## Final reconciliation checks
+
+- Original verified-finding count remains 97.
+- Original Category-A count remains 49.
+- Original Category-B count remains 21.
+- All 26 Category-C findings are reconciled once: 18 decided, 8 `TBD / DO NOT TOUCH`, and 0 unresolved.
+- Finding `3.4` is decided, with authority maintenance pending.
+- No `TBD / DO NOT TOUCH` item is resolved by implication.
+- The existing technical follow-up on exact historical deployment identity remains non-blocking.
+
+**YES — HUMAN DECISION RECONCILIATION COMPLETE**
+
+**Implementation remains unauthorized. Authority maintenance for Finding 3.4 and a separate accepted remediation-planning step are still required before implementation.**
