@@ -42,7 +42,7 @@ No new SQL join syntax is introduced in this Lesson. The novelty is the row-surv
 
 ## 2. Business case and relation pair
 
-The investment team is validating a funding-round report. The report should show every recorded funding round together with the company's status, and the team also needs to know whether every company is represented in that report.
+The investment team is validating a funding-round report. The report should show every recorded funding round together with the company's status. The team already knows one concrete edge case in the current data: `Lumina Bio` (`company_id = 20`) exists as a company but has no recorded funding round. They need to understand what the familiar INNER JOIN report does with that zero-match company, and what that means for company coverage.
 
 The relevant relations are:
 
@@ -55,13 +55,13 @@ The direct relationship is:
 
 Each funding round belongs to one company. A company can have zero, one, or multiple recorded funding rounds.
 
-The current seed provides a real zero-match case:
+The current seed grounds that known zero-match case:
 
 - 12 company rows;
 - 26 funding-round rows;
 - `Lumina Bio` (`company_id = 20`) exists in `company` and has no row in `funding_round`.
 
-The current data fact supports the encounter; it does not itself supply the INNER JOIN conclusion.
+This source-data fact is supplied as the concrete case premise. The learner is not required to rediscover it through a separate pre-SQL comparison task. Supplying the fact does not supply the protected INNER JOIN conclusion.
 
 ---
 
@@ -104,22 +104,19 @@ Lesson 3 must not assume or teach as part of its required path:
 3. **Establish requested result Grain.**  
    One requested result row represents one recorded funding round with company context. Company coverage is a separate validation question and must not redefine the result as one company per row.
 
-4. **Generate company-coverage evidence from source data.**  
-   The learner inspects source evidence that makes comparison practical without requiring unnecessary manual scanning of all 12 company rows against all 26 funding-round rows. The interface may sort, align, group, or otherwise make the two source sets inspectable, but it must leave the key inference to the learner: identify a company that exists in `company` but has no matching `funding_round` row. With the current seed, the correct entity is `Lumina Bio` (`company_id = 20`).
+4. **Protected prediction: reason about the concrete zero-match case under INNER JOIN.**  
+   The encounter supplies the source-grounded case premise: `Lumina Bio` (`company_id = 20`) exists in `company` and has zero recorded funding rounds. Before SQL authoring or any joined-result reveal, the learner predicts what INNER JOIN will do with that zero-match company. The required reasoning is: zero matching row pairs → zero result rows contributed by that company.
 
-5. **Protected prediction: reason about zero matches under INNER JOIN.**  
-   Before SQL authoring or any joined-result reveal, the learner predicts what INNER JOIN will do with the identified zero-match company. The required reasoning is: zero matching row pairs → zero result rows contributed by that company.
+5. **Explain and name the mechanism.**  
+   Only after the learner has produced the prediction, the course explains the mechanism explicitly: **zero matches → zero INNER JOIN result rows**. The explanation connects the supplied zero-match case to INNER JOIN row survival without introducing LEFT JOIN or NULL.
 
-6. **Explain and name the mechanism.**  
-   Only after the learner has produced the prediction, the course explains the mechanism explicitly: **zero matches → zero INNER JOIN result rows**. The explanation connects the learner's source evidence to INNER JOIN row survival without introducing LEFT JOIN or NULL.
-
-7. **Implement the familiar INNER JOIN.**  
+6. **Implement the familiar INNER JOIN.**  
    The learner authors the company-to-funding-round INNER JOIN. INNER JOIN and `ON` are reused syntax; no new join syntax is taught.
 
-8. **Inspect and verify actual Results.**  
+7. **Inspect and verify actual Results.**  
    A semantically correct result contains all 26 funding-round rows at funding-round Grain. The learner verifies from the actual result that `company_id = 20` is absent.
 
-9. **Answer the original coverage question.**  
+8. **Answer the original coverage question.**  
    The learner concludes that a 26-row funding-round report can be correct at funding-round Grain while representing only 11 of the 12 companies. Total result-row count therefore does not prove entity coverage.
 
 Completion visibly closes this reasoning thread rather than adding a new repair task.
@@ -130,7 +127,7 @@ Completion visibly closes this reasoning thread rather than adding a new repair 
 
 The core protected inference is:
 
-> What does INNER JOIN do when the identified company has zero matching funding-round rows?
+> What does INNER JOIN do when the supplied case company has zero matching funding-round rows?
 
 Before the learner produces that prediction:
 
@@ -141,9 +138,9 @@ Before the learner produces that prediction:
 - do not introduce NULL as the expected unmatched-row representation;
 - do not provide answer wording, visuals, or scaffolding from which the learner can select the correct consequence without performing the relational reasoning.
 
-The structural statement that a company **can** have zero funding rounds is a permitted premise. The protected inference is the effect of that realized zero-match case under INNER JOIN.
+The structural statement that a company **can** have zero funding rounds is a permitted premise. The concrete source-data fact that `Lumina Bio` currently has zero recorded funding rounds is also a permitted supplied premise. The protected inference is the effect of that realized zero-match case under INNER JOIN.
 
-The source-data comparison must reduce irrelevant scanning load without performing the comparison for the learner. Highlighting, alignment, sorting, or grouping may support inspection; directly labeling `Lumina Bio` as the unmatched answer before learner action is not permitted.
+No pre-SQL source-data comparison, hidden query result, or separate discovery task is required to establish the case. The learner's ownership begins with the INNER JOIN consequence: they must still predict the result-row contribution before that consequence is explained or shown.
 
 ---
 
@@ -174,7 +171,7 @@ Lesson 3 completion requires evidence that the learner has:
 - identified the connecting company-id relationship;
 - confirmed the relevant company-to-funding-round cardinality;
 - established funding-round result Grain;
-- identified from source data a company with zero funding-round matches;
+- used the supplied source-grounded case of a company with zero funding-round matches;
 - predicted that the company contributes zero INNER JOIN result rows;
 - produced a semantically correct INNER JOIN result;
 - verified from actual Results that the zero-match company is absent;
@@ -190,7 +187,7 @@ Implementation must preserve:
 
 - the one-match → multiple-matches → zero-matches conceptual progression;
 - compact reuse of already introduced concepts rather than first-exposure re-teaching;
-- learner ownership of the zero-match identification;
+- a clear, source-grounded zero-match case premise without a separate discovery task;
 - learner ownership of the pre-execution INNER JOIN survival prediction;
 - the reveal boundary separating structural optionality from INNER JOIN consequence;
 - funding-round result Grain;
@@ -202,7 +199,7 @@ Implementation may choose, within current visual/control authority:
 
 - exact component composition;
 - exact wording polish that preserves reasoning ownership and non-preemption;
-- the practical visual arrangement used to compare the two source sets;
+- the concise presentation of the supplied zero-match case premise;
 - technical state representation;
 - semantic-validator implementation details;
 - local styling consistent with current visual roles.
