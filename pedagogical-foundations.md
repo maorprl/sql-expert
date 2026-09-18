@@ -7,7 +7,7 @@ The current course design may rely on:
 - the current startup-ecosystem schema and seed data
 - the neutral SQL Lab built on that schema
 - pedagogical decisions explicitly established in the current reconstruction
-- the dedicated current Lesson 1–2 authority documents for encounter-local decisions; their historical repository paths retain `stage-1` / `stage-2` naming
+- the dedicated current Lesson 1–3 authority documents for encounter-local decisions; their repository paths retain historical `stage-*` naming where applicable
 Previous course versions, previous pedagogy documents, superseded stage structures, previous checkpoints, and remembered decisions are not authoritative.
 They must not be imported into the current design unless they are explicitly reconsidered and established again.
 The course is not primarily a SQL-syntax course.
@@ -23,7 +23,7 @@ A WORKING decision may still be revised or rejected.
 A question that has not yet been resolved.
 An OPEN question must not be silently resolved inside implementation work or treated as if a decision already exists.
 The learner should understand what the data represents before SQL syntax is allowed to substitute for that understanding.
-This does not determine a universal sequence beyond the encounter-local sequences explicitly established for the current Lessons 1–2 journey. It does not prescribe the order of grain, keys, cardinality, joins, aggregation, or SQL timing in future encounters that have not yet been designed.
+This does not determine a universal sequence beyond the encounter-local sequences explicitly established for the current Lessons 1–3 design. It does not prescribe the order of grain, keys, cardinality, joins, aggregation, or SQL timing in future encounters that have not yet been designed.
 This is currently a working pedagogical direction, not a locked universal course sequence.
 course-knowledge-map.md defines the knowledge and capability space of the course.
 It does not automatically define teaching order.
@@ -90,10 +90,10 @@ A safer current working method is:
 A local sequence should not be treated as globally fixed merely because it was designed first.
 For the current course design, Lesson 1 is the first learner encounter, using the `news_article → news_source` business case. Its learner-route and interaction-decisions documents establish the first introduction of Grain, Primary Key / Foreign Key, Cardinality, and JOIN, including their exact Lesson 1 timing. The repository retains `stage-1` in internal paths and identifiers; that historical naming does not change the learner-facing `Lesson 1` label.
 Those documents also establish locally distinct placements for prepared SQL used as a measurement tool, explicit SQL syntax instruction, and independent learner-authored SQL. They do not define a broader course-level rule for the timing of SQL or new SQL constructs outside that encounter.
-Current Lesson 2 authority establishes encounter-local reuse and extension of already introduced relational reasoning. Its exact local sequence is not a universal template for future encounters. Preserved Stage 3 documents are candidate/history only and do not establish a current Lesson 3.
+Current Lesson 2 authority establishes encounter-local reuse and extension of already introduced relational reasoning. Its exact local sequence is not a universal template for future encounters. Current Lesson 3 authority in `course-design/stage-3/stage-3-authority.md` establishes the zero-match INNER JOIN / entity-coverage encounter from the accepted Lessons 1–2 baseline. The older Stage 3 route and interaction files remain candidate/history only.
 The following remain OPEN at broader course scope:
 - how much of the schema is exposed initially in future contexts where that question matters;
-- the course structure beyond the currently accepted Lessons 1–2 journey;
+- the course structure beyond the current Lesson 3 design authority;
 - the overall progression beyond the current implemented encounters toward full exit-capability coverage.
 These broader questions must remain open until they are explicitly resolved.
 Before treating a pedagogical claim as part of the current course design, verify that it was established in the current reconstruction.

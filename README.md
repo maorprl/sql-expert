@@ -21,9 +21,10 @@ Older encounter modules remain in the repository but are not the accepted Lesson
 Current encounter authority is stored separately from runtime code:
 
 - Lesson 1: `course-design/stage-1/stage-1-learner-route.md` and `course-design/stage-1/stage-1-interaction-decisions.md`;
-- Lesson 2: `course-design/stage-2/stage-2-authority.md`.
+- Lesson 2: `course-design/stage-2/stage-2-authority.md`;
+- Lesson 3 design: `course-design/stage-3/stage-3-authority.md`.
 
-The Stage 3 documents and the production-system Lesson 3 dry-run design are candidate/history only. No Lesson 3 is currently part of the accepted journey.
+Lesson 3 now has current design authority, but it is not yet implemented or part of the accepted runnable journey. The older `stage-3-learner-route.md` / `stage-3-interaction-decisions.md` files and the production-system Lesson 3 dry-run design remain candidate/history only.
 
 Course-wide learner-experience authority is currently defined by:
 
@@ -33,7 +34,7 @@ Course-wide learner-experience authority is currently defined by:
 
 There is currently no separate Lessons 1–2 topology authority. Spatial and interaction conformance is derived directly from current course-level and Lesson authority.
 
-A compact Previous / Next control in the masthead provides progression-safe inter-Lesson navigation. Lesson 1 Next becomes usable only after the existing completion progression authorizes Lesson 2. Lesson 2 Previous returns to Lesson 1, and Lesson 2 has no usable Next because no Lesson 3 is currently approved.
+A compact Previous / Next control in the masthead provides progression-safe inter-Lesson navigation. Lesson 1 Next becomes usable only after the existing completion progression authorizes Lesson 2. Lesson 2 Previous returns to Lesson 1, and Lesson 2 has no usable Next because Lesson 3 is not yet implemented or accepted into the runnable journey.
 
 Within the current browser run, each available Lesson keeps its own in-memory reasoning state, editor text, result, completion state, and other existing runtime state when the learner navigates away and back. This does not establish a broader persistence contract across reloads or browser sessions.
 

@@ -24,6 +24,7 @@ A source has authority only within the scope it is responsible for. A source mus
 | Course-wide pedagogical foundations | `pedagogical-foundations.md` | Defines current pedagogical principles and decision rules; does not replace encounter-local authority or create an undeclared universal Lesson sequence. |
 | Lesson 1 learner route and interaction decisions | `course-design/stage-1/stage-1-learner-route.md` and `course-design/stage-1/stage-1-interaction-decisions.md` | Own Lesson 1 encounter-local pedagogy, sequence, reveal/evidence requirements, and learner interaction behavior within course-wide authority. |
 | Lesson 2 learner route and interaction decisions | `course-design/stage-2/stage-2-authority.md` | Own Lesson 2 encounter-local pedagogy, sequence, reveal/evidence requirements, and learner interaction behavior within course-wide authority. |
+| Lesson 3 learner route and interaction decisions | `course-design/stage-3/stage-3-authority.md` | Owns Lesson 3 encounter-local pedagogy, sequence, reveal/evidence requirements, SQL/result contract, and implementation boundary within course-wide authority. |
 | Course-level controls and SQL-local assistance roles | `course-design/course-controls.md` | Owns controls covered there, including inter-Lesson navigation and the course-level role/boundary of local SQL assistance. |
 | Course-wide visual language, spatial roles, and interaction locality | `course-design/course-visual-language.md` | Owns visual/spatial role rules; visual design supports pedagogy and does not redefine Lesson reasoning or control semantics. |
 | Executable relational structure | `startup-ecosystem/startup-ecosystem-schema.sql` | Source of truth for tables, columns, PK/FK definitions, constraints, indexes, and other executable structural facts. |
@@ -35,7 +36,7 @@ A source has authority only within the scope it is responsible for. A source mus
 
 `course-work-management.md` and `production-system-work-management.md` are historical / superseded management records and are not current work-state owners.
 
-`course-design/stage-3/` is preserved candidate/history and is not current Lesson authority.
+`course-design/stage-3/stage-3-authority.md` is current Lesson 3 authority. The older `stage-3-learner-route.md` and `stage-3-interaction-decisions.md` files in that directory remain preserved candidate/history and are not current authority.
 
 The rebaseline records under `course-design/production/rebaseline/` are evidence/history of the process redesign. They do not compete with `learner-encounter-production-process.md` as current process authority.
 

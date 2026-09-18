@@ -30,7 +30,7 @@ The accepted runtime baseline remains:
 
 The canonical repository state is the current accepted `main` HEAD and may advance without changing the accepted runtime baseline.
 
-Lesson 3 is not currently accepted or implemented as part of the learner journey. Preserved Stage 3 material and the rebaseline Lesson 3 dry-run design remain candidate/history only.
+Lesson 3 now has current design authority in `course-design/stage-3/stage-3-authority.md`, but it is not yet implemented or accepted as part of the runnable learner journey. The older Stage 3 route/interaction files and the rebaseline Lesson 3 dry-run design remain candidate/history only.
 
 `learner-encounter-production-process.md` is the current rebaselined production-process authority. It no longer requires the legacy permanent-role / fixed-review / verbatim-handoff choreography.
 
@@ -47,8 +47,9 @@ This is the established project plan. The production-system rebaseline in Sectio
    Evidence: `source-of-truth-hierarchy.md`.
 6. **DONE** — Production Contract v1.  
    Evidence: `production-contract-v1.md`.
-7. **CURRENT** — Fresh Lesson 3 design through the current rebaselined learner-encounter production process.
-8. **NOT STARTED** — Build the production system / “machine”.
+7. **DONE** — Fresh Lesson 3 design through the current rebaselined learner-encounter production process.  
+   Evidence: `course-design/stage-3/stage-3-authority.md`.
+8. **CURRENT** — Build the production system / “machine”.
 9. **NOT STARTED** — CI.
 10. **NOT STARTED** — Implement Lesson 3 through the production system.
 11. **NOT STARTED** — CD.
@@ -79,11 +80,11 @@ The rebaseline artifacts are evidence/history for why the current process looks 
 
 ### Current action
 
-**CURRENT ACTION:** execute Master Plan Step 7 — design Lesson 3 freshly through `learner-encounter-production-process.md`, beginning from the accepted Lessons 1–2 baseline and current canon.
+**CURRENT ACTION:** execute Master Plan Step 8 — design and build the production system / “machine” from the current rebaselined process and current authority, before Lesson 3 implementation.
 
-The production-system dry-run Lesson 3 design is **not** current Lesson 3 authority. It may be considered as candidate evidence only after the fresh process establishes the capability need, learner state, and case.
+Lesson 3 design authority is now `course-design/stage-3/stage-3-authority.md`. The older Stage 3 candidate files and the rebaseline Lesson 3 dry-run remain evidence/history only.
 
-Do not implement Lesson 3 during Step 7. Implementation remains Master Plan Step 10.
+Step 8 must operationalize the current process without restoring legacy permanent roles or fixed review choreography. It must also resolve how the machine turns current Lesson authority into a buildable implementation specification and whether/how a visual mockup / visual implementation reference is required before Build. Lesson 3 implementation remains Master Plan Step 10.
 
 ## 4. Management-preservation reconciliation
 
@@ -194,7 +195,7 @@ The following labels organize work only. They are not separate trackers and do n
 Current state:
 
 - Lessons 1–2 are the accepted learner journey;
-- Lesson 3 is the current design task but has no current Lesson authority yet;
+- Lesson 3 has current design authority in `course-design/stage-3/stage-3-authority.md` but is not yet implemented or accepted into the runnable learner journey;
 - current pedagogy, visual, control, schema, data, and accepted Lesson authority remains in the sources identified by `source-of-truth-hierarchy.md`.
 
 ### Production System
@@ -215,7 +216,7 @@ These items are not current blockers unless present work makes them necessary.
 - broader persistence semantics across reloads or sessions;
 - Retry / Redo reset and downstream-invalidation semantics;
 - broader hint / adaptive-assistance policy — deferred unless new evidence justifies reopening;
-- Lesson structure beyond the accepted Lessons 1–2 journey and current Lesson 3 design work;
+- Lesson structure beyond the current Lesson 3 design authority;
 - broader initial schema exposure where future Lesson work actually requires a decision;
 - release-level accessibility, responsive, cross-browser, and cumulative-regression validation.
 
