@@ -70,9 +70,9 @@ This is the established project plan. The production-system rebaseline is comple
 
 1. **DONE** — Establish Lesson 3 encounter design and current Lesson authority.  
    Evidence: `course-design/stage-3/stage-3-authority.md`.
-2. **CURRENT** — Produce the Lesson 3 implementation specification from current authority.  
-   The spec must be sufficient for implementation without inventing pedagogy, evidence behavior, reveal timing, controls, or other governed learner-facing decisions.
-3. **NOT STARTED** — Produce the Lesson 3 visual mockup / visual implementation reference for the material learner states needed before Build.
+2. **DONE** — Produce the Lesson 3 implementation specification from current authority.  
+   Evidence: `course-design/stage-3/stage-3-implementation-spec.md`.
+3. **CURRENT** — Produce the Lesson 3 visual mockup / visual implementation reference for the material learner states needed before Build.
 4. **NOT STARTED** — Reconcile the authority, implementation spec, and visual reference before Build.  
    Confirm that the build boundary is complete, the visual reference does not change pedagogy or protected evidence, and no material ambiguity remains for implementation.
 5. **NOT STARTED** — Implement Lesson 3 manually from the reconciled authority/spec/reference.
@@ -85,9 +85,9 @@ This is the established project plan. The production-system rebaseline is comple
 
 ### Current action
 
-**CURRENT ACTION:** produce the Lesson 3 implementation specification from `course-design/stage-3/stage-3-authority.md` and applicable current course-wide authority.
+**CURRENT ACTION:** produce the Lesson 3 visual mockup / visual implementation reference from the current Lesson authority, `course-design/stage-3/stage-3-implementation-spec.md`, and applicable course-wide visual/control authority.
 
-Do not begin the visual reference, Lesson 3 implementation, or production-system / “machine” work until the current subplan step is completed and the tracker is advanced explicitly.
+Do not begin Lesson 3 implementation or production-system / “machine” work until the visual-reference step is completed, the pre-build reconciliation step is completed, and the tracker is advanced explicitly.
 
 ### 3.2 Closed subplan — Production-system rebaseline
 
