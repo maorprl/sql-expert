@@ -23,8 +23,10 @@ Current encounter authority is stored separately from runtime code:
 - Lesson 1: `course-design/stage-1/stage-1-learner-route.md` and `course-design/stage-1/stage-1-interaction-decisions.md`;
 - Lesson 2: `course-design/stage-2/stage-2-authority.md`;
 - Lesson 3 design: `course-design/stage-3/stage-3-authority.md`.
+- Lesson 3 implementation specification: `course-design/stage-3/stage-3-implementation-spec.md`.
+- Lesson 3 current runnable visual implementation reference: `course-design/stage-3/stage-3-visual-reference.html`.
 
-Lesson 3 now has current design authority, but it is not yet implemented or part of the accepted runnable journey. The older `stage-3-learner-route.md` / `stage-3-interaction-decisions.md` files and the production-system Lesson 3 dry-run design remain candidate/history only.
+Lesson 3 now has reconciled current design authority, an implementation specification, and a runnable visual implementation reference for review. It is **not** yet production-runtime implementation and is not part of the accepted runnable learner journey. The older `stage-3-learner-route.md` / `stage-3-interaction-decisions.md` files and the production-system Lesson 3 dry-run design remain candidate/history only.
 
 Course-wide learner-experience authority is currently defined by:
 

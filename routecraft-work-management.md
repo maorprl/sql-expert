@@ -72,9 +72,11 @@ This is the established project plan. The production-system rebaseline is comple
    Evidence: `course-design/stage-3/stage-3-authority.md`.
 2. **DONE** — Produce the Lesson 3 implementation specification from current authority.  
    Evidence: `course-design/stage-3/stage-3-implementation-spec.md`.
-3. **CURRENT** — Produce the Lesson 3 visual mockup / visual implementation reference for the material learner states needed before Build.
-4. **NOT STARTED** — Reconcile the authority, implementation spec, and visual reference before Build.  
-   Confirm that the build boundary is complete, the visual reference does not change pedagogy or protected evidence, and no material ambiguity remains for implementation.
+3. **DONE** — Produce the Lesson 3 visual mockup / visual implementation reference for the material learner states needed before Build.  
+   Evidence: `course-design/stage-3/stage-3-visual-reference.html`.
+4. **DONE** — Reconcile the authority, implementation spec, and visual reference before Build.  
+   The reconciled review baseline uses a reported missing-company symptom, a visible learner-run prepared source check, protected zero-match prediction, learner-authored INNER JOIN, actual-result verification, and final coverage diagnosis.  
+   Evidence: `course-design/stage-3/stage-3-authority.md`, `course-design/stage-3/stage-3-implementation-spec.md`, and `course-design/stage-3/stage-3-visual-reference.html`.
 5. **NOT STARTED** — Implement Lesson 3 manually from the reconciled authority/spec/reference.
 6. **NOT STARTED** — Validate Lesson 3 to its declared impact and scope.  
    Validation must cover applicable authority conformance, protected evidence and reveal timing, learner flow / UX, executable/runtime behavior, semantic result behavior, and regression across accepted Lessons materially exposed to the change.
@@ -85,9 +87,9 @@ This is the established project plan. The production-system rebaseline is comple
 
 ### Current action
 
-**CURRENT ACTION:** produce the Lesson 3 visual mockup / visual implementation reference from the current Lesson authority, `course-design/stage-3/stage-3-implementation-spec.md`, and applicable course-wide visual/control authority.
+**CURRENT ACTION:** external review of the complete INNER JOIN chapter, including the reconciled Lesson 3 review baseline. Lesson 3 production-runtime implementation remains unstarted until the review feedback is assessed and the user explicitly resumes implementation work.
 
-Do not begin Lesson 3 implementation or production-system / “machine” work until the visual-reference step is completed, the pre-build reconciliation step is completed, and the tracker is advanced explicitly.
+Do not begin production-system / “machine” work. The current Lesson 3 authority, implementation spec, and visual reference are durably reconciled in the repository for review.
 
 ### 3.2 Closed subplan — Production-system rebaseline
 
@@ -217,7 +219,7 @@ The following labels organize work only. They are not separate trackers and do n
 Current state:
 
 - Lessons 1–2 are the accepted learner journey;
-- Lesson 3 has current design authority in `course-design/stage-3/stage-3-authority.md` and is being completed manually through the active Section 3.1 subplan; it is not yet implemented or accepted into the runnable learner journey;
+- Lesson 3 has reconciled current design authority, implementation specification, and runnable visual implementation reference under `course-design/stage-3/`; production-runtime implementation has not started, and the complete INNER JOIN chapter is currently being taken through external review;
 - current pedagogy, visual, control, schema, data, and accepted Lesson authority remains in the sources identified by `source-of-truth-hierarchy.md`.
 
 ### Production System

@@ -1,6 +1,6 @@
 # Lesson 3 implementation specification — INNER JOIN zero matches and entity coverage
 
-**Status:** CURRENT IMPLEMENTATION SPEC — READY FOR VISUAL REFERENCE  
+**Status:** CURRENT IMPLEMENTATION SPEC — RECONCILED WITH CURRENT VISUAL REFERENCE / NOT YET IMPLEMENTED  
 **Source design authority:** `course-design/stage-3/stage-3-authority.md`  
 **Scope:** buildable learner-state behavior, interaction gates, evidence behavior, SQL/result validation, control usage, and implementation constraints for Lesson 3
 
@@ -34,7 +34,7 @@ During development and validation, Lesson 3 may be directly reachable for testin
 
 The persistent business context is:
 
-> The investment team is validating a funding-round report. The report should show every recorded funding round together with the company's status. The team already knows that `Lumina Bio` (`company_id = 20`) exists as a company but has no recorded funding round. They need to understand what the familiar INNER JOIN report does with that zero-match company, and what that means for company coverage.
+> The investment team has received a funding-round report. It should show every recorded funding round together with the company's status. QA has flagged one problem: `Lumina Bio` (`company_id = 20`) is in the company list but is missing from the report. The learner must find out why.
 
 This business context remains available as orientation while visual prominence shifts to the current task, tool, or evidence surface.
 
@@ -46,14 +46,15 @@ The runtime must preserve the following ordered reasoning path:
 
 | State | Learner action | Primary role / surface | Gate |
 | --- | --- | --- | --- |
-| L3-01 Relations | Identify `company` and `funding_round` as the relevant relations | Live Schema / Working Schema with learner-response prompt | Both correct relations are selected |
+| L3-01 Relations | Identify `company` and `funding_round` as the relevant relations behind the report | Live Schema / Working Schema with learner-response prompt | Both correct relations are selected |
 | L3-02 Connection | Identify `funding_round.company_id` as the direct connecting field | Working Schema interaction + learner-response prompt | Correct field is identified |
 | L3-03 Relationship and Grain | Confirm the reused relationship meaning and establish funding-round result Grain | Learner-response lane with Working Schema as evidence/reference | Relationship meaning and Grain are correct |
-| L3-04 Protected prediction | Using the supplied case that `Lumina Bio` has zero recorded funding rounds, predict how many INNER JOIN result rows it can contribute | Learner-response lane with Working Schema available as reference | Learner supplies numeric answer `0` |
-| L3-05 Mechanism explanation | Encounter the teacher-led explanation `zero matches → zero INNER JOIN result rows` | Instructional / teaching treatment | Learner continues |
-| L3-06 SQL authoring | Author the required direct INNER JOIN | SQL Workspace | Semantic validation passes |
-| L3-07 Result verification | Verify from the accepted result that `company_id = 20` is absent | Results in workspace/evidence lane + verification in learner-response lane | Verification is correct |
-| L3-08 Coverage conclusion | Conclude whether 26 result rows prove that all 12 companies are represented | Learner-response lane with result evidence still inspectable | Correct conclusion; Lesson completion |
+| L3-04 Source investigation | Run the visible prepared check for Lumina's matching funding rounds | Prepared SQL in workspace + explicit Run action | Check runs and returns `matching_rounds = 0` |
+| L3-05 Protected prediction | Predict how many INNER JOIN result rows a company with zero matching funding rounds can contribute | Learner-response lane with source-check result still visible | Learner supplies numeric answer `0` |
+| L3-06 Mechanism explanation | Encounter the teacher-led explanation `zero matches → zero INNER JOIN result rows` | Instructional / teaching treatment | Learner continues |
+| L3-07 SQL authoring | Author the required direct INNER JOIN report | SQL Workspace | Semantic validation passes |
+| L3-08 Result verification | Verify from the accepted result that `company_id = 20` is absent | Results in workspace/evidence lane + verification in learner-response lane | Verification is correct |
+| L3-09 Diagnosis and coverage conclusion | Explain why Lumina is missing and conclude whether 26 result rows prove that all 12 companies are represented | Learner-response lane with result evidence still inspectable | Correct diagnosis and conclusion; Lesson completion |
 
 Completion is a state that closes the argument. There is no required repair task or new JOIN type after L3-09.
 
@@ -101,19 +102,34 @@ PK/FK, Cardinality, Grain, and INNER JOIN are reused concepts here. They should 
 
 ---
 
-## 5. Zero-match case premise
+## 5. Source investigation — explicit prepared SQL
 
-The learner is not required to discover the zero-match company through a separate pre-SQL source-data comparison.
+The missing-company symptom is known at entry; the cause is not.
 
-The encounter supplies one concrete source-grounded fact from the current data:
+The learner must establish Lumina's actual source-side match count through an explicit visible action. The required prepared check is:
 
-> `Lumina Bio` (`company_id = 20`) exists in `company` and has no recorded row in `funding_round`.
+```sql
+SELECT COUNT(*) AS matching_rounds
+FROM funding_round
+WHERE company_id = 20;
+```
 
-This fact is the test case for the Lesson. It must be presented explicitly as a fact about the current data, not as a table or query result produced by an unexplained hidden operation.
+The query is prepared for the learner because this is a focused diagnostic measurement, not the Lesson's SQL-authoring task. This reuses the accepted Lessons 1–2 pattern in which prepared SQL is shown, the learner presses Run, and only then does a result appear.
 
-Supplying this case does **not** reveal the protected INNER JOIN consequence. Before the learner answers the protected prediction, the interface must not state or show that `Lumina Bio` disappears from the INNER JOIN result or contributes zero result rows.
+Before Run:
 
-No pre-SQL comparison table, deduplicated coverage list, hidden source query, or learner discovery gate is required.
+- the query text is visible;
+- the interface may state that it checks how many recorded funding rounds match company 20;
+- the result area is empty;
+- the interface must not state that the answer is zero.
+
+After Run, and only after Run, the result may show:
+
+`matching_rounds = 0`
+
+The result must be visibly attributable to the prepared query immediately above it. No hidden query, auto-generated comparison table, deduplicated coverage list, or unexplained data surface may establish this fact.
+
+The source-check result remains available while the protected prediction becomes active.
 
 ---
 
@@ -121,7 +137,7 @@ No pre-SQL comparison table, deduplicated coverage list, hidden source query, or
 
 The protected inference is:
 
-> Given the supplied case company has zero matching funding-round rows, how many result rows can it contribute under the familiar INNER JOIN?
+> The learner has just established that Lumina has zero matching funding-round rows. How many result rows can a company row with zero matches contribute under the familiar INNER JOIN?
 
 This interaction must occur before SQL authoring and before any joined-result reveal.
 
@@ -151,7 +167,7 @@ This is a teacher-led mechanism explanation attaching explicit meaning to reason
 
 ## 7. SQL authoring state
 
-After the mechanism explanation, the learner authors the familiar INNER JOIN.
+After the mechanism explanation, the learner authors the familiar INNER JOIN that reproduces the report. The learner-facing instruction starts from `company`, joins matching `funding_round` rows, and returns the required report fields.
 
 No Lesson-1-style first-exposure JOIN teaching sequence is repeated. INNER JOIN and `ON` are reused syntax.
 
@@ -279,6 +295,7 @@ Learner-facing reasoning and verification interactions remain in the stable lear
 The workspace/evidence lane owns, as applicable:
 
 - Working Schema and direct schema manipulation;
+- the visible prepared source-check SQL and its run result;
 - SQL editor;
 - `Run query`;
 - SQL-local assistance;
@@ -298,6 +315,7 @@ Completed work must not become the dominant scan path or separate the learner fr
 Visual prominence may legitimately move from learner reasoning to:
 
 - Working Schema interaction;
+- the explicit prepared source check;
 - SQL authoring;
 - Results inspection.
 
@@ -309,23 +327,30 @@ The visual reference must make each material handoff legible without relocating 
 
 ## 12. Visual-reference requirements
 
-The next visual-reference step must resolve the composition of the material learner states without changing the interaction semantics established here.
+The current visual implementation reference is:
 
-At minimum it must represent:
+`course-design/stage-3/stage-3-visual-reference.html`
 
-1. **Protected-prediction state**  
-   How the supplied zero-match case is made explicit and the numeric prediction becomes the learner's active response without revealing the INNER JOIN consequence.
+It is a runnable visual/reference artifact, not accepted production runtime.
 
-2. **SQL-authoring state**  
-   How the editor becomes visually primary while Working Schema and completed reasoning remain practically available but secondary.
+The reference must preserve at minimum:
 
-3. **Results-verification state**  
-   How all 26 accepted rows remain inspectable while the verification interaction stays in the stable learner-response lane.
+1. **Missing-company entry state**  
+   Lumina is named as the reported symptom, while the cause remains unknown.
 
-4. **Completion state**  
-   How the Lesson clearly closes the zero-match / coverage reasoning thread without visually introducing a new repair lesson.
+2. **Source-investigation state**  
+   The prepared SQL is visibly shown, the learner explicitly runs it, and the `0` result appears only as the output of that action.
 
-The visual reference may resolve exact composition, spacing, local component arrangement, and role-consistent styling. It must not alter the learner sequence, evidence ownership, reveal timing, answer logic, SQL contract, control semantics, or completion requirements established here and in higher-order authority.
+3. **Protected-prediction and mechanism states**  
+   The zero-match source result remains available, the learner supplies the numeric INNER JOIN consequence, and only then does the teaching treatment state `zero matches → zero INNER JOIN result rows`.
+
+4. **SQL-authoring state**  
+   The editor becomes visually primary while Working Schema and completed reasoning remain practically available but secondary.
+
+5. **Results-verification and completion states**  
+   All 26 accepted rows remain inspectable, the learner verifies that company 20 is absent, and the Lesson closes the missing-company diagnosis plus the entity-coverage consequence without introducing a repair lesson.
+
+The visual reference may resolve exact composition, spacing, local component arrangement, and role-consistent styling. It must not alter the learner sequence, evidence provenance, reveal timing, answer logic, SQL contract, control semantics, or completion requirements established here and in higher-order authority.
 
 ---
 
@@ -337,7 +362,7 @@ Implementation may choose, within current authority:
 - exact copy polish that preserves learner ownership and reveal boundaries;
 - internal state representation;
 - semantic-validator technical implementation;
-- exact presentation of the supplied zero-match case premise consistent with Section 5;
+- exact presentation of the missing-company symptom and prepared source-check treatment consistent with Section 5;
 - local styling consistent with course-wide visual roles.
 
 Implementation must not silently decide:
@@ -357,10 +382,10 @@ Implementation must not silently decide:
 
 This specification has been checked against the current Lesson 3 authority, course controls, course visual language, pedagogical foundations, and the relevant accepted Lessons 1–2 interaction patterns.
 
-The zero-match company is supplied as a source-grounded case premise rather than rediscovered through a pre-SQL comparison surface. This removes an unexplained evidence-generation step while preserving learner ownership of the protected INNER JOIN consequence.
+The missing company is supplied as the reported symptom, but its zero-match cause is not supplied. The learner establishes the cause by running a visible prepared SQL check. This preserves clear evidence provenance while avoiding the earlier unexplained comparison-table pattern.
 
 The protected prediction uses constrained numeric input rather than multiple choice because pre-answer selectable wording would violate the Lesson 3 protected-evidence constraint.
 
 The final company-coverage conclusion may use closed single-choice interaction because it occurs after the protected inference has already been produced and verified.
 
-No unresolved implementation-spec issue currently blocks production of the Lesson 3 visual implementation reference.
+The implementation specification and current visual implementation reference are reconciled. Production runtime implementation remains intentionally unstarted while the complete INNER JOIN chapter is taken through external review.

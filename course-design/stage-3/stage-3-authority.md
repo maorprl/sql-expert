@@ -1,6 +1,6 @@
 # Lesson 3 authority — INNER JOIN zero matches and entity coverage
 
-**Status:** CURRENT AUTHORITY — DESIGN COMPLETE / NOT YET IMPLEMENTED  
+**Status:** CURRENT AUTHORITY — RECONCILED REVIEW BASELINE / NOT YET IMPLEMENTED  
 **Scope:** Lesson 3 encounter-local pedagogy, sequence, evidence, reveal timing, SQL/result contract, and implementation boundary
 
 This document is the current Lesson 3 design authority. It was established freshly from the accepted Lessons 1–2 baseline through the current learner-encounter production process.
@@ -42,7 +42,7 @@ No new SQL join syntax is introduced in this Lesson. The novelty is the row-surv
 
 ## 2. Business case and relation pair
 
-The investment team is validating a funding-round report. The report should show every recorded funding round together with the company's status. The team already knows one concrete edge case in the current data: `Lumina Bio` (`company_id = 20`) exists as a company but has no recorded funding round. They need to understand what the familiar INNER JOIN report does with that zero-match company, and what that means for company coverage.
+The investment team has received a funding-round report. The report is intended to show every recorded funding round together with the company's status. QA has flagged one concrete symptom: `Lumina Bio` (`company_id = 20`) is in the company list but is missing from the report. The learner's task is to investigate why.
 
 The relevant relations are:
 
@@ -55,13 +55,14 @@ The direct relationship is:
 
 Each funding round belongs to one company. A company can have zero, one, or multiple recorded funding rounds.
 
-The current seed grounds that known zero-match case:
+The current seed grounds the investigation:
 
 - 12 company rows;
 - 26 funding-round rows;
-- `Lumina Bio` (`company_id = 20`) exists in `company` and has no row in `funding_round`.
+- `Lumina Bio` (`company_id = 20`) exists in `company`;
+- `Lumina Bio` has no row in `funding_round`.
 
-This source-data fact is supplied as the concrete case premise. The learner is not required to rediscover it through a separate pre-SQL comparison task. Supplying the fact does not supply the protected INNER JOIN conclusion.
+The missing-company symptom may be supplied at the start. The fact that Lumina has zero matching funding rounds must **not** be supplied as an unexplained premise. The learner establishes that fact by running the visible prepared source check defined in the learner journey below.
 
 ---
 
@@ -96,28 +97,39 @@ Lesson 3 must not assume or teach as part of its required path:
 ## 4. Learner journey
 
 1. **Identify the relevant relations.**  
-   From the business question and Live Schema, the learner identifies `company` and `funding_round`. This is reused relation-selection reasoning.
+   From the missing-company investigation and Live Schema, the learner identifies `company` and `funding_round`. This is reused relation-selection reasoning.
 
 2. **Identify the direct connection and confirm relationship meaning.**  
-   The learner identifies `funding_round.company_id` as the field that links a funding round to its company. After that action, the reused PK/FK relationship may be shown. The encounter confirms compactly that a company can have zero, one, or many funding rounds and each funding round belongs to one company. The structural possibility of zero matches may be established here; the INNER JOIN consequence must not be supplied here.
+   The learner identifies `funding_round.company_id` as the field that links a funding round to its company. After that action, the reused PK/FK relationship may be shown. The encounter confirms compactly that a company can have zero, one, or many funding rounds and each funding round belongs to one company. The structural possibility of zero matches may be established here; Lumina's actual match count and the INNER JOIN consequence must not be supplied here.
 
 3. **Establish requested result Grain.**  
-   One requested result row represents one recorded funding round with company context. Company coverage is a separate validation question and must not redefine the result as one company per row.
+   One requested report row represents one recorded funding round with company context. Company coverage is a separate diagnostic consequence and must not redefine the report as one company per row.
 
-4. **Protected prediction: reason about the concrete zero-match case under INNER JOIN.**  
-   The encounter supplies the source-grounded case premise: `Lumina Bio` (`company_id = 20`) exists in `company` and has zero recorded funding rounds. Before SQL authoring or any joined-result reveal, the learner predicts what INNER JOIN will do with that zero-match company. The required reasoning is: zero matching row pairs → zero result rows contributed by that company.
+4. **Investigate the reported symptom with an explicit source check.**  
+   The course shows a prepared SQL check and the learner explicitly runs it:
 
-5. **Explain and name the mechanism.**  
-   Only after the learner has produced the prediction, the course explains the mechanism explicitly: **zero matches → zero INNER JOIN result rows**. The explanation connects the supplied zero-match case to INNER JOIN row survival without introducing LEFT JOIN or NULL.
+   ```sql
+   SELECT COUNT(*) AS matching_rounds
+   FROM funding_round
+   WHERE company_id = 20;
+   ```
 
-6. **Implement the familiar INNER JOIN.**  
-   The learner authors the company-to-funding-round INNER JOIN. INNER JOIN and `ON` are reused syntax; no new join syntax is taught.
+   Only after the learner runs the visible check does the result establish that Lumina has `0` matching funding-round rows. The result must be visibly attributable to this query; no hidden comparison table or unexplained data surface substitutes for it.
 
-7. **Inspect and verify actual Results.**  
-   A semantically correct result contains all 26 funding-round rows at funding-round Grain. The learner verifies from the actual result that `company_id = 20` is absent.
+5. **Protected prediction: reason about zero matches under INNER JOIN.**  
+   With the source fact now established, and before report SQL authoring or any joined-result reveal, the learner predicts how many INNER JOIN result rows a company row with zero matching funding-round rows can contribute. The required reasoning is: zero matching row pairs → zero result rows.
 
-8. **Answer the original coverage question.**  
-   The learner concludes that a 26-row funding-round report can be correct at funding-round Grain while representing only 11 of the 12 companies. Total result-row count therefore does not prove entity coverage.
+6. **Explain and name the mechanism.**  
+   Only after the learner has produced the prediction, the course explains the mechanism explicitly: **zero matches → zero INNER JOIN result rows**. The explanation connects the just-run source check to INNER JOIN row survival without introducing LEFT JOIN or NULL.
+
+7. **Implement the familiar INNER JOIN.**  
+   The learner authors the direct company-to-funding-round INNER JOIN for the report. INNER JOIN and `ON` are reused syntax; no new join syntax is taught.
+
+8. **Inspect and verify actual Results.**  
+   A semantically correct result contains all 26 funding-round rows at funding-round Grain. The learner verifies from the actual result that `company_id = 20` is absent, reproducing the reported symptom.
+
+9. **Close the investigation and generalize the coverage consequence.**  
+   The learner explains why Lumina is missing: it has zero matching funding-round rows, so INNER JOIN forms zero matched row pairs for it. The encounter then closes the analytical consequence: a 26-row funding-round report can be correct at funding-round Grain while representing only 11 of the 12 companies. Total result-row count therefore does not prove entity coverage.
 
 Completion visibly closes this reasoning thread rather than adding a new repair task.
 
@@ -125,22 +137,40 @@ Completion visibly closes this reasoning thread rather than adding a new repair 
 
 ## 5. Protected evidence and reveal constraints
 
-The core protected inference is:
+The encounter has two sequential protected discoveries:
 
-> What does INNER JOIN do when the supplied case company has zero matching funding-round rows?
+1. **Source fact:** does Lumina actually have any matching `funding_round` rows?
+2. **Relational consequence:** given zero matches, what does INNER JOIN contribute for that company?
 
-Before the learner produces that prediction:
+At the opening, the course may state only the reported symptom:
 
-- do not state that the zero-match company will disappear from the result;
+> `Lumina Bio` exists in the company list but is missing from the funding-round report.
+
+Before the learner runs the prepared source check:
+
+- do not state that Lumina has zero funding rounds;
+- do not show a source-data table, deduplicated coverage list, or hidden-query output that reveals that fact;
+- do not state or show the INNER JOIN consequence.
+
+After the learner runs the prepared source check, the course may explicitly confirm:
+
+> `matching_rounds = 0`
+
+That confirmation is source evidence, not yet the INNER JOIN conclusion.
+
+Before the learner produces the protected numeric prediction:
+
+- do not state that Lumina contributes zero INNER JOIN rows;
 - do not show a finished joined result that demonstrates the disappearance;
-- do not frame the zero-cardinality possibility as equivalent to the INNER JOIN consequence;
-- do not introduce LEFT JOIN as a solution;
-- do not introduce NULL as the expected unmatched-row representation;
-- do not provide answer wording, visuals, or scaffolding from which the learner can select the correct consequence without performing the relational reasoning.
+- do not introduce LEFT JOIN as a repair;
+- do not introduce NULL as an unmatched-row representation;
+- do not provide selectable answer wording that gives away the numeric consequence.
 
-The structural statement that a company **can** have zero funding rounds is a permitted premise. The concrete source-data fact that `Lumina Bio` currently has zero recorded funding rounds is also a permitted supplied premise. The protected inference is the effect of that realized zero-match case under INNER JOIN.
+Only after the learner predicts `0` may the course explicitly teach:
 
-No pre-SQL source-data comparison, hidden query result, or separate discovery task is required to establish the case. The learner's ownership begins with the INNER JOIN consequence: they must still predict the result-row contribution before that consequence is explained or shown.
+> zero matching row pairs → zero INNER JOIN result rows
+
+The evidence provenance must stay legible: the zero-match fact comes from the visible prepared SQL the learner ran, and the later missing-company verification comes from the learner-authored report query.
 
 ---
 
@@ -150,7 +180,7 @@ The required logical output fields are:
 
 `company_id | status | funding_round_id | round_type | announced_date`
 
-The accepted logical result is the direct INNER JOIN of `company` and `funding_round` on the established company-id relationship:
+The accepted logical result is the direct INNER JOIN of `company` and `funding_round` on the established company-id relationship. The learner-facing authoring prompt starts from `company` so the missing-company diagnosis remains conceptually legible:
 
 - 26 funding-round-grain rows;
 - every current funding round represented exactly once;
@@ -171,10 +201,12 @@ Lesson 3 completion requires evidence that the learner has:
 - identified the connecting company-id relationship;
 - confirmed the relevant company-to-funding-round cardinality;
 - established funding-round result Grain;
-- used the supplied source-grounded case of a company with zero funding-round matches;
-- predicted that the company contributes zero INNER JOIN result rows;
-- produced a semantically correct INNER JOIN result;
-- verified from actual Results that the zero-match company is absent;
+- run the visible prepared source check for `company_id = 20`;
+- established from that check that Lumina has zero matching funding-round rows;
+- predicted that a zero-match company contributes zero INNER JOIN result rows;
+- produced a semantically correct direct INNER JOIN result;
+- verified from actual Results that `company_id = 20` is absent;
+- explained the reported missing-company symptom from the zero-match mechanism;
 - concluded that 26 result rows do not establish coverage of all 12 companies.
 
 Correct SQL alone is not sufficient completion evidence.
@@ -187,7 +219,8 @@ Implementation must preserve:
 
 - the one-match → multiple-matches → zero-matches conceptual progression;
 - compact reuse of already introduced concepts rather than first-exposure re-teaching;
-- a clear, source-grounded zero-match case premise without a separate discovery task;
+- a concrete missing-company symptom that motivates the investigation without revealing its cause;
+- explicit learner-run source evidence for Lumina's actual zero-match state;
 - learner ownership of the pre-execution INNER JOIN survival prediction;
 - the reveal boundary separating structural optionality from INNER JOIN consequence;
 - funding-round result Grain;
@@ -199,7 +232,7 @@ Implementation may choose, within current visual/control authority:
 
 - exact component composition;
 - exact wording polish that preserves reasoning ownership and non-preemption;
-- the concise presentation of the supplied zero-match case premise;
+- the concise presentation of the reported missing-company symptom and the visible prepared source check;
 - technical state representation;
 - semantic-validator implementation details;
 - local styling consistent with current visual roles.
