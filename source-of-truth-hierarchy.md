@@ -5,7 +5,7 @@
 
 This document defines which current source owns which kind of decision in RouteCraft and what to do when two current sources appear to overlap.
 
-It does **not** redesign pedagogy, Lesson flow, visual language, controls, schema, runtime, or the production process. It records the authority boundaries already established across the repository and adds only the minimum missing precedence rules needed to keep them deterministic.
+It does **not** redesign pedagogy, Lesson flow, visual language, controls, schema, runtime, or the production process. It records authority boundaries and adds only the minimum precedence rules needed to keep them deterministic.
 
 ## 1. Governing principle — domain ownership, not one global ranking
 
@@ -29,13 +29,15 @@ A source has authority only within the scope it is responsible for. A source mus
 | Executable relational structure | `startup-ecosystem/startup-ecosystem-schema.sql` | Source of truth for tables, columns, PK/FK definitions, constraints, indexes, and other executable structural facts. |
 | Current data instance | `startup-ecosystem/startup-ecosystem-seed.sql` | Source of truth for the rows and concrete values loaded into the course database. |
 | Human-readable schema intent and relation/grain documentation | `startup-ecosystem/startup-ecosystem-schema.md` | Documents schema purpose, row meanings, grains, and design intent; it must remain consistent with executable schema/data facts. |
-| Learner-encounter production workflow and gates | `learner-encounter-production-process.md` | Owns roles, gates, review/independence requirements, durable handoffs, acceptance, and change-impact rules. |
-| Agent/tool execution and coordination | `agent-assisted-work-protocol.md` | Owns worker allocation, branch/handoff mechanics, synchronization, and execution efficiency; remains subordinate to mandatory production-process gates. |
+| Learner-encounter production workflow and quality controls | `learner-encounter-production-process.md` | Owns the current basis → encounter definition → authority-before-build → build → impact-validation → acceptance workflow, including conditional case comparison, risk-triggered challenge, failure routing, and durable-record discipline. It does not decide Lesson content. |
+| Agent/tool execution and coordination | `agent-assisted-work-protocol.md` | Owns worker/tool allocation, branch/handoff mechanics, synchronization, and execution efficiency; it must not bypass controls required by the current production process or current authority. |
 | Current project work state and planning | `routecraft-work-management.md` | Single live tracker for the master plan, active subplans, current action, and non-authoritative backlog state; it does not create pedagogy, Lesson, process, validation, or implementation authority. |
 
 `course-work-management.md` and `production-system-work-management.md` are historical / superseded management records and are not current work-state owners.
 
 `course-design/stage-3/` is preserved candidate/history and is not current Lesson authority.
+
+The rebaseline records under `course-design/production/rebaseline/` are evidence/history of the process redesign. They do not compete with `learner-encounter-production-process.md` as current process authority.
 
 ## 3. Overlap and precedence rules
 
@@ -60,13 +62,13 @@ Visual authority determines how those established roles are composed, localized,
 
 Visual implementation must not change pedagogy in order to satisfy a visual pattern. If a visual rule and pedagogical requirement cannot both be satisfied, the conflict must be surfaced rather than silently resolved in implementation.
 
-### 3.3 Process versus course authority
+### 3.3 Production process versus course authority
 
-The production process governs **how** new or changed learner encounters are designed, reviewed, implemented, validated, and accepted.
+The production process governs **how** new or materially changed learner encounters move from current-state grounding through design, authority, implementation, validation, and acceptance.
 
-It does not decide **what** the course should teach merely because it controls the production workflow.
+It does not decide **what** the course should teach merely because it governs the workflow.
 
-Likewise, an agent/execution protocol cannot remove a mandatory production-process gate or invent course authority for efficiency.
+Likewise, an agent/execution protocol cannot invent course authority or bypass a control that the current production process requires for the actual risk/impact of the work.
 
 ## 4. Runtime and implementation rule
 
@@ -77,8 +79,8 @@ Runtime/code is **not**, by implementation presence alone, normative authority f
 Therefore:
 
 - a runtime/authority mismatch is a conformance issue, an implementation defect, or an owner-decision case; it is not automatically resolved in favor of the runtime;
-- an intentionally accepted owner decision may approve current runtime behavior and then require authority maintenance so the durable current authority reflects that accepted decision;
-- once that authority maintenance is complete, the reconciled authority — not the historical fact that the runtime happened to behave that way first — governs future work.
+- an intentionally accepted decision may approve current runtime behavior and then require authority maintenance so durable current authority reflects that accepted decision;
+- once that authority maintenance is complete, the reconciled authority — not the historical fact that runtime happened to behave that way first — governs future work.
 
 The accepted Lessons 1–2 runtime is the current product baseline for observable implementation behavior. That acceptance does not convert runtime files into pedagogical or control authority outside the decisions explicitly reconciled into current authority.
 
@@ -124,7 +126,7 @@ Potentially reusable material retained for future reconsideration, but it has no
 
 ## 7. Evidence, review, and provenance artifacts
 
-Audits, test drives, reviews, implementation records, production artifacts, screenshots, tests, and Git history are evidence/provenance unless a current authority source explicitly promotes an accepted decision into current authority.
+Audits, test drives, reviews, implementation records, production artifacts, screenshots, tests, rebaseline records, and Git history are evidence/provenance unless a current authority source explicitly promotes an accepted decision into current authority.
 
 They may:
 
@@ -139,7 +141,7 @@ They may not promote themselves into current authority merely because they are d
 
 If two current sources both legitimately claim the same decision domain and their requirements cannot be satisfied together, do not invent precedence from file age, implementation state, role seniority, or document detail.
 
-Classify the issue as a **genuine authority conflict** and escalate it to the Course Authority Owner for an explicit decision and durable authority update.
+Classify the issue as a **genuine authority conflict** and require an explicit decision and durable authority update before dependent work proceeds.
 
 If no current source owns a material decision, classify it as **MISSING AUTHORITY** or `OPEN` rather than silently assigning ownership to the nearest document or runtime convention.
 

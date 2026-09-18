@@ -23,7 +23,7 @@ Current encounter authority is stored separately from runtime code:
 - Lesson 1: `course-design/stage-1/stage-1-learner-route.md` and `course-design/stage-1/stage-1-interaction-decisions.md`;
 - Lesson 2: `course-design/stage-2/stage-2-authority.md`.
 
-The Stage 3 documents are preserved candidate/history and are not current learner-product authority. No Lesson 3 is currently part of the accepted journey.
+The Stage 3 documents and the production-system Lesson 3 dry-run design are candidate/history only. No Lesson 3 is currently part of the accepted journey.
 
 Course-wide learner-experience authority is currently defined by:
 
@@ -31,7 +31,7 @@ Course-wide learner-experience authority is currently defined by:
 - `course-design/course-visual-language.md`;
 - `course-design/course-controls.md`.
 
-There is currently no separate Lessons 1–2 topology authority. Spatial and interaction conformance is derived directly from the current course-level and Lesson authority above.
+There is currently no separate Lessons 1–2 topology authority. Spatial and interaction conformance is derived directly from current course-level and Lesson authority.
 
 A compact Previous / Next control in the masthead provides progression-safe inter-Lesson navigation. Lesson 1 Next becomes usable only after the existing completion progression authorizes Lesson 2. Lesson 2 Previous returns to Lesson 1, and Lesson 2 has no usable Next because no Lesson 3 is currently approved.
 
@@ -48,9 +48,10 @@ For current work state and authority boundaries, use:
 - `routecraft-work-management.md` — the single current project work-state tracker;
 - `source-of-truth-hierarchy.md` — current authority ownership and precedence;
 - `production-contract-v1.md` — cross-project preservation, change-routing, state, and promotion invariants;
-- `learner-encounter-production-process.md` — the formally current learner-encounter production-process authority unless an explicit later cutover changes that status;
+- `learner-encounter-production-process.md` — current learner-encounter production-process authority;
 - `agent-assisted-work-protocol.md` — execution / coordination guidance;
-- `learner-encounter-production-execution.md` — historical / superseded Cycle 1 execution snapshot unless explicitly reactivated for a future production cycle;
+- `course-design/production/rebaseline/` — historical/evaluative evidence for the production-process rebaseline, not current process authority;
+- `learner-encounter-production-execution.md` — historical / superseded Cycle 1 execution snapshot;
 - `course-design/production/cycle-1/` — durable Cycle 1 production artifacts and historical provenance.
 
 Historical management records include `course-work-management.md`, `production-system-work-management.md`, and `course-experience-improvement-work-management.md`; they are not current work-state sources.

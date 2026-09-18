@@ -1,32 +1,28 @@
 # Agent-Assisted Work Protocol
 
 **Status:** WORKING  
-**Role:** Execution / coordination protocol  
+**Role:** Execution / coordination protocol
 
-This document describes how work should be divided, handed off, reviewed, and synchronized when ChatGPT, Codex, other implementation agents, or independent review models are used on this repository.
+This document describes how work should be assigned, handed off, reviewed, and synchronized when ChatGPT, Codex, other implementation agents, or independent review models are used on this repository.
 
-It is not a pedagogical, visual, Stage, schema, or data source of truth. Those decisions remain in their dedicated authority documents.
+It is not pedagogical, visual, Lesson, schema, data, or production-process authority. Those decisions remain in their dedicated current sources.
 
-The purpose of this protocol is to reduce unnecessary handoff loops, preserve source-of-truth discipline, reduce token and coordination cost, and make the workflow safer as more work or more agents are introduced.
+The purpose of this protocol is to reduce unnecessary handoff loops, preserve source-of-truth discipline, reduce coordination cost, and keep multi-tool execution safe.
 
 ## Relationship to learner-encounter production
 
-For learner-encounter production, `learner-encounter-production-process.md` defines the **workflow, functional roles, required gates, independence requirements, durable artifacts, and acceptance logic**.
+`learner-encounter-production-process.md` defines the **current production workflow and required quality controls**: current-state grounding, encounter definition, authority-before-build, risk-triggered challenge where needed, implementation boundaries, impact-based validation, acceptance, and durable-record discipline.
 
-This document governs **how those required functions are assigned and executed**: worker/tool selection, handoff mechanics, implementation-agent usage, branch coordination, remote/local synchronization, and general execution efficiency.
+This document governs **how that work is assigned and executed**: worker/tool selection, handoff mechanics, implementation-agent usage, branch coordination, remote/local synchronization, and execution efficiency.
 
-Where `learner-encounter-production-process.md` requires a specific independent review, gate, or role separation, that requirement remains mandatory. General efficiency guidance in this document does not remove a required learner-encounter production control; it governs how that control is executed.
-
-The functional roles in the learner-encounter production process do not, by themselves, require a permanent one-role-per-agent topology. Concrete agent/run mapping may be decided separately as long as the mandatory independence boundaries are preserved.
-
-For learner-encounter production, any completed role output that becomes an input to a later role must be stored in the repository **verbatim before the dependent role begins**. A summary, reconstruction, paraphrase, or conversational restatement is not a valid durable handoff. If the actual completed output cannot be established, the dependent work remains blocked unless the Course Authority Owner explicitly authorizes another provenance treatment.
+This protocol must not bypass a production-process control that is triggered by the actual scope/risk of the work. Conversely, it must not add permanent roles, review loops, or handoff artifacts merely because a previous cycle used them.
 
 ## 1. Classify the work before choosing the worker
 
-A task should first be treated as one of these kinds of work:
+Treat a task first as one of these kinds of work:
 
-- **Decision / design work** — a pedagogical, learner-flow, visual, or other authority decision is unresolved.
-- **Authority maintenance** — an accepted decision needs to be recorded or minimally reconciled in current-source documents.
+- **Decision / design work** — a pedagogical, learner-flow, visual, evidence, or other authority decision is unresolved.
+- **Authority maintenance** — an accepted decision needs to be recorded or reconciled in current-source documents.
 - **Implementation work** — current authority is sufficiently clear and code must be brought into conformance.
 - **Validation / review work** — an implementation or document change must be checked against authority and actual behavior.
 
@@ -34,7 +30,7 @@ Do not send implementation work back into open-ended design merely because an im
 
 ## 2. Default division of responsibility
 
-### Orchestrator / primary assistant
+### Primary assistant / orchestrator
 
 Prefer the primary assistant for work it can complete directly and reliably, including:
 
@@ -57,29 +53,30 @@ Prefer an implementation agent for work that materially benefits from its local 
 - browser / application test drives;
 - iterative implementation where execution feedback is needed.
 
-The implementation agent implements current authority. It is not an alternate design authority.
+An implementation agent implements current authority. It is not an alternate design authority.
 
-### Independent review model
+### Independent challenge / review model
 
-Use an independent model only when there is a genuine unresolved decision for which an independent second opinion is useful.
+Use an independent model or reviewer when the current production process's **risk-triggered challenge** or impact-based validation rule makes independence useful — for example when protected learner evidence, answer leakage, substantial scaffolding, novel interaction semantics, consequential case trade-offs, or a material conformance claim is difficult for the author to self-validate.
 
-The prompt should be neutral and should not leak the preferred diagnosis as an assumed fact. An independent review is evidence for a decision; it does not become authority by itself.
+The prompt should be neutral and should not leak the preferred diagnosis as an assumed fact. Independent review is evidence for a decision or validation claim; it does not become authority by itself.
 
-Routine implementation, documentation, synchronization, and conformance checking do not require an independent model.
+Routine implementation, narrow documentation maintenance, synchronization, and low-risk conformance checking do not require an independent model by default.
 
 ## 3. Default handoff pattern
 
-When authority is clear, the default should be **one bounded implementation pass followed by review**, not repeated assessment → approval → implementation loops.
+When authority is clear, prefer **one bounded implementation pass followed by review/validation**, not repeated assessment → approval → implementation loops.
 
 A separate assessment-only pass is justified when:
 
-- the authority is materially ambiguous;
-- the implementation architecture may make the requested change non-local or risky;
+- authority is materially ambiguous;
+- implementation architecture may make the requested change non-local or risky;
 - the task boundary is unclear;
 - a previous implementation attempt revealed interpretation drift;
-- the reviewer cannot safely determine scope without first seeing the agent's implementation plan.
+- a risk-triggered challenge is needed before a material design decision is accepted;
+- the reviewer cannot safely determine scope without first seeing an implementation plan.
 
-Otherwise, avoid a preflight round that only restates what can already be inferred from current authority and code.
+Otherwise, avoid a preflight round that only restates what can already be established from current authority and code.
 
 An implementation handoff should normally identify:
 
@@ -91,41 +88,43 @@ An implementation handoff should normally identify:
 - required validation;
 - what to do if a material ambiguity or authority conflict is discovered.
 
-The handoff should not duplicate the authority into a second competing specification or dictate technical implementation details that are not themselves locked decisions.
+The handoff should not duplicate current authority into a second competing specification or dictate technical implementation details that are not locked decisions.
 
-For role-to-role production handoffs, the receiving role should read the durable repository artifact directly. Do not manually retype, summarize, or reinterpret another role's completed output when the repository artifact is available.
+When durable authority/evidence already exists in the repository, the receiving worker should read that source directly rather than relying on conversational reconstruction. A separate verbatim handoff file is required only when the actual task needs such a durable record; it is not a universal transition rule.
 
-## 4. Decision and implementation gates
+## 4. Decision, implementation, review, and validation boundaries
 
-### Decision gate
+### Decision boundary
 
-If a material learner-experience or pedagogical decision is unresolved, resolve it before implementation. If useful, obtain an independent review before accepting the decision.
+If a material learner-experience, evidence, or pedagogical decision is unresolved, resolve it before implementation depends on it.
 
-Once accepted, record the decision in current authority before asking an implementation agent to rely on it.
+If the decision meets the current process's risk-triggered challenge conditions, obtain that challenge before promoting the decision into current authority.
 
-### Implementation gate
+Once accepted, record the material decision in current authority before asking an implementation agent to rely on it.
 
-The implementation agent should use the smallest approach consistent with current authority and the existing architecture.
+### Implementation boundary
 
-Behavior that already conforms should be preserved. A materially ambiguous authority statement or a conflict that affects learner behavior should be reported rather than silently resolved in code.
+The implementation agent should use the smallest approach consistent with current authority and existing architecture.
+
+Behavior that already conforms should be preserved. A materially ambiguous authority statement or conflict affecting learner behavior should be reported rather than silently resolved in code.
 
 A genuinely OPEN implementation detail may be chosen locally when the choice is non-pedagogical, does not silently close a broader design question, and follows the smallest existing implementation pattern.
 
-### Review gate
+### Review boundary
 
-Review the **actual commit / diff**, not only the implementation agent's summary of what changed.
+Review the **actual commit / diff**, not only the implementation agent's summary.
 
-The review should check:
+Check as applicable:
 
-- conformance with the named authority;
+- conformance with named authority;
 - scope containment;
-- preservation of already-working behavior;
+- preservation of accepted behavior;
 - accidental resolution of OPEN decisions;
-- regressions or implementation claims that are not supported by the diff or validation evidence.
+- regressions or implementation claims unsupported by diff/validation evidence.
 
-### Validation gate
+### Validation boundary
 
-Use the level of validation appropriate to the change: static diff review, build/tests, targeted browser test, learner-flow test drive, or broader regression.
+Use the level of validation appropriate to impact: static diff review, schema/data checks, build/tests, SQL semantic/adversarial validation, targeted browser test, learner-flow test drive, independent challenge, or broader regression.
 
 Do not treat a successful build as evidence that the learner experience is pedagogically correct.
 
@@ -155,47 +154,43 @@ ChatGPT-specific Git command safety rules live only in `chatgpt-git-safety.md`. 
 
 ## 6. Branch ownership and active-work lock
 
-When an implementation agent begins work from an agreed starting HEAD, the branch relationship for that task must be treated as an active ownership boundary until the implementation is either abandoned or reviewed.
+When an implementation agent begins work from an agreed starting HEAD, treat the branch relationship for that task as an active ownership boundary until the implementation is abandoned or reviewed.
 
 Default rule:
 
 - create or use a dedicated task / review branch for implementation work;
 - one implementation writer owns that task branch while the handoff is active;
 - do not make unrelated direct writes to the branch the implementation agent is expected to rejoin while it is working locally;
-- if documentation or authority maintenance must happen concurrently, use a separate branch or wait until the active implementation handoff reaches a synchronization point;
-- do not silently move the expected base underneath an active local implementation commit.
+- if documentation or authority maintenance must happen concurrently, use a separate branch or wait for a synchronization point;
+- do not silently move the expected base underneath active local implementation.
 
-The preferred scalable flow is:
+Preferred scalable flow:
 
-`canonical working branch → task branch → implementation → validation/report → review of actual commit/diff → promotion to canonical working branch`
+`canonical working branch → task branch → implementation → validation/report → actual diff review → promotion to canonical working branch`
 
-Promotion means advancing the canonical working branch only after the implementation has been reviewed and accepted.
-
-The canonical working branch should therefore be treated as **write-frozen for the affected workstream during an active implementation handoff**, unless the handoff is explicitly paused and the implementation agent is instructed to resynchronize before continuing.
+Promotion means advancing the canonical working branch only after the change has been reviewed and accepted to its required scope.
 
 If an unavoidable concurrent write changes the canonical branch while local implementation is active:
 
 1. do not push the local implementation commit directly onto the moved canonical branch;
-2. publish or preserve the implementation on a separate task/review branch;
-3. rebase or otherwise reconcile only under explicit instruction and with conflict reporting;
+2. preserve implementation on a separate task/review branch;
+3. reconcile only under explicit instruction and with conflict reporting;
 4. review the reconciled commit against the new base;
 5. promote only after review.
-
-This rule exists to prevent coordination work from creating avoidable divergence and to make multi-agent execution scalable.
 
 ## 7. Multi-agent / scale rule
 
 As the workflow scales, avoid multiple active writers on the same branch.
 
-Preferred scalable pattern:
+Preferred pattern:
 
 - one active writer per task branch;
 - other agents review read-only or work on separate task branches;
-- each handoff names the exact starting commit;
-- accepted work advances the canonical working branch only after review;
-- durable repository state, not conversational memory, carries work between agents.
+- each implementation handoff names the exact starting commit;
+- accepted work advances the canonical branch only after review;
+- durable repository state, not conversational memory, carries accepted decisions and work state between agents.
 
-Agents should rely on current authority documents, branch / commit identity, and recorded evidence rather than on another agent's conversational memory.
+Agents should rely on current authority documents, branch / commit identity, and recorded evidence rather than another agent's conversational memory.
 
 ## 8. Token and coordination efficiency
 
@@ -205,19 +200,19 @@ In particular:
 
 - do not route narrow documentation edits through Codex when the primary assistant can safely perform them directly;
 - do not ask an implementation agent to re-explain repository state that can be inspected directly;
-- do not request an independent model review for routine execution work;
+- do not request independent review for routine low-risk execution work;
 - do not repeat an assessment-only gate when authority and scope are already clear;
 - do not make the user manually relay repository facts that connected tools can verify directly;
-- after implementation, review the concrete diff once rather than creating multiple summary-only verification loops.
+- after implementation, review concrete diff/evidence rather than creating multiple summary-only verification loops.
 
-Efficiency must not remove the authority, implementation, or validation boundaries. The goal is fewer redundant handoffs, not fewer safeguards.
+Efficiency must not remove authority, evidence, implementation, or validation boundaries. The goal is fewer redundant handoffs, not fewer safeguards.
 
 ## 9. Current practical allocation
 
-For the current course workflow, the default allocation is:
+Current default allocation:
 
 - **Primary assistant:** authority maintenance, narrow documentation edits, GitHub remote operations, task scoping, and diff / authority review.
-- **Codex:** local implementation, builds/tests, and browser-level implementation validation.
-- **Independent model (for example Claude):** only genuine unresolved design questions where an independent second opinion is intentionally requested.
+- **Codex / implementation agent:** local implementation, builds/tests, and browser-level implementation validation where local execution materially helps.
+- **Independent model/reviewer:** risk-triggered design challenge or validation where a genuinely independent perspective materially strengthens the claim.
 
-This allocation may change as tool access changes. The underlying rule remains: assign each task to the worker that can complete it directly with the fewest handoffs while preserving authority and review boundaries.
+This allocation may change as tool access changes. The underlying rule remains: assign each task to the worker that can complete it directly with the fewest handoffs while preserving current authority and required controls.
