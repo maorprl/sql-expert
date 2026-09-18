@@ -36,7 +36,7 @@ Lesson 3 now has current design authority in `course-design/stage-3/stage-3-auth
 
 ## 2. Master plan
 
-This is the established project plan. The production-system rebaseline in Section 3 is complete; it did not renumber or replace this plan.
+This is the established project plan. The production-system rebaseline is complete and preserved in Section 3.2; it did not renumber or replace this plan.
 
 1. **DONE** — Preserve the accepted Lessons 1–2 runtime baseline.  
    Evidence: accepted runtime baseline `9b8f6ffc1f22ce2d2783f49e52a48c480a0945fa`.
@@ -47,11 +47,12 @@ This is the established project plan. The production-system rebaseline in Sectio
    Evidence: `source-of-truth-hierarchy.md`.
 6. **DONE** — Production Contract v1.  
    Evidence: `production-contract-v1.md`.
-7. **DONE** — Fresh Lesson 3 design through the current rebaselined learner-encounter production process.  
-   Evidence: `course-design/stage-3/stage-3-authority.md`.
-8. **CURRENT** — Build the production system / “machine”.
+7. **CURRENT** — Complete Lesson 3 manually through accepted product baseline.  
+   Current design authority: `course-design/stage-3/stage-3-authority.md`.  
+   Active execution is tracked in Section 3.1.
+8. **NOT STARTED** — Build the production system / “machine” after Lesson 3 is accepted.
 9. **NOT STARTED** — CI.
-10. **NOT STARTED** — Implement Lesson 3 through the production system.
+10. **SUPERSEDED / REMOVED FROM EXECUTION** — Former plan to implement Lesson 3 through the production system. Lesson 3 is completed manually under Step 7.
 11. **NOT STARTED** — CD.
 12. **NOT STARTED** — Lesson 4 through the production system.
 13. **NOT STARTED** — Whole-course planning.
@@ -59,7 +60,36 @@ This is the established project plan. The production-system rebaseline in Sectio
 
 `DONE` records accepted project state. If later repository evidence materially contradicts a DONE claim, reclassify it explicitly rather than silently reconstructing history.
 
-## 3. Closed subplan — Production-system rebaseline
+## 3. Subplans
+
+### 3.1 Active subplan — Complete Lesson 3 manually
+
+**Status:** ACTIVE
+
+**Goal:** finish Lesson 3 manually from its accepted design authority through implementation, validation, and acceptance as an **ACCEPTED PRODUCT BASELINE** before production-system / “machine” work begins.
+
+1. **DONE** — Establish Lesson 3 encounter design and current Lesson authority.  
+   Evidence: `course-design/stage-3/stage-3-authority.md`.
+2. **CURRENT** — Produce the Lesson 3 implementation specification from current authority.  
+   The spec must be sufficient for implementation without inventing pedagogy, evidence behavior, reveal timing, controls, or other governed learner-facing decisions.
+3. **NOT STARTED** — Produce the Lesson 3 visual mockup / visual implementation reference for the material learner states needed before Build.
+4. **NOT STARTED** — Reconcile the authority, implementation spec, and visual reference before Build.  
+   Confirm that the build boundary is complete, the visual reference does not change pedagogy or protected evidence, and no material ambiguity remains for implementation.
+5. **NOT STARTED** — Implement Lesson 3 manually from the reconciled authority/spec/reference.
+6. **NOT STARTED** — Validate Lesson 3 to its declared impact and scope.  
+   Validation must cover applicable authority conformance, protected evidence and reveal timing, learner flow / UX, executable/runtime behavior, semantic result behavior, and regression across accepted Lessons materially exposed to the change.
+7. **NOT STARTED** — Accept Lesson 3 and reconcile project state.  
+   Promote the validated Lesson 3 implementation to the accepted product baseline, update the accepted runtime/product state, reconcile capability coverage, and close this subplan.
+
+**Subplan completion condition:** Lesson 3 is implemented, validated to required scope, explicitly accepted, and part of the accepted runnable learner journey. Design completion alone does not close this subplan.
+
+### Current action
+
+**CURRENT ACTION:** produce the Lesson 3 implementation specification from `course-design/stage-3/stage-3-authority.md` and applicable current course-wide authority.
+
+Do not begin the visual reference, Lesson 3 implementation, or production-system / “machine” work until the current subplan step is completed and the tracker is advanced explicitly.
+
+### 3.2 Closed subplan — Production-system rebaseline
 
 **Status:** DONE
 
@@ -77,14 +107,6 @@ This is the established project plan. The production-system rebaseline in Sectio
 7. **DONE** — Atomic documentation cutover: the rebaselined workflow became current process authority and Source-of-Truth, Production Contract, agent/execution guidance, README, rebaseline status, and management state were aligned in one cutover.
 
 The rebaseline artifacts are evidence/history for why the current process looks the way it does. They are not a second process authority.
-
-### Current action
-
-**CURRENT ACTION:** execute Master Plan Step 8 — design and build the production system / “machine” from the current rebaselined process and current authority, before Lesson 3 implementation.
-
-Lesson 3 design authority is now `course-design/stage-3/stage-3-authority.md`. The older Stage 3 candidate files and the rebaseline Lesson 3 dry-run remain evidence/history only.
-
-Step 8 must operationalize the current process without restoring legacy permanent roles or fixed review choreography. It must also resolve how the machine turns current Lesson authority into a buildable implementation specification and whether/how a visual mockup / visual implementation reference is required before Build. Lesson 3 implementation remains Master Plan Step 10.
 
 ## 4. Management-preservation reconciliation
 
@@ -195,7 +217,7 @@ The following labels organize work only. They are not separate trackers and do n
 Current state:
 
 - Lessons 1–2 are the accepted learner journey;
-- Lesson 3 has current design authority in `course-design/stage-3/stage-3-authority.md` but is not yet implemented or accepted into the runnable learner journey;
+- Lesson 3 has current design authority in `course-design/stage-3/stage-3-authority.md` and is being completed manually through the active Section 3.1 subplan; it is not yet implemented or accepted into the runnable learner journey;
 - current pedagogy, visual, control, schema, data, and accepted Lesson authority remains in the sources identified by `source-of-truth-hierarchy.md`.
 
 ### Production System
@@ -203,6 +225,7 @@ Current state:
 Current state:
 
 - the rebaselined `learner-encounter-production-process.md` is current;
+- production-system / “machine” build work has **not started** and remains blocked until the active Lesson 3 manual-completion subplan closes;
 - worker/tool assignment remains in `agent-assisted-work-protocol.md`;
 - Cycle 1 and rebaseline directories remain evidence/provenance, not flat current authority;
 - permanent role topology, fixed review counts, and universal handoff artifacts are not current process requirements.
