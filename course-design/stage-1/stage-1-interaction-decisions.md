@@ -12,7 +12,7 @@ The learner works from this business need: every news article should include the
 
 The Working Schema begins empty. From the live schema, the learner must identify and select `news_article` and `news_source` as the relations needed to connect the requested article information with the requested publishing-source information. This is assessed relational reasoning, not a pre-resolved setup step.
 
-The task requires two selected relations. The Working Schema can retain up to four selected relations concurrently for inspection and reasoning; that capacity does not imply that four relations are required.
+The task requires two selected relations. The Working Schema can retain up to four selected relations concurrently for inspection and reasoning; that capacity does not imply that four relations are required. The learner-facing selected-state wording for this functional role is `Added`.
 
 Before the learner has identified the connecting key, selected Working Schema cards expose relation names and column names but do **not** expose PK badges, FK badges, `FK → referenced_table.column` text, relationship connectors, or Cardinality markers that would reveal later answers.
 
@@ -39,7 +39,7 @@ After correct connecting-key reasoning, reveal that `news_article.news_source_id
 
 The relationship visual must correspond spatially to that established relationship. The connector should visibly attach to the highlighted FK and PK fields rather than to generic card centers. If Cardinality markers or directional annotations are added, their position and direction must agree with the displayed relation layout and the one-source-to-many-articles meaning; they must not overlap the relation cards in a way that makes the connection ambiguous. Exact connector geometry remains an implementation decision.
 
-At this point, Cardinality is still hidden. The learner then answers the existing closed relationship question. The question should test the directional business meaning of the relationship — one source can publish many articles while each article has one publishing source — rather than require technical Cardinality vocabulary in advance. Cardinality is reasoned from the PK/FK structure, not from observed seed examples.
+At this point, Cardinality is still hidden. The learner then answers the existing closed relationship question. The question should test the directional business meaning of the relationship — one source can publish many articles while each article has one publishing source — rather than require technical Cardinality vocabulary in advance. The first exposure explicitly reasons about possible participation in both directions, using the available structural constraints and domain meaning. The FK-to-PK connection identifies the related fields but does not alone establish full Cardinality; an FK may be unique. Observed seed examples are not the sole evidence for structural Cardinality.
 
 Only after correct Cardinality reasoning, introduce Cardinality and annotate the already-visible relationship as one news source to many news articles (`1 → M`). The relationship visual therefore grows from learner-established reasoning rather than appearing as a disconnected explanatory diagram.
 
@@ -73,23 +73,23 @@ Persistent artifacts do not have a fixed visual rank throughout the Lesson. Thei
 
 When a learner action produces evidence that must immediately be interpreted, the produced evidence, its relevant control, and the immediate interpretation should remain visually and spatially connected enough to read as one reasoning cycle. Avoid unnecessary attention jumps across unrelated page regions between producing evidence and interpreting it.
 
-When the current learner action legitimately changes page regions, the change of focus should be visually legible. The learner should not experience a reasoning question as simply jumping between columns without a clear handoff.
+When the current learner action legitimately changes page regions, the change of focus should be visually legible. The active guidance and active work surface should read as the same current moment, with the active work surface receiving the strongest relevant visual priority. The learner should not experience a reasoning question as simply jumping between columns without a clear handoff.
 
 ## Result Grain, baseline, prediction, and semantic action
 
 Result-Grain reasoning, the baseline, and the prediction are one continuous reasoning episode. After the relationship and Cardinality are established, the learner identifies that one requested result row represents one news article. The framing must reconnect this question to the business request rather than imply that Cardinality determines Grain. Only after the learner identifies the row meaning introduce **Grain**: the grain of the requested result is what one requested result row represents. Grain is never a property of `news_article`, and it is never another name for a table.
 
-The feedback after correct Grain reasoning should make the distinction explicit that a result row may contain information contributed by both relations while still representing one news article. This prepares the learner to reason about adding source information without changing what the row represents.
+The feedback after correct Grain reasoning should make the distinction explicit that a result row may contain information contributed by both relations while still representing one news article. This prepares the learner to reason about adding source information without changing what the row represents. The closed Grain-response options must include a plausible row-meaning misconception rather than a weak country-based distractor, while retaining the useful article/source-pair misconception. Exact distractor wording remains an implementation decision.
 
-The baseline is included because it supports reasoning about row-count and result-Grain preservation in this encounter. A dedicated compact Baseline SQL editor is used here as a measurement tool, prefilled with `SELECT COUNT(*) FROM news_article`. The learner runs and interprets this prepared query; they do not author it, and its role here is measurement rather than SQL syntax instruction. A short local explanation should state that `COUNT(*)` counts the rows in `news_article` and is being used here to establish the number of starting article rows; this is not the point to introduce broader `COUNT` semantics.
+The baseline is included because it supports reasoning about row-count and result-Grain preservation in this encounter. A dedicated compact Baseline SQL editor is used here as a measurement tool, prefilled with `SELECT COUNT(*) FROM news_article`. The learner runs this prepared query; they do not author it, and its role here is measurement rather than SQL syntax instruction. A short local explanation should state directly that `COUNT(*)` counts the rows in `news_article` and is being used to establish the number of starting article rows; this is not the point to introduce broader `COUNT` semantics.
 
-It reports 18 rows, which the learner interprets as 18 starting news-article rows. Because the requested result Grain is one article per row, this provides the baseline against which row and Grain preservation can be predicted. The Baseline control, returned count, and immediate interpretation should function as one local evidence cycle rather than forcing the learner to move between distant primary surfaces.
+It reports 18 rows, explicitly interpreted as 18 starting news-article rows. No separate baseline-interpretation multiple-choice gate is required. Because the requested result Grain is one article per row, this provides the baseline against which row and Grain preservation can be predicted. The Baseline control, returned count, and immediate interpretation should function as one local evidence cycle rather than forcing the learner to move between distant primary surfaces.
 
 The Baseline measurement editor is local to this measurement role. It does not persist into JOIN implementation. Once the measurement has been run and interpreted, the 18-row result remains part of the established reasoning evidence rather than remaining as an active SQL task.
 
 Before JOIN terminology appears, the learner predicts that adding one publishing-source name per article preserves the 18 result rows with the same result Grain. The prediction is a deduction from two already-established facts: there are 18 starting article rows, and each article matches one source row. The prompt must make those premises available before asking for the prediction rather than presenting row count as a guess.
 
-The prediction uses a closed response; no open rationale is required. The closed options should distinguish the relevant relational interpretations rather than test recall of the number 18 alone — for example, one result row per article versus one result row per distinct source versus row multiplication from multiple matches. The feedback makes the PK/FK and Cardinality basis explicit: each article matches one source row. The continuous chain is: one article per requested result row → 18 starting article rows → one matching source per article → 18 result rows with the same Grain.
+The prediction uses a closed response; no open rationale is required. The closed options should distinguish the relevant relational interpretations rather than test recall of the number 18 alone — for example, one result row per article versus one result row per distinct source versus row multiplication from multiple matches. The feedback makes the PK/FK and Cardinality basis explicit: each article matches one source row. After the learner commits to the prediction, a compact explanatory visual shows `1 article row → 1 matching source row → 1 result row`, then scales that reasoning to the 18-row case. It must express row matching and contribution rather than arithmetic addition, concatenation, or stacking. The continuous chain is: one article per requested result row → 18 starting article rows → one matching source per article → 18 result rows with the same Grain.
 
 This encounter establishes the mechanism that later makes row multiplication / fan-out understandable, but Lesson 1 does not need to introduce the term `fan-out` here.
 
@@ -120,7 +120,7 @@ The explanation progresses through this conceptual mapping:
 
 **established relationship → matching rows → relational operation → SQL expression**
 
-A local row-level example shows one article row matching one source row through the already-established `news_source_id` relationship and contributing information from both relations to one result row. The example must make the contribution of `news_article.title` and `news_source.name` visible.
+A local row-level example shows one article row matching one source row through the already-established `news_source_id` relationship and contributing information from both relations to one result row. The example must make the contribution of `news_article.title` and `news_source.name` visible. It uses direct relational language rather than a metaphor that implies a different operation.
 
 The Working Schema remains the schema-level reasoning anchor. It must not be converted into an instance-data browser. The row-level example is a separate local explanatory visual.
 
@@ -134,17 +134,11 @@ is not a new arbitrary SQL rule. It is the SQL expression, inside `ON`, of the r
 
 Before learner-authored implementation, the course reconnects the whole SQL query to the business question and the previously established relational reasoning.
 
-The mapping makes clear that:
-
-- requested output attributes become the `SELECT` list;
-- the article relation supplies the starting article rows in `FROM`;
-- the need to add matching source information motivates the relational `JOIN`;
-- the established relationship becomes the `ON` condition;
-- the expected result must continue to satisfy the previously established result Grain and 18-row prediction.
+The mapping makes clear that `FROM` starts from the article rows, `JOIN` brings in the matching source row, `ON` defines how the rows match, and `SELECT` chooses which article and source fields appear in each result row. Because each article matches one source, the result remains one article per row. The expected result must continue to satisfy the previously established result Grain and 18-row prediction.
 
 The course must not imply that `SELECT` alone determines Grain. Grain describes what one requested result row represents; the query as a whole must produce a result consistent with that Grain.
 
-The completed SQL should therefore be experienced as a translation of the business question and relational reasoning, not as a disconnected syntax exercise.
+The completed SQL should therefore be experienced as a translation of the business question and relational reasoning, not as a disconnected syntax exercise. The learner-facing control that advances from the established `ON` condition to the next explanatory layer is `See how it fits together`.
 
 ### Cognitive-load constraint
 
@@ -156,7 +150,7 @@ The learner should encounter the teaching progression in this order:
 2. how the established relationship becomes `ON`;
 3. how the full query expresses the business request.
 
-These beats must be progressively exposed as a teaching sequence. The initial JOIN teaching state must not present all three beats simultaneously as co-primary instructional panels. After a beat has been encountered, it may remain available as a compact reminder or be replaced by the next beat; that exact treatment remains an implementation decision.
+These layers must be progressively exposed as a teaching sequence. The initial JOIN teaching state must not present all three layers simultaneously as co-primary instructional panels. After an explanation has been encountered, it remains available and reviewable while the active explanation has stronger visual focus. Its compression, visual quieting, or other local presentation remains an implementation decision. Learner-facing labels use functional or conceptual language rather than the instructional-design term `Beat`.
 
 No new assessment is inserted between these explanatory beats. Only after this mapping is established does learner-authored SQL become the primary activity.
 
@@ -166,12 +160,13 @@ The implementation must make the following behavior observable:
 
 - there is an explicit instructional state between the semantic-action success and learner-authored SQL;
 - the established Working Schema remains visible and retains its PK/FK and Cardinality state during that instruction;
-- a separate local row-level visual shows one article row + its matching source row → one result row;
+- a separate local row-level visual shows one article row and its matching source row contributing to one result row;
 - the row-level visual uses the same `news_source_id` relationship already established in the Working Schema;
 - `title` and the publishing-source name are visibly connected to the resulting row;
 - the relationship-to-`ON` mapping is shown explicitly;
 - the business-question-to-query mapping covers `SELECT`, `FROM`, `JOIN`, and `ON` before learner-authored implementation;
-- the three teaching beats are not introduced simultaneously as equal-priority panels;
+- the three teaching layers are not introduced simultaneously as equal-priority panels;
+- earlier explanations remain available and reviewable as later layers take focus;
 - the JOIN implementation editor is not the primary visual focus until the explanatory mapping has been established;
 - no additional learner assessment is introduced inside the teaching explanation;
 - no previously established concept is re-taught as if it were new;
@@ -179,7 +174,7 @@ The implementation must make the following behavior observable:
 
 ### SQL implementation workspace
 
-After the JOIN teaching climax, a separate clean SQL implementation editor becomes the learner's primary action surface.
+After the JOIN teaching climax, a separate clean SQL workspace becomes the learner's primary action surface.
 
 This implementation editor is distinct from the compact Baseline measurement editor. It must not inherit the Baseline `COUNT(*)` query or its result as active editor state.
 
@@ -225,7 +220,7 @@ Neither optional representation may replace the row-matching explanation or beco
 - The exact visual sizing and placement of the compact Baseline measurement editor are not determined, provided it remains local to the measurement task and the Baseline control, evidence, and immediate interpretation read as one local cycle.
 - The exact visual sizing and placement of the separate JOIN implementation editor are not determined, provided it becomes the primary action surface only after the JOIN teaching climax and the task, editor, and Working Schema reference read as a coherent authoring workspace.
 - The exact visual form and animation of the local row-matching example are not determined beyond the observable requirements above.
-- The exact treatment of previously encountered JOIN teaching beats during progressive exposure — hidden, replaced, or retained as compact reminders — is not determined.
+- The exact compression, visual quieting, or other presentation of previously encountered JOIN explanations during progressive exposure is not determined, provided they remain available and reviewable.
 - The exact placement and styling of the Desired Output disclosure are not determined, provided it is optional scaffolding rather than permanently exposed output detail and is distinct from Hint 1 / Hint 2.
 - The exact placement and styling of the result-to-verification control are not determined, provided the progression and verification question remain visibly associated with the actual result evidence rather than requiring an unrelated cross-page attention jump.
 - The exact placement / treatment of persistent business-request context during later episodes is not determined.

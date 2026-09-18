@@ -176,3 +176,11 @@ The first JOIN teaching encounter is a calibrated sequence validated through the
 The business case for this first JOIN teaching encounter should retain the same relational shape: a base relation supplies the target output grain; each base row matches one referenced row through FK → PK; attributes are added from that referenced relation; and the JOIN preserves the base-row grain and row count. Grain, PK/FK, Cardinality, and JOIN remain first-exposure concepts here, so this scaffolding remains appropriate.
 
 Baseline measurement and prediction belong here only when they support reasoning about grain or row-count preservation; `COUNT(*)` is not required in every Lesson. The exact number of learner steps, exactly four Working Schema relations, answer choices, baseline value, and relation names are not pedagogical invariants. Later Lessons must not automatically repeat this full scaffolding: it should decrease or change as concepts are reinforced or transferred. The current Lesson 1 business case is evidence of this teaching architecture, not reusable content itself.
+
+## WORKING — Cardinality reasoning from relationship structure
+
+An FK-to-PK connection establishes which fields and relations are connected; it does not, by itself, establish the full Cardinality of that relationship. Cardinality is reasoned by considering possible participation and multiplicity in both directions, using the structural constraints and domain meaning available in the encounter.
+
+The reusable questions are: for one X, how many Y can participate; and for one Y, how many X can participate? An FK may itself be constrained `UNIQUE`, so this reasoning must not be reduced to the claim that foreign keys can repeat. Observed seed rows may illustrate a relationship, but they are not sufficient as the sole evidence for structural Cardinality.
+
+When Cardinality is a first exposure, the encounter should explicitly reason through both directions before introducing the formal Cardinality term or notation. Later encounters may reuse the same reasoning model more compactly when their learner evidence does not require first-exposure treatment. This establishes a decision rule, not a universal interaction pattern or Lesson sequence.

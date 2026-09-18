@@ -66,6 +66,8 @@ A relationship visual must spatially represent the relationship it claims to exp
 
 Cardinality notation should read immediately as part of the relationship representation rather than as arbitrary floating text attached to a line. The `1` and `M` roles, or any equivalent notation, should be visually associated with the relevant relationship endpoints strongly enough that the learner can interpret the one-to-many meaning without first decoding the layout.
 
+Learner-facing symbols and metaphors must not imply a relational operation, identity, equivalence, arithmetic, or other semantic claim that is not true. Use direct relational explanation when a metaphor would distort the mechanism. This is a proportional precision rule, not a ban on all symbols or metaphors; the exact local visual remains an implementation decision when it preserves the correct meaning.
+
 ## 8. Attention choreography and evidence locality
 
 Visual hierarchy should change as the learner's task changes. Persistent elements such as the Business Request, Working Schema, editors, and completed work do not have a fixed visual rank throughout a Lesson.
@@ -75,6 +77,8 @@ The active reasoning or action surface should lead; established artifacts should
 When a learner action produces evidence that must be interpreted immediately, keep the action, resulting evidence, and immediate interpretation spatially associated enough to read as one continuous reasoning cycle. Avoid unnecessary left-right or top-bottom jumps that make the learner search for the next action after producing evidence.
 
 Primary attention may legitimately shift between the learner-response lane and a tool, object, or evidence surface as the learner's role changes. That change in visual prominence does not relocate the learner-response role itself: on the current multi-lane course surface, learner-facing reasoning and verification responses remain anchored to the learner-response lane under Section 15. A handoff should make the new active tool or evidence surface obvious without making the learner hunt for where questions, checking, feedback, or progression controls have moved.
+
+When action moves between instructional guidance and an active work surface, visual focus moves with the active task. The active guidance and active work surface should read as the same current moment, with the active work surface receiving the strongest relevant visual priority. Previous or reference areas remain available but visually secondary. This does not prescribe dimming, borders, motion, animation, a universal component pattern, or another specific treatment.
 
 During active authoring, the current task, the authoring tool, and references needed to perform that task should read as one coherent working area. A supporting reference may be visually secondary, but it should remain practically available without requiring the learner to leave the authoring context.
 
