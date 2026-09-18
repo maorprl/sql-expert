@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>RouteCraft · Lesson 3 visual reference · Coverage evidence</title>
+  <link rel="stylesheet" href="../../src/stage2-prototype-runtime.css">
+  <style>
+    html,body{margin:0;min-height:100%;background:#e9edf3}
+    .stage3-visual-reference .reference-pill{padding:3px 8px;border:1px solid rgba(157,176,204,.45);border-radius:999px;color:#c7d5e8;font-size:10px;font-weight:700;white-space:nowrap}
+    .stage3-visual-reference .reference-note{font-size:11.5px;color:var(--muted);margin:8px 0 0}
+    .stage3-visual-reference .coverage-compare{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(190px,.65fr);gap:12px;align-items:start}
+    .stage3-visual-reference .coverage-panel{min-width:0}
+    .stage3-visual-reference .coverage-panel .results{margin-top:0}
+    .stage3-visual-reference .coverage-panel .results-scroll{max-height:355px}
+    .stage3-visual-reference .coverage-summary{padding:9px 10px;color:var(--muted);font-size:11px;border-top:1px solid var(--line)}
+    .stage3-visual-reference .coverage-ids{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:11px}
+    .stage3-visual-reference .coverage-id{display:flex;align-items:center;justify-content:center;min-height:31px;border:1px solid var(--line2);border-radius:7px;background:#fff;font:12px var(--mono);color:#2b3d55}
+    .stage3-visual-reference .response-select{width:100%;min-height:44px;border:1px solid var(--line2);border-radius:9px;background:#fff;color:var(--ink);padding:9px 11px;font:13.5px var(--sans)}
+    .stage3-visual-reference .response-select:focus-visible{outline:3px solid rgba(36,87,173,.3);outline-offset:2px}
+    .stage3-visual-reference .success-feedback{margin-top:12px;padding:11px 13px;border:1px solid #a8d5be;background:var(--greenSoft);color:#145b3d;border-radius:9px;font-size:13.5px}
+    .stage3-visual-reference .stage3-ws{opacity:.68}
+    .stage3-visual-reference .stage3-ws .wws{box-shadow:none}
+    @media(max-width:700px){
+      .stage3-visual-reference .coverage-compare{grid-template-columns:1fr}
+      .stage3-visual-reference .coverage-ids{grid-template-columns:repeat(4,minmax(0,1fr))}
+    }
+  </style>
+</head>
+<body>
+<div class="stage2-routecraft stage3-visual-reference">
+  <header class="masthead">
+    <div>
+      <div class="mh-course">RouteCraft · SQL Lab</div>
+      <div class="mh-title">Funding-round coverage — are all companies represented?</div>
+    </div>
+    <div class="mh-right">
+      <span class="reference-pill">Visual reference · L3-04</span>
+      <span class="mh-stage">Lesson 3 · zero matches &amp; coverage</span>
+      <nav class="lesson-nav" aria-label="Course lessons">
+        <button class="lesson-nav-button" type="button" disabled>Previous</button>
+        <button class="lesson-nav-button" type="button" disabled>Next</button>
+      </nav>
+      <button class="ghost" id="restart-state" type="button">Restart state</button>
+    </div>
+  </header>
+
+  <main class="app">
+    <div class="zones">
+      <section class="conversation" aria-label="Conversation">
+        <aside class="spine" aria-label="Reasoning thread">
+          <div class="spine-head">
+            <div class="spine-label">Thread</div>
+            <button class="spine-toggle" type="button" disabled aria-label="Thread shown">‹</button>
+          </div>
+          <ol class="spine-list">
+            <li>Relations: <code>company</code> + <code>funding_round</code></li>
+            <li>Link: <code>funding_round.company_id</code> → <code>company.company_id</code></li>
+            <li>Relationship: one company → 0..many funding rounds</li>
+            <li>Grain: one funding round per result row</li>
+          </ol>
+        </aside>
+
+        <div class="stream" id="stream" aria-live="polite">
+          <div class="turn teacher">
+            <span class="speaker">Teacher</span>
+            <p class="say">The report stays at funding-round Grain. But the business question has one more part: is every company represented? Before we reason about what <code>INNER JOIN</code> will do, compare the two source sets themselves.</p>
+          </div>
+
+          <div class="ask" id="coverage-question">
+            <p class="ask-q">Which company exists in <code>company</code> but has no <code>company_id</code> represented in the funding-round source evidence?</p>
+            <form class="ask-form" id="coverage-form">
+              <select class="response-select" id="company-choice" aria-label="Choose the company">
+                <option value="">Choose a company…</option>
+                <option value="1">1 · CloudFence Labs</option>
+                <option value="2">2 · MedOrbit</option>
+                <option value="3">3 · GreenRoute AI</option>
+                <option value="4">4 · FinEdge Systems</option>
+                <option value="5">5 · QuantumShelf</option>
+                <option value="6">6 · DeepSignal</option>
+                <option value="7">7 · TerraVision Robotics</option>
+                <option value="8">8 · RetailPulse</option>
+                <option value="9">9 · CivicGrid</option>
+                <option value="10">10 · NovaMaterials</option>
+                <option value="19">19 · Orbian Technologies</option>
+                <option value="20">20 · Lumina Bio</option>
+              </select>
+              <div class="ask-actions">
+                <button class="primary" id="check-answer" type="submit" disabled>Check</button>
+              </div>
+            </form>
+            <div class="ask-error" id="coverage-error" role="alert" hidden></div>
+            <div id="coverage-success" hidden>
+              <div class="learner">
+                <span class="learner-label">You</span>
+                <span class="learner-text"><code>company_id = 20</code> · Lumina Bio</span>
+              </div>
+              <div class="success-feedback">Correct. Lumina Bio exists in <code>company</code> but has no recorded funding round.</div>
+              <div class="ask-actions"><button class="primary" type="button" disabled>Continue</button></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="workbench" aria-label="Workbench">
+        <div class="wb-block stage3-ws">
+          <div class="wb-head"><span class="eyebrow">Working schema · reference</span><h3>Company to funding round</h3></div>
+          <div class="wws dim">
+            <article class="card">
+              <div class="card-head"><span>company</span></div>
+              <ul class="cols">
+                <li><button class="col relationship-endpoint endpoint-left" type="button" disabled><code>company_id</code><span class="badge">PK</span></button></li>
+                <li><button class="col" type="button" disabled><code>name</code></button></li>
+                <li><button class="col" type="button" disabled><code>status</code></button></li>
+              </ul>
+            </article>
+            <div class="link on cardinality">
+              <span class="line"></span>
+              <span class="cd one">one</span>
+              <span class="cd m">0..many</span>
+            </div>
+            <article class="card">
+              <div class="card-head"><span>funding_round</span></div>
+              <ul class="cols">
+                <li><button class="col" type="button" disabled><code>funding_round_id</code><span class="badge">PK</span></button></li>
+                <li><button class="col relationship-endpoint endpoint-right" type="button" disabled><code>company_id</code><span class="badge badge-fk">FK</span></button></li>
+                <li><button class="col" type="button" disabled><code>round_type</code></button></li>
+                <li><button class="col" type="button" disabled><code>announced_date</code></button></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="wb-block is-current-action" aria-current="step">
+          <div class="wb-head"><span class="eyebrow">Source coverage evidence</span><h3>Compare company identities across the source relations</h3></div>
+          <div class="coverage-compare">
+            <div class="coverage-panel">
+              <div class="results">
+                <div class="results-top"><span><code>company</code></span><span class="results-count">12 companies</span></div>
+                <div class="results-scroll">
+                  <table>
+                    <thead><tr><th>company_id</th><th>name</th></tr></thead>
+                    <tbody>
+                      <tr><td>1</td><td>CloudFence Labs</td></tr>
+                      <tr><td>2</td><td>MedOrbit</td></tr>
+                      <tr><td>3</td><td>GreenRoute AI</td></tr>
+                      <tr><td>4</td><td>FinEdge Systems</td></tr>
+                      <tr><td>5</td><td>QuantumShelf</td></tr>
+                      <tr><td>6</td><td>DeepSignal</td></tr>
+                      <tr><td>7</td><td>TerraVision Robotics</td></tr>
+                      <tr><td>8</td><td>RetailPulse</td></tr>
+                      <tr><td>9</td><td>CivicGrid</td></tr>
+                      <tr><td>10</td><td>NovaMaterials</td></tr>
+                      <tr><td>19</td><td>Orbian Technologies</td></tr>
+                      <tr><td>20</td><td>Lumina Bio</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="coverage-summary">Every current company identity needed for the comparison.</div>
+              </div>
+            </div>
+
+            <div class="coverage-panel">
+              <div class="results">
+                <div class="results-top"><span><code>funding_round</code> coverage</span><span class="results-count">11 IDs</span></div>
+                <div class="coverage-ids" aria-label="Distinct company ids represented by funding rounds">
+                  <span class="coverage-id">1</span>
+                  <span class="coverage-id">2</span>
+                  <span class="coverage-id">3</span>
+                  <span class="coverage-id">4</span>
+                  <span class="coverage-id">5</span>
+                  <span class="coverage-id">6</span>
+                  <span class="coverage-id">7</span>
+                  <span class="coverage-id">8</span>
+                  <span class="coverage-id">9</span>
+                  <span class="coverage-id">10</span>
+                  <span class="coverage-id">19</span>
+                </div>
+                <div class="coverage-summary">Distinct <code>company_id</code> values present in current <code>funding_round</code> rows.</div>
+              </div>
+            </div>
+          </div>
+          <p class="reference-note">The evidence is sorted and compacted for comparison. No company is pre-marked as the answer.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script>
+(function () {
+  var form = document.getElementById('coverage-form');
+  var choice = document.getElementById('company-choice');
+  var check = document.getElementById('check-answer');
+  var error = document.getElementById('coverage-error');
+  var success = document.getElementById('coverage-success');
+  var restart = document.getElementById('restart-state');
+
+  choice.addEventListener('change', function () {
+    check.disabled = !choice.value;
+    error.hidden = true;
+  });
+
+  form.addEventListener('submit', function (event) {
+    event.preventDefault();
+    if (choice.value !== '20') {
+      error.hidden = false;
+      error.textContent = 'Compare that company_id with the distinct company_id values represented by funding_round.';
+      return;
+    }
+    form.hidden = true;
+    error.hidden = true;
+    success.hidden = false;
+  });
+
+  restart.addEventListener('click', function () {
+    choice.value = '';
+    check.disabled = true;
+    form.hidden = false;
+    error.hidden = true;
+    success.hidden = true;
+  });
+}());
+</script>
+</body>
+</html>
