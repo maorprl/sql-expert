@@ -825,3 +825,577 @@ This is a record of future planning inputs, not a remediation plan. No change se
 **YES — HUMAN DECISION RECONCILIATION COMPLETE**
 
 **Implementation remains unauthorized. Authority maintenance for Finding 3.4 and a separate accepted remediation-planning step are still required before implementation.**
+
+# Accepted Remediation Plan
+
+**Status:** ACCEPTED REMEDIATION PLAN — PLANNING ONLY / NOT IMPLEMENTATION AUTHORITY
+
+This section converts the verified Lesson 1 findings, accepted human decisions, and current authority into an implementation-ready plan. It does not modify the preceding evidence, classification, or decision record; authorize implementation; or claim that remediation has occurred.
+
+## 1. Planning baseline
+
+- **Accepted runtime baseline:** `9b8f6ffc1f22ce2d2783f49e52a48c480a0945fa`, the accepted Lessons 1–2 product baseline recorded by the verification evidence. The Lesson 1 JavaScript and CSS blobs at that baseline were verified as identical to the reviewed implementation lineage.
+- **Current canonical planning baseline:** `main` at `27071fad9bacaf6d49ec4e5b327a50daccf32a26` after a clean fetch/fast-forward check against `origin/main`. This includes the accepted authority-maintenance pass.
+- **Current authority:** `pedagogical-foundations.md`; `course-design/course-visual-language.md`; `course-design/stage-1/stage-1-learner-route.md`; and `course-design/stage-1/stage-1-interaction-decisions.md`, interpreted under `source-of-truth-hierarchy.md`.
+- **Process boundary:** `learner-encounter-production-process.md` and `agent-assisted-work-protocol.md` require current authority before build, bounded implementation, impact-based validation, and separation of implementation from acceptance.
+- **Evidence used:** `course-design/reviews/lesson-1-runtime-review-2026-09-18.md`; `course-design/reviews/lesson-1-runtime-review-verification-2026-09-18.md`; the classification and candidate change sets earlier in this document; and the appended Human Decision Reconciliation.
+- **Actual implementation locality inspected:** `src/stage1-prototype-runtime.js`, especially the module `html` template and the `reset`, `beginConnection`, `onColumn`, `afterCardinality`, `afterGrain`, `runMeasurement`, `afterInterpret`, `afterPrediction`, `afterSemantic`, teaching-step handlers, SQL handoff, `askVerification`, `complete`, and `showEnrichment` paths; `src/stage1-prototype-runtime.css`, including current-action, Working Schema, teaching, sample, completion, enrichment, and responsive rules; and the Lesson 1 mount/navigation integration in `src/main.js`. The repository currently defines no automated test script or dedicated Lesson 1 test files.
+
+The accepted runtime is the implementation baseline to change and protect. Current authority, not the runtime or review prose, governs the required post-remediation behavior.
+
+## 2. Scope accounting
+
+| Input class | Count / item | Planning treatment |
+|---|---:|---|
+| Category A | **49** | Binding preservation and regression obligations; not implementation targets. |
+| Category B | **21** | Required remediation targets; every finding is assigned once below. |
+| Category C — `DECIDED — CHANGE` | **15** | Required remediation targets backed by current authority; every finding is assigned once below. |
+| Category C — `DECIDED — KEEP` | **3** | `1.3`, `9.2`, `9.3`; explicit non-remediation constraints. |
+| Category C — `TBD / DO NOT TOUCH` | **8** | `3.3`, `4.4`, `8.4`, `15.1`, `15.2`, `15.3`, `15.4`, `16.5`; explicitly excluded. |
+| Category D | **1** | `3.4`; implementation-eligible because authority maintenance is complete. |
+
+The implementation-target total is **37 unique findings**: 21 Category B + 15 Category-C changes + Finding `3.4`. Participation in dependencies, preservation notes, or validation does not create a second primary assignment.
+
+All 49 Category-A findings listed in Section 3 remain binding. In particular, remediation must protect the accepted reasoning spine, reveal order, learner evidence, execution/result behavior, verification gate, completion timing, and optional-enrichment boundary.
+
+## 3. Final implementation change sets
+
+### RP-1 — Entry guidance and functional selection language
+
+#### Included finding IDs
+
+`1.4` (B), `1.5` (C-CHANGE)
+
+#### Authority basis
+
+- `pedagogical-foundations.md` → **Teacher continuity and reasoning thread** and **Relation Identification from the Business Question**.
+- `course-design/stage-1/stage-1-learner-route.md` → Episode 1 selected-state wording.
+- `course-design/stage-1/stage-1-interaction-decisions.md` → **Relation identification and Working Schema**, including `Added`.
+
+#### Current problem
+
+Entry teacher copy narrates the lesson procedure, and the catalog/Working Schema exposes `bench`, `on bench`, and related metaphorical labels instead of direct functional state language.
+
+#### Required outcome
+
+The opening stays inside the media-coverage business problem and asks the learner to identify the relevant relations without pre-resolving them. A selected relation displays `Added`; learner-facing names for the selected-relation area use functional Working Schema language rather than `bench` terminology.
+
+#### Preserve
+
+- Category A `1.1`, `1.2`: learner selection and local non-revealing wrong-relation feedback.
+- Category-C KEEP `1.3`: do not add friction or redesign selection merely to prevent trial-and-error.
+- The persistent business request and the four-relation catalog.
+
+#### Explicit exclusions
+
+Do not redesign the relation-selection mechanism, removal behavior, or catalog information architecture. Those remain implementation freedom and are not required by this remediation.
+
+#### Implementation surfaces
+
+- `src/stage1-prototype-runtime.js`: module `html` entry/catalog headings and `catalog-status`; `reset()` entry teacher turn and reset labels; catalog-selection handler; Working Schema headings.
+- `src/stage1-prototype-runtime.css`: only if the `Added` state needs an existing-role styling adjustment; no generalized component architecture is required.
+
+#### Dependencies
+
+Independent of later reasoning changes. Its terminology must remain consistent with RP-6's accepted `SQL workspace` handoff.
+
+#### Validation
+
+- Static search for learner-facing `bench`, `on bench`, and `Workbench` in Lesson 1.
+- Automated or scripted correct/wrong relation-selection paths, including restart state.
+- Human pedagogical check that the opening frames the problem without narrating the lesson plan or leaking the required relations.
+
+### RP-2 — Connecting-field precision and two-direction Cardinality reasoning
+
+#### Included finding IDs
+
+`2.4` (B), `2.5` (B), `3.4` (D)
+
+#### Authority basis
+
+- `pedagogical-foundations.md` → **Cardinality reasoning from relationship structure**, **Business Question Precision and Non-Preemption**, and **First JOIN Teaching Encounter: Reusable Architecture**.
+- `course-design/stage-1/stage-1-learner-route.md` → Episode 2.
+- `course-design/stage-1/stage-1-interaction-decisions.md` → **Reasoning, concepts, and progressive relationship reveal**.
+
+#### Current problem
+
+The connecting-field prompt overstates what `news_source_id` directly returns; the PK/FK explanation names JOIN before the protected semantic-action decision; and the single closed Cardinality prompt treats visible FK→PK structure as if it alone established full multiplicity.
+
+#### Required outcome
+
+The learner first identifies the article field that identifies its publishing source. The PK/FK reveal explains the connection without naming JOIN. Before the term or `1 → M` notation appears, the learner explicitly reasons in both directions: each article has one publishing source, and one source can publish many articles. The evidence must use structural constraints and domain meaning, not seed-row frequency or the shortcut “FKs repeat.”
+
+The exact constrained interaction may be one coordinated two-part state or another compact form, provided both directions remain learner reasoning and neither answer is revealed in advance.
+
+#### Preserve
+
+- Category A `2.1`, `2.2`, `2.3`, `3.1`, `3.2`: meaning-first field selection, retry without reveal, correct PK/FK reveal, meaning before Cardinality terminology, and distinct Cardinality Concept Moment.
+- Category A `9.1`, `10.1`: semantic action remains before JOIN terminology.
+- Existing relationship connector/field endpoint semantics.
+
+#### Explicit exclusions
+
+- `3.3` remains TBD: do not use this work to resolve teacher/prompt duplication as a separate polish question.
+- Do not change Lessons 2 or 3.
+- Do not introduce seed-instance browsing as proof of structural Cardinality.
+
+#### Implementation surfaces
+
+- `src/stage1-prototype-runtime.js`: `beginConnection()`, `onColumn()`, Cardinality prompt/feedback, `afterCardinality()`, inspector relationship copy, and state/review-thread recording needed to retain both directions.
+- `src/stage1-prototype-runtime.css`: only if the chosen constrained two-direction interaction needs local state styling.
+- A new Lesson 1 interaction regression-test surface if implementation adds automated state coverage; no such test file currently exists.
+
+#### Dependencies
+
+Must complete before Grain/baseline work because the established relationship is a premise for RP-3 and RP-4. JOIN terminology introduced in RP-6 must remain downstream of this set and the semantic-action gate.
+
+#### Validation
+
+- Automated state/reveal test proving PK/FK follows the correct field and Cardinality term/notation follows both-direction reasoning.
+- Wrong-answer tests proving neither direction, PK/FK detail, nor later JOIN meaning is leaked.
+- Static/content checks for premature JOIN language and unsupported “FKs repeat” reasoning.
+- Scripted learner-flow and human pedagogical acceptance focused on evidence sufficiency.
+
+### RP-3 — Grain-to-baseline evidence cycle and active focus
+
+#### Included finding IDs
+
+`4.5` (C-CHANGE), `5.2` (B), `5.3` (B), `5.4` (B), `5.5` (C-CHANGE), `6.1` (B), `6.2` (B), `6.3` (C-CHANGE), `7.4` (C-CHANGE)
+
+#### Authority basis
+
+- `pedagogical-foundations.md` → **Guided reasoning progression** and **Teacher continuity and reasoning thread**.
+- `course-design/course-visual-language.md` → **Current learner focus**, **Attention choreography and evidence locality**, and **Interaction topology and locality contract**.
+- `course-design/stage-1/stage-1-learner-route.md` → Episode 3.
+- `course-design/stage-1/stage-1-interaction-decisions.md` → **Guided continuity**, **Learner-experience visual application**, and **Result Grain, baseline, prediction, and semantic action**.
+
+#### Current problem
+
+The Grain question contains a weak country distractor. The baseline bridge uses ambiguous/meta/bench language and does not explain why starting article-row count matters. The Working Schema competes with the measurement, and guidance/tool focus is weak across lanes. After execution, the runtime inserts a separate, low-value interpretation MCQ.
+
+#### Required outcome
+
+- Replace the country distractor with a plausible row-meaning misconception while retaining the article/source-pair misconception; exact wording remains implementation freedom.
+- Preserve `Grain → baseline → prediction`.
+- Explain directly that the learner is measuring the number of starting article rows so it can be used with the established Grain and relationship in the upcoming prediction; do not supply that prediction.
+- Keep the prepared `COUNT(*)` learner-run and non-authored.
+- When the result is `18`, state explicitly that it is **18 article rows** and proceed directly to prediction without a separate interpretation MCQ.
+- During the measurement, the active guidance and measurement surface read as one current moment; the measurement is the strongest work surface and the Working Schema remains available but secondary. Exact styling is implementation freedom.
+
+#### Preserve
+
+- Category A `4.1`, `4.2`, `4.3`, `5.1`, `5.6`, `7.1`, `7.2`, `7.3`, `8.1`, `8.2`, `8.3`.
+- The measurement result stays visible as established evidence.
+- Stable learner-response-lane ownership and local Run control ownership.
+
+#### Explicit exclusions
+
+- `4.4` remains TBD: do not separately redesign duplicate Grain framing.
+- `8.4` remains TBD: do not use the direct transition into prediction to resolve teacher/prompt duplication.
+- No assistance behavior from `15.1`–`15.4` or `16.5` may change.
+- Do not prescribe a universal CSS component or focus mechanism.
+
+#### Implementation surfaces
+
+- `src/stage1-prototype-runtime.js`: Grain choices/feedback; `afterGrain()` bridge; `runMeasurement()` result and removal of the interpretation MCQ; direct transition to the existing prediction state; `markCurrentAction()` usage and any narrowly scoped phase-state classes.
+- `src/stage1-prototype-runtime.css`: `.wb-block.is-current-action`, `.ws.dim`, guidance/work-surface coordination, and `@media` layouts for baseline states.
+
+#### Dependencies
+
+Requires RP-2's relationship premise. Must land with or before RP-4 because removal of the baseline MCQ changes the transition into prediction.
+
+#### Validation
+
+- Automated state test for Grain → baseline Run → explicit “18 article rows” → prediction, with no intervening interpretation question.
+- Database-backed measurement check that the current seed returns 18.
+- Answer-leak review of the pre-prediction bridge.
+- Desktop and narrow-layout visual regression for guidance/tool focus, evidence locality, and stable lane ownership.
+- Scripted learner-flow and human pedagogical acceptance.
+
+### RP-4 — Post-commitment prediction mechanism
+
+#### Included finding IDs
+
+`8.5` (B), `8.6` (C-CHANGE)
+
+#### Authority basis
+
+- `course-design/stage-1/stage-1-learner-route.md` → Episode 3 post-prediction explanation.
+- `course-design/stage-1/stage-1-interaction-decisions.md` → **Result Grain, baseline, prediction, and semantic action**.
+- `course-design/course-visual-language.md` → **Visual Aids** and its semantic-precision rule.
+
+#### Current problem
+
+Correct prediction currently advances directly to semantic action without locally explaining the unit-bearing relational mechanism or displaying the accepted post-commitment visual.
+
+#### Required outcome
+
+Only after the learner commits to the prediction, explain and show:
+
+`1 article row → 1 matching source row → 1 result row`
+
+Then scale the same mechanism to the full case:
+
+`18 article rows × 1 matching source row per article = 18 matching pairs → 18 result rows`
+
+Semantically equivalent wording/visual treatment is allowed, but it must retain units and row-matching meaning, must not become unexplained arithmetic, and must not leak the result before commitment. After consolidation, continue to the existing semantic-action decision before JOIN is named.
+
+#### Preserve
+
+- Category A `8.1`, `8.2`, `8.3`, `9.1`, `10.1`.
+- Category-C KEEP `9.2`, `9.3`: preserve the current semantic-action gate and distractors; do not add a new gate or redesign them.
+
+#### Explicit exclusions
+
+- `8.4` remains TBD; do not resolve prediction teacher/prompt duplication.
+- Do not introduce JOIN terminology inside the post-prediction explanation.
+- Do not use `+` or another symbol that implies arithmetic addition, concatenation, or stacking.
+
+#### Implementation surfaces
+
+- `src/stage1-prototype-runtime.js`: `afterPrediction()` and a compact post-prediction explanation/visual state before the semantic-action prompt.
+- `src/stage1-prototype-runtime.css`: narrow styles for the unit-bearing visual and responsive stacking.
+
+#### Dependencies
+
+Follows RP-3. Its direct matching language and visual semantics must align with RP-6 and RP-8.
+
+#### Validation
+
+- Automated sequencing test: prediction choice precedes explanation; semantic action precedes JOIN naming.
+- Static/content check for all required units and prohibited misleading connectors.
+- Scripted wrong/correct prediction paths to verify no leakage.
+- Responsive visual and human pedagogical validation.
+
+### RP-5 — Established, predicted, and verified terminology
+
+#### Included finding IDs
+
+`10.4` (B), `14.5` (B), `18.4` (B)
+
+#### Authority basis
+
+- `course-design/stage-1/stage-1-learner-route.md` → Episodes 3 and 5.
+- `course-design/stage-1/stage-1-interaction-decisions.md` → **Result Grain, baseline, prediction, and semantic action**, **SQL implementation workspace**, and **Execution evidence and final verification**.
+- `pedagogical-foundations.md` → **Guided reasoning progression**.
+
+#### Current problem
+
+Prediction, SQL-handoff, and completion copy repeatedly describes Grain as predicted. In this lesson, result Grain was established, row count was predicted, and execution evidence later verified consistency with both.
+
+#### Required outcome
+
+Apply that distinction consistently across the reasoning thread, post-prediction guidance, JOIN teaching, SQL-workspace handoff, final teacher feedback, and completion synthesis. Do not create new terminology instruction; correct the semantic references in their existing roles.
+
+#### Preserve
+
+- Category A `4.3`, `8.2`, `12.2`, `17.2`, `17.3`, `18.3`, `18.7`.
+- The visible reasoning thread remains concise and ordered by the learner's argument.
+
+#### Explicit exclusions
+
+Do not change prediction evidence, add assessment, or reopen Category-C KEEP `9.2`/`9.3`.
+
+#### Implementation surfaces
+
+- `src/stage1-prototype-runtime.js`: `afterPrediction()`, spine entries, teaching transitions, `#s1-to-sql` handler, `complete()`, and any other Lesson 1 string that conflates established Grain with predicted row count.
+
+#### Dependencies
+
+Should be implemented in the same pass as RP-6 and reviewed again with RP-7 because the same vocabulary spans those surfaces.
+
+#### Validation
+
+- Static search and content assertion for every occurrence of `predict*` near Grain.
+- Scripted end-to-end walkthrough checking established → predicted → verified language at each state.
+- Human semantic/pedagogical review.
+
+### RP-6 — Cumulative JOIN teaching and SQL-workspace handoff
+
+#### Included finding IDs
+
+`11.3` (B), `11.4` (C-CHANGE), `12.3` (B), `12.4` (C-CHANGE), `12.5` (C-CHANGE), `13.2` (C-CHANGE), `13.3` (C-CHANGE), `13.4` (C-CHANGE), `14.4` (C-CHANGE), `14.6` (B)
+
+#### Authority basis
+
+- `pedagogical-foundations.md` → **First JOIN Teaching Encounter: Reusable Architecture**.
+- `course-design/course-visual-language.md` → **Visual Aids**, **Attention choreography and evidence locality**, **SQL Teaching vs SQL Workspace**, and semantic precision.
+- `course-design/stage-1/stage-1-learner-route.md` → Episode 5.
+- `course-design/stage-1/stage-1-interaction-decisions.md` → **JOIN teaching climax**, **Business question → SQL**, **Cognitive-load constraint**, **Observable implementation requirements**, and **SQL implementation workspace**.
+
+#### Current problem
+
+The ON layer says the relationship becomes ON; its control says `Map the condition` after the condition is already shown. The final layer omits the complete `FROM`/`JOIN`/`ON`/`SELECT` mapping, uses misleading SELECT and request↔Grain semantics, hides previous explanations, exposes `Beat` labels, and hands the learner to authoring as a `Workbench` before canonical readiness is established.
+
+#### Required outcome
+
+- Explain that `ON` expresses how the rows match using the already-established relationship; the relationship does not literally become ON.
+- Replace the control label with `See how it fits together`.
+- Before authoring, visibly establish the full mapping: `FROM` starts article rows; `JOIN` brings in the matching source row; `ON` defines how rows match; `SELECT` chooses which article/source fields appear; because each article matches one source, the query as a whole remains one article per result row.
+- Do not represent the business request and Grain as equivalent.
+- Keep earlier teaching explanations available/reviewable as later layers take stronger focus. Compression or quieting remains implementation freedom; all layers must not appear initially as co-primary panels.
+- Replace learner-facing `Beat` with functional/conceptual labels.
+- Handoff to a clean **SQL workspace**, with authoring primary only after the complete mapping.
+
+#### Preserve
+
+- Category A `10.1`, `10.2`, `10.3`, `11.1`, `11.2`, `12.1`, `12.2`, `13.1`, `14.1`, `14.2`, `14.3`, `14.7`.
+- Semantic action remains before JOIN terminology.
+- The Working Schema remains the schema-level anchor; the row example remains a distinct instance-level visual.
+
+#### Explicit exclusions
+
+- Do not change assistance controls, strength, or post-success lifecycle (`15.1`–`15.4`, `16.5`).
+- Do not impose a universal card/component pattern for retained explanations.
+- Do not move response interactions out of the stable learner-response lane.
+
+#### Implementation surfaces
+
+- `src/stage1-prototype-runtime.js`: `html` teaching template; teaching-layer labels, copy, samples, and controls; teaching-step handler; `afterSemantic()`; `#s1-to-sql` handoff; SQL-area accessibility label/copy where learner-facing.
+- `src/stage1-prototype-runtime.css`: `.teach-board`, `.teach-step`, active/completed teaching treatment, `.sample*`, current-action focus, SQL workspace, and responsive presentation.
+- The existing `src/main.js` mount/navigation should remain unchanged unless implementation proves a narrow integration need.
+
+#### Dependencies
+
+Requires RP-2 and RP-4. Implement with RP-5 terminology corrections. Must complete before RP-7 validation because final verification depends on the established mapping and handoff.
+
+#### Validation
+
+- Static/content assertions for `See how it fits together`, `SQL workspace`, absence of learner-facing `Beat`, absence of false request↔Grain equivalence, and correct clause roles.
+- Automated teaching-state progression proving earlier layers remain reviewable, only one layer leads at a time, and authoring remains hidden/non-primary until mapping completes.
+- Answer-leak and reveal-order walkthrough from semantic action through editor focus.
+- Desktop/narrow responsive visual regression for active focus and retained explanation accessibility.
+- Human pedagogical acceptance of the full query mapping.
+
+### RP-7 — Evidence-based verification and reasoning-first completion
+
+#### Included finding IDs
+
+`17.5` (B), `18.5` (B), `18.6` (B)
+
+#### Authority basis
+
+- `pedagogical-foundations.md` → **Teacher continuity and reasoning thread**.
+- `course-design/course-visual-language.md` → **Concept Moments**, **Color Roles**, and **Completed Steps**.
+- `course-design/stage-1/stage-1-interaction-decisions.md` → **Execution evidence and final verification**.
+
+#### Current problem
+
+The verification prompt overclaims what the visible table alone supports. Completion presents `JOIN verified` with Concept Moment treatment and summarizes internal state labels instead of reconstructing the learner's reasoning argument.
+
+#### Required outcome
+
+The verification prompt explicitly asks the learner to compare actual result evidence with the earlier 18-row prediction and established one-article-per-row Grain. Keep the three-claim response structure. Completion uses verification/success treatment rather than a new Concept Moment and synthesizes the reasoning coherently: requested article Grain, 18 starting articles, one matching source per article, predicted 18 result rows, executed result, and verified matching source information at the same Grain.
+
+#### Preserve
+
+- Category A `16.1`, `16.2`, `16.3`, `16.4`, `17.1`, `17.2`, `17.3`, `17.4`, `17.6`, `18.1`, `18.2`, `18.3`, `18.7`, `18.8`.
+- The semantic-validator status may confirm task-contract satisfaction but must not perform learner interpretation.
+- Actual rows remain inspectable and Lesson 2 navigation remains post-completion.
+
+#### Explicit exclusions
+
+- Preserve existing assistance behavior. Do not resolve `15.1`–`15.4` or `16.5`, even though assistance may remain visible near changed result states.
+- Do not alter semantic SQL acceptance rules as part of copy/role remediation.
+
+#### Implementation surfaces
+
+- `src/stage1-prototype-runtime.js`: `askVerification()`, `complete()`, completion copy, and the current `concept('JOIN verified', ...)` role.
+- `src/stage1-prototype-runtime.css`: completion/verification styling only if needed to maintain a success role distinct from Concept Moment styling.
+
+#### Dependencies
+
+Follows RP-5 and RP-6. The execution validator itself is a preservation surface, not a target.
+
+#### Validation
+
+- Database-backed execution of valid and invalid SQL, including 18-row result inspection.
+- Automated check that verified execution does not complete the Lesson and that only correct learner verification does.
+- Static/visual assertion that completion is not styled or labeled as a new Concept Moment.
+- Scripted full-flow and human pedagogical acceptance of the final synthesis.
+
+### RP-8 — Semantically precise enrichment row construction
+
+#### Included finding IDs
+
+`19.4` (B), `19.5` (C-CHANGE), `19.6` (B), `19.7` (C-CHANGE), `19.8` (B)
+
+#### Authority basis
+
+- `course-design/course-visual-language.md` → **Visual Aids** and semantic precision.
+- `course-design/stage-1/stage-1-interaction-decisions.md` → **Optional enrichment** and the schema/instance distinction in **JOIN teaching climax**.
+
+#### Current problem
+
+The enrichment result row is visually cramped; `+` implies addition/concatenation/stacking; `JOIN is the bridge` substitutes metaphor for row matching; ON is said to name the relationship; and one-row-per-article is stated without limiting it to this query and relationship.
+
+#### Required outcome
+
+The optional post-completion visual legibly shows one article row and its matching source row contributing `title` and `source_name` to one result row. Use direct matching semantics without `+`. Explain that `ON` defines the condition used to match rows based on the established relationship. Qualify preservation as specific to this query, where each article matches one source.
+
+#### Preserve
+
+- Category A `19.1`, `19.2`, `19.3`, `19.9`: optional placement, schema-versus-instance distinction, row-to-result explanatory purpose, and the Venn limitation.
+- Enrichment remains non-required and appears only after completion.
+
+#### Explicit exclusions
+
+Do not turn enrichment into a completion gate, a new assessment, or a generalized JOIN guarantee. Do not introduce later-Lesson multiple-match or zero-match teaching.
+
+#### Implementation surfaces
+
+- `src/stage1-prototype-runtime.js`: `showEnrichment()` copy and sample markup.
+- `src/stage1-prototype-runtime.css`: `.enrichment`, `.sample.triple`, `.sample-card`, `.sample-row`, `.sample-arrow`, and narrow responsive layout.
+
+#### Dependencies
+
+Use the same direct relational vocabulary and connector semantics established by RP-4 and RP-6. It can be implemented after the required core flow because it is post-completion and has distinct validation.
+
+#### Validation
+
+- Static/content checks for prohibited `+`, bridge metaphor, “ON names,” and unqualified preservation claims.
+- Desktop and narrow-layout visual regression proving title/source contribution is legible.
+- Scripted post-completion access check and human semantic review.
+
+## 4. Full finding-to-change-set reconciliation
+
+### Primary implementation targets
+
+Every required implementation target appears exactly once.
+
+| Finding | Category | Primary change set |
+|---|---|---|
+| `1.4` | B | RP-1 |
+| `2.4` | B | RP-2 |
+| `2.5` | B | RP-2 |
+| `5.2` | B | RP-3 |
+| `5.3` | B | RP-3 |
+| `5.4` | B | RP-3 |
+| `6.1` | B | RP-3 |
+| `6.2` | B | RP-3 |
+| `8.5` | B | RP-4 |
+| `10.4` | B | RP-5 |
+| `11.3` | B | RP-6 |
+| `12.3` | B | RP-6 |
+| `14.5` | B | RP-5 |
+| `14.6` | B | RP-6 |
+| `17.5` | B | RP-7 |
+| `18.4` | B | RP-5 |
+| `18.5` | B | RP-7 |
+| `18.6` | B | RP-7 |
+| `19.4` | B | RP-8 |
+| `19.6` | B | RP-8 |
+| `19.8` | B | RP-8 |
+| `1.5` | C-CHANGE | RP-1 |
+| `4.5` | C-CHANGE | RP-3 |
+| `5.5` | C-CHANGE | RP-3 |
+| `6.3` | C-CHANGE | RP-3 |
+| `7.4` | C-CHANGE | RP-3 |
+| `8.6` | C-CHANGE | RP-4 |
+| `11.4` | C-CHANGE | RP-6 |
+| `12.4` | C-CHANGE | RP-6 |
+| `12.5` | C-CHANGE | RP-6 |
+| `13.2` | C-CHANGE | RP-6 |
+| `13.3` | C-CHANGE | RP-6 |
+| `13.4` | C-CHANGE | RP-6 |
+| `14.4` | C-CHANGE | RP-6 |
+| `19.5` | C-CHANGE | RP-8 |
+| `19.7` | C-CHANGE | RP-8 |
+| `3.4` | D — authority-backed | RP-2 |
+
+Reconciliation proof:
+
+- Category B rows: **21**.
+- Category-C CHANGE rows: **15**.
+- Category-D rows: **1** (`3.4`).
+- Unique primary implementation-target rows: **37**.
+
+### Non-remediation constraints and exclusions
+
+| Finding(s) | Status | Plan treatment |
+|---|---|---|
+| `1.3` | C-KEEP | Preserve current retry/trial-and-error possibility; RP-1 must not add artificial friction. |
+| `9.2`, `9.3` | C-KEEP | Preserve the existing semantic-action gate and distractors; RP-4/RP-6 must not redesign them. |
+| `3.3` | TBD / DO NOT TOUCH | Excluded; RP-2 must preserve existing nearby teacher/prompt behavior except where the two-direction evidence requirement mechanically requires content. |
+| `4.4` | TBD / DO NOT TOUCH | Excluded; RP-3 must not separately optimize duplicate Grain framing. |
+| `8.4` | TBD / DO NOT TOUCH | Excluded; RP-3/RP-4 must not separately optimize prediction teacher/prompt duplication. |
+| `15.1`, `15.2`, `15.3`, `15.4` | TBD / DO NOT TOUCH | Excluded; assistance availability, strength, escalation, and post-success lifecycle remain unchanged. |
+| `16.5` | TBD / DO NOT TOUCH | Excluded; result-focus changes must not invent assistance collapse/hide/disable behavior. |
+
+Category A is not an implementation-target bucket. All **49** findings enumerated in Section 3 remain global or region-specific regression invariants and must be checked wherever the eight change sets expose their behavior.
+
+## 5. Implementation order
+
+The smallest safe dependency order is:
+
+1. **RP-1 + RP-2 — early reasoning pass.** These share entry/schema/relationship runtime locality and can be implemented in one Codex pass. RP-2 needs its own evidence/reveal validation within that pass.
+2. **RP-3 + RP-4 — Grain/baseline/prediction pass.** These must be coordinated because removing the baseline MCQ changes the entry into prediction and the post-prediction explanation changes the exit. RP-3's focus choreography requires a distinct responsive visual-validation checkpoint.
+3. **RP-5 + RP-6 — JOIN teaching and SQL-handoff pass.** The recurring established/predicted vocabulary and teaching-template changes share strings and transitions. Validate cumulative retention and authoring readiness before proceeding.
+4. **RP-7 — verification/completion pass.** Keep separate because it touches the acceptance-critical boundary between machine validation, learner interpretation, and Lesson completion.
+5. **RP-8 — optional enrichment pass.** Keep separate because it is post-completion, visually distinct, and must not affect core completion evidence.
+
+After each pass, run the relevant narrow state checks; after all passes, run the complete validation plan below. This ordering is implementation planning only and does not authorize any pass.
+
+## 6. Validation plan
+
+### Build and static success
+
+- Run the repository build. Build success proves technical compilation only.
+- Add or run narrow Lesson 1 state/interaction checks for all changed transitions. Because the current repository has no automated test script or dedicated Lesson 1 test suite, implementation must make the chosen repeatable test surface explicit rather than claiming coverage that does not exist.
+- Assert required/forbidden learner-facing strings and clause-role language.
+- Verify no Lesson 2 or Lesson 3 runtime/source changed.
+
+### Runtime and semantic conformance
+
+- Walk the entire correct path and representative wrong paths from relation selection through completion and enrichment.
+- Confirm Cardinality requires explicit reasoning in both directions before terminology/notation, without seed-only proof, “FKs repeat,” or premature JOIN language.
+- Confirm `Grain → baseline → prediction`, learner-run prepared SQL, explicit **18 article rows**, no baseline MCQ, and no prediction leak.
+- Confirm the post-commitment `1 article row → 1 matching source row → 1 result row` mechanism scales with units to the 18-row result.
+- Confirm semantic action remains before JOIN terminology.
+- Confirm the complete `FROM`/`JOIN`/`ON`/`SELECT` mapping precedes learner-authored SQL.
+- Execute valid SQL and representative invalid SQL; confirm semantic validation, 18 inspectable article/source rows, required columns/associations, and the permitted validator-status boundary.
+- Confirm verified execution does not complete the Lesson; correct learner interpretation does.
+- Confirm optional enrichment remains post-completion and does not alter required evidence.
+
+### Pedagogical conformance
+
+- Review every changed state for answer leakage and learner ownership.
+- Confirm the relationship reasoning uses structural constraints and domain meaning in both directions.
+- Confirm the baseline bridge explains purpose without supplying the prediction.
+- Confirm established Grain, predicted row count, and verified result remain distinct throughout.
+- Confirm the semantic-action gate and its current options remain unchanged under KEEP findings `9.2` and `9.3`.
+- Confirm previous JOIN explanations remain available/reviewable, active teaching remains progressive, and SQL authoring starts only after readiness is established.
+- Confirm completion reconstructs the argument rather than listing implementation states.
+- Obtain human pedagogical acceptance; build/test success alone is insufficient.
+
+### Visual and UX conformance
+
+- Inspect every material transition at desktop and narrow breakpoints: current response/guidance, active tool/evidence surface, Working Schema/reference state, retained explanations, and next control.
+- Confirm active-focus choreography during baseline, JOIN teaching, SQL workspace, result inspection, and verification without relocating the learner-response role.
+- Confirm earlier JOIN explanations remain reviewable but secondary and do not make all layers co-primary.
+- Confirm the post-prediction and enrichment visuals communicate row matching/contribution without false equivalence, `+`, arithmetic, concatenation, stacking, or bridge metaphors.
+- Confirm `title` and `source_name` contributions remain legible in enrichment.
+- Confirm Concept Moment, correctness, semantic validation, and completion/success roles remain visually distinct.
+
+### Regression and exclusion audit
+
+- Recheck all 49 Category-A invariants from Section 3 against every materially exposed changed surface.
+- Recheck Category-C KEEP `1.3`, `9.2`, `9.3` as explicit non-remediation constraints.
+- Verify all eight TBD findings remain unresolved and that assistance behavior is byte-for-byte or behaviorally unchanged unless an unavoidable non-semantic selector adjustment is documented and shown not to change behavior.
+- Verify no authority, work-management, Lesson 2, or Lesson 3 file changed during implementation.
+- Record conformance evidence separately from product acceptance; passing checks do not themselves accept the remediation.
+
+## Final plan reconciliation
+
+- All 21 Category-B findings are assigned once.
+- All 15 Category-C CHANGE findings are assigned once.
+- Finding `3.4` is assigned once and is no longer authority-blocked.
+- Category-C KEEP findings `1.3`, `9.2`, and `9.3` are preservation constraints, not remediation targets.
+- All eight TBD / DO NOT TOUCH findings remain excluded.
+- All 49 Category-A findings remain binding protection obligations.
+- The plan changes no implementation, test, authority, work-management, Lesson 2, or Lesson 3 file.
+- No accepted decision is reopened, reinterpreted, or generalized beyond current authority.
+
+**YES — ACCEPTED REMEDIATION PLAN COMPLETE**
+
+**Implementation remains unauthorized until the plan is explicitly reviewed and accepted.**
