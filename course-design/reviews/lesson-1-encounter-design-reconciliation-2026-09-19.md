@@ -1,18 +1,20 @@
 # Lesson 1 Encounter-Design Reconciliation — 2026-09-19
 
-**Status:** CANDIDATE DESIGN RECONCILIATION / AUTHORITY PREPARATION — NOT CURRENT AUTHORITY — NOT IMPLEMENTATION AUTHORITY
+**Status:** HUMAN ACCEPTED — AUTHORITY MAINTENANCE AUTHORIZED — NOT YET CURRENT AUTHORITY — NOT IMPLEMENTATION AUTHORITY
 
 **Repository:** `maorprl/sql-expert`
 
 **Implementation evidence inspected:** `c95ff0aacbfd533d741d486fcb86bc790f7e1437`
 
-This record responds to independent learner test-drive evidence after the accepted Lesson 1 remediation was implemented but before that implementation was accepted as the product baseline. It prepares a focused design decision. It does not accept the implementation, modify current authority, authorize runtime work, change Lessons 2–3, or supersede the accepted remediation record.
+This record responds to independent learner test-drive evidence after the accepted Lesson 1 remediation was implemented but before that implementation was accepted as the product baseline. The user has explicitly accepted this encounter-design reconciliation, including all reconciled independent-challenge findings. This acceptance authorizes Lesson 1 authority maintenance only. It does not accept the implementation, itself modify current authority, authorize runtime work, change Lessons 2–3, or supersede the accepted remediation record.
 
 ## 1. Reconciliation outcome
 
-Lesson 1 should remain the first guided JOIN encounter, but its argument should be re-centered around one capability:
+The accepted design changes Lesson 1's conceptual center:
 
-> Given a chosen starting-row baseline and the relationship, determine how many matching rows each starting row contributes to the result, and use those contributions to predict the row-count effect of the JOIN relative to that baseline before writing SQL.
+> Lesson 1 is organized around predicting the row effect of the JOIN from a chosen baseline by reasoning about how many matching rows each baseline row contributes.
+
+PK/FK, Cardinality, Grain, baseline, prediction, JOIN, ON, SELECT, and verification are supporting parts of that single causal argument rather than parallel lesson topics.
 
 For the Lesson 1 INNER JOIN step, before unrelated row-changing operations such as filtering, aggregation, `DISTINCT`, or additional joins:
 
@@ -278,7 +280,7 @@ This reconciliation does not reopen Category-C KEEP findings `1.3`, `9.2`, or `9
 
 ## 8. Authority-preparation consequences
 
-If this candidate reconciliation is accepted, current Lesson 1 authority must be updated before implementation. At minimum:
+Because this reconciliation is human accepted, current Lesson 1 authority is authorized for maintenance and must be updated before implementation. At minimum:
 
 1. `course-design/stage-1/stage-1-learner-route.md`
    - make matches contributed per row relative to a chosen baseline the organizing capability of Episodes 2–5;
@@ -305,8 +307,10 @@ Because the candidate changes protected evidence and narrows the pre-question di
 - the reverse-perspective illustration remains bounded and cannot reveal the protected prediction; and
 - the central equation remains scoped to the current JOIN operation.
 
-## 9. Acceptance and implementation gates
+## 9. Acceptance decision and next authorized task
 
-The independent design challenge has been completed and its findings are reconciled in this candidate. The next gate is a human decision to accept, revise, or reject it. Only an accepted decision may authorize the authority-maintenance pass described above. Implementation planning and runtime work remain later, separate tasks.
+**Human decision:** ACCEPTED
 
-**INDEPENDENT CHALLENGE FINDINGS RECONCILED — HUMAN ACCEPTANCE REQUIRED — NOT AUTHORITY**
+The user has explicitly accepted the current Lesson 1 encounter-design reconciliation, including all reconciled independent-challenge findings. The next authorized task is **Lesson 1 authority maintenance**. This decision does not itself modify or promote current authority. Implementation planning and runtime work remain later, separate tasks.
+
+**HUMAN ACCEPTED — LESSON 1 AUTHORITY MAINTENANCE AUTHORIZED — NOT YET CURRENT AUTHORITY — NOT IMPLEMENTATION AUTHORITY**
