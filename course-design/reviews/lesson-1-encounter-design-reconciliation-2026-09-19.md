@@ -12,7 +12,18 @@ This record responds to independent learner test-drive evidence after the accept
 
 Lesson 1 should remain the first guided JOIN encounter, but its argument should be re-centered around one capability:
 
-> Given a chosen starting-row baseline and the relationship, determine how many matching rows each starting row contributes to the result, and use those contributions to predict row-count change relative to that baseline before writing SQL.
+> Given a chosen starting-row baseline and the relationship, determine how many matching rows each starting row contributes to the result, and use those contributions to predict the row-count effect of the JOIN relative to that baseline before writing SQL.
+
+For the Lesson 1 INNER JOIN step, before unrelated row-changing operations such as filtering, aggregation, `DISTINCT`, or additional joins:
+
+```text
+result rows = matching row pairs
+
+result count
+= sum of matches contributed by the chosen baseline rows
+```
+
+This is the mechanism for reasoning about the current JOIN operation. It is not a universal formula for the final row count of arbitrary SQL containing other row-changing operations.
 
 The supporting concepts do not become separate lesson destinations:
 
@@ -37,22 +48,16 @@ start from article rows
 → verify 18 article-grain rows with source information
 ```
 
-The reverse perspective is a deliberately small contrast inside that argument:
+Before the protected article-baseline prediction, the reverse perspective remains only a structural Cardinality contrast:
 
 ```text
-source baseline:
-4 starting source rows
-
-TechLedger → 5 article matches
-Venture Daily → 6 article matches
-MarketWire → 5 article matches
-HealthTech Review → 2 article matches
-
-= 18 matching pairs
-= 18 result rows
+one article → one source
+one source → potentially many articles
 ```
 
-This is the same set of 18 matching article/source pairs as in the article-baseline view. What changes is the comparison baseline: 18 result rows do not expand relative to 18 starting articles, while they do expand relative to four starting sources. The contrast explains the `1:M` relationship and why row multiplication or expansion is baseline-relative. It is not a claim that reversing SQL relation order inherently changes INNER JOIN pair count, a second JOIN task, a second learner prediction, or a Lesson 2 fan-out lesson.
+After the learner has reasoned through the reverse direction, `Venture Daily → 6 articles` may illustrate that one source can relate to multiple articles. The complete reverse-baseline comparison—four starting source rows collectively contributing the same 18 matching article/source pairs—must not be learner-facing until Grain is established, the 18-article baseline is measured, and the learner commits to the 18-row article-baseline prediction. If learner-facing at all, it should preferably remain optional or later enrichment rather than a competing core case.
+
+At the design-analysis level, the reverse perspective is relationally valid: the same 18 matching pairs do not expand relative to 18 starting articles but do expand relative to four starting sources. This explains why row multiplication or expansion is baseline-relative. It is not a claim that reversing SQL relation order inherently changes INNER JOIN pair count, a second JOIN task, a second learner prediction, or a Lesson 2 fan-out lesson.
 
 ## 2. Basis and authority boundary
 
@@ -68,7 +73,7 @@ The following current sources were read under `source-of-truth-hierarchy.md`:
 
 The implemented Lesson 1 JavaScript and CSS were inspected only as evidence of the tested experience. Runtime does not decide the desired design.
 
-The current authority already supports much of the target model: relationship meaning before terminology, Cardinality in both directions, Grain before baseline and prediction, a post-commitment unit-bearing visual, semantic action before JOIN terminology, direct ON semantics, full-query mapping, and verification against prediction and Grain. It requires PK/FK reveal after connecting-field reasoning and Cardinality reasoning before Cardinality terminology, but it does not define the pre-Cardinality disclosure boundary precisely enough to prevent the PK/FK explanation from supplying the protected first-direction inference. The new evidence therefore requires a focused reconciliation of how the existing parts function as one argument and how that inference remains independent.
+The current authority already supports much of the target model: relationship meaning before terminology, Cardinality in both directions, Grain before baseline and prediction, a post-commitment unit-bearing visual, semantic action before JOIN terminology, direct ON semantics, full-query mapping, and verification against prediction and Grain. It requires PK/FK reveal after connecting-field reasoning and Cardinality reasoning before Cardinality terminology, but it does not define the pre-Cardinality disclosure boundary precisely enough to prevent the PK/FK explanation or another learner-visible surface from supplying the protected first-direction inference. The new evidence therefore requires a focused reconciliation of how the existing parts function as one argument and how that inference remains independent.
 
 ## 3. Confirmed defects
 
@@ -92,6 +97,8 @@ The missing foregrounded rule is:
 
 > To predict row-count change relative to a chosen starting-row baseline, ask how many matching rows each starting row contributes to the result.
 
+In this record, that rule is scoped to the row effect of the Lesson 1 INNER JOIN step. Filtering, aggregation, `DISTINCT`, or additional joins could change a larger query's final row count and are outside this mechanism's present teaching claim.
+
 For this encounter’s article baseline:
 
 ```text
@@ -101,7 +108,7 @@ For this encounter’s article baseline:
 = 18 result rows
 ```
 
-There is therefore no row-count expansion relative to the 18-row article baseline. The overall `one source → many articles` relationship does not contradict this. From a four-source baseline, the source rows contribute 5, 6, 5, and 2 article matches respectively, producing the same 18 matching pairs and 18 result rows; relative to that four-row baseline, the result expands. A `1:M` label alone does not mean every JOIN multiplies rows, and changing the written table order of an equivalent INNER JOIN does not by itself change the matching pair set.
+There is therefore no row-count expansion relative to the 18-row article baseline. The overall `one source → many articles` relationship does not contradict this. At the design-analysis level, four source rows collectively contribute the same 18 matching pairs and 18 result rows; relative to that four-row baseline, the result expands. The full source tally is not needed in the core learner journey. A `1:M` label alone does not mean every JOIN multiplies rows, and changing the written table order of an equivalent INNER JOIN does not by itself change the matching pair set.
 
 ## 4. Evidence-safe Cardinality reconciliation
 
@@ -109,15 +116,15 @@ There is therefore no row-count expansion relative to the 18-row article baselin
 
 Before asking about `one article → how many source rows?`, the encounter may establish:
 
-- the business meaning: the article row records which source published it;
+- the business meaning: the article row records a source identifier used to locate related publishing-source information;
 - the learner-selected connecting field: `news_article.news_source_id`;
 - the related field: `news_source.news_source_id`;
 - that the fields form the article-to-source relationship; and
-- the relevant visible schema/data context needed to inspect that relationship.
+- the structural premises needed for the supported deduction, without translating them into the conclusion.
 
 This is enough to identify what connection is being reasoned about without supplying its multiplicity.
 
-### 4.2 Evidence that must remain protected until after the first answer
+### 4.2 Protected disclosure boundary across all learner-visible surfaces
 
 Before the learner answers the first direction, do not state an equivalent of:
 
@@ -128,28 +135,50 @@ Before the learner answers the first direction, do not state an equivalent of:
 
 Those statements directly resolve the question being used as learner evidence.
 
-### 4.3 Candidate reveal order
+This restriction applies to every learner-visible surface, including mastheads, titles, subtitles, persistent reasoning-thread labels, teacher text, Concept Moments, Working Schema annotations, relationship labels, feedback from earlier steps, and surrounding explanatory copy. The current runtime masthead, `Media coverage — one article, one publisher`, is therefore an implementation surface that later remediation must inspect and change. This design record does not prescribe replacement copy.
+
+### 4.3 Exact first-direction inference contract
+
+For one article row, the supported deduction has two logical parts.
+
+**At most one matching source:** `news_source.news_source_id` is a Primary Key. A particular source-id value can therefore identify at most one `news_source` row.
+
+**At least one matching source:** `news_article.news_source_id` is `NOT NULL` and is a satisfied Foreign Key reference to `news_source.news_source_id`. The article's source-id value must therefore reference an existing source row.
+
+The learner combines those premises:
+
+```text
+at most one
++ at least one
+= exactly one matching source row
+```
+
+The equation above specifies the design logic; it must not be shown as a pre-resolved learner answer before commitment. Neither premise may be translated into wording that itself states `exactly one`. Later design may decide how much terminology such as referential integrity is learner-facing, but authority must preserve both logical premises even when instructional wording is simpler.
+
+This interaction is a **supported first-exposure relational deduction**. A correct response is evidence that the learner combined the supplied structural premises in this guided case; it is not evidence of independent Cardinality mastery.
+
+### 4.4 Candidate reveal order
 
 1. The learner selects `news_article.news_source_id` from the article relation.
 2. The encounter names the selected article field as the foreign key and `news_source.news_source_id` as the referenced primary key. This establishes how the rows are related, but it does not state the match count, say that the article stores “one source,” or announce the first-direction conclusion.
-3. The learner reasons about the first direction from the visible FK→PK structure, the primary key’s uniqueness, the required participation constraint, and the publishing meaning: for one article, how many source rows can match?
+3. The learner reasons about the first direction by combining the at-most-one premise from Primary Key uniqueness with the at-least-one premise from the non-null, satisfied Foreign Key reference: for one article, how many source rows can match?
 4. Corrective feedback may direct attention to the relevant constraint without stating the answer before another attempt. Correct success feedback records `one article → one source`.
 5. The learner reasons about the reverse direction using the absence of a `UNIQUE` constraint plus domain meaning: one source may be referenced by many article rows.
-6. A small concrete instance, such as `Venture Daily → 6 article rows`, may illustrate the already-reasoned reverse direction. It must not serve as the sole proof of structural Cardinality.
+6. A small concrete instance, such as `Venture Daily → 6 article rows`, may illustrate the already-reasoned reverse direction. It must not serve as the sole proof of structural Cardinality or reveal the complete 18-row result before the protected prediction.
 7. Only after both directions are established does the encounter formally name Cardinality and show `one source → many articles` / `1:M`.
 
 This candidate preserves the current timing of the PK/FK Concept Moment while narrowing what it may disclose before the protected first-direction inference. Current authority requires PK/FK reveal after connecting-field reasoning and Cardinality reasoning before Cardinality terminology, but it leaves the intervening disclosure boundary insufficiently constrained. The runtime used that gap to state the one-value conclusion before the question; authority did not explicitly mandate that leakage. Authority maintenance is still required before implementation may rely on the revised boundary.
 
-### 4.4 Why the reverse direction matters
+### 4.5 Why the reverse direction matters
 
 The reverse-direction question should have an explicit instructional purpose, not merely complete a definition:
 
 - `one article → one source` predicts one result contribution per row relative to the 18-article baseline;
-- `one source → many articles` explains why rows contribute multiple matches relative to the four-source baseline;
-- both perspectives produce the same 18 matching article/source pairs in this INNER JOIN case; and
+- `one source → many articles` establishes that a source may contribute multiple article matches from a source-baseline perspective;
+- after the protected prediction, optional explanation may show that both perspectives produce the same 18 matching article/source pairs in this INNER JOIN case; and
 - the contrast prevents the misconception that a `1:M` relationship automatically multiplies rows without identifying the baseline against which expansion is being measured.
 
-The concrete `Venture Daily → 6 article rows` example is useful only as a compact confirmation after the structural inference and as one contribution within the four-source baseline contrast. It should not initiate a second SQL task, ask for a second learner prediction, teach INNER JOIN commutativity or optimizer behavior, or introduce the later Lesson 2 encounter.
+The concrete `Venture Daily → 6 article rows` example is sufficient for the core encounter after the structural inference. The complete four-source tally is unnecessary there. Any aggregate `4 source rows → 18 matching pairs` comparison belongs only after the protected article prediction and should preferably be optional/later enrichment. Neither form should initiate a second SQL task, ask for a second learner prediction, teach INNER JOIN commutativity or optimizer behavior, or introduce the later Lesson 2 encounter.
 
 ## 5. Re-centered learner journey
 
@@ -176,7 +205,7 @@ article baseline → one source match contributed per article
 source baseline → potentially many article matches contributed per source
 ```
 
-Then name the relationship concepts. The formal labels summarize the reasoning; they do not become a parallel mini-lesson.
+After the reverse-direction answer, `Venture Daily → 6 articles` may provide the bounded concrete illustration. Do not show the complete four-source/18-result comparison here. Then name the relationship concepts. The formal labels summarize the reasoning; they do not become a parallel mini-lesson.
 
 ### Episode 3 — Turn the match count into a row prediction
 
@@ -192,7 +221,7 @@ therefore each starting article contributes one result row
 therefore predict 18 result rows at the same Grain
 ```
 
-The article baseline is appropriate because the requested result Grain is one article per row; Grain remains the meaning of a requested result row, not the identity of the SQL `FROM` relation. The reverse-perspective contrast may remain available as a quiet reminder, but it must not compete with the article-baseline prediction.
+The article baseline is appropriate because the requested result Grain is one article per row; Grain remains the meaning of a requested result row, not the identity of the baseline or SQL `FROM` relation. Only after the learner commits to this prediction may an aggregate four-source/18-match comparison appear. It should preferably remain optional or later enrichment and must not compete with the article-baseline argument.
 
 ### Episode 4 — Name the operation
 
@@ -239,7 +268,10 @@ This reconciliation does not reopen Category-C KEEP findings `1.3`, `9.2`, or `9
 - Do not turn Lesson 1 into a generic lecture on JOIN direction.
 - Do not add a reverse-direction JOIN exercise or teach full fan-out behavior.
 - Do not treat `1:M` notation as a row-count prediction by itself.
+- Do not present the complete reverse-baseline 18-row result before the learner commits to the article-baseline prediction.
 - Do not use seed frequency as the sole proof of structural Cardinality.
+- Do not claim independent Cardinality mastery from the supported first-direction deduction.
+- Do not present the match-contribution equation as a final-row-count formula for arbitrary SQL.
 - Do not remove working steps merely to reduce text.
 - Do not change assistance lifecycle or strength.
 - Do not accept `c95ff0a` as the product baseline through this record.
@@ -250,29 +282,31 @@ If this candidate reconciliation is accepted, current Lesson 1 authority must be
 
 1. `course-design/stage-1/stage-1-learner-route.md`
    - make matches contributed per row relative to a chosen baseline the organizing capability of Episodes 2–5;
-   - preserve the reverse perspective as a bounded, baseline-relative contrast that does not imply different INNER JOIN pair counts from SQL table order;
+   - preserve the reverse perspective as a bounded structural contrast before prediction, with `Venture Daily → 6 articles` sufficient for the core illustration;
+   - prohibit the aggregate four-source/18-result comparison before the protected article prediction and prefer optional/later treatment if it is learner-facing;
    - preserve PK/FK naming after connecting-field reasoning while making its role subordinate to the baseline-relative match-contribution argument.
 2. `course-design/stage-1/stage-1-interaction-decisions.md`
-   - define what PK/FK relationship evidence may appear before the first Cardinality question;
-   - prohibit revealing the first-direction multiplicity before learner commitment;
+   - define the exact at-most-one and at-least-one premises supporting the first-direction deduction;
+   - characterize the interaction as supported first-exposure deduction rather than independent Cardinality mastery;
+   - prohibit every learner-visible surface from revealing first-direction multiplicity before learner commitment, including mastheads, titles, thread labels, teacher text, Concept Moments, Working Schema annotations, relationship labels, earlier feedback, and surrounding copy;
+   - identify the current `Media coverage — one article, one publisher` masthead as an implementation remediation surface without prescribing replacement copy;
    - define the reverse-perspective contrast’s purpose and boundary;
-   - require baseline, prediction, JOIN teaching, ON, and verification to carry the matches-contributed-per-baseline-row causal thread.
+   - require baseline, prediction, JOIN teaching, ON, and verification to carry the matches-contributed-per-baseline-row causal thread;
+   - scope the match-contribution equation to the row effect of the current INNER JOIN before unrelated filtering, aggregation, `DISTINCT`, or additional joins.
 3. `pedagogical-foundations.md`
    - update only if the accepted result is intended to refine the reusable first-JOIN architecture or the general Cardinality evidence rule; do not generalize an encounter-local solution automatically.
 
 `course-design/course-visual-language.md` does not require change unless acceptance adds a new cross-course visual rule. Existing focus, evidence-locality, and visual-aid rules are sufficient for this candidate.
 
-Because the candidate changes protected evidence and narrows the pre-question PK/FK disclosure boundary, the production process’s risk-triggered challenge applies before any authority promotion. The challenge should specifically test:
+Because the candidate changes protected evidence and narrows the pre-question disclosure boundary, the production process’s risk-triggered challenge applies before any authority promotion. The completed challenge required this reconciliation to ensure:
 
-- whether the learner has enough non-leaking evidence to reason about the first direction;
-- whether the preserved PK/FK concept timing remains intelligible without leaking the Cardinality conclusion;
-- whether the reverse-perspective example clarifies baseline-relative expansion without becoming Lesson 2; and
-- whether the whole encounter now reads as one causal argument rather than a sequence of concept cards.
+- the learner has both non-leaking logical premises needed to reason about the first direction;
+- the preserved PK/FK concept timing remains intelligible without leaking the Cardinality conclusion from any learner-visible surface;
+- the reverse-perspective illustration remains bounded and cannot reveal the protected prediction; and
+- the central equation remains scoped to the current JOIN operation.
 
 ## 9. Acceptance and implementation gates
 
-The next authorized task should be an independent design challenge of this candidate reconciliation. It should not edit runtime or authority.
+The independent design challenge has been completed and its findings are reconciled in this candidate. The next gate is a human decision to accept, revise, or reject it. Only an accepted decision may authorize the authority-maintenance pass described above. Implementation planning and runtime work remain later, separate tasks.
 
-After challenge findings are reconciled, a human decision is required to accept, revise, or reject the candidate. Only an accepted decision may authorize the authority-maintenance pass described above. Implementation planning and runtime work remain later, separate tasks.
-
-**DESIGN RECONCILIATION PREPARED — INDEPENDENT CHALLENGE AND HUMAN ACCEPTANCE REQUIRED**
+**INDEPENDENT CHALLENGE FINDINGS RECONCILED — HUMAN ACCEPTANCE REQUIRED — NOT AUTHORITY**
