@@ -2,9 +2,11 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const runtime = await readFile(new URL('../src/stage1-prototype-runtime.js', import.meta.url), 'utf8');
+const styles = await readFile(new URL('../src/stage1-prototype-runtime.css', import.meta.url), 'utf8');
 
 const contains = (text, message) => assert.ok(runtime.includes(text), message);
 const excludes = (text, message) => assert.ok(!runtime.includes(text), message);
+const containsStyle = (text, message) => assert.ok(styles.includes(text), message);
 const ordered = (...parts) => {
   let cursor = -1;
   for (const part of parts) {
@@ -51,8 +53,10 @@ excludes('Beat 2', 'Learner-facing Beat labels must be removed.');
 excludes('Beat 3', 'Learner-facing Beat labels must be removed.');
 excludes('grain you predicted', 'Grain must be established, not predicted.');
 contains("current.classList.add('completed')", 'Prior JOIN explanations must remain as completed reviewable layers.');
+containsStyle('.teach-step.completed .teach-actions{display:none}', 'Reviewable completed explanations must not replay progression actions.');
 ordered('function afterSemantic()', "concept('JOIN'", "$('#s1-teaching').hidden = false", 'function executeSql()');
 contains("$('#s1-to-sql').addEventListener('click', () => { state = 'sql'", 'SQL workspace must open only from the completed teaching mapping.');
+contains("activeTeaching.classList.add('completed')", 'SQL handoff must make all teaching layers reviewable but secondary.');
 
 contains('Compare the actual result with your earlier prediction of 18 rows and the established Grain', 'Verification must integrate result evidence, prediction, and established Grain.');
 contains('verification-summary', 'Completion must use a verification/consolidation role.');
@@ -60,5 +64,16 @@ excludes("concept('JOIN verified'", 'Completion must not introduce a new JOIN Co
 contains('You established one article per requested result row', 'Completion must reconstruct the reasoning argument.');
 excludes('relations, link, cardinality, grain, baseline, prediction', 'Completion must not be an administrative state transcript.');
 ordered("setExecutionStatus('Verified · result satisfies the task'", 'askVerification()', "state = 'complete'", 'Reasoning verified', 'Lesson 1 complete');
+
+contains('row-construction', 'Enrichment must use a legible row-construction visual.');
+contains('matches the same source id', 'Enrichment must show direct row matching.');
+contains('contributes both fields', 'Enrichment must show field contribution to the result row.');
+contains('it defines how article rows match source rows', 'Enrichment must state ON semantics directly.');
+contains('because each article matches one source, this result keeps one row per article', 'Enrichment preservation claim must be query-local and mechanism-qualified.');
+contains('The schema tells us which relationships are possible. The instance shows which row matches actually occur.', 'Schema-versus-instance distinction must remain.');
+contains('A Venn view can help with inclusion and exclusion, but it does not explain Grain or row multiplication.', 'Venn limitation must remain.');
+excludes('JOIN is the bridge', 'Enrichment must not rely on the bridge metaphor.');
+excludes('<div class="sample-arrow">+</div>', 'Enrichment must not use plus as a relational connector.');
+excludes('it names it', 'ON must not be said to name the relationship.');
 
 console.log('Lesson 1 remediation validation passed.');
