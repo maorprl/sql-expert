@@ -14,24 +14,24 @@ When this document conflicts with a Lesson-local placement decision for a contro
 
 ## 1. Inter-Lesson navigation
 
-The current learner journey contains Lesson 1 and Lesson 2. Navigation between them uses lightweight **Previous** / **Next** controls in the course masthead, adjacent to Lesson/progress orientation and visually separate from pedagogical actions such as `Check answer`, `Continue`, and `Run query`.
+The current accepted runnable journey contains Course 4 / Lesson 1 and Course 4 / Lesson 2. Navigation between them uses lightweight **Previous** / **Next** controls in the course masthead, adjacent to Lesson/progress orientation and visually separate from pedagogical actions such as `Check answer`, `Continue`, and `Run query`.
 
 Navigation reads the existing progression state; it does not create a second unlock model, mark evidence complete, fabricate learner evidence, or reset an available Lesson merely because the learner navigates.
 
-For the accepted Lessons 1–2 journey:
+For the accepted Course 4 Lessons 1–2 journey:
 
-- Lesson 1 has no usable Previous control;
-- Lesson 1 Next is unavailable until the existing Lesson 1 completion progression authorizes Lesson 2;
-- after Lesson 1 completion, Next opens Lesson 2;
-- Lesson 2 Previous returns to the already available Lesson 1;
+- Course 4 / Lesson 1 has no usable Previous control;
+- Course 4 / Lesson 1 Next is unavailable until the existing Course 4 / Lesson 1 completion progression authorizes Course 4 / Lesson 2;
+- after Course 4 / Lesson 1 completion, Next opens Course 4 / Lesson 2;
+- Course 4 / Lesson 2 Previous returns to the already available Course 4 / Lesson 1;
 - returning between available Lessons preserves their established in-memory learner state;
-- Lesson 2 has no usable Next because no Lesson 3 is currently accepted.
+- Course 4 / Lesson 2 has no usable Next because no Course 4 / Lesson 3 is currently accepted.
 
 This document does not require unrestricted chapter switching, a three-chapter selector, or navigation to an unapproved future Lesson.
 
 ### Navigation naming consistency
 
-Learner-facing sequence labels use **Lesson**. Internal paths, identifiers, and historical artifacts may retain `Stage` naming.
+Learner-facing sequence labels use the canonical **Course / Lesson** identity. Historical artifacts retain the naming they originally used.
 
 A Lesson/order identifier and a descriptive encounter title are different label roles. Navigation should apply those roles consistently across the accepted Lessons.
 
@@ -130,7 +130,7 @@ It should not silently become a full worked query, specify the entire relational
 
 ## 5. Within-Lesson review
 
-The current Lessons 1–2 product does not require course-shell Back / Forward journey-history navigation inside an active Lesson. Important completed reasoning and evidence remain reviewable through the accepted Conversation/Thread and Workbench presentation.
+The current Course 4 Lessons 1–2 product does not require course-shell Back / Forward journey-history navigation inside an active Lesson. Important completed reasoning and evidence remain reviewable through the accepted Conversation/Thread and Workbench presentation.
 
 Reviewability does not authorize editing historical answers, rerunning earlier evidence-bearing activity as a new attempt, or mutating later evidence. Those behaviors belong to Retry / Redo, whose reset and downstream-invalidation semantics remain OPEN.
 
@@ -183,7 +183,7 @@ The current learner task, evidence, or authoring surface should remain visually 
 This document does **not** currently establish:
 
 - a global hint system;
-- a generalized Lesson locking/unlocking system beyond the accepted Lessons 1–2 progression;
+- a generalized Lesson locking/unlocking system beyond the accepted Course 4 Lessons 1–2 progression;
 - exact keyboard shortcuts;
 - exact mobile behavior;
 - Retry / Redo reset and downstream invalidation semantics;

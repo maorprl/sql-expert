@@ -1,4 +1,4 @@
-import './inner-join-unmatched.css';
+import './course-4-lesson-3-runtime.css';
 
 const BUSINESS_REQUEST = 'The investment team is validating a funding-round report. It should show every recorded funding round with the company\'s status, and they also need to know whether every company is represented in the report.';
 const REQUIRED_RELATIONS = ['funding_round', 'company'];
@@ -20,7 +20,7 @@ const INTERACTION_LABELS = {
   complete: 'Stage complete',
 };
 
-export function createInnerJoinUnmatched({ editor, getDatabase, getSchema, onSelectionChange, interactionLifecycle }) {
+export function createCourse4Lesson3Runtime({ editor, getDatabase, getSchema, onSelectionChange, interactionLifecycle }) {
   const state = {
     current: 'relations',
     completed: [],
@@ -405,7 +405,7 @@ export function createInnerJoinUnmatched({ editor, getDatabase, getSchema, onSel
     learningEl.classList.remove('join-teaching-active');
     learningEl.classList.toggle('sql-implementation-active', sqlImplementation);
     learningEl.classList.toggle('results-evidence-active', resultEvidence);
-    learningEl.dataset.stage3State = resultEvidence ? 'results' : state.current;
+    learningEl.dataset.course4Lesson3State = resultEvidence ? 'results' : state.current;
 
     document.querySelector('.editor-header h2').textContent = measurementWorkspace || predictionEvidence ? 'Evidence measurement' : 'INNER JOIN implementation';
     document.querySelectorAll('.lab-action').forEach((element) => {

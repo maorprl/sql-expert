@@ -1,10 +1,10 @@
-# Lesson 3 implementation specification — INNER JOIN zero matches and entity coverage
+# Course 4 / Lesson 3 implementation specification — INNER JOIN zero matches and entity coverage
 
 **Status:** CURRENT IMPLEMENTATION SPEC — RECONCILED WITH CURRENT VISUAL REFERENCE / NOT YET IMPLEMENTED  
-**Source design authority:** `course-design/stage-3/stage-3-authority.md`  
-**Scope:** buildable learner-state behavior, interaction gates, evidence behavior, SQL/result validation, control usage, and implementation constraints for Lesson 3
+**Source design authority:** `course-design/course-4/lesson-3/authority.md`  
+**Scope:** buildable learner-state behavior, interaction gates, evidence behavior, SQL/result validation, control usage, and implementation constraints for Course 4 / Lesson 3
 
-This specification translates the current Lesson 3 design authority into implementation-checkable behavior. It does not replace the Lesson 3 design authority, course-wide visual authority, or course-wide control authority.
+This specification translates the current Course 4 / Lesson 3 design authority into implementation-checkable behavior. It does not replace the Course 4 / Lesson 3 design authority, course-wide visual authority, or course-wide control authority.
 
 Applicable course-wide authority includes:
 
@@ -21,7 +21,7 @@ If implementation would require a material learner-facing decision not establish
 
 ## 1. Runtime entry and business context
 
-Lesson 3 continues within the established course shell and interaction topology used by the accepted Lessons 1–2 journey.
+Course 4 / Lesson 3 continues within the established course shell and interaction topology used by the accepted Course 4 Lessons 1–2 journey.
 
 Implementation must not invent:
 
@@ -30,7 +30,7 @@ Implementation must not invent:
 - Retry / Redo reset semantics;
 - a separate learner-response location model.
 
-During development and validation, Lesson 3 may be directly reachable for testing. It must not be promoted into the accepted learner journey or treated as the accepted next Lesson until Lesson 3 acceptance is complete.
+During development and validation, Course 4 / Lesson 3 may be directly reachable for testing. It must not be promoted into the accepted learner journey or treated as the accepted next Lesson until Course 4 / Lesson 3 acceptance is complete.
 
 The persistent business context is:
 
@@ -114,7 +114,7 @@ FROM funding_round
 WHERE company_id = 20;
 ```
 
-The query is prepared for the learner because this is a focused diagnostic measurement, not the Lesson's SQL-authoring task. This reuses the accepted Lessons 1–2 pattern in which prepared SQL is shown, the learner presses Run, and only then does a result appear.
+The query is prepared for the learner because this is a focused diagnostic measurement, not the Lesson's SQL-authoring task. This reuses the accepted Course 4 Lessons 1–2 pattern in which prepared SQL is shown, the learner presses Run, and only then does a result appear.
 
 Before Run:
 
@@ -277,7 +277,7 @@ The completion state must not introduce LEFT JOIN, NULL, or a preservation/repai
 
 ## 11. Reviewability, spatial ownership, and visual behavior
 
-All Lesson 3 states must conform to `course-design/course-visual-language.md`.
+All Course 4 / Lesson 3 states must conform to `course-design/course-visual-language.md`.
 
 ### Stable learner-response lane
 
@@ -329,7 +329,7 @@ The visual reference must make each material handoff legible without relocating 
 
 The current visual implementation reference is:
 
-`course-design/stage-3/stage-3-visual-reference.html`
+`course-design/course-4/lesson-3/visual-reference.html`
 
 It is a runnable visual/reference artifact, not accepted production runtime.
 
@@ -380,11 +380,11 @@ Implementation must not silently decide:
 
 ## 14. Spec conformance result
 
-This specification has been checked against the current Lesson 3 authority, course controls, course visual language, pedagogical foundations, and the relevant accepted Lessons 1–2 interaction patterns.
+This specification has been checked against the current Course 4 / Lesson 3 authority, course controls, course visual language, pedagogical foundations, and the relevant accepted Course 4 Lessons 1–2 interaction patterns.
 
 The missing company is supplied as the reported symptom, but its zero-match cause is not supplied. The learner establishes the cause by running a visible prepared SQL check. This preserves clear evidence provenance while avoiding the earlier unexplained comparison-table pattern.
 
-The protected prediction uses constrained numeric input rather than multiple choice because pre-answer selectable wording would violate the Lesson 3 protected-evidence constraint.
+The protected prediction uses constrained numeric input rather than multiple choice because pre-answer selectable wording would violate the Course 4 / Lesson 3 protected-evidence constraint.
 
 The final company-coverage conclusion may use closed single-choice interaction because it occurs after the protected inference has already been produced and verified.
 

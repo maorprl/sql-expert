@@ -1,9 +1,9 @@
-# Lesson 3 authority — INNER JOIN zero matches and entity coverage
+# Course 4 / Lesson 3 authority — INNER JOIN zero matches and entity coverage
 
 **Status:** CURRENT AUTHORITY — RECONCILED REVIEW BASELINE / NOT YET IMPLEMENTED  
-**Scope:** Lesson 3 encounter-local pedagogy, sequence, evidence, reveal timing, SQL/result contract, and implementation boundary
+**Scope:** Course 4 / Lesson 3 encounter-local pedagogy, sequence, evidence, reveal timing, SQL/result contract, and implementation boundary
 
-This document is the current Lesson 3 design authority. It was established freshly from the accepted Lessons 1–2 baseline through the current learner-encounter production process.
+This document is the current Course 4 / Lesson 3 design authority. It was established freshly from the accepted Course 4 Lessons 1–2 baseline through the current learner-encounter production process.
 
 The older files `course-design/stage-3/stage-3-learner-route.md` and `course-design/stage-3/stage-3-interaction-decisions.md` remain preserved candidate/history. Where they overlap, this document is the current authority.
 
@@ -20,11 +20,11 @@ For course-wide behavior, this Lesson remains constrained by:
 
 ## 1. Encounter purpose and gist
 
-Lesson 3 extends the learner's existing INNER JOIN reasoning to the missing case in the current progression:
+Course 4 / Lesson 3 extends the learner's existing INNER JOIN reasoning to the missing case in the current progression:
 
-- Lesson 1: one match;
-- Lesson 2: multiple matches;
-- Lesson 3: **zero matches**.
+- Course 4 / Lesson 1: one match;
+- Course 4 / Lesson 2: multiple matches;
+- Course 4 / Lesson 3: **zero matches**.
 
 The new relational reasoning capability is:
 
@@ -68,7 +68,7 @@ The missing-company symptom may be supplied at the start. The fact that Lumina h
 
 ## 3. Course-assumed learner state
 
-Lesson 3 reuses, rather than re-teaches as first exposure:
+Course 4 / Lesson 3 reuses, rather than re-teaches as first exposure:
 
 - relation identification from a business question;
 - direct PK/FK relationship reading;
@@ -82,7 +82,7 @@ Lesson 3 reuses, rather than re-teaches as first exposure:
 
 Prior exposure is not treated as proof of mastery. The learner still performs the reasoning moves needed by this encounter.
 
-Lesson 3 must not assume or teach as part of its required path:
+Course 4 / Lesson 3 must not assume or teach as part of its required path:
 
 - LEFT JOIN;
 - NULL semantics from unmatched outer-join rows;
@@ -195,7 +195,7 @@ The required solution must not use LEFT JOIN, aggregation, DISTINCT, EXISTS, or 
 
 ## 7. Completion evidence
 
-Lesson 3 completion requires evidence that the learner has:
+Course 4 / Lesson 3 completion requires evidence that the learner has:
 
 - selected the relevant relations;
 - identified the connecting company-id relationship;
@@ -243,7 +243,7 @@ Implementation must stop rather than invent a material learner-facing decision i
 
 ## 9. Explicitly out of scope
 
-Lesson 3 does not teach how to preserve unmatched companies.
+Course 4 / Lesson 3 does not teach how to preserve unmatched companies.
 
 The following remain outside this Lesson:
 

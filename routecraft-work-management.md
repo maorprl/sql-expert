@@ -21,8 +21,8 @@ Historical management records must not be used as current work-state sources.
 
 The accepted runnable Learning Product contains two Lessons:
 
-- **Lesson 1 — Media coverage / first JOIN** using `news_article → news_source`;
-- **Lesson 2 — Funding participation / row multiplication** using `funding_round → round_investment`.
+- **Course 4 / Lesson 1 — One Match** using the media-coverage `news_article → news_source` case;
+- **Course 4 / Lesson 2 — Multiple Matches** using the funding-participation `funding_round → round_investment` case.
 
 The accepted runtime baseline remains:
 
@@ -30,7 +30,7 @@ The accepted runtime baseline remains:
 
 The canonical repository state is the current accepted `main` HEAD and may advance without changing the accepted runtime baseline.
 
-Lesson 3 now has current design authority in `course-design/stage-3/stage-3-authority.md`, but it is not yet implemented or accepted as part of the runnable learner journey. The older Stage 3 route/interaction files and the rebaseline Lesson 3 dry-run design remain candidate/history only.
+Course 4 / Lesson 3 now has current design authority in `course-design/course-4/lesson-3/authority.md`, but it is not yet implemented or accepted as part of the runnable learner journey. The older Stage 3 route/interaction files and the rebaseline Course 4 / Lesson 3 dry-run design remain candidate/history only.
 
 `learner-encounter-production-process.md` is the current rebaselined production-process authority. It no longer requires the legacy permanent-role / fixed-review / verbatim-handoff choreography.
 
@@ -38,23 +38,23 @@ Lesson 3 now has current design authority in `course-design/stage-3/stage-3-auth
 
 This is the established project plan. The production-system rebaseline is complete and preserved in Section 3.2; it did not renumber or replace this plan.
 
-1. **DONE** — Preserve the accepted Lessons 1–2 runtime baseline.  
+1. **DONE** — Preserve the accepted Course 4 Lessons 1–2 runtime baseline.  
    Evidence: accepted runtime baseline `9b8f6ffc1f22ce2d2783f49e52a48c480a0945fa`.
-2. **DONE** — Full external UI/UX review of Lessons 1–2.
-3. **DONE** — Consolidated Lessons 1–2 cleanup.
+2. **DONE** — Full external UI/UX review of Course 4 Lessons 1–2.
+3. **DONE** — Consolidated Course 4 Lessons 1–2 cleanup.
 4. **DONE** — Full repository documentation / canon reconciliation.
 5. **DONE** — Source-of-Truth hierarchy / authority precedence.  
    Evidence: `source-of-truth-hierarchy.md`.
 6. **DONE** — Production Contract v1.  
    Evidence: `production-contract-v1.md`.
-7. **CURRENT** — Complete Lesson 3 manually through accepted product baseline.  
-   Current design authority: `course-design/stage-3/stage-3-authority.md`.  
+7. **CURRENT** — Complete Course 4 / Lesson 3 manually through accepted product baseline.  
+   Current design authority: `course-design/course-4/lesson-3/authority.md`.  
    Active execution is tracked in Section 3.1.
-8. **NOT STARTED** — Build the production system / “machine” after Lesson 3 is accepted.
+8. **NOT STARTED** — Build the production system / “machine” after Course 4 / Lesson 3 is accepted.
 9. **NOT STARTED** — CI.
-10. **SUPERSEDED / REMOVED FROM EXECUTION** — Former plan to implement Lesson 3 through the production system. Lesson 3 is completed manually under Step 7.
+10. **SUPERSEDED / REMOVED FROM EXECUTION** — Former plan to implement Course 4 / Lesson 3 through the production system. Course 4 / Lesson 3 is completed manually under Step 7.
 11. **NOT STARTED** — CD.
-12. **NOT STARTED** — Lesson 4 through the production system.
+12. **NOT STARTED** — The next human-approved Lesson through the production system; no additional Lesson identity is canonical yet.
 13. **NOT STARTED** — Whole-course planning.
 14. **NOT STARTED** — Engineering cleanup.
 
@@ -62,34 +62,34 @@ This is the established project plan. The production-system rebaseline is comple
 
 ## 3. Subplans
 
-### 3.1 Active subplan — Complete Lesson 3 manually
+### 3.1 Active subplan — Complete Course 4 / Lesson 3 manually
 
 **Status:** ACTIVE
 
-**Goal:** finish Lesson 3 manually from its accepted design authority through implementation, validation, and acceptance as an **ACCEPTED PRODUCT BASELINE** before production-system / “machine” work begins.
+**Goal:** finish Course 4 / Lesson 3 manually from its accepted design authority through implementation, validation, and acceptance as an **ACCEPTED PRODUCT BASELINE** before production-system / “machine” work begins.
 
-1. **DONE** — Establish Lesson 3 encounter design and current Lesson authority.  
-   Evidence: `course-design/stage-3/stage-3-authority.md`.
-2. **DONE** — Produce the Lesson 3 implementation specification from current authority.  
-   Evidence: `course-design/stage-3/stage-3-implementation-spec.md`.
-3. **DONE** — Produce the Lesson 3 visual mockup / visual implementation reference for the material learner states needed before Build.  
-   Evidence: `course-design/stage-3/stage-3-visual-reference.html`.
+1. **DONE** — Establish Course 4 / Lesson 3 encounter design and current Lesson authority.  
+   Evidence: `course-design/course-4/lesson-3/authority.md`.
+2. **DONE** — Produce the Course 4 / Lesson 3 implementation specification from current authority.  
+   Evidence: `course-design/course-4/lesson-3/implementation-spec.md`.
+3. **DONE** — Produce the Course 4 / Lesson 3 visual mockup / visual implementation reference for the material learner states needed before Build.  
+   Evidence: `course-design/course-4/lesson-3/visual-reference.html`.
 4. **DONE** — Reconcile the authority, implementation spec, and visual reference before Build.  
    The reconciled review baseline uses a reported missing-company symptom, a visible learner-run prepared source check, protected zero-match prediction, learner-authored INNER JOIN, actual-result verification, and final coverage diagnosis.  
-   Evidence: `course-design/stage-3/stage-3-authority.md`, `course-design/stage-3/stage-3-implementation-spec.md`, and `course-design/stage-3/stage-3-visual-reference.html`.
-5. **NOT STARTED** — Implement Lesson 3 manually from the reconciled authority/spec/reference.
-6. **NOT STARTED** — Validate Lesson 3 to its declared impact and scope.  
+   Evidence: `course-design/course-4/lesson-3/authority.md`, `course-design/course-4/lesson-3/implementation-spec.md`, and `course-design/course-4/lesson-3/visual-reference.html`.
+5. **NOT STARTED** — Implement Course 4 / Lesson 3 manually from the reconciled authority/spec/reference.
+6. **NOT STARTED** — Validate Course 4 / Lesson 3 to its declared impact and scope.  
    Validation must cover applicable authority conformance, protected evidence and reveal timing, learner flow / UX, executable/runtime behavior, semantic result behavior, and regression across accepted Lessons materially exposed to the change.
-7. **NOT STARTED** — Accept Lesson 3 and reconcile project state.  
-   Promote the validated Lesson 3 implementation to the accepted product baseline, update the accepted runtime/product state, reconcile capability coverage, and close this subplan.
+7. **NOT STARTED** — Accept Course 4 / Lesson 3 and reconcile project state.  
+   Promote the validated Course 4 / Lesson 3 implementation to the accepted product baseline, update the accepted runtime/product state, reconcile capability coverage, and close this subplan.
 
-**Subplan completion condition:** Lesson 3 is implemented, validated to required scope, explicitly accepted, and part of the accepted runnable learner journey. Design completion alone does not close this subplan.
+**Subplan completion condition:** Course 4 / Lesson 3 is implemented, validated to required scope, explicitly accepted, and part of the accepted runnable learner journey. Design completion alone does not close this subplan.
 
 ### Current action
 
-**CURRENT ACTION:** external review of the complete INNER JOIN chapter, including the reconciled Lesson 3 review baseline. Lesson 3 production-runtime implementation remains unstarted until the review feedback is assessed and the user explicitly resumes implementation work.
+**CURRENT ACTION:** external review of the complete INNER JOIN chapter, including the reconciled Course 4 / Lesson 3 review baseline. Course 4 / Lesson 3 production-runtime implementation remains unstarted until the review feedback is assessed and the user explicitly resumes implementation work.
 
-Do not begin production-system / “machine” work. The current Lesson 3 authority, implementation spec, and visual reference are durably reconciled in the repository for review.
+Do not begin production-system / “machine” work. The current Course 4 / Lesson 3 authority, implementation spec, and visual reference are durably reconciled in the repository for review.
 
 ### 3.2 Closed subplan — Production-system rebaseline
 
@@ -102,7 +102,7 @@ Do not begin production-system / “machine” work. The current Lesson 3 author
    Evidence: `course-design/production/rebaseline/production-system-requirements-traceability-audit.md`.
 4. **DONE** — Design and preserve Candidate Workflow v0 from the audited requirements.  
    Evidence: `course-design/production/rebaseline/candidate-workflow-v0.md`.
-5. **DONE** — Run Lesson 3 design dry-run evaluation without implementation. The preserved dry-run evidence exposed the authority-before-Build ambiguity; the recovery dry run additionally exposed capability-selection drift toward a larger LEFT JOIN / NULL jump. The current process now preserves risk-triggered pre-build challenge and comparison of materially plausible next capability gaps against the current learner state.  
+5. **DONE** — Run Course 4 / Lesson 3 design dry-run evaluation without implementation. The preserved dry-run evidence exposed the authority-before-Build ambiguity; the recovery dry run additionally exposed capability-selection drift toward a larger LEFT JOIN / NULL jump. The current process now preserves risk-triggered pre-build challenge and comparison of materially plausible next capability gaps against the current learner state.  
    Evidence: `course-design/production/rebaseline/lesson-3-candidate-workflow-dry-run.md`.
 6. **DONE** — Compare the candidate against the legacy process by outcomes and protected failure modes. The comparison retained proportional case comparison and risk-triggered independent challenge as conditional protections without restoring permanent roles/review streams.  
    Evidence: `course-design/production/rebaseline/candidate-vs-legacy-outcome-comparison.md`.
@@ -197,7 +197,7 @@ The following historical work does not need to be revived as active management m
 
 - course-shell controls such as Show Solution, navigation, Retry / Redo, persistence, and related OPEN semantics remain governed by `course-design/course-controls.md` and current authority/status;
 - completed Stage 1 stabilization remains historical completed work with repository evidence; it is not an active workstream;
-- the prior Learning Experience / Wave initiative is historical/superseded management evidence and does not override the accepted Lessons 1–2 baseline or current authority.
+- the prior Learning Experience / Wave initiative is historical/superseded management evidence and does not override the accepted Course 4 Lessons 1–2 baseline or current authority.
 
 ### 4.7 Reconciliation result
 
@@ -218,8 +218,8 @@ The following labels organize work only. They are not separate trackers and do n
 
 Current state:
 
-- Lessons 1–2 are the accepted learner journey;
-- Lesson 3 has reconciled current design authority, implementation specification, and runnable visual implementation reference under `course-design/stage-3/`; production-runtime implementation has not started, and the complete INNER JOIN chapter is currently being taken through external review;
+- Course 4 Lessons 1–2 are the accepted learner journey;
+- Course 4 / Lesson 3 has reconciled current design authority, implementation specification, and runnable visual implementation reference under `course-design/course-4/lesson-3/`; production-runtime implementation has not started, and the complete INNER JOIN chapter is currently being taken through external review;
 - current pedagogy, visual, control, schema, data, and accepted Lesson authority remains in the sources identified by `source-of-truth-hierarchy.md`.
 
 ### Production System
@@ -227,7 +227,7 @@ Current state:
 Current state:
 
 - the rebaselined `learner-encounter-production-process.md` is current;
-- production-system / “machine” build work has **not started** and remains blocked until the active Lesson 3 manual-completion subplan closes;
+- production-system / “machine” build work has **not started** and remains blocked until the active Course 4 / Lesson 3 manual-completion subplan closes;
 - worker/tool assignment remains in `agent-assisted-work-protocol.md`;
 - Cycle 1 and rebaseline directories remain evidence/provenance, not flat current authority;
 - permanent role topology, fixed review counts, and universal handoff artifacts are not current process requirements.
@@ -241,7 +241,7 @@ These items are not current blockers unless present work makes them necessary.
 - broader persistence semantics across reloads or sessions;
 - Retry / Redo reset and downstream-invalidation semantics;
 - broader hint / adaptive-assistance policy — deferred unless new evidence justifies reopening;
-- Lesson structure beyond the current Lesson 3 design authority;
+- Lesson structure beyond the current Course 4 / Lesson 3 design authority;
 - broader initial schema exposure where future Lesson work actually requires a decision;
 - release-level accessibility, responsive, cross-browser, and cumulative-regression validation.
 

@@ -1,13 +1,13 @@
-/* Stage 3 reuses the existing learner and SQL surfaces. Keep overrides local to this relation pair. */
+/* Course 4 / Lesson 3 reuses the existing learner and SQL surfaces. Keep overrides local to this relation pair. */
 
-.learning-panel[data-stage3-state="results"] .working-schema-panel {
+.learning-panel[data-course4-lesson3-state="results"] .working-schema-panel {
   border-color: #dce4ed;
   background: #fafbfd;
   box-shadow: none;
   opacity: .72;
 }
 
-/* Funding Stage 2 globally offsets funding_round. Reset it here and align company.company_id with funding_round.company_id. */
+/* Funding Course 4 / Lesson 2 globally offsets funding_round. Reset it here and align company.company_id with funding_round.company_id. */
 .learning-panel:has(.data-card[data-relation="company"]) .relation-preview.relationship-visible .data-card[data-relation="funding_round"] {
   transform: none;
 }

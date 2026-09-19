@@ -37,7 +37,7 @@ code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospac
 
 .topbar { min-height: 72px; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; background: linear-gradient(135deg, #173155, #214f86); color: #fff; box-shadow: var(--shadow); }
 .topbar h1 { margin: 0; font-size: 21px; }
-.stage-label { margin-left: 8px; padding: 3px 8px; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; color: #eaf2ff; font-size: 11px; vertical-align: 2px; }
+.course-lesson-label { margin-left: 8px; padding: 3px 8px; border: 1px solid rgba(255,255,255,.35); border-radius: 999px; color: #eaf2ff; font-size: 11px; vertical-align: 2px; }
 .status { display: block; margin-top: 3px; color: #dce8f8; font-size: 12px; }
 .status.ready { color: #c7f5dc; }
 .status.failed { color: #ffd1d1; }
@@ -237,9 +237,9 @@ td.null { color: #7d8795; font-style: italic; }
 
 /* Shared focus treatment follows the learner-facing role, not the encounter. */
 .learning-panel:is(
-  [data-stage1-state="connection"],
-  [data-stage2-state="connection"],
-  [data-stage3-state="connection"]
+  [data-course4-lesson1-state="connection"],
+  [data-course4-lesson2-state="connection"],
+  [data-course4-lesson3-state="connection"]
 ) .working-schema-panel {
   border-color: #8fb4ec;
   background: #f8fbff;
@@ -247,9 +247,9 @@ td.null { color: #7d8795; font-style: italic; }
 }
 
 .learning-panel:is(
-  [data-stage1-state="connection"],
-  [data-stage2-state="connection"],
-  [data-stage3-state="connection"]
+  [data-course4-lesson1-state="connection"],
+  [data-course4-lesson2-state="connection"],
+  [data-course4-lesson3-state="connection"]
 ) .current-step {
   border-color: #d8e1ec;
   background: #fbfcfe;

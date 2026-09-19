@@ -2,31 +2,35 @@
 
 A browser-only SQLite workspace for the startup ecosystem dataset.
 
-The accepted learner journey currently contains two implemented Lessons in one SQL Lab runtime:
+The canonical curriculum structure is:
 
-1. **Lesson 1 — Media coverage / first JOIN** using `news_article → news_source`;
-2. **Lesson 2 — Funding participation / row multiplication** using `funding_round → round_investment`.
+- **Course 1 — Reading Relational Data**, with the design-approved but not implemented **Lesson 1 — What Does One Row Represent?**;
+- **Course 2 — Working With Rows**, with no canonical Lessons yet;
+- **Course 3 — Aggregating Data**, with no canonical Lessons yet;
+- **Course 4 — Joining Relations**, containing **Lesson 1 — One Match**, **Lesson 2 — Multiple Matches**, and **Lesson 3 — Zero Matches**.
 
-`Lesson` is the learner-facing product term. Historical/internal paths and identifiers retain `stage1`, `stage2`, `stage-1`, and `stage-2` where renaming would create unnecessary implementation churn.
+The accepted runnable journey currently contains Course 4 / Lesson 1 and Course 4 / Lesson 2. Course 4 / Lesson 3 has current design authority and a visual reference but is not yet accepted into the production runtime. Course 4 / Lesson 1 is not the curriculum's first Lesson, first learner encounter, or first exposure to Grain.
 
 The accepted learner journey is rendered by:
 
-- `src/stage1-prototype-runtime.js` and `src/stage1-prototype-runtime.css` — Lesson 1 Conversation/Workbench runtime;
-- `src/stage2-prototype-runtime.js` and `src/stage2-prototype-runtime.css` — Lesson 2 Conversation/Workbench runtime;
+- `src/course-4-lesson-1-runtime.js` and `src/course-4-lesson-1-runtime.css` — Course 4 / Lesson 1 Conversation/Workbench runtime;
+- `src/course-4-lesson-2-runtime.js` and `src/course-4-lesson-2-runtime.css` — Course 4 / Lesson 2 Conversation/Workbench runtime;
+- `src/course-4-lesson-3-runtime.js` and `src/course-4-lesson-3-runtime.css` — the in-progress Course 4 / Lesson 3 runtime module;
 - `src/main.js` — database initialization and Lesson orchestration;
 - `src/course-navigation.css` and `src/styles.css` — surrounding runtime styling.
 
-Older encounter modules remain in the repository but are not the accepted Lessons 1–2 learner journey.
+Older encounter modules remain in the repository but are not the accepted Course 4 Lessons 1–2 learner journey.
 
 Current encounter authority is stored separately from runtime code:
 
-- Lesson 1: `course-design/stage-1/stage-1-learner-route.md` and `course-design/stage-1/stage-1-interaction-decisions.md`;
-- Lesson 2: `course-design/stage-2/stage-2-authority.md`;
-- Lesson 3 design: `course-design/stage-3/stage-3-authority.md`.
-- Lesson 3 implementation specification: `course-design/stage-3/stage-3-implementation-spec.md`.
-- Lesson 3 current runnable visual implementation reference: `course-design/stage-3/stage-3-visual-reference.html`.
+- canonical curriculum identity: `course-design/curriculum-structure.md`;
+- Course 4 / Lesson 1: `course-design/course-4/lesson-1/learner-route.md` and `course-design/course-4/lesson-1/interaction-decisions.md`;
+- Course 4 / Lesson 2: `course-design/course-4/lesson-2/authority.md`;
+- Course 4 / Lesson 3: `course-design/course-4/lesson-3/authority.md`;
+- Course 4 / Lesson 3 implementation specification: `course-design/course-4/lesson-3/implementation-spec.md`;
+- Course 4 / Lesson 3 visual reference: `course-design/course-4/lesson-3/visual-reference.html`.
 
-Lesson 3 now has reconciled current design authority, an implementation specification, and a runnable visual implementation reference for review. It is **not** yet production-runtime implementation and is not part of the accepted runnable learner journey. The older `stage-3-learner-route.md` / `stage-3-interaction-decisions.md` files and the production-system Lesson 3 dry-run design remain candidate/history only.
+Course 4 / Lesson 3 is **not** yet part of the accepted runnable learner journey. The older `stage-3-learner-route.md` / `stage-3-interaction-decisions.md` files and the production-system Lesson 3 dry-run design remain candidate/history only and retain their historical names.
 
 Course-wide learner-experience authority is currently defined by:
 
@@ -34,15 +38,15 @@ Course-wide learner-experience authority is currently defined by:
 - `course-design/course-visual-language.md`;
 - `course-design/course-controls.md`.
 
-There is currently no separate Lessons 1–2 topology authority. Spatial and interaction conformance is derived directly from current course-level and Lesson authority.
+There is currently no separate Course 4 Lessons 1–2 topology authority. Spatial and interaction conformance is derived directly from current course-level and Lesson authority.
 
-A compact Previous / Next control in the masthead provides progression-safe inter-Lesson navigation. Lesson 1 Next becomes usable only after the existing completion progression authorizes Lesson 2. Lesson 2 Previous returns to Lesson 1, and Lesson 2 has no usable Next because Lesson 3 is not yet implemented or accepted into the runnable journey.
+A compact Previous / Next control in the masthead provides progression-safe inter-Lesson navigation. Course 4 / Lesson 1 Next becomes usable only after the existing completion progression authorizes Course 4 / Lesson 2. Course 4 / Lesson 2 Previous returns to Course 4 / Lesson 1, and Course 4 / Lesson 2 has no usable Next because Course 4 / Lesson 3 is not yet implemented or accepted into the runnable journey.
 
 Within the current browser run, each available Lesson keeps its own in-memory reasoning state, editor text, result, completion state, and other existing runtime state when the learner navigates away and back. This does not establish a broader persistence contract across reloads or browser sessions.
 
 `Show solution` is not a persistent course-shell control. Where available, it is SQL-workspace-local assistance during active SQL authoring and follows `course-design/course-controls.md`.
 
-Lesson 2 begins with reuse checkpoints rather than a pre-resolved relationship: the learner selects the relevant relations and identifies the connecting participation field before the PK/FK relationship is revealed. These are reuse actions, not new first-exposure teaching and not the encounter's core row-multiplication evidence.
+Course 4 / Lesson 2 begins with reuse checkpoints rather than a pre-resolved relationship: the learner selects the relevant relations and identifies the connecting participation field before the PK/FK relationship is revealed. These are reuse actions, not new first-exposure teaching and not the encounter's core row-multiplication evidence.
 
 This README describes the runnable product and current observable runtime structure. It does **not** define pedagogical authority or the project's next authorized work item.
 

@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
-const runtime = await readFile(new URL('../src/stage1-prototype-runtime.js', import.meta.url), 'utf8');
-const styles = await readFile(new URL('../src/stage1-prototype-runtime.css', import.meta.url), 'utf8');
+const runtime = await readFile(new URL('../src/course-4-lesson-1-runtime.js', import.meta.url), 'utf8');
+const styles = await readFile(new URL('../src/course-4-lesson-1-runtime.css', import.meta.url), 'utf8');
 
 const contains = (text, message) => assert.ok(runtime.includes(text), message);
 const excludes = (text, message) => assert.ok(!runtime.includes(text), message);
@@ -22,7 +22,9 @@ excludes('on bench', 'Learner-facing on bench wording must be removed.');
 excludes('Relations on the bench', 'Selected-relation heading must be functional.');
 excludes('The two relations on the bench', 'Working Schema heading must be functional.');
 excludes('Media coverage — one article, one publisher', 'The masthead must not disclose first-direction multiplicity.');
-contains('Media coverage — articles and publishing sources', 'The masthead must preserve neutral media-coverage context.');
+contains('Course 4 · Joining Relations', 'The masthead must identify the canonical Course.');
+contains('Lesson 1 — One Match', 'The masthead must identify the canonical Lesson.');
+contains('Media coverage · request → verified JOIN', 'The masthead must preserve neutral media-coverage context.');
 excludes('identifies the source that published it', 'Connecting-field copy must not imply first-direction multiplicity.');
 excludes('stores one value that references', 'PK/FK copy must not collapse the two premises into the conclusion.');
 excludes('the article row carries the pointer to its publisher', 'Connecting-field recovery must not imply a singular match.');
@@ -56,7 +58,7 @@ contains('${count} article rows measured.', 'Baseline result must be interpreted
 contains('1 article row', 'Post-prediction mechanism must carry article-row units.');
 contains('1 matching source row', 'Post-prediction mechanism must carry matching-source units.');
 contains('18 matching pairs', 'Scaled prediction mechanism must explain matching pairs.');
-ordered("state = 'grain'", 'function afterGrain()', "state = 'baseline'", 'function runMeasurement()', 'function startPrediction(count)', "state = 'prediction'", 'onCorrect: afterPrediction', "state = 'semantic'", "$('#s1-prediction-mechanism').hidden = false", 'onCorrect: afterSemantic', "concept('JOIN'");
+ordered("state = 'grain'", 'function afterGrain()', "state = 'baseline'", 'function runMeasurement()', 'function startPrediction(count)', "state = 'prediction'", 'onCorrect: afterPrediction', "state = 'semantic'", "$('#c4l1-prediction-mechanism').hidden = false", 'onCorrect: afterSemantic', "concept('JOIN'");
 contains('For this INNER JOIN step', 'Match-contribution language must remain scoped to the current JOIN step.');
 contains('each article contributes one matching article/source pair', 'Prediction must apply one-match contribution to the baseline.');
 contains('Starting baseline: <b>${count}</b> article rows', 'The durable thread must distinguish baseline from Grain.');
@@ -78,8 +80,8 @@ excludes('Beat 3', 'Learner-facing Beat labels must be removed.');
 excludes('grain you predicted', 'Grain must be established, not predicted.');
 contains("current.classList.add('completed')", 'Prior JOIN explanations must remain as completed reviewable layers.');
 containsStyle('.teach-step.completed .teach-actions{display:none}', 'Reviewable completed explanations must not replay progression actions.');
-ordered('function afterSemantic()', "concept('JOIN'", "$('#s1-teaching').hidden = false", 'function executeSql()');
-contains("$('#s1-to-sql').addEventListener('click', () => { state = 'sql'", 'SQL workspace must open only from the completed teaching mapping.');
+ordered('function afterSemantic()', "concept('JOIN'", "$('#c4l1-teaching').hidden = false", 'function executeSql()');
+contains("$('#c4l1-to-sql').addEventListener('click', () => { state = 'sql'", 'SQL workspace must open only from the completed teaching mapping.');
 contains("activeTeaching.classList.add('completed')", 'SQL handoff must make all teaching layers reviewable but secondary.');
 
 contains('Compare the actual result with your earlier prediction of 18 rows and the established Grain', 'Verification must integrate result evidence, prediction, and established Grain.');
@@ -87,7 +89,7 @@ contains('verification-summary', 'Completion must use a verification/consolidati
 excludes("concept('JOIN verified'", 'Completion must not introduce a new JOIN Concept Moment.');
 contains('You established one article per requested result row', 'Completion must reconstruct the reasoning argument.');
 excludes('relations, link, cardinality, grain, baseline, prediction', 'Completion must not be an administrative state transcript.');
-ordered("setExecutionStatus('Verified · result satisfies the task'", 'askVerification()', "state = 'complete'", 'Reasoning verified', 'Lesson 1 complete');
+ordered("setExecutionStatus('Verified · result satisfies the task'", 'askVerification()', "state = 'complete'", 'Reasoning verified', 'Course 4 · Lesson 1 complete');
 
 contains('row-construction', 'Enrichment must use a legible row-construction visual.');
 contains('matches the same source id', 'Enrichment must show direct row matching.');
@@ -100,5 +102,5 @@ excludes('JOIN is the bridge', 'Enrichment must not rely on the bridge metaphor.
 excludes('<div class="sample-arrow">+</div>', 'Enrichment must not use plus as a relational connector.');
 excludes('it names it', 'ON must not be said to name the relationship.');
 
-console.log('Lesson 1 remediation validation passed.');
+console.log('Course 4 / Lesson 1 remediation validation passed.');
 console.log('Stateful visibility and interaction behavior remain browser-walkthrough responsibilities.');

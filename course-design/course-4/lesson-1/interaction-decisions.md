@@ -1,6 +1,6 @@
-# Lesson 1 interaction decisions
+# Course 4 / Lesson 1 interaction decisions
 
-The repository path retains the historical/internal `stage-1` name. The learner-facing product label is **Lesson 1**.
+The canonical identity is **Course 4 / Lesson 1 — One Match**.
 
 ## Business case and schema basis
 
@@ -10,9 +10,9 @@ The learner works from this business need: every news article should include the
 
 ## Organizing causal argument
 
-Lesson 1 is organized around predicting the row effect of the current JOIN from a chosen baseline by reasoning about how many matching rows each baseline row contributes. PK/FK, Cardinality, Grain, baseline, prediction, JOIN, ON, SELECT, and verification are supporting parts of that single causal argument rather than parallel lesson topics.
+Course 4 / Lesson 1 is organized around predicting the row effect of the current JOIN from a chosen baseline by reasoning about how many matching rows each baseline row contributes. PK/FK, Cardinality, Grain, baseline, prediction, JOIN, ON, SELECT, and verification are supporting parts of that single causal argument rather than parallel lesson topics.
 
-For this Lesson 1 INNER JOIN step, before unrelated row-changing operations such as filtering, aggregation, `DISTINCT`, or additional joins:
+For this Course 4 / Lesson 1 INNER JOIN step, before unrelated row-changing operations such as filtering, aggregation, `DISTINCT`, or additional joins:
 
 ```text
 result rows = matching row pairs
@@ -35,7 +35,7 @@ The Working Schema remains the same guided reasoning surface as the learner prog
 
 ## Reasoning, concepts, and progressive relationship reveal
 
-Lesson 1 reasoning remains constrained / closed rather than open-text unless a later explicit decision changes a specific interaction.
+Course 4 / Lesson 1 reasoning remains constrained / closed rather than open-text unless a later explicit decision changes a specific interaction.
 
 Concepts appear only after the learner's prerequisite reasoning:
 
@@ -88,7 +88,7 @@ When feedback follows a correct reasoning move, it should do more than report UI
 
 The active reasoning task or action remains the strongest visual focus. Completed work remains visible and reviewable but visually quieter.
 
-Completed Lesson 1 work retains the original question or task, learner answer or selection, completion state, relevant feedback or concept consequence, and any opened hints for review. When one top-level episode contains more than one reasoning move, those distinct evidence-bearing moves must remain inspectable rather than collapsing into one opaque success state. The exact internal state representation is not prescribed here.
+Completed Course 4 / Lesson 1 work retains the original question or task, learner answer or selection, completion state, relevant feedback or concept consequence, and any opened hints for review. When one top-level episode contains more than one reasoning move, those distinct evidence-bearing moves must remain inspectable rather than collapsing into one opaque success state. The exact internal state representation is not prescribed here.
 
 During active authoring or other tool-led work, completed review must not displace the current task from the working area or separate that task from the tool used to perform it. Completed work may move to a secondary placement or treatment while remaining reviewable.
 
@@ -106,7 +106,7 @@ When the current learner action legitimately changes page regions, the change of
 
 ## Result Grain, baseline, prediction, and semantic action
 
-Result-Grain reasoning, the baseline, and the prediction are one continuous reasoning episode. After the relationship and Cardinality are established, the learner identifies that one requested result row represents one news article. The framing must reconnect this question to the business request rather than imply that Cardinality determines Grain. Only after the learner identifies the row meaning introduce **Grain**: the grain of the requested result is what one requested result row represents. Grain is never a property of `news_article`, and it is never another name for a table.
+Result-Grain reasoning, the baseline, and the prediction are one continuous reasoning episode. After the relationship and Cardinality are established, the learner identifies that one requested result row represents one news article. The framing must reconnect this question to the business request rather than imply that Cardinality determines Grain. After the learner identifies the row meaning, explicitly reuse **Grain**: the grain of the requested result is what one requested result row represents. This encounter does not claim to introduce Grain for the first time in the curriculum. Grain is never a property of `news_article`, and it is never another name for a table.
 
 The feedback after correct Grain reasoning should make the distinction explicit that a result row may contain information contributed by both relations while still representing one news article. This prepares the learner to reason about adding source information without changing what the row represents. The closed Grain-response options must include a plausible row-meaning misconception rather than a weak country-based distractor, while retaining the useful article/source-pair misconception. Exact distractor wording remains an implementation decision.
 
@@ -120,15 +120,15 @@ Before JOIN terminology appears, the learner predicts that adding one publishing
 
 The prediction uses a closed response; no open rationale is required. The closed options should distinguish the relevant relational interpretations rather than test recall of the number 18 alone — for example, one result row per article versus one result row per distinct source versus row multiplication from multiple matches. The feedback makes the PK/FK and Cardinality basis explicit: each article matches one source row. After the learner commits to the prediction, a compact explanatory visual shows `1 article row → 1 matching source row → 1 result row`, then scales that reasoning to the 18-row case. It must express row matching and contribution rather than arithmetic addition, concatenation, or stacking. The continuous chain is: one article per requested result row → 18 starting article rows → one matching source per article → 18 matching pairs → 18 result rows with the same Grain.
 
-Only after that prediction commitment may an aggregate reverse-baseline comparison show that four starting source rows contribute the same 18 matching pairs/result rows. Such a comparison is not required in the core journey and, if learner-facing, should preferably be optional or later enrichment. It must not become a second prediction, a reverse-order SQL task, or Lesson 2 fan-out teaching.
+Only after that prediction commitment may an aggregate reverse-baseline comparison show that four starting source rows contribute the same 18 matching pairs/result rows. Such a comparison is not required in the core journey and, if learner-facing, should preferably be optional or later enrichment. It must not become a second prediction, a reverse-order SQL task, or Course 4 / Lesson 2 fan-out teaching.
 
-This encounter establishes the baseline-relative match-contribution mechanism that later makes row multiplication / fan-out understandable, but Lesson 1 does not need to introduce the term `fan-out` here. The mechanism here is limited to the row effect of this INNER JOIN before filtering, aggregation, `DISTINCT`, or additional joins; learner-facing explanation must not imply a universal final-query row-count rule.
+This encounter establishes the baseline-relative match-contribution mechanism that later makes row multiplication / fan-out understandable, but Course 4 / Lesson 1 does not need to introduce the term `fan-out` here. The mechanism here is limited to the row effect of this INNER JOIN before filtering, aggregation, `DISTINCT`, or additional joins; learner-facing explanation must not imply a universal final-query row-count rule.
 
 The learner then chooses the semantic action of combining each article with its matching source. This learner decision is retained; it is not replaced by an instructional statement. Only after that choice is **JOIN** introduced. Learner-facing terminology across this transition should stay consistent enough that the learner can follow the same idea from “matching source row” into JOIN rather than encountering unnecessary shifts among unrelated labels.
 
 ## JOIN teaching climax
 
-The JOIN introduction is the instructional climax of Lesson 1.
+The JOIN introduction is the instructional climax of Course 4 / Lesson 1.
 
 Its purpose is not merely to introduce JOIN syntax. It must make explicit that the SQL query is the implementation of the relational reasoning already established from the business request.
 
@@ -235,9 +235,9 @@ Lesson completion is a state, not a numbered learner episode.
 
 Relational algebra and Venn-style representations may be offered as optional enrichment after the core JOIN explanation.
 
-Relational algebra may show the JOIN as a formal representation of the same relational operation already understood by the learner. It is not required learner evidence and its notation is not assessed in Lesson 1.
+Relational algebra may show the JOIN as a formal representation of the same relational operation already understood by the learner. It is not required learner evidence and its notation is not assessed in Course 4 / Lesson 1.
 
-Venn-style representations may support enrichment about row participation across JOIN types. They are not the primary explanatory model for how the task-specific JOIN matches rows and they are not required learner evidence in Lesson 1.
+Venn-style representations may support enrichment about row participation across JOIN types. They are not the primary explanatory model for how the task-specific JOIN matches rows and they are not required learner evidence in Course 4 / Lesson 1.
 
 Neither optional representation may replace the row-matching explanation or become a prerequisite for learner-authored SQL.
 

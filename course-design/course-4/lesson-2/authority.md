@@ -1,11 +1,11 @@
-# Lesson 2 authority — JOIN row multiplication
+# Course 4 / Lesson 2 authority — JOIN row multiplication
 
 **Status:** CURRENT AUTHORITY — RECONCILED TARGET EXPERIENCE  
 **Scope:** current `funding_round → round_investment` learner encounter only
 
-This document defines the current Lesson 2 learner design after reconciliation with the approved target experience. The repository path retains the historical/internal `stage-2` name; the learner-facing product label is **Lesson 2**.
+This document defines the current Course 4 / Lesson 2 learner design after reconciliation with the approved target experience. Its canonical identity is **Course 4 / Lesson 2 — Multiple Matches**.
 
-It supersedes the earlier extracted Lesson 2 route where that route conflicts with the decisions established here, including the former no-baseline sequence, the separate mandatory numeric application, and the earlier Grain/Cardinality entry sequence.
+It supersedes the earlier extracted Course 4 / Lesson 2 route where that route conflicts with the decisions established here, including the former no-baseline sequence, the separate mandatory numeric application, and the earlier Grain/Cardinality entry sequence.
 
 For course-wide behavior, this Lesson remains constrained by:
 
@@ -13,15 +13,15 @@ For course-wide behavior, this Lesson remains constrained by:
 - `course-design/course-visual-language.md`;
 - `course-design/course-controls.md`.
 
-There is no separate current Lessons 1–2 topology authority. Spatial placement, locality, handoffs, and visual ownership must be derived directly from the course-level visual/control authority together with the Lesson-specific requirements below. If those sources leave a material spatial question unresolved, that question remains unresolved until explicitly decided; it must not be silently filled by a derived topology document or implementation convention.
+There is no separate current Course 4 Lessons 1–2 topology authority. Spatial placement, locality, handoffs, and visual ownership must be derived directly from the course-level visual/control authority together with the Lesson-specific requirements below. If those sources leave a material spatial question unresolved, that question remains unresolved until explicitly decided; it must not be silently filled by a derived topology document or implementation convention.
 
-Historical Cycle 1 production artifacts remain provenance and decision history. They are not a flat set of current Lesson 2 authority once a decision has been superseded or promoted into current course-level authority.
+Historical Cycle 1 production artifacts remain provenance and decision history. They are not a flat set of current Course 4 / Lesson 2 authority once a decision has been superseded or promoted into current course-level authority.
 
 ---
 
 ## 1. Encounter purpose and gist
 
-Lesson 2 develops the ability to reason about **multiple matches** in a one-to-many JOIN while preserving the requested participation Grain.
+Course 4 / Lesson 2 develops the ability to reason about **multiple matches** in a one-to-many JOIN while preserving the requested participation Grain.
 
 The Lesson gist is:
 
@@ -59,7 +59,7 @@ Each participation belongs to one funding round. One funding round can have mult
 
 ## 3. Course-assumed learner state
 
-Lesson 2 reuses, rather than re-teaches as first exposure:
+Course 4 / Lesson 2 reuses, rather than re-teaches as first exposure:
 
 - relation identification;
 - direct PK/FK relationship reading;
@@ -74,7 +74,7 @@ Previously encountered does **not** mean pre-resolved or mastered. The learner s
 
 Reuse should reduce explanatory and ceremonial load before removing reasoning structure. PK/FK, Cardinality, Grain, and JOIN are therefore not re-taught as new Concept Moments, but they remain available as reasoning structure where this Lesson needs them.
 
-Lesson 2 must not assume LEFT JOIN / `NULL`, aggregation, pre-aggregation, bridge-table reasoning, fan-out repair, or broader independent end-to-end transfer.
+Course 4 / Lesson 2 must not assume LEFT JOIN / `NULL`, aggregation, pre-aggregation, bridge-table reasoning, fan-out repair, or broader independent end-to-end transfer.
 
 ---
 
@@ -88,7 +88,7 @@ The current sequence is:
 
 3. **Confirm the relationship and establish result Grain.** In one compact reused-premises interaction, the learner carries forward the relationship meaning — many participation rows can point to the same funding round, while each participation names one round — and makes the real row-meaning decision that one requested result row represents one recorded round-investor participation. The relationship confirmation may be lighter than the Grain decision. Cardinality labels or equivalent relationship annotation appear only after this interaction is correct. Grain remains a statement about what one requested result row represents; it is not a property of `round_investment` and is not determined merely by the later `FROM` clause.
 
-4. **Measure the participation baseline.** A prepared compact measurement runs `SELECT COUNT(*) FROM round_investment` and returns **72 rows**. The learner runs the measurement; the course identifies the result as 72 recorded participation rows and carries that number forward. This is reuse of a measurement pattern already established in Lesson 1, not a new `COUNT(*)` lesson and not a separate baseline-interpretation quiz.
+4. **Measure the participation baseline.** A prepared compact measurement runs `SELECT COUNT(*) FROM round_investment` and returns **72 rows**. The learner runs the measurement; the course identifies the result as 72 recorded participation rows and carries that number forward. This is reuse of a measurement pattern already established in Course 4 / Lesson 1, not a new `COUNT(*)` lesson and not a separate baseline-interpretation quiz.
 
 5. **Predict result row behavior.** With participation Grain, the one-to-many relationship, and the 72-row baseline established, the learner predicts **72 result rows — one for each recorded participation** when each participation is joined to the round it belongs to. The course must not yet name row multiplication as the answer.
 
@@ -124,7 +124,7 @@ After the correct field is established, the relationship may be revealed as reus
 
 The relationship/Cardinality meaning and result Grain remain required premises, but they do not receive first-exposure teaching treatment. The interaction should preserve the learner's reasoning while reducing repeated explanation and ceremony.
 
-The prepared baseline measurement is part of the current Lesson 2 route. It may disclose the concrete count of 72 recorded participation rows before the learner predicts the JOIN result row count. The baseline supplies evidence; it does not supply the relational conclusion. The learner must still use the established Grain and relationship to predict what happens after the JOIN.
+The prepared baseline measurement is part of the current Course 4 / Lesson 2 route. It may disclose the concrete count of 72 recorded participation rows before the learner predicts the JOIN result row count. The baseline supplies evidence; it does not supply the relational conclusion. The learner must still use the established Grain and relationship to predict what happens after the JOIN.
 
 ### 5.3 Core pre-execution evidence
 
@@ -182,7 +182,7 @@ The primary result surface should keep all 72 accepted rows inspectable in a scr
 
 ## 7. Assistance and controls
 
-Lesson 2 uses current `course-design/course-controls.md` for assistance/control semantics.
+Course 4 / Lesson 2 uses current `course-design/course-controls.md` for assistance/control semantics.
 
 In particular:
 
@@ -198,7 +198,7 @@ A broader global hint/adaptive system is not established by this Lesson authorit
 
 ## 8. Interaction / spatial-authority boundary
 
-Lesson 2 does not define a course-wide left/right ownership path of its own.
+Course 4 / Lesson 2 does not define a course-wide left/right ownership path of its own.
 
 The learner route in Section 4 is the pedagogical sequence. Spatial conformance must be checked directly against:
 
@@ -208,7 +208,7 @@ The learner route in Section 4 is the pedagogical sequence. Spatial conformance 
 
 Direct manipulation stays on the manipulated object in the Workbench. The reasoning question, learner response, reasoning feedback, Concept Moment / reused-concept consequence, and local progression remain in the learner-response lane. Results and the `1003` evidence slice remain in the Workbench while the verification interaction stays in the learner-response lane.
 
-The superseded 2026-09-15 Stage 1–3 target-topology decision/review/post-build chain is not Lesson 2 authority and is no longer present in the active tree.
+The superseded 2026-09-15 Stage 1–3 target-topology decision/review/post-build chain is not Course 4 / Lesson 2 authority and is no longer present in the active tree.
 
 ---
 
@@ -251,11 +251,11 @@ This Lesson does not establish:
 
 ## 11. Reconciliation note
 
-This authority now reflects the later approved Lesson 2 target experience rather than merely extracting the earlier Cycle 1 route.
+This authority now reflects the later approved Course 4 / Lesson 2 target experience rather than merely extracting the earlier Cycle 1 route.
 
 The substantive reconciled decisions are:
 
-- Lesson 2's conceptual identity is **Multiple matches**;
+- Course 4 / Lesson 2's conceptual identity is **Multiple matches**;
 - the prepared 72-row participation baseline is part of the route;
 - reused relationship/Cardinality and result Grain are handled compactly without first-exposure re-teaching;
 - the learner predicts row behavior and reasons about repeated context before the mechanism is named;

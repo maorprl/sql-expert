@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build && node scripts/copy-sql-sources.mjs",
     "preview": "vite preview",
-    "validate:lesson1-remediation": "node scripts/validate-stage1-remediation.mjs"
+    "validate:course4-lesson1-remediation": "node scripts/validate-course-4-lesson-1-remediation.mjs"
   },
   "dependencies": {
     "ace-builds": "^1.43.2",

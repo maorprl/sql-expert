@@ -6,9 +6,9 @@ import initSqlJs from 'sql.js';
 import wasmUrl from 'sql.js/dist/sql-wasm.wasm?url';
 import './styles.css';
 import './course-navigation.css';
-import { createStage1Prototype } from './stage1-prototype-runtime.js';
-import { createStage2Prototype } from './stage2-prototype-runtime.js';
-import { createInnerJoinUnmatched } from './inner-join-unmatched.js';
+import { createCourse4Lesson1Runtime } from './course-4-lesson-1-runtime.js';
+import { createCourse4Lesson2Runtime } from './course-4-lesson-2-runtime.js';
+import { createCourse4Lesson3Runtime } from './course-4-lesson-3-runtime.js';
 import { createInteractionLifecycle } from './interaction-lifecycle.js';
 
 const SOURCE_FILES = [
@@ -51,7 +51,7 @@ let schema = [];
 let editor;
 let activeEncounter;
 let activeEncounterName = 'media-coverage';
-let stage2Experience;
+let course4Lesson2Experience;
 let innerJoinUnmatchedEncounter;
 const encounterEditorText = { 'media-coverage': '', 'funding-participation': '', 'inner-join-unmatched': '' };
 const encounterResults = { 'media-coverage': null, 'funding-participation': null, 'inner-join-unmatched': null };
@@ -294,11 +294,11 @@ function ensureChapterNavigation() {
   nav.className = 'course-chapter-nav';
   nav.setAttribute('aria-label', 'Course chapters');
   nav.innerHTML = `
-    <span class="course-chapter-nav-label">Chapters</span>
+    <span class="course-chapter-nav-label">Course 4 · Joining Relations</span>
     <div class="course-chapter-list">
-      <button type="button" class="course-chapter-button" data-chapter="media-coverage">Media coverage</button>
-      <button type="button" class="course-chapter-button" data-chapter="funding-participation">Funding participation</button>
-      <button type="button" class="course-chapter-button" data-chapter="inner-join-unmatched">INNER JOIN · 0 matches</button>
+      <button type="button" class="course-chapter-button" data-chapter="media-coverage">Lesson 1 · One Match</button>
+      <button type="button" class="course-chapter-button" data-chapter="funding-participation">Lesson 2 · Multiple Matches</button>
+      <button type="button" class="course-chapter-button" data-chapter="inner-join-unmatched">Lesson 3 · Zero Matches</button>
     </div>`;
   document.querySelector('.topbar').insertAdjacentElement('afterend', nav);
   nav.querySelectorAll('[data-chapter]').forEach((button) => button.addEventListener('click', () => activateEncounter(button.dataset.chapter)));
@@ -327,9 +327,9 @@ function resetEncounterDom() {
 
 function resetLearningPanelState() {
   const learningPanel = document.querySelector('.learning-panel');
-  delete learningPanel.dataset.stage1State;
-  delete learningPanel.dataset.stage2State;
-  delete learningPanel.dataset.stage3State;
+  delete learningPanel.dataset.course4Lesson1State;
+  delete learningPanel.dataset.course4Lesson2State;
+  delete learningPanel.dataset.course4Lesson3State;
   learningPanel.classList.remove(
     'sql-active',
     'baseline-workspace-active',
@@ -346,8 +346,8 @@ function resetLearningPanelState() {
 
 function applyMediaCoverageShell() {
   document.title = 'SQL Lab · Media coverage';
-  const stageLabel = document.querySelector('.stage-label');
-  stageLabel.hidden = true;
+  const courseLessonLabel = document.querySelector('.course-lesson-label');
+  courseLessonLabel.hidden = true;
   el('business-request-title').textContent = 'The research team is reviewing media coverage and wants every article to include the source that published it.';
   document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
   resetLearningPanelState();
@@ -355,7 +355,7 @@ function applyMediaCoverageShell() {
 
 function applyFundingParticipationShell() {
   document.title = 'SQL Lab · Funding participation';
-  document.querySelector('.stage-label').hidden = true;
+  document.querySelector('.course-lesson-label').hidden = true;
   el('business-request-title').textContent = 'The investment team wants to review every recorded investor participation with its funding round type, announced date, investor, and lead status.';
   document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
   el('working-schema-status').textContent = 'Build it from the Live Schema';
@@ -364,7 +364,7 @@ function applyFundingParticipationShell() {
 
 function applyInnerJoinUnmatchedShell() {
   document.title = 'SQL Lab · INNER JOIN unmatched rows';
-  document.querySelector('.stage-label').hidden = true;
+  document.querySelector('.course-lesson-label').hidden = true;
   el('business-request-title').textContent = 'The investment team wants a table of companies that have recorded funding rounds, with each company\'s status alongside the round type and announced date.';
   document.querySelector('.working-schema-header .eyebrow').textContent = 'Reasoning surface';
   el('working-schema-status').textContent = 'Build it from the Live Schema';
@@ -376,32 +376,32 @@ function activateMediaCoverageEncounter() {
   activeEncounterName = 'media-coverage';
   clearError();
   activeEncounter = null;
-  el('stage2-root').hidden = true;
+  el('course4-lesson2-root').hidden = true;
   el('app').hidden = true;
-  el('stage1-root').hidden = false;
+  el('course4-lesson1-root').hidden = false;
   document.title = 'RouteCraft · Media coverage';
 }
 
-function activateFundingParticipationEncounter({ continuedFromStage1 = false } = {}) {
-  if (activeEncounterName === 'funding-participation' && !el('stage2-root').hidden) return;
+function activateFundingParticipationEncounter({ continuedFromCourse4Lesson1 = false } = {}) {
+  if (activeEncounterName === 'funding-participation' && !el('course4-lesson2-root').hidden) return;
   if (activeEncounterName !== 'funding-participation') saveEncounterSurface();
   activeEncounterName = 'funding-participation';
-  el('stage1-root').hidden = true;
-  el('stage2-root').hidden = false;
+  el('course4-lesson1-root').hidden = true;
+  el('course4-lesson2-root').hidden = false;
   el('app').hidden = true;
   clearError();
   activeEncounter = null;
   document.title = 'RouteCraft · Funding participation';
-  if (!stage2Experience) stage2Experience = createStage2Prototype({ root: el('stage2-root'), getDatabase: () => db, onPrevious: activateMediaCoverageEncounter });
-  stage2Experience.setContinuation(continuedFromStage1);
+  if (!course4Lesson2Experience) course4Lesson2Experience = createCourse4Lesson2Runtime({ root: el('course4-lesson2-root'), getDatabase: () => db, onPrevious: activateMediaCoverageEncounter });
+  course4Lesson2Experience.setContinuation(continuedFromCourse4Lesson1);
 }
 
 function activateInnerJoinUnmatchedEncounter() {
   if (activeEncounterName === 'inner-join-unmatched') return;
   saveEncounterSurface();
   activeEncounterName = 'inner-join-unmatched';
-  el('stage1-root').hidden = true;
-  el('stage2-root').hidden = true;
+  el('course4-lesson1-root').hidden = true;
+  el('course4-lesson2-root').hidden = true;
   el('app').hidden = false;
   clearError();
   resetEncounterDom();
@@ -410,7 +410,7 @@ function activateInnerJoinUnmatchedEncounter() {
   restoreEncounterResults('inner-join-unmatched');
 
   if (!innerJoinUnmatchedEncounter) {
-    innerJoinUnmatchedEncounter = createInnerJoinUnmatched({
+    innerJoinUnmatchedEncounter = createCourse4Lesson3Runtime({
       editor,
       getDatabase: () => db,
       getSchema: () => schema,
@@ -444,5 +444,5 @@ activeEncounter = null;
 SQL = await initSqlJs({ locateFile: () => wasmUrl });
 db = new SQL.Database();
 await loadDatabase();
-createStage1Prototype({ root: el('stage1-root'), getDatabase: () => db, onContinue: () => activateFundingParticipationEncounter({ continuedFromStage1: true }) });
+createCourse4Lesson1Runtime({ root: el('course4-lesson1-root'), getDatabase: () => db, onContinue: () => activateFundingParticipationEncounter({ continuedFromCourse4Lesson1: true }) });
 activateMediaCoverageEncounter();

@@ -1,10 +1,10 @@
 <!doctype html>
-<!-- CURRENT LESSON 3 VISUAL IMPLEMENTATION REFERENCE — REVIEW BASELINE ONLY; NOT ACCEPTED PRODUCTION RUNTIME. -->
+<!-- CURRENT COURSE 4 / LESSON 3 VISUAL IMPLEMENTATION REFERENCE — REVIEW BASELINE ONLY; NOT ACCEPTED PRODUCTION RUNTIME. -->
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>RouteCraft · Lesson 3 · Visual reference · Why is Lumina missing?</title>
+<title>RouteCraft · Course 4 / Lesson 3 · Visual reference · Why is Lumina missing?</title>
 <style>
 :root{--page:#e9edf3;--paper:#fff;--ink:#16202e;--ink2:#3b4a5e;--muted:#68788b;--line:rgba(22,32,46,.13);--line2:rgba(22,32,46,.24);--blue:#2457ad;--blueSoft:#e8f0fb;--purple:#6b4fd3;--purpleSoft:#f1eefc;--purpleLine:#d3c9f4;--green:#1c7a52;--greenSoft:#e5f4ed;--amber:#9a6112;--amberSoft:#fbf1dd;--navy:#131f36;--sans:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;--serif:"IBM Plex Serif",Georgia,serif;--mono:"IBM Plex Mono",Consolas,monospace;--r:12px;--shadow:0 1px 2px rgba(16,26,40,.05),0 12px 30px -20px rgba(16,26,40,.4)}
 *{box-sizing:border-box}html,body{margin:0}body{background:var(--page);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}button,textarea,input,select{font:inherit}button{cursor:pointer}code{font-family:var(--mono)}:focus-visible{outline:3px solid rgba(36,87,173,.3);outline-offset:2px}[hidden]{display:none!important}
@@ -24,7 +24,7 @@
 <div id="lesson3">
 <header class="masthead">
   <div><div class="mh-course">RouteCraft · SQL Lab</div><div class="mh-title">Investigating a missing company</div></div>
-  <div class="mh-right"><span class="mh-stage">Lesson 3 · zero matches</span><nav class="lesson-nav" aria-label="Course lessons"><button class="lesson-nav-button" type="button" disabled>Previous</button><button class="lesson-nav-button" type="button" disabled>Next</button></nav><button class="ghost" id="restart">Restart</button></div>
+  <div class="mh-right"><span class="mh-stage">Course 4 / Lesson 3 · zero matches</span><nav class="lesson-nav" aria-label="Course lessons"><button class="lesson-nav-button" type="button" disabled>Previous</button><button class="lesson-nav-button" type="button" disabled>Next</button></nav><button class="ghost" id="restart">Restart</button></div>
 </header>
 <main class="app"><div class="zones">
 <section class="conversation" id="conversation" aria-label="Conversation">
@@ -43,7 +43,7 @@ FROM funding_round
 WHERE company_id = 20;</pre></div><div class="editor-actions"><button class="primary" id="run-check" type="button">Run check</button><span class="run-note" id="check-note">Prepared for you — you don’t write this one.</span></div><div id="check-result" role="status" aria-live="polite"></div></div>
   <div class="wb-block" id="wb-mechanism" hidden><div class="wb-head"><span class="eyebrow">Teaching moment</span><h3>What zero matches means for INNER JOIN</h3></div><div class="teach-panel"><h4>Zero matches → zero joined rows</h4><p>You just measured the source relationship: Lumina has zero matching <code>funding_round</code> rows. Now connect that evidence to the familiar INNER JOIN mechanism.</p><div class="zero-mechanism"><div class="teach-card"><div class="teach-card-head">company · one row</div><div class="teach-card-body">20 · Lumina Bio · active</div></div><div class="teach-arrow">+</div><div class="teach-card"><div class="teach-card-head">funding_round · matches</div><div class="teach-card-body zero-empty">0 matching rows</div></div><div class="teach-arrow">→</div><div class="teach-card"><div class="teach-card-head">INNER JOIN contribution</div><div class="teach-card-body zero-empty">0 result rows</div></div></div><div class="mechanism-summary">A starting row contributes one joined row per matching row pair. With zero matching pairs, it contributes zero INNER JOIN rows.</div></div></div>
   <div class="wb-block" id="wb-sql" hidden><div class="wb-head"><span class="eyebrow">SQL authoring</span><h3>Author the direct INNER JOIN</h3></div><div class="editor"><div class="editor-gutter">1<br>2<br>3<br>4<br>5</div><textarea class="sql-editor" id="sql-editor" spellcheck="false" placeholder="Write a SELECT that joins company to funding_round…"></textarea></div><div class="editor-actions"><button class="primary" id="run-sql" type="button">Execute SQL</button><button class="secondary" id="desired-output" type="button">Desired Output</button><button class="secondary" id="show-solution" type="button">Show solution</button><span class="run-note">Prototype validates the required relational path and result contract.</span></div><div class="assist" id="desired-panel" hidden><strong>Desired Output</strong><ul class="required"><li>company_id</li><li>status</li><li>funding_round_id</li><li>round_type</li><li>announced_date</li></ul></div><div class="execution-status" id="execution-status" hidden></div><div id="sql-diagnostic"></div><div id="sql-results"></div></div>
-  <div class="wb-block" id="wb-completion" hidden><div class="completion"><div class="completion-eyebrow">Success · verified result</div><h3>Lesson 3 complete</h3><p>You traced a real missing-company symptom from source evidence to INNER JOIN behavior and verified the explanation in the result.</p><p><strong>26 funding-round rows can be correct at funding-round Grain while only 11 of 12 companies are represented.</strong> Total row count does not establish entity coverage.</p></div></div>
+  <div class="wb-block" id="wb-completion" hidden><div class="completion"><div class="completion-eyebrow">Success · verified result</div><h3>Course 4 / Lesson 3 complete</h3><p>You traced a real missing-company symptom from source evidence to INNER JOIN behavior and verified the explanation in the result.</p><p><strong>26 funding-round rows can be correct at funding-round Grain while only 11 of 12 companies are represented.</strong> Total row count does not establish entity coverage.</p></div></div>
 </section>
 </div></main>
 </div>

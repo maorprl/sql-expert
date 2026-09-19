@@ -4,7 +4,7 @@
 
 WORKING
 
-This document defines the initial visual language for the course, using Lesson 1 as the calibration specimen. Historical/internal repository naming may retain `Stage` identifiers.
+This document defines the initial visual language for the course, using Course 4 / Lesson 1 as the calibration specimen.
 
 It is not a full design system.
 
@@ -72,7 +72,7 @@ Learner-facing symbols and metaphors must not imply a relational operation, iden
 
 Visual hierarchy should change as the learner's task changes. Persistent elements such as the Business Request, Working Schema, editors, and completed work do not have a fixed visual rank throughout a Lesson.
 
-The active reasoning or action surface should lead; established artifacts should shift into reference roles when appropriate. In Lesson 1, for example, the Working Schema can be central while the learner establishes the relationship, then become secondary when a Baseline measurement, JOIN explanation, SQL implementation, result inspection, or final verification becomes the current task.
+The active reasoning or action surface should lead; established artifacts should shift into reference roles when appropriate. In Course 4 / Lesson 1, for example, the Working Schema can be central while the learner establishes the relationship, then become secondary when a Baseline measurement, JOIN explanation, SQL implementation, result inspection, or final verification becomes the current task.
 
 When a learner action produces evidence that must be interpreted immediately, keep the action, resulting evidence, and immediate interpretation spatially associated enough to read as one continuous reasoning cycle. Avoid unnecessary left-right or top-bottom jumps that make the learner search for the next action after producing evidence.
 
@@ -104,9 +104,9 @@ Consistency does not require pixel-identical screens or identical scaffolding. A
 
 Shared visual behavior should therefore be implemented from a clear common source where practical, while encounter-local styling should be reserved for genuine encounter-specific needs. This is an implementation constraint in service of visual consistency, not a requirement to create a separate design-system layer.
 
-## 11. Lesson 1 as Calibration Specimen
+## 11. Course 4 / Lesson 1 as Calibration Specimen
 
-Lesson 1 tests and refines this visual language. The language should be reusable, but is not yet a complete system for every future Lesson. Do not over-generalize from Lesson 1 to future concepts that have not yet been designed.
+Course 4 / Lesson 1 tests and refines this visual language. The language should be reusable, but is not yet a complete system for every future Lesson. Do not over-generalize from Course 4 / Lesson 1 to future concepts that have not yet been designed.
 
 ## 12. Locked Pedagogy
 
