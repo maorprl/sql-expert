@@ -12,15 +12,15 @@ This record responds to independent learner test-drive evidence after the accept
 
 Lesson 1 should remain the first guided JOIN encounter, but its argument should be re-centered around one capability:
 
-> Given the meaning of the starting rows and the relationship, determine how many matching rows each starting row can find, and use that match count to predict JOIN row behavior before writing SQL.
+> Given a chosen starting-row baseline and the relationship, determine how many matching rows each starting row contributes to the result, and use those contributions to predict row-count change relative to that baseline before writing SQL.
 
 The supporting concepts do not become separate lesson destinations:
 
 - **PK/FK** explains how a starting row finds a related row.
-- **Cardinality** distinguishes the possible match counts in each direction.
+- **Cardinality** distinguishes the possible match contributions from each directional starting-row perspective.
 - **Grain** establishes what each requested result row must continue to represent.
-- **Baseline** establishes how many starting rows exist.
-- **Prediction** applies matches-per-starting-row to those starting rows.
+- **Baseline** establishes which rows are the comparison baseline and how many of them exist.
+- **Prediction** applies matches contributed per starting row to that baseline.
 - **JOIN** names the row-combining operation already chosen in meaning.
 - **ON** expresses the condition used to find the matching row.
 - **Verification** checks whether the executed result agrees with the prior match-count prediction and established Grain.
@@ -37,13 +37,22 @@ start from article rows
 → verify 18 article-grain rows with source information
 ```
 
-The reverse direction is a deliberately small contrast inside that argument:
+The reverse perspective is a deliberately small contrast inside that argument:
 
 ```text
-one source can be found by many article rows
+source baseline:
+4 starting source rows
+
+TechLedger → 5 article matches
+Venture Daily → 6 article matches
+MarketWire → 5 article matches
+HealthTech Review → 2 article matches
+
+= 18 matching pairs
+= 18 result rows
 ```
 
-It explains the `1:M` relationship and demonstrates that the direction of traversal matters. It is not a second JOIN task, a second result prediction, or a Lesson 2 fan-out lesson.
+This is the same set of 18 matching article/source pairs as in the article-baseline view. What changes is the comparison baseline: 18 result rows do not expand relative to 18 starting articles, while they do expand relative to four starting sources. The contrast explains the `1:M` relationship and why row multiplication or expansion is baseline-relative. It is not a claim that reversing SQL relation order inherently changes INNER JOIN pair count, a second JOIN task, a second learner prediction, or a Lesson 2 fan-out lesson.
 
 ## 2. Basis and authority boundary
 
@@ -59,7 +68,7 @@ The following current sources were read under `source-of-truth-hierarchy.md`:
 
 The implemented Lesson 1 JavaScript and CSS were inspected only as evidence of the tested experience. Runtime does not decide the desired design.
 
-The current authority already supports much of the target model: relationship meaning before terminology, Cardinality in both directions, Grain before baseline and prediction, a post-commitment unit-bearing visual, semantic action before JOIN terminology, direct ON semantics, full-query mapping, and verification against prediction and Grain. The new evidence requires a focused reconciliation of how those parts function as one argument and how the first Cardinality inference remains independent.
+The current authority already supports much of the target model: relationship meaning before terminology, Cardinality in both directions, Grain before baseline and prediction, a post-commitment unit-bearing visual, semantic action before JOIN terminology, direct ON semantics, full-query mapping, and verification against prediction and Grain. It requires PK/FK reveal after connecting-field reasoning and Cardinality reasoning before Cardinality terminology, but it does not define the pre-Cardinality disclosure boundary precisely enough to prevent the PK/FK explanation from supplying the protected first-direction inference. The new evidence therefore requires a focused reconciliation of how the existing parts function as one argument and how that inference remains independent.
 
 ## 3. Confirmed defects
 
@@ -81,16 +90,18 @@ The localized components are individually defensible, but the encounter distribu
 
 The missing foregrounded rule is:
 
-> JOIN row behavior depends on how many matching rows each starting row finds in the direction used by the query.
+> To predict row-count change relative to a chosen starting-row baseline, ask how many matching rows each starting row contributes to the result.
 
-For this encounter:
+For this encounter’s article baseline:
 
 ```text
-one starting article row → one matching source row → one result row
-18 starting article rows → 18 matches → 18 result rows
+18 starting article rows
+× 1 matching source row per article
+= 18 matching pairs
+= 18 result rows
 ```
 
-The overall `one source → many articles` relationship does not contradict this. It describes the reverse direction. A `1:M` label alone does not mean every JOIN multiplies rows.
+There is therefore no row-count expansion relative to the 18-row article baseline. The overall `one source → many articles` relationship does not contradict this. From a four-source baseline, the source rows contribute 5, 6, 5, and 2 article matches respectively, producing the same 18 matching pairs and 18 result rows; relative to that four-row baseline, the result expands. A `1:M` label alone does not mean every JOIN multiplies rows, and changing the written table order of an equivalent INNER JOIN does not by itself change the matching pair set.
 
 ## 4. Evidence-safe Cardinality reconciliation
 
@@ -127,18 +138,18 @@ Those statements directly resolve the question being used as learner evidence.
 6. A small concrete instance, such as `Venture Daily → 6 article rows`, may illustrate the already-reasoned reverse direction. It must not serve as the sole proof of structural Cardinality.
 7. Only after both directions are established does the encounter formally name Cardinality and show `one source → many articles` / `1:M`.
 
-This candidate preserves the current timing of the PK/FK Concept Moment while narrowing what it may disclose before the protected first-direction inference. Current authority still requires maintenance because it presently authorizes an explanation that states the one-value conclusion before the question. Implementation must not infer the revised disclosure boundary from this review record.
+This candidate preserves the current timing of the PK/FK Concept Moment while narrowing what it may disclose before the protected first-direction inference. Current authority requires PK/FK reveal after connecting-field reasoning and Cardinality reasoning before Cardinality terminology, but it leaves the intervening disclosure boundary insufficiently constrained. The runtime used that gap to state the one-value conclusion before the question; authority did not explicitly mandate that leakage. Authority maintenance is still required before implementation may rely on the revised boundary.
 
 ### 4.4 Why the reverse direction matters
 
 The reverse-direction question should have an explicit instructional purpose, not merely complete a definition:
 
-- `one article → one source` predicts the current article-starting JOIN behavior;
-- `one source → many articles` explains the other side of the same relationship;
-- the contrast demonstrates that match count is directional; and
-- the contrast prevents the misconception that a `1:M` relationship automatically multiplies rows in every JOIN.
+- `one article → one source` predicts one result contribution per row relative to the 18-article baseline;
+- `one source → many articles` explains why rows contribute multiple matches relative to the four-source baseline;
+- both perspectives produce the same 18 matching article/source pairs in this INNER JOIN case; and
+- the contrast prevents the misconception that a `1:M` relationship automatically multiplies rows without identifying the baseline against which expansion is being measured.
 
-The concrete `Venture Daily → 6 article rows` example is useful only as a compact confirmation after the structural inference. It should not initiate a second SQL task, ask for a reverse-direction result count, or introduce the later Lesson 2 encounter.
+The concrete `Venture Daily → 6 article rows` example is useful only as a compact confirmation after the structural inference and as one contribution within the four-source baseline contrast. It should not initiate a second SQL task, ask for a second learner prediction, teach INNER JOIN commutativity or optimizer behavior, or introduce the later Lesson 2 encounter.
 
 ## 5. Re-centered learner journey
 
@@ -158,11 +169,11 @@ relationship field: news_article.news_source_id → news_source.news_source_id
 
 ### Episode 2 — Reason about matches in both directions
 
-Ask the two directional questions without leaking the first answer. Use the contrast to make direction consequential:
+Ask the two directional questions without leaking the first answer. Use the contrast to make the chosen baseline consequential without suggesting that equivalent INNER JOIN table order changes the matching pair set:
 
 ```text
-article start → one source match
-source start → potentially many article matches
+article baseline → one source match contributed per article
+source baseline → potentially many article matches contributed per source
 ```
 
 Then name the relationship concepts. The formal labels summarize the reasoning; they do not become a parallel mini-lesson.
@@ -181,7 +192,7 @@ therefore each starting article contributes one result row
 therefore predict 18 result rows at the same Grain
 ```
 
-The reverse-direction contrast may remain available as a quiet reminder, but it must not compete with the article-starting prediction.
+The article baseline is appropriate because the requested result Grain is one article per row; Grain remains the meaning of a requested result row, not the identity of the SQL `FROM` relation. The reverse-perspective contrast may remain available as a quiet reminder, but it must not compete with the article-baseline prediction.
 
 ### Episode 4 — Name the operation
 
@@ -196,7 +207,7 @@ Preserve the current progressive teaching layers, SQL workspace, result inspecti
 - `FROM` identifies the starting rows;
 - `JOIN` brings the matching source row;
 - `SELECT` chooses the article/source fields shown;
-- execution tests the predicted row behavior; and
+- execution tests the predicted row count relative to the article baseline; and
 - verification compares actual evidence with the prior match-count prediction and established Grain.
 
 The optional enrichment remains after completion and should reinforce, not broaden, this case-specific mechanism.
@@ -238,14 +249,14 @@ This reconciliation does not reopen Category-C KEEP findings `1.3`, `9.2`, or `9
 If this candidate reconciliation is accepted, current Lesson 1 authority must be updated before implementation. At minimum:
 
 1. `course-design/stage-1/stage-1-learner-route.md`
-   - make matches per starting row the organizing capability of Episodes 2–5;
-   - preserve the reverse direction as a bounded contrast;
-   - preserve PK/FK naming after connecting-field reasoning while making its role subordinate to the directional match-count argument.
+   - make matches contributed per row relative to a chosen baseline the organizing capability of Episodes 2–5;
+   - preserve the reverse perspective as a bounded, baseline-relative contrast that does not imply different INNER JOIN pair counts from SQL table order;
+   - preserve PK/FK naming after connecting-field reasoning while making its role subordinate to the baseline-relative match-contribution argument.
 2. `course-design/stage-1/stage-1-interaction-decisions.md`
    - define what PK/FK relationship evidence may appear before the first Cardinality question;
    - prohibit revealing the first-direction multiplicity before learner commitment;
-   - define the reverse-direction contrast’s purpose and boundary;
-   - require baseline, prediction, JOIN teaching, ON, and verification to carry the matches-per-starting-row causal thread.
+   - define the reverse-perspective contrast’s purpose and boundary;
+   - require baseline, prediction, JOIN teaching, ON, and verification to carry the matches-contributed-per-baseline-row causal thread.
 3. `pedagogical-foundations.md`
    - update only if the accepted result is intended to refine the reusable first-JOIN architecture or the general Cardinality evidence rule; do not generalize an encounter-local solution automatically.
 
@@ -255,7 +266,7 @@ Because the candidate changes protected evidence and narrows the pre-question PK
 
 - whether the learner has enough non-leaking evidence to reason about the first direction;
 - whether the preserved PK/FK concept timing remains intelligible without leaking the Cardinality conclusion;
-- whether the reverse-direction example clarifies direction without becoming Lesson 2; and
+- whether the reverse-perspective example clarifies baseline-relative expansion without becoming Lesson 2; and
 - whether the whole encounter now reads as one causal argument rather than a sequence of concept cards.
 
 ## 9. Acceptance and implementation gates
