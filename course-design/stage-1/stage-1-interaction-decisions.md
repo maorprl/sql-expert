@@ -8,6 +8,21 @@ The learner works from this business need: every news article should include the
 
 `news_article` has `news_article_id` as its primary key and `news_source_id INTEGER NOT NULL` as a foreign key referencing `news_source.news_source_id`. `news_source.news_source_id` is its primary key, and `news_source.name` is the publishing-source attribute needed in the result. The seed contains 18 `news_article` rows and four `news_source` rows. This is a one-source-to-many-articles relationship; every article has one referenced source.
 
+## Organizing causal argument
+
+Lesson 1 is organized around predicting the row effect of the current JOIN from a chosen baseline by reasoning about how many matching rows each baseline row contributes. PK/FK, Cardinality, Grain, baseline, prediction, JOIN, ON, SELECT, and verification are supporting parts of that single causal argument rather than parallel lesson topics.
+
+For this Lesson 1 INNER JOIN step, before unrelated row-changing operations such as filtering, aggregation, `DISTINCT`, or additional joins:
+
+```text
+result rows = matching row pairs
+
+result count
+= sum of matches contributed by the chosen baseline rows
+```
+
+The comparison is relative to the chosen baseline. This model explains the row-count effect of the current JOIN operation; it is not a universal formula for the final row count of arbitrary SQL.
+
 ## Relation identification and Working Schema
 
 The Working Schema begins empty. From the live schema, the learner must identify and select `news_article` and `news_source` as the relations needed to connect the requested article information with the requested publishing-source information. This is assessed relational reasoning, not a pre-resolved setup step.
@@ -33,21 +48,35 @@ Before a technical concept is named for the first time, the learner-facing promp
 
 After result Grain is established, `news_article` may receive local visual emphasis as the relation supplying the target output-row meaning while `news_source` remains available but quieter. This must not imply the general rule `Grain = table`.
 
-For the connecting-key reasoning, the learner selects the relevant column directly in the `news_article` Working Schema card. The learner-facing framing should ask, in task meaning, which article column tells us which source published the article; it should not require the learner to know that they are looking for a Foreign Key or a “connecting key”. This remains a constrained answer interaction. A wrong selection produces local corrective feedback and must not reveal PK/FK or the relationship. A correct selection confirms `news_article.news_source_id` in meaning-first language and only then permits the PK/FK Concept Moment.
+For the connecting-key reasoning, the learner selects the relevant column directly in the `news_article` Working Schema card. The learner-facing framing should ask, in task meaning, which article column can be used to locate related publishing-source information; it should not require the learner to know that they are looking for a Foreign Key or a “connecting key”, and it must not state the first-direction multiplicity. This remains a constrained answer interaction. A wrong selection produces local corrective feedback and must not reveal PK/FK or the relationship. A correct selection confirms `news_article.news_source_id` in meaning-first language and only then permits the PK/FK Concept Moment.
 
-After correct connecting-key reasoning, reveal that `news_article.news_source_id` is the FK referencing `news_source.news_source_id` as PK, and reveal a connector between those columns. The PK/FK explanation first connects this formal terminology to the relationship the learner just found: the article's `news_source_id` identifies the `news_source` row that published it, and that source row contains the `name` needed in the result.
+After correct connecting-key reasoning, reveal that `news_article.news_source_id` is the FK referencing `news_source.news_source_id` as PK, and reveal a connector between those columns. The PK/FK explanation first connects this formal terminology to the relationship the learner just found: the article's `news_source_id` is used to locate related `news_source` information, and the referenced relation contains the `name` needed in the result. Before the protected first-direction deduction, this explanation must not translate the relationship into an exact match count or say that an article stores, identifies, has, or matches exactly one source.
 
 The relationship visual must correspond spatially to that established relationship. The connector should visibly attach to the highlighted FK and PK fields rather than to generic card centers. If Cardinality markers or directional annotations are added, their position and direction must agree with the displayed relation layout and the one-source-to-many-articles meaning; they must not overlap the relation cards in a way that makes the connection ambiguous. Exact connector geometry remains an implementation decision.
 
-At this point, Cardinality is still hidden. The learner then answers the existing closed relationship question. The question should test the directional business meaning of the relationship — one source can publish many articles while each article has one publishing source — rather than require technical Cardinality vocabulary in advance. The first exposure explicitly reasons about possible participation in both directions, using the available structural constraints and domain meaning. The FK-to-PK connection identifies the related fields but does not alone establish full Cardinality; an FK may be unique. Observed seed examples are not the sole evidence for structural Cardinality.
+At this point, Cardinality is still hidden. The learner reasons explicitly in two directions without requiring technical Cardinality vocabulary in advance.
 
-Only after correct Cardinality reasoning, introduce Cardinality and annotate the already-visible relationship as one news source to many news articles (`1 → M`). The relationship visual therefore grows from learner-established reasoning rather than appearing as a disconnected explanatory diagram.
+For the first direction, `one article → how many matching source rows?`, the supported deduction must preserve both logical premises:
+
+- **At most one matching source row:** `news_source.news_source_id` is a Primary Key, so a particular source-id value can identify at most one `news_source` row.
+- **At least one matching source row:** `news_article.news_source_id` is `NOT NULL` and is a satisfied Foreign Key reference to `news_source.news_source_id`, so the article's value must reference an existing source row.
+- **Conclusion produced by the learner:** at most one + at least one = exactly one matching source row.
+
+The premises may be expressed in simpler learner-facing language, but both logical functions must remain intact. Neither premise nor its presentation may state the exactly-one conclusion before the learner performs the deduction. A correct response is evidence of a **supported first-exposure relational deduction** in this guided case, not evidence of independent Cardinality mastery. Corrective feedback may direct the learner to the relevant constraint but must not state the conclusion before another attempt; success feedback may record `one article → one source` after commitment.
+
+For the reverse direction, the learner reasons that `one source → potentially many articles`, using the absence of a `UNIQUE` constraint on `news_article.news_source_id` together with domain meaning. The reusable relationship questions remain directional: for one X, how many Y can participate, and for one Y, how many X can participate. The FK-to-PK connection identifies the related fields but does not alone establish full Cardinality; an FK may be unique. Observed seed examples are not the sole evidence for structural Cardinality.
+
+After the reverse-direction reasoning, `Venture Daily → 6 articles` may be used as a bounded concrete illustration. Before the learner commits to the protected article-baseline prediction, do not expose the complete aggregate `4 source rows → 18 matching pairs/result rows`. Any such aggregate comparison may appear only after Grain is established, the learner measures the 18-article baseline, and the learner commits to the 18-row prediction; if learner-facing at all, it should preferably be optional or later enrichment rather than a competing core case.
+
+Only after both directional meanings are correctly established, introduce Cardinality and annotate the already-visible relationship as one news source to many news articles (`1 → M`). The relationship visual therefore grows from learner-established reasoning rather than appearing as a disconnected explanatory diagram. The reverse direction clarifies that match contribution is directional and that a `1:M` label does not by itself predict expansion relative to the article baseline.
+
+Before learner commitment to the first direction, no learner-visible surface may reveal an equivalent of `one article → exactly one source`. This protection applies to mastheads, titles and subtitles, teacher copy, persistent reasoning-thread text, Concept Moments, Working Schema annotations, relationship labels, earlier feedback, surrounding explanatory copy, and any other persistent or transient learner-facing surface. The current runtime masthead `Media coverage — one article, one publisher` is therefore an implementation remediation surface; this authority does not prescribe its replacement copy.
 
 No visual aid or label may reveal the answer to a later reasoning move before the learner has engaged with that move.
 
 ## Guided continuity
 
-The learner should remain oriented to the same business problem, what has already been established, and why the next reasoning move is relevant.
+The learner should remain oriented to the same business problem, what has already been established, and why the next reasoning move is relevant. Across relationship reasoning, Grain, baseline measurement, prediction, JOIN teaching, SQL expression, execution, and verification, guidance should carry one causal thread: determine how many matching rows each chosen-baseline row contributes, use those contributions to predict the current JOIN's row effect, and compare execution evidence with that prediction and the established Grain.
 
 This continuity does not require a fixed bridge-text component or an explanation between every move. It may be carried by the evolving Working Schema, concise instructional framing, persistent business context, visual progression, or another implementation that preserves orientation without performing the next reasoning move for the learner.
 
@@ -87,11 +116,13 @@ It reports 18 rows, explicitly interpreted as 18 starting news-article rows. No 
 
 The Baseline measurement editor is local to this measurement role. It does not persist into JOIN implementation. Once the measurement has been run and interpreted, the 18-row result remains part of the established reasoning evidence rather than remaining as an active SQL task.
 
-Before JOIN terminology appears, the learner predicts that adding one publishing-source name per article preserves the 18 result rows with the same result Grain. The prediction is a deduction from two already-established facts: there are 18 starting article rows, and each article matches one source row. The prompt must make those premises available before asking for the prediction rather than presenting row count as a guess.
+Before JOIN terminology appears, the learner predicts that adding one publishing-source name per article preserves the 18 result rows with the same result Grain. The prediction applies the scoped match-contribution model to the chosen article baseline: this INNER JOIN produces matching article/source pairs; each starting article contributes one matching pair; therefore 18 starting article rows predict 18 result rows. The prompt must make the already-established premises available before asking for the prediction rather than presenting row count as a guess. Grain establishes what each requested result row represents; it is not the baseline, a relation, or the SQL `FROM` clause.
 
-The prediction uses a closed response; no open rationale is required. The closed options should distinguish the relevant relational interpretations rather than test recall of the number 18 alone — for example, one result row per article versus one result row per distinct source versus row multiplication from multiple matches. The feedback makes the PK/FK and Cardinality basis explicit: each article matches one source row. After the learner commits to the prediction, a compact explanatory visual shows `1 article row → 1 matching source row → 1 result row`, then scales that reasoning to the 18-row case. It must express row matching and contribution rather than arithmetic addition, concatenation, or stacking. The continuous chain is: one article per requested result row → 18 starting article rows → one matching source per article → 18 result rows with the same Grain.
+The prediction uses a closed response; no open rationale is required. The closed options should distinguish the relevant relational interpretations rather than test recall of the number 18 alone — for example, one result row per article versus one result row per distinct source versus row multiplication from multiple matches. The feedback makes the PK/FK and Cardinality basis explicit: each article matches one source row. After the learner commits to the prediction, a compact explanatory visual shows `1 article row → 1 matching source row → 1 result row`, then scales that reasoning to the 18-row case. It must express row matching and contribution rather than arithmetic addition, concatenation, or stacking. The continuous chain is: one article per requested result row → 18 starting article rows → one matching source per article → 18 matching pairs → 18 result rows with the same Grain.
 
-This encounter establishes the mechanism that later makes row multiplication / fan-out understandable, but Lesson 1 does not need to introduce the term `fan-out` here.
+Only after that prediction commitment may an aggregate reverse-baseline comparison show that four starting source rows contribute the same 18 matching pairs/result rows. Such a comparison is not required in the core journey and, if learner-facing, should preferably be optional or later enrichment. It must not become a second prediction, a reverse-order SQL task, or Lesson 2 fan-out teaching.
+
+This encounter establishes the baseline-relative match-contribution mechanism that later makes row multiplication / fan-out understandable, but Lesson 1 does not need to introduce the term `fan-out` here. The mechanism here is limited to the row effect of this INNER JOIN before filtering, aggregation, `DISTINCT`, or additional joins; learner-facing explanation must not imply a universal final-query row-count rule.
 
 The learner then chooses the semantic action of combining each article with its matching source. This learner decision is retained; it is not replaced by an instructional statement. Only after that choice is **JOIN** introduced. Learner-facing terminology across this transition should stay consistent enough that the learner can follow the same idea from “matching source row” into JOIN rather than encountering unnecessary shifts among unrelated labels.
 
