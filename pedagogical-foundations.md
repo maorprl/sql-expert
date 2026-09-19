@@ -7,7 +7,7 @@ The current course design may rely on:
 - the current startup-ecosystem schema and seed data
 - the neutral SQL Lab built on that schema
 - pedagogical decisions explicitly established in the current reconstruction
-- the dedicated current Lesson 1–3 authority documents for encounter-local decisions; their repository paths retain historical `stage-*` naming where applicable
+- dedicated current encounter-local authority documents identified by `source-of-truth-hierarchy.md`
 Previous course versions, previous pedagogy documents, superseded stage structures, previous checkpoints, and remembered decisions are not authoritative.
 They must not be imported into the current design unless they are explicitly reconsidered and established again.
 The course is not primarily a SQL-syntax course.
@@ -23,7 +23,7 @@ A WORKING decision may still be revised or rejected.
 A question that has not yet been resolved.
 An OPEN question must not be silently resolved inside implementation work or treated as if a decision already exists.
 The learner should understand what the data represents before SQL syntax is allowed to substitute for that understanding.
-This does not determine a universal sequence beyond the encounter-local sequences explicitly established for the current Lessons 1–3 design. It does not prescribe the order of grain, keys, cardinality, joins, aggregation, or SQL timing in future encounters that have not yet been designed.
+This does not determine a universal sequence beyond encounter-local sequences explicitly established in current Lesson authority. It does not prescribe the order of grain, keys, cardinality, joins, aggregation, or SQL timing in future encounters that have not yet been designed.
 This is currently a working pedagogical direction, not a locked universal course sequence.
 course-knowledge-map.md defines the knowledge and capability space of the course.
 It does not automatically define teaching order.
@@ -88,12 +88,11 @@ A safer current working method is:
 5. refine or reject it;
 6. only then consider the next move.
 A local sequence should not be treated as globally fixed merely because it was designed first.
-For the current course design, Lesson 1 is the first learner encounter, using the `news_article → news_source` business case. Its learner-route and interaction-decisions documents establish the first introduction of Grain, Primary Key / Foreign Key, Cardinality, and JOIN, including their exact Lesson 1 timing. The repository retains `stage-1` in internal paths and identifiers; that historical naming does not change the learner-facing `Lesson 1` label.
-Those documents also establish locally distinct placements for prepared SQL used as a measurement tool, explicit SQL syntax instruction, and independent learner-authored SQL. They do not define a broader course-level rule for the timing of SQL or new SQL constructs outside that encounter.
-Current Lesson 2 authority establishes encounter-local reuse and extension of already introduced relational reasoning. Its exact local sequence is not a universal template for future encounters. Current Lesson 3 authority in `course-design/stage-3/stage-3-authority.md` establishes the zero-match INNER JOIN / entity-coverage encounter from the accepted Lessons 1–2 baseline. The older Stage 3 route and interaction files remain candidate/history only.
+Encounter-local authority owns the exact sequence, first-exposure versus reuse status, reveal timing, and SQL timing for that encounter. This global foundation must not infer those facts from another Lesson's design, historical numbering, or the order in which older materials were created.
+A concrete encounter may establish locally distinct placements for prepared SQL used as a measurement tool, explicit SQL syntax instruction, and independent learner-authored SQL. Such placement remains encounter-local unless a separate course-wide decision explicitly establishes a broader rule.
 The following remain OPEN at broader course scope:
 - how much of the schema is exposed initially in future contexts where that question matters;
-- the course structure beyond the current Lesson 3 design authority;
+- course structure not yet established by `course-design/curriculum-structure.md` and current encounter authority;
 - the overall progression beyond the current implemented encounters toward full exit-capability coverage.
 These broader questions must remain open until they are explicitly resolved.
 Before treating a pedagogical claim as part of the current course design, verify that it was established in the current reconstruction.
@@ -171,11 +170,11 @@ The question should remain concise enough that incidental field lists, implement
 
 ## WORKING — First JOIN Teaching Encounter: Reusable Architecture
 
-The first JOIN teaching encounter is a calibrated sequence validated through the current Lesson 1 business case, not a universal template for later Lessons. Its validated progression is: concrete business problem → identify the required relations → relational key connection → PK/FK → Cardinality → requested output-row meaning → Grain → baseline when needed to reason about row-count preservation → prediction before execution → semantic relational action → JOIN terminology → INNER JOIN / ON syntax before independent SQL implementation → SQL implementation → verification against expected grain and relational behavior.
+A first JOIN teaching encounter should connect established relational meaning to matching rows, the relational operation, and then the SQL expression. A calibrated progression may include: concrete business problem → identify required relations → establish the relevant relationship → reason about requested output-row meaning → predict row behavior where needed → choose the semantic relational action → introduce JOIN terminology → explain INNER JOIN / ON syntax before independent SQL implementation → implement → verify against expected grain and relational behavior. The exact sequence remains encounter-local authority rather than a universal template.
 
-The business case for this first JOIN teaching encounter should retain the same relational shape: a base relation supplies the target output grain; each base row matches one referenced row through FK → PK; attributes are added from that referenced relation; and the JOIN preserves the base-row grain and row count. Grain, PK/FK, Cardinality, and JOIN remain first-exposure concepts here, so this scaffolding remains appropriate.
+A suitable first-JOIN case should make the relationship shape, row matching, and output-row meaning inspectable without forcing unrelated concepts. The encounter-local authority determines which prerequisite concepts are genuinely new and which are reused. In particular, this global foundation does not assign first-exposure status for Grain, keys, or Cardinality to the first JOIN encounter.
 
-Baseline measurement and prediction belong here only when they support reasoning about grain or row-count preservation; `COUNT(*)` is not required in every Lesson. The exact number of learner steps, exactly four Working Schema relations, answer choices, baseline value, and relation names are not pedagogical invariants. Later Lessons must not automatically repeat this full scaffolding: it should decrease or change as concepts are reinforced or transferred. The current Lesson 1 business case is evidence of this teaching architecture, not reusable content itself.
+Baseline measurement and prediction belong only when they support reasoning about grain or row-count preservation; `COUNT(*)` is not required in every Lesson. The exact number of learner steps, Working Schema relations, answer choices, baseline value, and relation names are not pedagogical invariants. Later JOIN Lessons must not automatically repeat full first-exposure scaffolding; it should decrease or change as concepts are reinforced or transferred.
 
 ## WORKING — Cardinality reasoning from relationship structure
 

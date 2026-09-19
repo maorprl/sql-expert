@@ -119,17 +119,17 @@ The rebaseline artifacts are evidence/history for why the current process looks 
 **Established state:**
 
 - the Lesson is human-approved at the design level;
+- current encounter-local authority is now `course-design/course-1/lesson-1/authority.md`;
 - it is not yet implemented;
-- the current work is documentation/authority formation, not runtime implementation;
 - no additional Course 1 Lesson is made canonical by this subplan;
 - no Course 2 or Course 3 Lesson is created or approved by this subplan;
 - existing Course 4 authority, runtime, history, and paused work remain preserved.
 
 ### Current action
 
-**CURRENT ACTION:** create the durable authority/documentation package for **Course 1 / Lesson 1 — What Does One Row Represent?** from the already human-approved Lesson 1 design.
+**CURRENT ACTION:** make **Course 1 / Lesson 1 — What Does One Row Represent?** buildable from its current authority under `learner-encounter-production-process.md`: identify only the material build boundary, implementation discretion, validation expectations, and genuine stop conditions that implementation would otherwise have to invent.
 
-Do not implement the Lesson yet. Do not design or promote Course 1 / Lesson 2 or later Lessons. Do not begin production-system / “machine” work as part of this action.
+Do not implement the Lesson yet. Do not create an additional artifact unless the build boundary genuinely needs a durable record beyond current authority. Do not design or promote Course 1 / Lesson 2 or later Lessons. Do not begin production-system / “machine” work as part of this action.
 
 ## 4. Management-preservation reconciliation
 
@@ -222,6 +222,8 @@ This tracker does **not** claim that a complete repository-wide audit has been p
 
 Closing this matter requires a separate, explicitly bounded global-vs-local documentation audit. That audit is not the current action and must not be silently folded into Course 1 / Lesson 1 work.
 
+A scoped correction to `pedagogical-foundations.md` removed stale Lesson-topology / first-Grain claims that directly conflicted with Course 1 / Lesson 1 authority formation. That scoped unblocker does **not** establish that other global/local leakage has been found or resolved and does not close this deferred audit.
+
 ### 4.7 Items already safely accounted for
 
 The following historical work does not need to be revived as active management merely because older records mention it:
@@ -259,7 +261,7 @@ Current state:
 Current state:
 
 - the rebaselined `learner-encounter-production-process.md` is current;
-- production-system / “machine” build work has **not started** and remains blocked until the active Course 4 / Lesson 3 manual-completion subplan closes;
+- production-system / “machine” build work has **not started**; the preserved Course 4 / Lesson 3 manual-completion dependency has not been satisfied and remains deferred while that subplan is paused;
 - worker/tool assignment remains in `agent-assisted-work-protocol.md`;
 - Cycle 1 and rebaseline directories remain evidence/provenance, not flat current authority;
 - permanent role topology, fixed review counts, and universal handoff artifacts are not current process requirements.
