@@ -30,7 +30,7 @@ The accepted runtime baseline remains:
 
 The canonical repository state is the current accepted `main` HEAD and may advance without changing the accepted runtime baseline.
 
-The canonical Course/Lesson namespace migration was committed at `79c13d36255eaef69549e42b38e156e2982390ba`. It established the current Course/Lesson naming structure but does not by itself close the deferred global/local documentation-boundary issue recorded in Section 4.8.
+The canonical Course/Lesson namespace migration was committed at `79c13d36255eaef69549e42b38e156e2982390ba`. It established the current Course/Lesson naming structure but does not by itself close the deferred global/local documentation-boundary issue recorded in Section 4.6.
 
 **Course 1 / Lesson 1 — What Does One Row Represent?** is human-approved at the design level and is not yet implemented. The current work is to create the durable authority/documentation needed to move that Lesson forward. No additional Course 1 Lesson, and no Course 2 or Course 3 Lesson, is canonical merely because this work has begun.
 
@@ -56,7 +56,7 @@ This is the established project plan. The production-system rebaseline is comple
    The subplan and all completed work remain preserved; active execution is paused while the user has explicitly moved current work to Course 1 / Lesson 1.
 8. **NOT STARTED** — Build the production system / “machine” after Course 4 / Lesson 3 is accepted.
 9. **NOT STARTED** — CI.
-10. **SUPERSEDED / REMOVED FROM EXECUTION** — Former plan to implement Course 4 / Lesson 3 through the production system. Course 4 / Lesson 3 is completed manually under Step 7.
+10. **SUPERSEDED / REMOVED FROM EXECUTION** — Former plan to implement Course 4 / Lesson 3 through the production system. Course 4 / Lesson 3 remains assigned to manual completion under Step 7.
 11. **NOT STARTED** — CD.
 12. **CURRENT** — Move the next human-approved Lesson forward. The current Lesson is **Course 1 / Lesson 1 — What Does One Row Represent?**; the current phase is durable authority/documentation only. Implementation and production-system execution are not started.
 13. **NOT STARTED** — Whole-course planning.
