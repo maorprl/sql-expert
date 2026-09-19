@@ -30,6 +30,10 @@ The accepted runtime baseline remains:
 
 The canonical repository state is the current accepted `main` HEAD and may advance without changing the accepted runtime baseline.
 
+The canonical Course/Lesson namespace migration was committed at `79c13d36255eaef69549e42b38e156e2982390ba`. It established the current Course/Lesson naming structure but does not by itself close the deferred global/local documentation-boundary issue recorded in Section 4.8.
+
+**Course 1 / Lesson 1 — What Does One Row Represent?** is human-approved at the design level and is not yet implemented. The current work is to create the durable authority/documentation needed to move that Lesson forward. No additional Course 1 Lesson, and no Course 2 or Course 3 Lesson, is canonical merely because this work has begun.
+
 Course 4 / Lesson 3 now has current design authority in `course-design/course-4/lesson-3/authority.md`, but it is not yet implemented or accepted as part of the runnable learner journey. The older Stage 3 route/interaction files and the rebaseline Course 4 / Lesson 3 dry-run design remain candidate/history only.
 
 `learner-encounter-production-process.md` is the current rebaselined production-process authority. It no longer requires the legacy permanent-role / fixed-review / verbatim-handoff choreography.
@@ -47,14 +51,14 @@ This is the established project plan. The production-system rebaseline is comple
    Evidence: `source-of-truth-hierarchy.md`.
 6. **DONE** — Production Contract v1.  
    Evidence: `production-contract-v1.md`.
-7. **CURRENT** — Complete Course 4 / Lesson 3 manually through accepted product baseline.  
+7. **PAUSED / PRESERVED** — Complete Course 4 / Lesson 3 manually through accepted product baseline.  
    Current design authority: `course-design/course-4/lesson-3/authority.md`.  
-   Active execution is tracked in Section 3.1.
+   The subplan and all completed work remain preserved; active execution is paused while the user has explicitly moved current work to Course 1 / Lesson 1.
 8. **NOT STARTED** — Build the production system / “machine” after Course 4 / Lesson 3 is accepted.
 9. **NOT STARTED** — CI.
 10. **SUPERSEDED / REMOVED FROM EXECUTION** — Former plan to implement Course 4 / Lesson 3 through the production system. Course 4 / Lesson 3 is completed manually under Step 7.
 11. **NOT STARTED** — CD.
-12. **NOT STARTED** — The next human-approved Lesson through the production system; no additional Lesson identity is canonical yet.
+12. **CURRENT** — Move the next human-approved Lesson forward. The current Lesson is **Course 1 / Lesson 1 — What Does One Row Represent?**; the current phase is durable authority/documentation only. Implementation and production-system execution are not started.
 13. **NOT STARTED** — Whole-course planning.
 14. **NOT STARTED** — Engineering cleanup.
 
@@ -62,9 +66,9 @@ This is the established project plan. The production-system rebaseline is comple
 
 ## 3. Subplans
 
-### 3.1 Active subplan — Complete Course 4 / Lesson 3 manually
+### 3.1 Paused subplan — Complete Course 4 / Lesson 3 manually
 
-**Status:** ACTIVE
+**Status:** PAUSED / PRESERVED
 
 **Goal:** finish Course 4 / Lesson 3 manually from its accepted design authority through implementation, validation, and acceptance as an **ACCEPTED PRODUCT BASELINE** before production-system / “machine” work begins.
 
@@ -85,11 +89,7 @@ This is the established project plan. The production-system rebaseline is comple
 
 **Subplan completion condition:** Course 4 / Lesson 3 is implemented, validated to required scope, explicitly accepted, and part of the accepted runnable learner journey. Design completion alone does not close this subplan.
 
-### Current action
-
-**CURRENT ACTION:** external review of the complete INNER JOIN chapter, including the reconciled Course 4 / Lesson 3 review baseline. Course 4 / Lesson 3 production-runtime implementation remains unstarted until the review feedback is assessed and the user explicitly resumes implementation work.
-
-Do not begin production-system / “machine” work. The current Course 4 / Lesson 3 authority, implementation spec, and visual reference are durably reconciled in the repository for review.
+Course 4 / Lesson 3 production-runtime implementation remains unstarted. This paused state does not cancel, supersede, or rewrite the subplan; it preserves the work for explicit resumption.
 
 ### 3.2 Closed subplan — Production-system rebaseline
 
@@ -109,6 +109,27 @@ Do not begin production-system / “machine” work. The current Course 4 / Less
 7. **DONE** — Atomic documentation cutover: the rebaselined workflow became current process authority and Source-of-Truth, Production Contract, agent/execution guidance, README, rebaseline status, and management state were aligned in one cutover.
 
 The rebaseline artifacts are evidence/history for why the current process looks the way it does. They are not a second process authority.
+
+### 3.3 Active subplan — Course 1 / Lesson 1 durable authority/documentation
+
+**Status:** ACTIVE
+
+**Lesson:** **Course 1 / Lesson 1 — What Does One Row Represent?**
+
+**Established state:**
+
+- the Lesson is human-approved at the design level;
+- it is not yet implemented;
+- the current work is documentation/authority formation, not runtime implementation;
+- no additional Course 1 Lesson is made canonical by this subplan;
+- no Course 2 or Course 3 Lesson is created or approved by this subplan;
+- existing Course 4 authority, runtime, history, and paused work remain preserved.
+
+### Current action
+
+**CURRENT ACTION:** create the durable authority/documentation package for **Course 1 / Lesson 1 — What Does One Row Represent?** from the already human-approved Lesson 1 design.
+
+Do not implement the Lesson yet. Do not design or promote Course 1 / Lesson 2 or later Lessons. Do not begin production-system / “machine” work as part of this action.
 
 ## 4. Management-preservation reconciliation
 
@@ -191,7 +212,17 @@ Preserve, without promoting to current requirements:
 
 Activate any of these only when evidence from implementation, validation, retrieval, or scale demonstrates a concrete need.
 
-### 4.6 Items already safely accounted for
+### 4.6 Global/local documentation boundary — OPEN / DEFERRED
+
+The canonical namespace migration exposed evidence that Course/Lesson-specific state may exist in documentation whose intended scope is global or cross-project.
+
+**Status:** OPEN / DEFERRED.
+
+This tracker does **not** claim that a complete repository-wide audit has been performed, and known examples must not be treated as proof that all affected locations have been identified.
+
+Closing this matter requires a separate, explicitly bounded global-vs-local documentation audit. That audit is not the current action and must not be silently folded into Course 1 / Lesson 1 work.
+
+### 4.7 Items already safely accounted for
 
 The following historical work does not need to be revived as active management merely because older records mention it:
 
@@ -199,7 +230,7 @@ The following historical work does not need to be revived as active management m
 - completed Stage 1 stabilization remains historical completed work with repository evidence; it is not an active workstream;
 - the prior Learning Experience / Wave initiative is historical/superseded management evidence and does not override the accepted Course 4 Lessons 1–2 baseline or current authority.
 
-### 4.7 Reconciliation result
+### 4.8 Reconciliation result
 
 Against the historical management sources reviewed for this consolidation, the known preservation gaps are now explicitly accounted for as:
 
@@ -219,7 +250,8 @@ The following labels organize work only. They are not separate trackers and do n
 Current state:
 
 - Course 4 Lessons 1–2 are the accepted learner journey;
-- Course 4 / Lesson 3 has reconciled current design authority, implementation specification, and runnable visual implementation reference under `course-design/course-4/lesson-3/`; production-runtime implementation has not started, and the complete INNER JOIN chapter is currently being taken through external review;
+- Course 4 / Lesson 3 has reconciled current design authority, implementation specification, and runnable visual implementation reference under `course-design/course-4/lesson-3/`; production-runtime implementation has not started and its manual-completion subplan is currently paused/preserved;
+- Course 1 / Lesson 1 — What Does One Row Represent? is human-approved at the design level, not implemented, and is the current documentation/authority work;
 - current pedagogy, visual, control, schema, data, and accepted Lesson authority remains in the sources identified by `source-of-truth-hierarchy.md`.
 
 ### Production System
@@ -241,7 +273,7 @@ These items are not current blockers unless present work makes them necessary.
 - broader persistence semantics across reloads or sessions;
 - Retry / Redo reset and downstream-invalidation semantics;
 - broader hint / adaptive-assistance policy — deferred unless new evidence justifies reopening;
-- Lesson structure beyond the current Course 4 / Lesson 3 design authority;
+- Lesson structure beyond the currently canonical/human-approved Lesson identities; Course 1 / Lesson 1 work does not itself authorize additional Lessons;
 - broader initial schema exposure where future Lesson work actually requires a decision;
 - release-level accessibility, responsive, cross-browser, and cumulative-regression validation.
 
