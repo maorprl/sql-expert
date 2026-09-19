@@ -54,4 +54,11 @@ contains("current.classList.add('completed')", 'Prior JOIN explanations must rem
 ordered('function afterSemantic()', "concept('JOIN'", "$('#s1-teaching').hidden = false", 'function executeSql()');
 contains("$('#s1-to-sql').addEventListener('click', () => { state = 'sql'", 'SQL workspace must open only from the completed teaching mapping.');
 
+contains('Compare the actual result with your earlier prediction of 18 rows and the established Grain', 'Verification must integrate result evidence, prediction, and established Grain.');
+contains('verification-summary', 'Completion must use a verification/consolidation role.');
+excludes("concept('JOIN verified'", 'Completion must not introduce a new JOIN Concept Moment.');
+contains('You established one article per requested result row', 'Completion must reconstruct the reasoning argument.');
+excludes('relations, link, cardinality, grain, baseline, prediction', 'Completion must not be an administrative state transcript.');
+ordered("setExecutionStatus('Verified · result satisfies the task'", 'askVerification()', "state = 'complete'", 'Reasoning verified', 'Lesson 1 complete');
+
 console.log('Lesson 1 remediation validation passed.');
