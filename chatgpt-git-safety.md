@@ -1,9 +1,9 @@
 # ChatGPT Git Safety Instructions
 
 **Audience:** ChatGPT / primary assistant  
-**Purpose:** Mandatory self-instructions before giving the user Git commands or performing Git coordination for this repository.
+**Purpose:** Mandatory self-instructions before giving the user Git commands, performing Git coordination, or preparing a repository-changing handoff to Codex / another implementation agent for this repository.
 
-When the user says **“read `chatgpt-git-safety.md`”**, **“use the Git safety instructions”**, or equivalent wording, read and apply this file before giving any Git command.
+Before any repository-changing Codex / implementation-agent handoff, read and apply the current version of this file. Also read and apply it when the user says **“read `chatgpt-git-safety.md`”**, **“use the Git safety instructions”**, or equivalent wording.
 
 These rules are specifically for ChatGPT. They are not instructions for the user to manage Git on ChatGPT's behalf.
 
@@ -88,8 +88,43 @@ If checkout path, HEAD, and status were already verified and nothing relevant ha
 
 Do not make the user rerun diagnostic commands just because ChatGPT lost track of the workflow.
 
-## 8. Core rule
+## 8. Codex / implementation-agent handoff and review separation
 
-> **No user-facing Git state-change command without verified checkout identity, current HEAD, current status, and a defined target state. Prefer exact detached validation over modifying the user's local branch topology when validation is the only goal.**
+Before drafting any repository-changing handoff to Codex or another implementation agent, ChatGPT must apply this file and preserve an explicit execution/review boundary.
 
-If any of those prerequisites is missing, first obtain the minimum missing evidence. Do not guess.
+The handoff must require the implementation agent to establish and report, before changing files:
+
+- the repository / checkout being used;
+- the current branch;
+- the exact starting `HEAD` SHA;
+- the current working-tree status;
+- any mismatch, divergence, or unrelated pre-existing change that makes the requested baseline unsafe.
+
+The reported starting SHA is the implementation baseline. The implementation agent must not silently switch branches, reset, rebase, merge, pull, discard work, or broaden the task to repair unrelated state.
+
+The implementation agent is the **executor**, not the final reviewer or approver of its own change. It may:
+
+- inspect the repository;
+- implement the bounded task;
+- run builds, tests, browser checks, or other requested validation;
+- report execution results and discovered blockers;
+- create the requested focused commit.
+
+It must not be asked to perform or claim the final diff review, conformance approval, acceptance verdict, or promotion decision for its own implementation.
+
+After a committed implementation, the handoff must require reporting at least:
+
+- new commit SHA;
+- parent / starting SHA;
+- branch;
+- working-tree status.
+
+The primary assistant must then retrieve and review the **actual commit / diff against the reported parent**, rather than relying on the implementation agent's summary. The primary assistant owns the final scope/conformance review unless a separate independent reviewer is explicitly required by current process or risk.
+
+If implementation exposes a material issue outside the bounded task, report it without automatically expanding the implementation scope. A separate issue may be opened only when the user or current authority explicitly authorizes that additional work.
+
+## 9. Core rule
+
+> **No user-facing Git state-change command without verified checkout identity, current HEAD, current status, and a defined target state. No repository-changing Codex handoff without an explicit starting SHA and executor/reviewer separation.**
+
+If any prerequisite is missing, first obtain the minimum missing evidence. Do not guess.

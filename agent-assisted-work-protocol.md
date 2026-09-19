@@ -78,15 +78,21 @@ A separate assessment-only pass is justified when:
 
 Otherwise, avoid a preflight round that only restates what can already be established from current authority and code.
 
+Before drafting a repository-changing implementation handoff, the primary assistant must read and apply the current `chatgpt-git-safety.md`. That file owns the ChatGPT-specific baseline-check and executor/reviewer-separation rules.
+
 An implementation handoff should normally identify:
 
-- branch and expected starting HEAD;
+- repository / checkout identity;
+- branch and exact expected starting HEAD;
+- current working-tree status;
 - current authority documents;
 - the bounded problem being implemented;
 - important behavior that must be preserved;
 - explicit out-of-scope areas;
 - required validation;
 - what to do if a material ambiguity or authority conflict is discovered.
+
+For Codex / implementation-agent work, the agent executes the bounded change and reports execution evidence. It is not asked to perform or claim the final review or approval of its own implementation. After a committed change, the primary assistant reviews the actual commit / diff against its reported parent before making the scope/conformance judgment.
 
 The handoff should not duplicate current authority into a second competing specification or dictate technical implementation details that are not locked decisions.
 
