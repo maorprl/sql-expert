@@ -1,6 +1,6 @@
 # Course 1 / Lesson 1 authority — What Does One Row Represent?
 
-**Status:** CURRENT AUTHORITY — HUMAN-APPROVED DESIGN / NOT YET IMPLEMENTED  
+**Status:** CURRENT AUTHORITY — BUILDABLE / NOT YET IMPLEMENTED  
 **Scope:** Course 1 / Lesson 1 encounter-local capability, learner route, evidence, concept timing, transfer, and non-scope
 
 This document records the human-approved design for **Course 1 / Lesson 1 — What Does One Row Represent?** as current encounter-local authority.
@@ -202,8 +202,76 @@ It also does not establish the design, sequence, capability, or content of Cours
 
 ---
 
-## 9. Implementation boundary at this authority stage
+## 9. Build boundary
 
-This document records the accepted encounter design. It intentionally does not invent a reusable Lesson template, state machine, automation manifest, implementation specification, or fixed artifact package.
+**Buildability result:** PASS. The current authority is sufficient to implement Course 1 / Lesson 1 without inventing a material pedagogical or learner-evidence decision, provided the boundaries below are preserved.
 
-Before Build begins, apply the **Make It Buildable** step from `learner-encounter-production-process.md`. Create another durable artifact only if implementation would otherwise need to invent a material learner-behavior, evidence, governed-control, visual-authority, or validation decision that is not sufficiently resolved by current authority.
+### 9.1 Required observable behavior
+
+The implementation must preserve the approved reasoning sequence and evidence timing:
+
+1. show several real `company` rows as readable data;
+2. focus the learner on one company row as a coherent unit;
+3. require a learner commitment about what that row represents before supplying Grain terminology;
+4. after the correct company-row judgment, attach the formal terms relation, attribute, and Grain to the meaning already established;
+5. require a second row-meaning judgment using `news_article`;
+6. reveal the article-row conclusion only after learner commitment;
+7. close with the approved company/article synthesis.
+
+The learner-facing framing may use the Lesson's analytical question, **What does one row represent?** The build must not invent an unrelated business scenario merely because an existing shell contains a Business Request role. If a shared shell element would force such a scenario, it may be adapted or suppressed for this Lesson without changing the accepted Course 4 experience.
+
+No learner-facing surface in this Lesson may expose PK/FK badges, relationship connectors, uniqueness cues, or other database metadata whose interpretation depends on concepts the Lesson has not introduced. SQL authoring, SQL execution, and SQL-workspace assistance are not part of this Lesson.
+
+Reasoning prompts, response controls, reasoning feedback, Concept Moment content, and local progression follow the stable learner-response-lane contract in `course-design/course-visual-language.md`. Produced row evidence may occupy the workspace/evidence role. Completed reasoning remains reviewable and visually quieter than the current task.
+
+### 9.2 Course-navigation boundary
+
+Course 1 / Lesson 1 must **not** invent a learner-facing progression from its completion directly into Course 4 / Lesson 1. Courses 2 and 3 do not yet contain canonical Lessons, so such a link would silently define missing curriculum.
+
+The current accepted Course 4 learner-facing navigation and unlock behavior remain unchanged during this build.
+
+For implementation and validation, Course 1 / Lesson 1 may be made directly activatable through a non-learner-facing development/test mechanism. The exact technical activation mechanism is implementation discretion and is not a course-navigation decision.
+
+Learner-facing integration of Course 1 / Lesson 1 into a broader course navigation model remains outside this build.
+
+### 9.3 Implementation discretion
+
+Provided the requirements above remain true, implementation may choose:
+
+- the exact number and selection of real `company` rows shown in the initial multi-row view;
+- the exact real `news_article` row and visible fields used for transfer;
+- the exact constrained/closed-response control;
+- exact copy variants for approved distractor meanings and diagnostic feedback;
+- internal state representation, DOM/component structure, CSS, and animation;
+- whether existing generic schema/workspace surfaces are hidden, simplified, or not used when they would add irrelevant technical metadata;
+- the non-learner-facing mechanism used to activate this unaccepted Lesson for development and validation.
+
+These choices must not change the target capability, reveal order, evidence claim, Concept Moment timing, or explicit non-scope.
+
+### 9.4 Validation expectations
+
+Before the implementation can be treated as validated to scope, validation must cover at least:
+
+- repository build/executable success where applicable;
+- actual schema/data fidelity for every displayed row/value;
+- the full company → meaning → terminology → article transfer → synthesis sequence;
+- protection against Grain, PK/FK, relationship, or answer leakage before the required learner commitment;
+- diagnostic wrong-answer behavior without premature answer reveal;
+- Concept Moment timing after the company-row meaning is established;
+- transfer evidence before the article-row conclusion is supplied;
+- stable learner-response-lane and workspace/evidence-role conformance across material transitions;
+- absence of SQL authoring/workspace behavior from this Lesson;
+- regression of accepted Course 4 Lessons 1–2 for any shared entry, shell, styles, or runtime infrastructure materially touched by the implementation.
+
+### 9.5 Stop conditions
+
+Stop and return to authority/design rather than deciding locally if implementation would require:
+
+- a new learner-facing cross-Course navigation or unlock model;
+- a new Retry / Redo or persistence semantic;
+- changing the approved learner-evidence sequence or making a response optional that completion currently requires;
+- exposing unintroduced database concepts in order to reuse an existing shared surface;
+- adding a business scenario, new concept, new assessment claim, or new Lesson content not established here;
+- changing accepted Course 4 behavior rather than merely preserving it.
+
+This build boundary does not create another Lesson, reusable Lesson template, state-machine requirement, automation manifest, or fixed artifact package.

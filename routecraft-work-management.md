@@ -58,7 +58,7 @@ This is the established project plan. The production-system rebaseline is comple
 9. **NOT STARTED** — CI.
 10. **SUPERSEDED / REMOVED FROM EXECUTION** — Former plan to implement Course 4 / Lesson 3 through the production system. Course 4 / Lesson 3 remains assigned to manual completion under Step 7.
 11. **NOT STARTED** — CD.
-12. **CURRENT** — Move the next human-approved Lesson forward. The current Lesson is **Course 1 / Lesson 1 — What Does One Row Represent?**; the current phase is durable authority/documentation only. Implementation and production-system execution are not started.
+12. **CURRENT** — Move the next human-approved Lesson forward. **Course 1 / Lesson 1 — What Does One Row Represent?** is now build-ready; implementation and scoped validation are the current work. Production-system execution remains not started.
 13. **NOT STARTED** — Whole-course planning.
 14. **NOT STARTED** — Engineering cleanup.
 
@@ -110,26 +110,28 @@ Course 4 / Lesson 3 production-runtime implementation remains unstarted. This pa
 
 The rebaseline artifacts are evidence/history for why the current process looks the way it does. They are not a second process authority.
 
-### 3.3 Active subplan — Course 1 / Lesson 1 durable authority/documentation
+### 3.3 Active subplan — Course 1 / Lesson 1
 
-**Status:** ACTIVE
+**Status:** ACTIVE — BUILD READY
 
 **Lesson:** **Course 1 / Lesson 1 — What Does One Row Represent?**
 
 **Established state:**
 
 - the Lesson is human-approved at the design level;
-- current encounter-local authority is now `course-design/course-1/lesson-1/authority.md`;
+- current encounter-local authority is `course-design/course-1/lesson-1/authority.md`;
+- the Make It Buildable review is complete and the build boundary is durable in that authority;
 - it is not yet implemented;
+- learner-facing cross-Course navigation remains outside the current build;
 - no additional Course 1 Lesson is made canonical by this subplan;
 - no Course 2 or Course 3 Lesson is created or approved by this subplan;
 - existing Course 4 authority, runtime, history, and paused work remain preserved.
 
 ### Current action
 
-**CURRENT ACTION:** make **Course 1 / Lesson 1 — What Does One Row Represent?** buildable from its current authority under `learner-encounter-production-process.md`: identify only the material build boundary, implementation discretion, validation expectations, and genuine stop conditions that implementation would otherwise have to invent.
+**CURRENT ACTION:** implement **Course 1 / Lesson 1 — What Does One Row Represent?** from its current authority and build boundary, then validate the actual implementation to the declared scope.
 
-Do not implement the Lesson yet. Do not create an additional artifact unless the build boundary genuinely needs a durable record beyond current authority. Do not design or promote Course 1 / Lesson 2 or later Lessons. Do not begin production-system / “machine” work as part of this action.
+The implementation must remain isolated from unresolved learner-facing cross-Course navigation. Do not design or promote Course 1 / Lesson 2 or later Lessons. Do not begin production-system / “machine” work as part of this action.
 
 ## 4. Management-preservation reconciliation
 
@@ -253,7 +255,7 @@ Current state:
 
 - Course 4 Lessons 1–2 are the accepted learner journey;
 - Course 4 / Lesson 3 has reconciled current design authority, implementation specification, and runnable visual implementation reference under `course-design/course-4/lesson-3/`; production-runtime implementation has not started and its manual-completion subplan is currently paused/preserved;
-- Course 1 / Lesson 1 — What Does One Row Represent? is human-approved at the design level, not implemented, and is the current documentation/authority work;
+- Course 1 / Lesson 1 — What Does One Row Represent? is human-approved, has current buildable encounter authority, is not yet implemented, and is the current implementation/validation work;
 - current pedagogy, visual, control, schema, data, and accepted Lesson authority remains in the sources identified by `source-of-truth-hierarchy.md`.
 
 ### Production System
