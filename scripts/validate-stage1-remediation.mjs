@@ -36,4 +36,22 @@ contains('1 matching source row', 'Post-prediction mechanism must carry matching
 contains('18 matching pairs', 'Scaled prediction mechanism must explain matching pairs.');
 ordered("state = 'prediction'", 'onCorrect: afterPrediction', "state = 'semantic'", "$('#s1-prediction-mechanism').hidden = false", 'onCorrect: afterSemantic', "concept('JOIN'");
 
+contains('See how it fits together', 'Accepted ON-to-query control label is required.');
+contains('FROM news_article', 'Full query mapping must include FROM.');
+contains('JOIN news_source', 'Full query mapping must include JOIN.');
+contains('defines how the rows match', 'Full query mapping must state ON semantics.');
+contains('chooses the article and source fields that appear', 'Full query mapping must state SELECT semantics.');
+contains('query as a whole keeps the established Grain', 'Grain preservation must belong to the full query.');
+contains('SQL workspace', 'Learner-facing SQL workspace terminology is required.');
+excludes('Map the condition', 'Obsolete control label must be removed.');
+excludes('relationship becomes', 'Relationship must not be described as becoming ON.');
+excludes('↔', 'Business request and Grain must not be represented as equivalent.');
+excludes('Beat 1', 'Learner-facing Beat labels must be removed.');
+excludes('Beat 2', 'Learner-facing Beat labels must be removed.');
+excludes('Beat 3', 'Learner-facing Beat labels must be removed.');
+excludes('grain you predicted', 'Grain must be established, not predicted.');
+contains("current.classList.add('completed')", 'Prior JOIN explanations must remain as completed reviewable layers.');
+ordered('function afterSemantic()', "concept('JOIN'", "$('#s1-teaching').hidden = false", 'function executeSql()');
+contains("$('#s1-to-sql').addEventListener('click', () => { state = 'sql'", 'SQL workspace must open only from the completed teaching mapping.');
+
 console.log('Lesson 1 remediation validation passed.');
