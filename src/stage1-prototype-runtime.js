@@ -28,6 +28,7 @@ const html = `
         </div><div class="catalog-feedback" id="s1-catalog-feedback" role="alert" hidden></div><div class="wb-head bench-head"><span class="eyebrow">Working schema</span><h3>Selected relations</h3></div><div class="relations" id="s1-relations"><span class="hint">Select the two relations that contain the requested information.</span></div></div>
         <div class="wb-block" id="s1-schema" hidden><div class="wb-head"><span class="eyebrow">Working schema</span><h3>The two selected relations</h3></div><div class="ws locked" id="s1-ws"><article class="card" data-rel="news_article"><div class="card-head"><span>news_article</span><button class="inspect-relation" type="button">Inspect</button></div><ul class="cols"><li><button class="col" data-rel="news_article" data-col="news_article_id"><code>news_article_id</code><span class="badge">PK</span></button></li><li><button class="col" data-rel="news_article" data-col="title"><code>title</code></button></li><li><button class="col relationship-endpoint endpoint-left" data-rel="news_article" data-col="news_source_id"><code>news_source_id</code><span class="badge badge-fk">FK</span></button></li></ul></article><div class="link" id="s1-link"><span class="line"></span><span class="cd m">M</span><span class="cd one">1</span></div><article class="card" data-rel="news_source"><div class="card-head"><span>news_source</span><button class="inspect-relation" type="button">Inspect</button></div><ul class="cols"><li><button class="col relationship-endpoint endpoint-right" data-rel="news_source" data-col="news_source_id"><code>news_source_id</code><span class="badge">PK</span></button></li><li><button class="col" data-rel="news_source" data-col="name"><code>name</code></button></li></ul></article></div></div>
         <div class="wb-block" id="s1-measure" hidden><div class="wb-head"><span class="eyebrow">Measurement</span><h3>Baseline — starting article rows</h3></div><div class="editor"><div class="editor-gutter">1</div><pre class="editor-code">SELECT COUNT(*) FROM news_article;</pre></div><div class="editor-actions"><button class="primary" id="s1-run-measure">Run measurement</button><span class="run-note" id="s1-run-note">Prepared for you — you don’t write this one.</span></div><div id="s1-measure-out" role="status" aria-live="polite"></div></div>
+        <div class="wb-block" id="s1-prediction-mechanism" hidden><div class="wb-head"><span class="eyebrow">Prediction explained</span><h3>One match keeps one article row</h3></div><div class="match-mechanism" aria-label="One article row matches one source row and contributes one result row"><div class="mechanism-unit"><strong>1 article row</strong><span>starting row</span></div><div class="mechanism-arrow" aria-hidden="true">→</div><div class="mechanism-unit"><strong>1 matching source row</strong><span>for that article</span></div><div class="mechanism-arrow" aria-hidden="true">→</div><div class="mechanism-unit"><strong>1 result row</strong><span>same article Grain</span></div></div><p class="mechanism-scale"><strong>18 article rows</strong> × <strong>1 matching source row per article</strong> = <strong>18 matching pairs</strong> → <strong>18 result rows</strong>.</p></div>
         <div class="wb-block" id="s1-teaching" hidden><div class="wb-head"><span class="eyebrow">JOIN teaching</span><h3>Follow the relationship you established</h3></div><div class="teach-board" id="s1-teach-board">
           <div class="teach-step active" data-step="1"><div class="teach-kicker">Beat 1 · match</div><div class="teach-title">One article finds its source</div><div class="teach-copy">A row from <code>news_article</code> carries <span class="on-line">news_source_id = 2</span>. The row with <span class="on-line">news_source_id = 2</span> in <code>news_source</code> is the source that belongs beside it.</div><div class="sample"><div class="sample-card"><div class="sample-head">news_article</div><div class="sample-row">article 12 · source_id 2</div></div><div class="sample-arrow">→</div><div class="sample-card"><div class="sample-head">news_source</div><div class="sample-row">source 2 · Venture Daily</div></div></div><div class="teach-actions"><button class="primary beat-next" data-next="2">Trace the match</button></div></div>
           <div class="teach-step" data-step="2"><div class="teach-kicker">Beat 2 · condition</div><div class="teach-title">The relationship becomes <code>ON</code></div><div class="teach-copy">The match rule says: compare the article’s foreign key with the source’s primary key. In SQL, that relationship becomes <span class="on-line">ON news_article.news_source_id = news_source.news_source_id</span>.</div><div class="sample"><div class="sample-card"><div class="sample-head">article side</div><div class="sample-row">news_article.news_source_id</div></div><div class="sample-arrow">=</div><div class="sample-card"><div class="sample-head">source side</div><div class="sample-row">news_source.news_source_id</div></div></div><div class="teach-actions"><button class="primary beat-next" data-next="3">Map the condition</button></div></div>
@@ -56,7 +57,10 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
 
   const scroll = () => { conversation.scrollTop = conversation.scrollHeight; };
   const add = (element) => { stream.append(element); scroll(); return element; };
-  const teacher = (copy) => add(node(`<div class="turn teacher"><span class="speaker">Teacher</span><p class="say">${copy}</p></div>`));
+  const teacher = (copy) => {
+    $$('.turn.teacher').forEach((turn) => turn.classList.remove('active-guidance'));
+    return add(node(`<div class="turn teacher active-guidance"><span class="speaker">Teacher</span><p class="say">${copy}</p></div>`));
+  };
   const learner = (copy) => add(node(`<div class="learner"><span class="learner-label">You</span><span class="learner-text">${copy}</span></div>`));
   const concept = (term, copy) => add(node(`<div class="concept"><div class="concept-eyebrow">Concept</div><div class="concept-term">${term}</div><div class="concept-body">${copy}</div></div>`));
   const spine = (copy) => spineList.append(node(`<li>${copy}</li>`));
@@ -102,7 +106,7 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
     state = 'request'; selected.clear(); stream.innerHTML = ''; spineList.innerHTML = ''; keyInfoRevealed = false; relationshipInfoRevealed = false; closeInspector(); $('#s1-next').disabled = true;
     $$('.catalog-card').forEach((card) => { card.classList.remove('selected'); card.querySelector('.catalog-status').textContent = 'add'; });
     $('#s1-catalog-feedback').hidden = true; $('#s1-relations').innerHTML = '<span class="hint">Select the two relations that contain the requested information.</span>';
-    ['#s1-schema', '#s1-measure', '#s1-teaching', '#s1-sql', '#s1-enrich'].forEach((id) => { $(id).hidden = true; });
+    ['#s1-schema', '#s1-measure', '#s1-prediction-mechanism', '#s1-teaching', '#s1-sql', '#s1-enrich'].forEach((id) => { $(id).hidden = true; });
     $('#s1-entry').hidden = false; $('#s1-ws').className = 'ws locked'; $('#s1-link').className = 'link';
     $$('.col').forEach((column) => column.classList.remove('picked', 'wrong')); $$('.card').forEach((card) => card.classList.remove('interactive'));
     $('#s1-run-measure').disabled = false; $('#s1-run-note').textContent = 'Prepared for you — you don’t write this one.'; $('#s1-measure-out').innerHTML = '';
@@ -152,12 +156,12 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
     spine('Cardinality: <code>1 → M</code>'); concept('Cardinality', 'This relationship is <strong>one-to-many</strong>, written 1 → M: one <code>news_source</code> can be pointed at by many <code>news_article</code> rows.'); $('#s1-link').classList.add('cardinality'); relationshipInfoRevealed = true; renderInspector(); state = 'grain';
     teacher('The team wants a list of articles, each with its publisher. What should one returned row represent?');
     markCurrentAction();
-    ask({ prompt: 'If the result should show every article with its source, what should one result row represent?', options: [['article', 'a news article'], ['source', 'a news source'], ['country', 'a country'], ['pair', 'a combination of article and source']], correct: 'article', wrong: { source: 'The request is a list of articles. What is the row about?', country: 'There is no country in either relation.', pair: 'The request organises the information around articles. What does one row stand for?' }, onCorrect: afterGrain });
+    ask({ prompt: 'If the result should show every article with its source, what should one result row represent?', options: [['article', 'a news article'], ['source', 'a news source'], ['source-group', 'one publishing source with all of its articles'], ['pair', 'a combination of article and source']], correct: 'article', wrong: { source: 'The request is a list of articles. What is the row about?', 'source-group': 'Grouping all articles under one source would organize rows around sources, not around every article.', pair: 'The request organises the information around articles. What does one row stand for?' }, onCorrect: afterGrain });
   }
 
   function afterGrain() {
     spine('Grain: one article per row'); concept('Grain', 'The result’s <strong>grain</strong> is what a single row represents — here, <strong>one news article per row</strong>.'); state = 'baseline';
-    teacher('Now measure the starting point. The prepared line on the bench counts rows in <code>news_article</code>. This is measurement, not SQL to learn.'); $('#s1-measure').hidden = false; $('#s1-ws').classList.add('dim'); $('#s1-run-measure').focus();
+    teacher('One requested result row represents one article. To predict whether adding its source will preserve that row meaning and count, first measure how many article rows we are starting with. Run the prepared measurement below.'); $('#s1-measure').hidden = false; $('#s1-ws').classList.add('dim'); $('#s1-run-measure').focus();
     markCurrentAction('#s1-measure');
   }
 
@@ -166,21 +170,19 @@ export function createStage1Prototype({ root, getDatabase, onContinue }) {
     try {
       const count = getDatabase().exec('SELECT COUNT(*) FROM news_article;')[0]?.values?.[0]?.[0];
       if (count !== 18) throw new Error(`Expected 18 article rows, received ${count}.`);
-      state = 'baseline-interpret'; $('#s1-run-measure').disabled = true; $('#s1-run-note').textContent = `${count} rows returned.`;
-      $('#s1-measure-out').innerHTML = `<div class="results"><div class="results-top"><span>Baseline measurement</span><span class="results-count">${count} rows</span></div><table><thead><tr><th>COUNT(*)</th></tr></thead><tbody><tr><td><b>${count}</b></td></tr></tbody></table></div>`;
-      teacher(`There’s the number: <strong>${count}</strong>. But a number only helps if we know what it counts.`);
-      markCurrentAction();
-      ask({ prompt: `What does the number ${count} represent here?`, options: [['articles', '18 news articles'], ['sources', '18 news sources'], ['companies', '18 companies'], ['dates', '18 publication dates']], correct: 'articles', wrong: { sources: 'The measurement ran on <code>news_article</code>.', companies: 'There is no company relation here.', dates: '<code>COUNT(*)</code> counts rows, not dates.' }, onCorrect: afterInterpret });
+      $('#s1-run-measure').disabled = true; $('#s1-run-note').textContent = `${count} article rows measured.`;
+      $('#s1-measure-out').innerHTML = `<div class="results"><div class="results-top"><span>Baseline measurement</span><span class="results-count">${count} article rows</span></div><table><thead><tr><th>COUNT(*)</th></tr></thead><tbody><tr><td><b>${count}</b></td></tr></tbody></table></div>`;
+      startPrediction(count);
     } catch (error) { $('#s1-measure-out').innerHTML = `<div class="diag">The database measurement could not run: ${escapeText(error.message)}</div>`; }
   }
 
-  function afterInterpret() {
-    spine('Baseline: <b>18</b> article rows'); state = 'prediction'; teacher('18 articles — our baseline. Each article points at exactly one source. What should happen to the row count when its publisher is added?');
+  function startPrediction(count) {
+    spine(`Baseline: <b>${count}</b> article rows`); state = 'prediction'; markCurrentAction(); teacher(`<strong>${count} article rows</strong> is the baseline. Each article identifies exactly one source. What should happen to the row count when its publisher is added?`);
     ask({ prompt: 'What should happen to the row count when we add each article’s source information?', options: [['exact', '18 rows — one result row for each article'], ['sources', '4 rows — one result row for each source'], ['more', 'More than 18 rows — some articles would produce multiple result rows']], correct: 'exact', wrong: { sources: 'Start from the articles: how many result rows does each article contribute?', more: 'Each article matches exactly one source. Would that multiply it?' }, onCorrect: afterPrediction });
   }
 
   function afterPrediction() {
-    spine('Prediction: <b>18</b> rows, same grain'); state = 'semantic'; teacher('Which relational action expresses that intention and leaves the predicted grain untouched?');
+    spine('Prediction: <b>18</b> rows, same grain'); state = 'semantic'; $('#s1-prediction-mechanism').hidden = false; markCurrentAction('#s1-prediction-mechanism'); teacher('Each starting article row matches one source row, so it contributes one result row. Across 18 article rows, that makes 18 matching pairs and therefore 18 result rows at the established article Grain. Which relational action expresses that intention?');
     ask({ prompt: 'What relational action expresses that intention?', options: [['join', 'Combine each article with its matching source.'], ['filter', 'Keep only the article rows that pass a condition.'], ['aggregate', 'Collapse rows into counts or summaries.'], ['union', 'Stack the article rows and source rows together.']], correct: 'join', wrong: { filter: 'Filtering does not bring publisher information alongside each article.', aggregate: 'Aggregation changes the grain into a summary.', union: 'A union stacks rows; we need to combine matching rows.' }, onCorrect: afterSemantic });
   }
 

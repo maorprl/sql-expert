@@ -25,4 +25,15 @@ contains('For one publishing source, how many article rows', 'Source-to-article 
 contains('The link tells us which fields connect', 'FK→PK must be distinguished from full Cardinality reasoning.');
 ordered("state = 'cardinality-source-direction'", 'onCorrect: afterCardinality', "concept('Cardinality'");
 
+excludes("['country', 'a country']", 'Weak country Grain distractor must be removed.');
+contains('one publishing source with all of its articles', 'Grain options must include a plausible row-meaning misconception.');
+contains('first measure how many article rows we are starting with', 'Baseline bridge must state the measurement purpose.');
+excludes('prepared line on the bench', 'Baseline wording must not use the bench metaphor.');
+excludes('What does the number ${count} represent here?', 'Separate baseline interpretation MCQ must be removed.');
+contains('${count} article rows measured.', 'Baseline result must be interpreted inline as article rows.');
+contains('1 article row', 'Post-prediction mechanism must carry article-row units.');
+contains('1 matching source row', 'Post-prediction mechanism must carry matching-source units.');
+contains('18 matching pairs', 'Scaled prediction mechanism must explain matching pairs.');
+ordered("state = 'prediction'", 'onCorrect: afterPrediction', "state = 'semantic'", "$('#s1-prediction-mechanism').hidden = false", 'onCorrect: afterSemantic', "concept('JOIN'");
+
 console.log('Lesson 1 remediation validation passed.');
